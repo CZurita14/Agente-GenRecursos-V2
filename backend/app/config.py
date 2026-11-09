@@ -28,14 +28,8 @@ class Ajustes(BaseSettings):
     api_origen: str = "https://localhost:5173"
     auth_secreto: SecretStr | None = Field(default=None, min_length=32)
     entorno: Literal["desarrollo", "produccion"] = "produccion"
-    # Entrar sin validar el correo, mientras no hay SMTP institucional (B4). Solo en desarrollo.
+    # Entrar sin autenticar contra el SGA (solo desarrollo); el ingreso normal usa el SGA.
     acceso_prueba: bool = False
-    smtp_modo: Literal["deshabilitado", "consola", "smtp"] = "deshabilitado"
-    smtp_host: str = ""
-    smtp_port: int = Field(default=587, ge=1, le=65535)
-    smtp_remitente: str = ""
-    smtp_usuario: str = ""
-    smtp_clave: SecretStr | None = None
     pdf_max_bytes: int = Field(default=10 * 1024 * 1024, ge=1, le=50 * 1024 * 1024)
     pdf_timeout_s: float = Field(default=20, gt=0, le=120)
     pdf_memoria_mb: int = Field(default=512, ge=128, le=2048)
@@ -50,10 +44,8 @@ class Ajustes(BaseSettings):
     proxies_confiables: list[str] = Field(default_factory=list)
     limite_ip_minuto: int = Field(default=600, ge=1, le=100000)
     limite_usuario_minuto: int = Field(default=120, ge=1, le=100000)
-    limite_codigo_ip_hora: int = Field(default=120, ge=1, le=100000)
-    limite_codigo_correo_hora: int = Field(default=6, ge=1, le=100000)
-    limite_verificar_ip_minuto: int = Field(default=60, ge=1, le=100000)
-    limite_verificar_correo_minuto: int = Field(default=20, ge=1, le=100000)
+    limite_ingresar_ip_minuto: int = Field(default=60, ge=1, le=100000)
+    limite_ingresar_usuario_minuto: int = Field(default=20, ge=1, le=100000)
     limite_generar_correo_hora: int = Field(default=30, ge=1, le=100000)
     limite_pdf_correo_hora: int = Field(default=10, ge=1, le=100000)
     limite_editar_correo_minuto: int = Field(default=30, ge=1, le=100000)

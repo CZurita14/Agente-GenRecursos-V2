@@ -24,8 +24,8 @@ HEADERS = {"Origin": ORIGEN}
 
 @pytest.fixture
 def entorno(nueva_conexion, silabo, conn, monkeypatch):
-    enviados, clientes = {}, {}
-    auth = ServicioAuth(nueva_conexion, "s" * 48, lambda c, k: enviados.update({c: k}))
+    clientes = {}
+    auth = ServicioAuth(nueva_conexion, "s" * 48)
     config = Ajustes(_env_file=None, database_url="no-usar", llm_base_url="http://no-usar/v1",
                      llm_model="m", api_origen=ORIGEN, auth_secreto="s" * 48)
     app = crear_app(config, auth=auth, conexion=nueva_conexion, lector_pdf=lambda *_, **__: silabo)
@@ -35,8 +35,7 @@ def entorno(nueva_conexion, silabo, conn, monkeypatch):
         def cliente(correo):
             if correo not in clientes:
                 c = pila.enter_context(TestClient(app, base_url=ORIGEN))
-                auth.pedir(correo)
-                c.cookies.set("sesion", auth.verificar(correo, enviados[correo]))
+                c.cookies.set("sesion", auth.sesion_directa(correo))
                 clientes[correo] = c
             return clientes[correo]
 

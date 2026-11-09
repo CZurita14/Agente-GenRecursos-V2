@@ -1,4 +1,4 @@
-"""Rutas de códigos y sesiones. El middleware comprueba origen y sesión."""
+"""Rutas de ingreso con el SGA y sesiones. El middleware comprueba origen y sesión."""
 from fastapi import APIRouter, HTTPException, Request, Response
 from pydantic import BaseModel, Field
 
@@ -8,12 +8,12 @@ router = APIRouter(prefix="/auth")
 INVITADO = "invitado@uti.edu.ec"
 
 
-class PedidoCodigo(BaseModel):
-    correo: str = Field(max_length=254)
+class Ingreso(BaseModel):
+    usuario: str = Field(min_length=1, max_length=128)
+    clave: str = Field(min_length=1, max_length=256)
 
-
-class VerificarCodigo(PedidoCodigo):
-    codigo: str = Field(max_length=64)
+    def __repr__(self):  # La clave no debe aparecer en trazas ni en mensajes de error.
+        return "Ingreso(...)"
 
 
 class AccesoPrueba(BaseModel):
@@ -26,25 +26,20 @@ def servicio(request):
     return request.app.state.auth
 
 
-@router.post("/codigo")
-def pedir(datos: PedidoCodigo, request: Request):
-    correo = normalizar_correo(datos.correo)
-    if request.app.state.control is not None:
-        request.app.state.control.correo_publico(correo, "codigo")
-    servicio(request).pedir(datos.correo)
-    return {"mensaje": "Se ha solicitado un código de acceso"}
+COOKIE = dict(max_age=7 * 24 * 3600, httponly=True, secure=True, samesite="lax", path="/")
 
 
-@router.post("/verificar")
-def verificar(datos: VerificarCodigo, request: Request, response: Response):
-    correo = normalizar_correo(datos.correo)
+@router.post("/ingresar")
+def ingresar(datos: Ingreso, request: Request, response: Response):
+    usuario = datos.usuario.strip().lower()
     if request.app.state.control is not None:
-        request.app.state.control.correo_publico(correo, "verificar")
-    token = servicio(request).verificar(datos.correo, datos.codigo)
+        request.app.state.control.usuario_publico(usuario)
+    auth = servicio(request)
+    token = auth.ingresar(usuario, datos.clave)
+    correo = auth.identificar(token)
     request.state.usuario = correo
-    response.set_cookie("sesion", token, max_age=7 * 24 * 3600,
-                        httponly=True, secure=True, samesite="lax", path="/")
-    return {"mensaje": "Sesión iniciada"}
+    response.set_cookie("sesion", token, **COOKIE)
+    return {"correo": correo, "materias": auth.materias(correo)}
 
 
 @router.get("/modo")
@@ -60,11 +55,10 @@ def prueba(datos: AccesoPrueba, request: Request, response: Response):
         raise HTTPException(404, "No encontrado")
     correo = normalizar_correo(datos.correo or INVITADO)
     if request.app.state.control is not None:
-        request.app.state.control.correo_publico(correo, "verificar")
+        request.app.state.control.usuario_publico(correo)
     token = servicio(request).sesion_directa(correo)
     request.state.usuario = correo
-    response.set_cookie("sesion", token, max_age=7 * 24 * 3600,
-                        httponly=True, secure=True, samesite="lax", path="/")
+    response.set_cookie("sesion", token, **COOKIE)
     return {"mensaje": "Sesión iniciada"}
 
 

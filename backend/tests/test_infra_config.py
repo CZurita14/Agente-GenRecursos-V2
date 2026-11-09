@@ -90,7 +90,7 @@ def test_limites_configurables_en_compose_con_los_valores_de_la_api():
     from app.config import Ajustes
     entorno = yaml.safe_load((RAIZ/'infra/compose.yaml').read_text(encoding='utf-8'))['x-backend']['environment']
     campos = [c for c in Ajustes.model_fields if c.startswith('limite_')] + ['auditoria_retencion_dias']
-    assert len(campos) == 10
+    assert len(campos) == 8
     for campo in campos:
         valor = entorno[campo.upper()]
         defecto = re.fullmatch(r'\$\{' + campo.upper() + r':-(\d+)\}', valor)

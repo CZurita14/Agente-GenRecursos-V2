@@ -27,8 +27,7 @@ def entorno(tmp_path):
         (tls / name).write_text("certificado de prueba")
     values = {
         "ENTORNO": "produccion", "API_ORIGEN": "https://recursos.uti.edu.ec",
-        "AUTH_SECRETO": "s3guro-aleatorio-" * 4, "SMTP_MODO": "smtp",
-        "SMTP_HOST": "smtp.uti.edu.ec", "SMTP_REMITENTE": "recursos@uti.edu.ec",
+        "AUTH_SECRETO": "s3guro-aleatorio-" * 4,
         "ADMINISTRADORES": '["admin@uti.edu.ec", "otro@indoamerica.edu.ec"]',
         "RED_PROXY": "172.29.8.0/24", "IP_PROXY": "172.29.8.10",
         "RANGO_DINAMICO": "172.29.8.128/25", "TLS_DIR": "tls", "DOMINIO": "recursos.uti.edu.ec",
@@ -67,8 +66,7 @@ def test_validar_no_invoca_docker_ni_revela_secretos(operar, entorno, monkeypatc
     {"API_ORIGEN": "http://recursos.uti.edu.ec"},
     {"API_ORIGEN": "https://recursos.uti.edu.ec/ruta"},
     {"AUTH_SECRETO": "x" * 31}, {"AUTH_SECRETO": "cambiar-por-un-secreto-largo-123456789"},
-    {"POSTGRES_PASSWORD": "changeme"}, {"SMTP_MODO": "consola"},
-    {"SMTP_MODO": "deshabilitado"}, {"SMTP_HOST": ""}, {"SMTP_REMITENTE": ""},
+    {"POSTGRES_PASSWORD": "changeme"},
     {"ADMINISTRADORES": "[]"}, {"ADMINISTRADORES": "{}"},
     {"ADMINISTRADORES": '["user@gmail.com"]'}, {"ADMINISTRADORES": "secreto-malformado"},
     {"RED_PROXY": "0.0.0.0/0"}, {"RED_PROXY": "::/64"},
@@ -93,8 +91,8 @@ def test_limites_admitidos(operar, entorno):
     assert operar.main(["--entorno", str(entorno(LIMITE_IP_MINUTO="5000", AUDITORIA_RETENCION_DIAS="90")), "validar"]) == 0
 
 
-def test_desarrollo_sin_smtp(operar, entorno):
-    assert operar.main(["--entorno", str(entorno(ENTORNO="desarrollo", SMTP_MODO="deshabilitado", SMTP_HOST="", SMTP_REMITENTE="", ADMINISTRADORES="[]")), "validar"]) == 0
+def test_desarrollo_sin_administradores(operar, entorno):
+    assert operar.main(["--entorno", str(entorno(ENTORNO="desarrollo", ADMINISTRADORES="[]")), "validar"]) == 0
 
 
 def fake_docker(monkeypatch, *, exists=False, failure=None):

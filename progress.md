@@ -2,7 +2,7 @@
 
 > **Para qué sirve:** es la memoria del proyecto V2. Al retomar, **se lee primero este archivo** y solo después, si hace falta, el documento puntual que enlaza.
 >
-> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 4.
+> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 5.
 
 ## Cómo se actualiza
 
@@ -35,7 +35,7 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
 | 1 | Contrato en el código e integridad | ✅ hecha |
 | 2 | Proveedor SGA, traductor, SGA simulado y esquemas de materias y autenticación | ✅ hecha |
 | 3 | Sincronización de materias y sílabos | ✅ hecha |
-| 4 | Ingreso con el SGA | ⬜ pendiente |
+| 4 | Ingreso con el SGA | ✅ hecha |
 | 5 | API de materias y eliminación del PDF | ⬜ pendiente |
 | 6 | Frontend | ⬜ pendiente |
 | 7 | Ciencia de datos con JSON | ⬜ pendiente |
@@ -61,6 +61,10 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
   - Se elimina «compartir» (servicio, endpoints, ruta de auditoría y modelo); la tabla `asignatura_acceso` y los roles se conservan.
   - `asignatura.activa_sga` (migración `009_sga.sql`): al sincronizar, una asignatura cuya materia el SGA ya no lista queda inactiva (404 y fuera del listado); nunca se borra y vuelve si la materia regresa.
   - Una asignatura por `(docente, codigo_pf)`: dos paralelos son dos filas de `materia_sga` apuntando a la misma.
+- **2026-11-09:**
+  - Se elimina el SMTP por completo (`app/auth/correo.py`, campos `smtp_*`, variables en `.env.example`, `infra/`) y con él `/auth/codigo` y `/auth/verificar`; el ingreso es `POST /auth/ingresar` contra el SGA.
+  - El bloqueo sigue la convención de V1: 5 claves erróneas seguidas por usuario → **429** «Demasiados intentos» con `Retry-After: 900` (no 423). Tabla `auth_bloqueo` (`010_auth_sga.sql`, con una columna `actualizado` para limpiar contadores viejos); `auth_reto` se elimina.
+  - Cuotas: `limite_ingresar_usuario_minuto` (20) y `limite_ingresar_ip_minuto` (60) reemplazan las cuatro de código/verificar.
 - **2026-11-09:** El contrato también define los JSON de la lista de materias y de la autenticación (Tarea 2).
 
 ## Bitácora (lo ya hecho)
@@ -74,10 +78,11 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
 - **Tarea 1:** `SilaboUTI` acepta el contrato JSON (9 campos pasan a opcionales) y `app/silabo/integridad.py` añade `cargar_silabo` y `SilaboInvalido` con fallos `ruta: regla` sin valores. Pruebas: `test_contrato.py` 11 nuevas; suite estándar 1227 pasan, 23 se saltan (1216 + 11 nuevas).
 - **Tarea 2:** `app/sga/` (interfaz `ProveedorSGA`, traductor de lista blanca, SGA simulado con fixtures `S91-SIMU-…`, real pendiente de TI), esquemas `materias-api` y `auth-sga` con ejemplos, y 3 campos en la configuración. Sin `jsonschema`: las pruebas leen las claves de los esquemas. Pruebas: `test_sga_proveedor.py` 22 nuevas; suite estándar 1249 pasan, 23 se saltan (1227 + 22 nuevas).
 - **Tarea 3:** `app/sga/sincronizar.py` y migración `009_sga.sql` (`materia_sga`, `asignatura.activa_sga`); una transacción por materia, estados `importada/sin_cambios/no_disponible/invalida`. Se quita «compartir». Pruebas: `test_sga_sincronizar.py` 10 nuevas, 3 nuevas y 4 borradas de «compartir» en `test_asignaturas_api.py`; suite estándar 1259 pasan, 23 se saltan (1249 + 10).
+- **Tarea 4:** `POST /auth/ingresar` (bloqueo → SGA → sincronización → sesión con la misma cookie de V1); la clave solo es un parámetro local (pruebas con `caplog` y búsqueda en todas las columnas de texto). Si la sincronización falla se entra igual y solo se registra el nombre de la excepción. SGA caído → 503 sin contar fallo. Se borra `test_correo_auth.py` y se reescribe `test_auth.py` (32 casos); `test_control_api.py` cambia las cuotas de código por las de ingreso. Suite estándar 1247 pasan, 23 se saltan (1259 + las nuevas − las del código por correo; la base citada era 1261).
 
 ---
 
 ## Siguiente paso
 
-1. Tarea 3: sincronización de materias y sílabos.
+1. Tarea 5: API de materias y eliminación del PDF.
 2. Pedir a TI lo del bloqueo B-SGA1.

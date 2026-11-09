@@ -12,9 +12,9 @@ from app.silabo.lector.errores import SilaboIlegible
 def ruta_publica(c, funcion):
     """Ruta de prueba en un camino público por POST (/salud solo admite GET/HEAD).
 
-    Se coloca primero para que sustituya al manejador real de /auth/codigo.
+    Se coloca primero para que sustituya al manejador real de /auth/ingresar.
     """
-    c.app.add_api_route("/auth/codigo", funcion, methods=["POST"])
+    c.app.add_api_route("/auth/ingresar", funcion, methods=["POST"])
     c.app.router.routes.insert(0, c.app.router.routes.pop())
 
 
@@ -70,19 +70,19 @@ def test_rutas_cerradas_sin_sesion(ruta):
 def test_post_exige_origen_exacto(origen):
     headers = {"Origin": origen} if origen else {}
     with cliente() as c:
-        assert c.post("/auth/codigo", headers=headers).status_code == 403
+        assert c.post("/auth/ingresar", headers=headers).status_code == 403
 
 
 def test_preflight_solo_admite_origen_configurado():
     with cliente() as c:
         headers = {"Origin": "https://materiales.example",
                    "Access-Control-Request-Method": "POST"}
-        r = c.options("/auth/codigo", headers=headers)
+        r = c.options("/auth/ingresar", headers=headers)
         assert r.status_code == 200
         assert r.headers["access-control-allow-origin"] == headers["Origin"]
         assert r.headers["access-control-allow-credentials"] == "true"
         headers["Origin"] = "https://intruso.example"
-        r = c.options("/auth/codigo", headers=headers)
+        r = c.options("/auth/ingresar", headers=headers)
         assert "access-control-allow-origin" not in r.headers
 
 
@@ -101,7 +101,7 @@ def test_error_no_incluye_contenido_interno(error, codigo):
 
     ruta_publica(c, fallar)
     with c:
-        r = c.post("/auth/codigo", headers={"Origin": "https://materiales.example"})
+        r = c.post("/auth/ingresar", headers={"Origin": "https://materiales.example"})
     assert r.status_code == codigo
     assert "contenido privado" not in r.text
 
@@ -114,7 +114,7 @@ def test_validacion_no_devuelve_valores_recibidos():
 
     ruta_publica(c, validar)
     with c:
-        r = c.post("/auth/codigo?numero=contenido-privado",
+        r = c.post("/auth/ingresar?numero=contenido-privado",
                    headers={"Origin": "https://materiales.example"})
     assert r.status_code == 422
     assert "contenido-privado" not in r.text

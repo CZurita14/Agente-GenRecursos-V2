@@ -18,8 +18,8 @@ ORIGEN = "https://materiales.example"
 
 @pytest.fixture
 def entorno(nueva_conexion, silabo):
-    codigos, rutas = {}, []
-    auth = ServicioAuth(nueva_conexion, "s" * 48, lambda c, k: codigos.update({c: k}))
+    rutas = []
+    auth = ServicioAuth(nueva_conexion, "s" * 48)
 
     def lector(ruta, **_):
         rutas.append(Path(ruta))
@@ -32,9 +32,7 @@ def entorno(nueva_conexion, silabo):
 
     def cliente(correo):
         c = TestClient(app, base_url=ORIGEN)
-        auth.pedir(correo)
-        token = auth.verificar(correo, codigos[correo])
-        c.cookies.set("sesion", token)
+        c.cookies.set("sesion", auth.sesion_directa(correo))
         return c
 
     return app, cliente, rutas

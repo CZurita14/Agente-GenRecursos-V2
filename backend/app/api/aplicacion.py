@@ -20,7 +20,6 @@ from app.api.recursos import router as recursos_router
 from app.api.chat import router as chat_router
 from app.api.privacidad import router as privacidad_router
 from app.api.errores import registrar_errores
-from app.auth.correo import transporte_correo
 from app.auth.servicio import ServicioAuth
 from app.config import RAIZ, Ajustes, ajustes
 from app.db.conexion import conectar
@@ -31,6 +30,7 @@ from app.control.identidad import ProxyInvalido, ip_cliente, operacion_segura
 from app.control.limites import LimiteExcedido
 from app.control.servicio import ControlAcceso
 from app.operacion import preparado
+from app.sga import SGAError, crear_proveedor
 
 
 def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, conexion=None, lector_pdf=None) -> FastAPI:
@@ -49,6 +49,8 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         app.state.asignaturas = ServicioAsignaturas(conexion, cargar_catalogo(RAIZ / "kb/catalogo.yaml"),
                                                     app.state.perfiles)
         app.state.recursos = ServicioRecursos(conexion, app.state.perfiles)
+        if isinstance(app.state.auth, ServicioAuth) and app.state.auth.asignaturas is None:
+            app.state.auth.asignaturas = app.state.asignaturas
         async with httpx.AsyncClient(timeout=5, transport=transporte,
                                      headers={"Authorization": f"Bearer {config.llm_api_key}"}) as cliente:
             app.state.ia = cliente
@@ -70,8 +72,11 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
     app.state.lector_pdf = lector_pdf
     app.state.auth = auth
     if auth is None and config.auth_secreto is not None:
-        app.state.auth = ServicioAuth(conexion,
-                                      config.auth_secreto.get_secret_value(), transporte_correo(config))
+        try:
+            proveedor = crear_proveedor(config)
+        except SGAError:
+            proveedor = None  # Sin SGA configurado el ingreso responde 503; /auth/prueba sigue disponible.
+        app.state.auth = ServicioAuth(conexion, config.auth_secreto.get_secret_value(), proveedor)
     registrar_errores(app)
     app.include_router(auth_router)
     app.include_router(asignaturas_router)
@@ -93,7 +98,7 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
             if request.headers.get("origin") != config.api_origen:
                 return JSONResponse({"detail": "Origen no permitido"}, status_code=403)
         publica = ((request.method in {"GET", "HEAD"} and request.url.path in {"/salud", "/auth/modo"})
-                   or (request.method == "POST" and request.url.path in {"/auth/codigo", "/auth/verificar", "/auth/prueba"}))
+                   or (request.method == "POST" and request.url.path in {"/auth/ingresar", "/auth/prueba"}))
         if not publica:
             usuario = None
             if app.state.auth is not None and request.cookies.get("sesion"):

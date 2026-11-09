@@ -3,6 +3,7 @@ from contextlib import ExitStack
 from datetime import datetime, timezone
 import json
 import logging
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -10,14 +11,16 @@ from fastapi.testclient import TestClient
 from app.api.aplicacion import crear_app
 from app.auth.servicio import ServicioAuth
 from app.config import Ajustes
+from app.sga.simulado import ProveedorSimulado
 
 ORIGEN = "https://materiales.example"
+SGA = Path(__file__).parent / "fixtures" / "sga"
 
 
 @pytest.fixture
 def entorno(nueva_conexion):
-    enviados = {}
-    auth = ServicioAuth(nueva_conexion, "s" * 48, lambda c, k: enviados.update({c: k}))
+    sga = ProveedorSimulado(SGA)
+    auth = ServicioAuth(nueva_conexion, "s" * 48, sga)
 
     def construir(**kw):
         config = Ajustes(_env_file=None, database_url="no-usar", llm_base_url="http://no-usar/v1",
@@ -32,11 +35,10 @@ def entorno(nueva_conexion):
             app = app or construir()
             c = pila.enter_context(TestClient(app, base_url=ORIGEN, client=(ip, 12345)))
             if correo:
-                auth.pedir(correo)
-                c.cookies.set("sesion", auth.verificar(correo, enviados[correo]))
+                c.cookies.set("sesion", auth.sesion_directa(correo))
             return c
 
-        yield construir, cliente, enviados
+        yield construir, cliente, sga
 
 
 def test_consumo_solo_admin_configurado(entorno, conn):
@@ -79,21 +81,29 @@ def test_cuota_por_usuario_suma_sesiones_y_diferentes_ips(entorno):
     app = construir(limite_usuario_minuto=1)
     c1 = cliente(app, correo="docente@uti.edu.ec", ip="198.51.100.11")
     assert c1.get("/auth/yo").status_code == 200
-    # Copiar una sesión válida a otro cliente; no solicitar otro código en el cooldown.
+    # Copiar una sesión válida a otro cliente: la cuota es por usuario, no por sesión.
     c2 = cliente(app, ip="198.51.100.12")
     c2.cookies.set("sesion", c1.cookies.get("sesion"))
     assert c2.get("/auth/yo").status_code == 429
 
 
-def test_cuota_email_codigo_no_se_elude_rotando_ip(entorno, conn):
-    construir, cliente, enviados = entorno
-    app = construir(limite_codigo_correo_hora=1)
+def test_cuota_de_ingreso_por_usuario_no_se_elude_rotando_ip(entorno):
+    construir, cliente, _ = entorno
+    app = construir(limite_ingresar_usuario_minuto=1)
     uno = cliente(app, ip="198.51.100.41")
-    r = uno.post("/auth/codigo", json={"correo": "docente@uti.edu.ec"}, headers={"Origin": ORIGEN})
-    assert r.status_code == 200
-    conn.execute("update auth_reto set emitido=clock_timestamp()-interval '61 seconds'")
+    r = uno.post("/auth/ingresar", json={"usuario": "docente.uno", "clave": "mala"}, headers={"Origin": ORIGEN})
+    assert r.status_code == 401
     otro = cliente(app, ip="198.51.100.42")
-    r = otro.post("/auth/codigo", json={"correo": "Docente@UTI.EDU.EC"}, headers={"Origin": ORIGEN})
+    r = otro.post("/auth/ingresar", json={"usuario": " Docente.UNO ", "clave": "mala"}, headers={"Origin": ORIGEN})
+    assert r.status_code == 429 and "retry-after" in r.headers
+
+
+def test_cuota_de_ingreso_por_ip(entorno):
+    construir, cliente, _ = entorno
+    app = construir(limite_ingresar_ip_minuto=1)
+    c = cliente(app, ip="198.51.100.43")
+    assert c.post("/auth/ingresar", json={"usuario": "a", "clave": "b"}, headers={"Origin": ORIGEN}).status_code == 401
+    r = c.post("/auth/ingresar", json={"usuario": "c", "clave": "d"}, headers={"Origin": ORIGEN})
     assert r.status_code == 429 and "retry-after" in r.headers
 
 
@@ -223,15 +233,13 @@ def test_peticiones_reutilizan_conexiones(nueva_conexion):
         creadas.append(1)
         return nueva_conexion()
 
-    enviados = {}
-    auth = ServicioAuth(contar, "s" * 48, lambda c, k: enviados.update({c: k}))
+    auth = ServicioAuth(contar, "s" * 48)
     config = Ajustes(_env_file=None, database_url="no-usar", llm_base_url="http://no-usar/v1",
                      llm_model="m", api_origen=ORIGEN, auth_secreto="s" * 48)
     app = crear_app(config, auth=auth, conexion=contar)
     auth.conexion = app.state.conexion  # Como en producción: la sesión usa la fábrica de la app.
     with TestClient(app, base_url=ORIGEN, client=("198.51.100.30", 1)) as c:
-        auth.pedir("docente@uti.edu.ec")
-        c.cookies.set("sesion", auth.verificar("docente@uti.edu.ec", enviados["docente@uti.edu.ec"]))
+        c.cookies.set("sesion", auth.sesion_directa("docente@uti.edu.ec"))
         antes = len(creadas)
         for _ in range(5):
             assert c.get("/auth/yo").status_code == 200

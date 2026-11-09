@@ -13,10 +13,9 @@ def limpiar(conn, dias=30):
         accesos = conn.execute("delete from acceso_api where creado<clock_timestamp()-make_interval(days=>%s)", (dias,)).rowcount
         sesiones = conn.execute("delete from auth_sesion where vence<=clock_timestamp() "
                                 "or actividad<=clock_timestamp()-interval '8 hours'").rowcount
-        retos = conn.execute("delete from auth_reto where emitido<clock_timestamp()-interval '1 day' "
-                             "and coalesce(vence,'-infinity')<clock_timestamp() "
-                             "and coalesce(bloqueado_hasta,'-infinity')<clock_timestamp()").rowcount
-    return {"cuotas": cuotas, "accesos": accesos, "sesiones": sesiones, "retos": retos}
+        bloqueos = conn.execute("delete from auth_bloqueo where actualizado<clock_timestamp()-interval '1 day' "
+                                "and coalesce(bloqueado_hasta,'-infinity')<clock_timestamp()").rowcount
+    return {"cuotas": cuotas, "accesos": accesos, "sesiones": sesiones, "bloqueos": bloqueos}
 
 
 def main():

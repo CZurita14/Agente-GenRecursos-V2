@@ -17,8 +17,8 @@ REPO = Path(__file__).resolve().parents[1]
 PROTEGIDOS = {"genrecursos", "rootdev", "genrecursos-db"}
 LIMITES = {  # Variable opcional → máximo admitido por app/config.py (mínimo 1).
     **{clave: 100000 for clave in (
-        "LIMITE_IP_MINUTO", "LIMITE_USUARIO_MINUTO", "LIMITE_CODIGO_IP_HORA", "LIMITE_CODIGO_CORREO_HORA",
-        "LIMITE_VERIFICAR_IP_MINUTO", "LIMITE_VERIFICAR_CORREO_MINUTO", "LIMITE_GENERAR_CORREO_HORA",
+        "LIMITE_IP_MINUTO", "LIMITE_USUARIO_MINUTO", "LIMITE_INGRESAR_IP_MINUTO",
+        "LIMITE_INGRESAR_USUARIO_MINUTO", "LIMITE_GENERAR_CORREO_HORA",
         "LIMITE_PDF_CORREO_HORA", "LIMITE_EDITAR_CORREO_MINUTO")},
     "AUDITORIA_RETENCION_DIAS": 365,
 }
@@ -121,9 +121,6 @@ def validar(datos, archivo):
            and re.fullmatch(r"[A-Za-z0-9_-]+", v("POSTGRES_PASSWORD")), "POSTGRES_PASSWORD")
     exigir(all(re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_-]{0,62}", v(campo))
                for campo in ("POSTGRES_DB", "POSTGRES_USER")), "POSTGRES_DB / POSTGRES_USER")
-    exigir(v("SMTP_MODO") in ({"smtp"} if produccion else {"smtp", "deshabilitado"}), "SMTP_MODO")
-    if v("SMTP_MODO") == "smtp":
-        exigir(bool(v("SMTP_HOST")) and bool(v("SMTP_REMITENTE")), "SMTP_HOST / SMTP_REMITENTE")
     try:
         admins = json.loads(v("ADMINISTRADORES") or ("[]" if not produccion else ""))
     except (ValueError, TypeError):

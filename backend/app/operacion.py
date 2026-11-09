@@ -30,8 +30,7 @@ def validar_configuracion(config):
     secreto = config.auth_secreto.get_secret_value() if config.auth_secreto else ''
     if (len(secreto) < 32 or len(set(secreto)) < 8
             or not config.api_origen.startswith('https://')
-            or config.smtp_modo != 'smtp' or not config.smtp_host
-            or not config.smtp_remitente or not config.administradores):
+            or not config.administradores):
         raise ValueError('Configuración de producción incompleta')
 
 
