@@ -1,0 +1,1739 @@
+[
+ {
+  "clase": "datos_M3S4",
+  "version": 3,
+  "calculado": "Cooperativa de ahorro ficticia 'Coop. Andina': tráfico de red en Mbps, 30 mediciones por segmento.\nSegmento A (oficinas): media 117.8, desv. 16.9\nSegmento B (cajeros): media 123.2, desv. 14.4\nSegmento C (servidores web): media 139.8, desv. 16.1\nShapiro-Wilk p: A=0.053, B=0.319, C=0.496\nLevene: estadístico=0.09, p=0.912\nANOVA de un factor: F(2, 87)=15.71, p=1.5e-06; F crítico (α=0,05)=3.10\nPrueba t A vs B (varianzas iguales): t(58)=-1.32, p=0.192\nIC 95 % de la media de C: [133.8; 145.8]",
+  "generados": [
+   {
+    "nivel": "receptivo",
+    "ra": "RA3",
+    "foco": "Receptivo",
+    "contexto": "En el análisis de tráfico de red de la Cooperativa de ahorro 'Coop. Andina', se ha verificado que los datos cumplen con la normalidad y la homogeneidad de varianzas.",
+    "pregunta": "¿Qué tipo de prueba estadística se utiliza para comparar la media de dos grupos cuando se cumple la normalidad y la homogeneidad de varianzas? ¿Por qué?",
+    "opciones": [
+     {
+      "texto": "Prueba t de Student",
+      "justificacion": "La prueba t de Student se utiliza cuando se comparan las medias de dos grupos independientes y se cumplen las condiciones de normalidad y homogeneidad de varianzas. Es la opción correcta porque se ajusta a las condiciones dadas.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Prueba de chi-cuadrado",
+      "justificacion": "La prueba de chi-cuadrado se usa para datos categóricos y no para comparar medias continuas. No es aplicable en este contexto.",
+      "error_que_representa": "uso inadecuado de la prueba"
+     },
+     {
+      "texto": "ANOVA de un factor",
+      "justificacion": "El ANOVA se utiliza para comparar más de dos grupos simultáneamente. No es adecuado para comparar solo dos grupos.",
+      "error_que_representa": "uso inadecuado de la prueba"
+     },
+     {
+      "texto": "Prueba de Kolmogorov-Smirnov",
+      "justificacion": "Esta prueba se usa para verificar la normalidad de un único conjunto de datos, no para comparar medias entre grupos.",
+      "error_que_representa": "uso inadecuado de la prueba"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "Para comparar medias entre dos grupos, se requiere una prueba específica que considere las condiciones de normalidad y homogeneidad de varianzas.",
+     "La prueba t de Student es la adecuada en este caso, ya que cumple con estas condiciones y permite comparar dos medias."
+    ],
+    "nivel_pedido": "receptivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La prueba t de Student es la adecuada para comparar medias de dos grupos cuando se cumplen normalidad y homogeneidad de varianzas. La opción 0 coincide con la pregunta y el contexto proporcionado."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La prueba de chi-cuadrado se utiliza para datos categóricos y no para comparar medias de grupos continuos. No es aplicable en este contexto."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "El ANOVA de un factor se usa para comparar tres o más grupos, no dos. La pregunta especifica la comparación de dos grupos (A vs B), por lo que no es adecuado."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La prueba de Kolmogorov-Smirnov se utiliza para evaluar la normalidad de un conjunto de datos, no para comparar medias entre grupos. No es aplicable aquí."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 21.6,
+     "tokens": 589
+    }
+   },
+   {
+    "nivel": "resolutivo",
+    "ra": "RA3",
+    "foco": "Resolutivo",
+    "contexto": "Se han realizado análisis estadísticos sobre los datos de tráfico de red de la Cooperativa de ahorro 'Coop. Andina', incluyendo un ANOVA de un factor con resultados F(2, 87)=15.71, p=1.5e-06 y F crítico (α=0,05)=3.10.",
+    "pregunta": "¿Cuál es la decisión correcta sobre la hipótesis nula del ANOVA basándose en los resultados calculados?",
+    "opciones": [
+     {
+      "texto": "Se rechaza la hipótesis nula, indicando que al menos un grupo tiene una media diferente.",
+      "justificacion": "El valor F calculado (15.71) es mayor que el F crítico (3.10), lo que indica que hay diferencias significativas entre al menos dos grupos. Por lo tanto, se rechaza la hipótesis nula.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "No se rechaza la hipótesis nula, ya que no hay evidencia suficiente para afirmar diferencias entre los grupos.",
+      "justificacion": "Este es un error conceptual, ya que el valor F obtenido es significativo y supera al F crítico, lo que permite rechazar la hipótesis nula.",
+      "error_que_representa": "error en la interpretación del resultado"
+     },
+     {
+      "texto": "Se acepta la hipótesis nula, lo que significa que todas las medias son iguales.",
+      "justificacion": "Este es un error conceptual, ya que rechazar la hipótesis nula no implica aceptarla, sino simplemente no encontrar evidencia contra ella.",
+      "error_que_representa": "confusión entre rechazo y aceptación de H0"
+     },
+     {
+      "texto": "No se puede tomar ninguna decisión debido a la falta de información suficiente.",
+      "justificacion": "Este es un error de interpretación, ya que los resultados del ANOVA proporcionan información suficiente para tomar una decisión.",
+      "error_que_representa": "ignorar información relevante"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El ANOVA se utiliza para determinar si existen diferencias significativas entre las medias de tres o más grupos.",
+     "El valor F calculado (15.71) es significativamente mayor que el valor F crítico (3.10), lo que indica que al menos un grupo difiere significativamente de los demás."
+    ],
+    "nivel_pedido": "resolutivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La decisión correcta es rechazar la hipótesis nula (H0) porque el valor F calculado (15.71) es significativamente mayor que el F crítico (3.10) y el p-valor (1.5e-06) es menor que 0.05. Esto indica que al menos un grupo tiene una media diferente."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "No se rechaza H0 solo cuando el p-valor es mayor que 0.05. En este caso, el p-valor es extremadamente pequeño (1.5e-06), lo que contradice esta opción."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "Aceptar H0 es incorrecto porque los resultados del ANOVA muestran evidencia clara de diferencias entre los grupos (p < 0.05)."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La decisión sí es posible: los resultados del ANOVA proporcionan suficiente información para concluir que H0 debe ser rechazada."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 30.5,
+     "tokens": 816
+    }
+   },
+   {
+    "nivel": "reflexivo",
+    "ra": "RA3",
+    "foco": "Reflexivo: ¿Qué implicación tiene que el ANOVA rechace la hipótesis nula si no se realiza una prueba post hoc? ¿Qué se pierde en la interpretación?",
+    "contexto": "Los resultados del ANOVA indican que existe una diferencia significativa entre las medias de los tres segmentos de tráfico de red. Sin embargo, no se ha realizado ninguna prueba post hoc para determinar cuáles segmentos son estadísticamente diferentes entre sí.",
+    "pregunta": "¿Qué implicación tiene que el ANOVA rechace la hipótesis nula si no se realiza una prueba post hoc? ¿Qué se pierde en la interpretación?",
+    "opciones": [
+     {
+      "texto": "Se pierde la capacidad de identificar cuáles segmentos son diferentes entre sí, lo que limita la capacidad de tomar decisiones específicas sobre cada segmento.",
+      "justificacion": "Es correcto, ya que el ANOVA solo indica que hay diferencias, pero no cuáles son. Esto limita la interpretación a un nivel general.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Se obtiene una mayor precisión en la estimación de las medias de los segmentos, lo que mejora la interpretación global.",
+      "justificacion": "Este es un error conceptual, ya que el ANOVA no proporciona información sobre qué segmentos son diferentes, por lo que esta afirmación es incorrecta.",
+      "error_que_representa": "confundir no rechazar H0 con aceptarla"
+     },
+     {
+      "texto": "Se genera un mayor riesgo de errores de tipo I, ya que no se controla la corrección múltiple en la comparación de medias.",
+      "justificacion": "Este es un error conceptual, ya que el ANOVA no aumenta el riesgo de errores de tipo I en sí mismo, pero la falta de pruebas post hoc puede llevar a interpretaciones erróneas.",
+      "error_que_representa": "sobregeneralizar"
+     },
+     {
+      "texto": "Se mejora la confiabilidad del modelo, ya que se elimina la necesidad de realizar pruebas adicionales.",
+      "justificacion": "Este es un error conceptual, ya que el ANOVA no elimina la necesidad de pruebas post hoc, sino que simplemente no las proporciona. Esta afirmación es incorrecta.",
+      "error_que_representa": "ignorar un supuesto"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El ANOVA es una prueba de contraste global que determina si al menos una de las medias es diferente, pero no identifica cuál.",
+     "Sin pruebas post hoc, se pierde la capacidad de realizar comparaciones específicas entre los segmentos, lo que limita la interpretación a un nivel general."
+    ],
+    "nivel_pedido": "reflexivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La opción es correcta porque el ANOVA rechaza la hipótesis nula sin identificar cuáles segmentos son diferentes, lo que limita la capacidad de tomar decisiones específicas. Sin una prueba post hoc, no se puede determinar la dirección o magnitud de las diferencias entre grupos, lo cual es esencial para interpretar los resultados con precisión."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La opción es incorrecta porque el ANOVA no mejora la precisión de las estimaciones de medias individuales. Su propósito es detectar diferencias globales, no refinar las estimaciones de cada grupo. La precisión de las medias se mantiene independientemente de si se realizan pruebas post hoc."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La opción es incorrecta porque el riesgo de errores de tipo I no se incrementa al omitir pruebas post hoc. Este riesgo surge al realizar múltiples comparaciones sin corregirlos, pero si no se realizan comparaciones múltiples, no hay un aumento de dicho riesgo. La opción confunde la necesidad de corrección múltiple con la ausencia de pruebas post hoc."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La opción es incorrecta porque no evitar pruebas post hoc no mejora la confiabilidad del modelo. El ANOVA ya es parte del análisis, pero su interpretación incompleta (sin identificar diferencias específicas) limita la utilidad de los resultados. La confiabilidad no se incrementa al omitir análisis adicionales."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 33.9,
+     "tokens": 917
+    }
+   },
+   {
+    "nivel": "critico",
+    "ra": "RA3",
+    "foco": "Crítico: ¿Qué error metodológico comete un estudiante que afirma que todos los segmentos tienen medias iguales basándose solo en el ANOVA?",
+    "contexto": "El ANOVA rechaza la hipótesis nula, lo que indica que no todas las medias son iguales, pero no especifica cuáles son diferentes.",
+    "pregunta": "¿Qué error metodológico comete un estudiante que afirma que todos los segmentos tienen medias iguales basándose solo en el ANOVA?",
+    "opciones": [
+     {
+      "texto": "Comete el error de sobregeneralizar, al asumir que todas las medias son iguales sin realizar pruebas post hoc para confirmarlo.",
+      "justificacion": "Es correcto, ya que el rechazo de la hipótesis nula solo indica que no todas las medias son iguales, pero no cuáles. Asumir que todas son iguales es una interpretación errónea.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Comete el error de confundir no rechazar H0 con aceptarla, al interpretar incorrectamente el resultado del ANOVA.",
+      "justificacion": "Este es un error conceptual, ya que el ANOVA no acepta H0, sino que rechaza la igualdad de medias. No es aplicable en este caso.",
+      "error_que_representa": "confundir no rechazar H0 con aceptarla"
+     },
+     {
+      "texto": "Comete el error de ignorar la variabilidad entre los segmentos, lo que afecta la validez de la comparación.",
+      "justificacion": "Este es un error conceptual, ya que el ANOVA ya considera la variabilidad entre los segmentos. La afirmación no refleja el error real.",
+      "error_que_representa": "ignorar un supuesto"
+     },
+     {
+      "texto": "Comete el error de usar un método inadecuado para comparar medias, al no utilizar pruebas post hoc después del ANOVA.",
+      "justificacion": "Esta es una interpretación parcialmente correcta, pero no describe directamente el error metodológico principal, que es la sobregeneralización.",
+      "error_que_representa": "sobregeneralizar"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El ANOVA rechaza la hipótesis nula, lo que indica que no todas las medias son iguales, pero no especifica cuáles.",
+     "Afirmar que todas las medias son iguales es una interpretación errónea que ignora el resultado del ANOVA y sobregeneraliza la conclusión."
+    ],
+    "nivel_pedido": "critico",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La opción 0 es correcta porque el estudiante comete el error de sobregeneralizar al asumir que todas las medias son iguales (la hipótesis nula) sin realizar pruebas post hoc, que son necesarias para identificar cuáles segmentos difieren. Aunque el ANOVA rechaza H0, el estudiante ignora que la prueba no especifica qué pares son diferentes, lo que es un error metodológico."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La opción 1 es incorrecta porque el ANOVA rechazó H0 (p < 0.05), lo que indica que no todas las medias son iguales. El estudiante no confunde no rechazar H0 con aceptarla, ya que la conclusión de su error contradice directamente el resultado del ANOVA."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La opción 2 es incorrecta porque la homogeneidad de varianzas fue confirmada por el test de Levene (p = 0.912 > 0.05). El error del estudiante no se relaciona con la variabilidad entre segmentos, sino con la interpretación incorrecta del ANOVA."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La opción 3 es incorrecta porque el ANOVA es adecuado para comparar medias de múltiples grupos, pero el error del estudiante no radica en el uso del método, sino en la conclusión errónea de que todas las medias son iguales sin seguir con pruebas post hoc."
+      }
+     ],
+     "nivel_real": "reflexivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 125.6,
+     "tokens": 3420
+    }
+   },
+   {
+    "nivel": "receptivo",
+    "ra": "RA3",
+    "foco": "Receptivo",
+    "contexto": "En la evaluación del tráfico de red de la Cooperativa de ahorro ficticia 'Coop. Andina', se calculó que el intervalo de confianza del 95% para la media del Segmento C (servidores web) es [133.8; 145.8]. Este intervalo no contiene la media del Segmento A (oficinas), que es 117.8.",
+    "pregunta": "¿Qué significa que el intervalo de confianza del Segmento C no incluya la media del Segmento A?",
+    "opciones": [
+     {
+      "texto": "Que existe evidencia estadística suficiente para rechazar la hipótesis nula de que las medias son iguales.",
+      "justificacion": "Esta opción es correcta porque el intervalo de confianza no contiene la media del otro grupo, lo que sugiere que las medias son diferentes.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Que el Segmento C tiene una varianza significativamente mayor que el Segmento A.",
+      "justificacion": "Este es un error conceptual, ya que el intervalo de confianza no mide varianza, sino la posible ubicación de la media.",
+      "error_que_representa": "confundir intervalo de confianza con varianza"
+     },
+     {
+      "texto": "Que el Segmento C está siempre por encima del Segmento A en todas las mediciones.",
+      "justificacion": "Este es un error de interpretación, ya que el intervalo de confianza indica una estimación de la media, no la posición absoluta de todos los datos.",
+      "error_que_representa": "sobregeneralizar resultados estadísticos"
+     },
+     {
+      "texto": "Que el Segmento C es más seguro que el Segmento A debido a su menor desviación estándar.",
+      "justificacion": "Este es un error de interpretación, ya que la desviación estándar no se relaciona directamente con la inclusión o exclusión de la media en un intervalo de confianza.",
+      "error_que_representa": "confundir desviación estándar con intervalo de confianza"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El intervalo de confianza del Segmento C no incluye la media del Segmento A, lo que sugiere que las medias son diferentes.",
+     "Esto implica que hay evidencia estadística para rechazar la hipótesis nula de igualdad de medias entre los dos segmentos."
+    ],
+    "nivel_pedido": "receptivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "El intervalo de confianza del 95% del Segmento C no contiene la media del Segmento A, lo que indica que existe evidencia estadística suficiente para rechazar la hipótesis nula de que las medias son iguales. Esto se debe a que el valor de la media del Segmento A (117.8) está fuera del intervalo de confianza de C ([133.8; 145.8]), lo que sugiere una diferencia estadísticamente significativa entre ambas medias."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La homogeneidad de varianzas se asume debido a que el p-valor de Levene (0.912) es mayor que 0.05. Por lo tanto, no hay evidencia de que las varianzas sean significativamente diferentes entre los segmentos, lo que invalida esta opción."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "Un intervalo de confianza no implica que todos los valores individuales estén por encima o por debajo de una media. Solo indica que la media poblacional del Segmento C no es igual a la del Segmento A. Esta opción interpreta incorrectamente el concepto de intervalo de confianza."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La seguridad no se relaciona directamente con la desviación estándar. La desviación estándar de C (16.1) es ligeramente menor que la de A (16.9), pero esto no justifica una conclusión sobre seguridad. La pregunta se enfoca en la diferencia de medias, no en la variabilidad."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 44.5,
+     "tokens": 1210
+    }
+   },
+   {
+    "nivel": "resolutivo",
+    "ra": "RA3",
+    "foco": "Resolutivo",
+    "contexto": "Se realizó una prueba t para comparar las medias del Segmento A (oficinas) y el Segmento B (cajeros), obteniendo un valor p de 0.192. El nivel de significancia α utilizado es 0.05.",
+    "pregunta": "¿Qué decisión se debe tomar sobre la hipótesis nula de la comparación entre los Segmentos A y B según el valor p obtenido?",
+    "opciones": [
+     {
+      "texto": "Rechazar la hipótesis nula, ya que el valor p es menor que 0.05.",
+      "justificacion": "Esta opción es incorrecta, ya que el valor p es mayor que 0.05, lo que no proporciona evidencia suficiente para rechazar la hipótesis nula.",
+      "error_que_representa": "tomar decisión errónea basada en valor p"
+     },
+     {
+      "texto": "Aceptar la hipótesis nula, ya que el valor p es mayor que 0.05.",
+      "justificacion": "Esta opción es correcta, ya que el valor p no alcanza el nivel de significancia establecido, por lo que no se rechaza la hipótesis nula.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "No se puede tomar ninguna decisión, ya que el valor p es muy cercano a 0.05.",
+      "justificacion": "Este es un error conceptual, ya que el valor p no se considera cercano a 0.05, sino que es claramente mayor.",
+      "error_que_representa": "ignorar criterios de significancia"
+     },
+     {
+      "texto": "Rechazar la hipótesis nula, ya que el valor p es mayor que 0.05.",
+      "justificacion": "Esta opción es incorrecta, ya que rechazar la hipótesis nula requiere que el valor p sea menor que 0.05.",
+      "error_que_representa": "confundir rechazo con aceptación de la hipótesis nula"
+     }
+    ],
+    "correcta": 1,
+    "razonamiento": [
+     "El valor p obtenido es 0.192, que es mayor que el nivel de significancia α = 0.05.",
+     "Por lo tanto, no hay evidencia suficiente para rechazar la hipótesis nula de que las medias son iguales."
+    ],
+    "nivel_pedido": "resolutivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": false,
+       "motivo": "El valor p (0.192) es mayor que 0.05, por lo que no se rechaza la hipótesis nula. La opción afirma lo contrario, lo que es incorrecto."
+      },
+      {
+       "opcion": 1,
+       "correcta": true,
+       "motivo": "El valor p (0.192) es mayor que 0.05, por lo que no hay evidencia suficiente para rechazar la hipótesis nula. Aunque la redacción 'aceptar' no es estrictamente técnica, es la opción más cercana a la correcta en el contexto del enunciado."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "El valor p (0.192) no es cercano a 0.05; es significativamente mayor, por lo que la opción es incorrecta."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "El valor p (0.192) es mayor que 0.05, por lo que no se rechaza la hipótesis nula. La opción afirma lo contrario, lo que es incorrecto."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      1
+     ],
+     "segundos": 40.1,
+     "tokens": 1091
+    }
+   },
+   {
+    "nivel": "reflexivo",
+    "ra": "RA3",
+    "foco": "Reflexivo",
+    "contexto": "Los resultados de los tests de normalidad (Shapiro-Wilk) indican que los datos de los tres segmentos de tráfico de red cumplen con la suposición de normalidad.",
+    "pregunta": "¿Qué se puede concluir sobre la variabilidad de los datos si los p de Shapiro-Wilk son mayores que 0,05?",
+    "opciones": [
+     {
+      "texto": "Los datos muestran una alta variabilidad, lo que sugiere que no se puede aplicar ninguna prueba estadística.",
+      "justificacion": "Este es un error conceptual, ya que los p > 0,05 indican normalidad, no variabilidad elevada.",
+      "error_que_representa": "confusión entre normalidad y variabilidad"
+     },
+     {
+      "texto": "Los datos siguen una distribución normal, por lo que se pueden aplicar pruebas paramétricas con mayor confiabilidad.",
+      "justificacion": "Esta opción es correcta, ya que los p > 0,05 indican que los datos cumplen con la suposición de normalidad.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "La variabilidad es menor en los segmentos con mayor desviación estándar, lo que indica una distribución sesgada.",
+      "justificacion": "Este es un error de interpretación, ya que los p > 0,05 no reflejan la variabilidad, sino la normalidad.",
+      "error_que_representa": "confusión entre desviación estándar y normalidad"
+     },
+     {
+      "texto": "Los datos presentan una distribución uniforme, lo que invalida cualquier análisis estadístico.",
+      "justificacion": "Este es un error conceptual, ya que los p > 0,05 no indican distribución uniforme, sino normalidad.",
+      "error_que_representa": "confusión entre distribuciones estadísticas"
+     }
+    ],
+    "correcta": 1,
+    "razonamiento": [
+     "El test de Shapiro-Wilk se usa para evaluar la normalidad de los datos.",
+     "Un p > 0,05 indica que no se rechaza la hipótesis nula de normalidad, por lo que los datos son considerados normalmente distribuidos."
+    ],
+    "nivel_pedido": "reflexivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": false,
+       "motivo": "Los p de Shapiro-Wilk > 0,05 indican normalidad, no variabilidad. La alta variabilidad se refleja en desviación estándar, no en los resultados del test de normalidad. La opción confunde conceptos estadísticos clave."
+      },
+      {
+       "opcion": 1,
+       "correcta": true,
+       "motivo": "Los p > 0,05 en Shapiro-Wilk implican normalidad de los datos. Esto permite aplicar pruebas paramétricas (como ANOVA o t-test) con mayor confiabilidad, lo que coincide con la opción."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La variabilidad (desviación estándar) no se relaciona directamente con los p de Shapiro-Wilk. Además, la opción menciona distribución sesgada, lo cual no se infiere de los resultados del test de normalidad."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "Los p > 0,05 en Shapiro-Wilk no indican distribución uniforme. La opción confunde la normalidad con otras distribuciones y afirma que el análisis es inválido, lo cual no es correcto."
+      }
+     ],
+     "nivel_real": "receptivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      1
+     ],
+     "segundos": 29.6,
+     "tokens": 787
+    }
+   },
+   {
+    "nivel": "critico",
+    "ra": "RA3",
+    "foco": "Crítico",
+    "contexto": "Un estudiante interpreta el valor p del ANOVA como evidencia de que todos los segmentos son diferentes entre sí, sin realizar una prueba post hoc.",
+    "pregunta": "¿Qué error conceptual comete un estudiante que interpreta el valor p del ANOVA como evidencia de que todos los segmentos son diferentes entre sí?",
+    "opciones": [
+     {
+      "texto": "Confunde el rechazo de la hipótesis nula con la identificación de todas las diferencias entre los grupos.",
+      "justificacion": "Esta opción describe correctamente el error, ya que el ANOVA solo rechaza la igualdad general de medias, no identifica cuáles son diferentes.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Ignora el supuesto de homocedasticidad al interpretar los resultados del ANOVA.",
+      "justificacion": "Este es un error de interpretación, ya que el error está relacionado con la interpretación de los resultados, no con el supuesto de homocedasticidad.",
+      "error_que_representa": "confusión entre supuestos y conclusión"
+     },
+     {
+      "texto": "Sobregeneraliza la conclusión al asumir que todas las medias son diferentes sin evidencia directa.",
+      "justificacion": "Este es un error conceptual, pero no es el más preciso, ya que el error principal está en la interpretación del p-value del ANOVA.",
+      "error_que_representa": "sobregeneralización de resultados"
+     },
+     {
+      "texto": "Acepta la hipótesis nula como verdadera al no encontrar diferencias significativas entre los grupos.",
+      "justificacion": "Este es un error de interpretación, ya que el estudiante no está aceptando la hipótesis nula, sino malinterpretando el resultado.",
+      "error_que_representa": "confusión entre rechazo y aceptación de H0"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El ANOVA permite rechazar la hipótesis nula de que todas las medias son iguales.",
+     "Sin embargo, no identifica cuáles pares de medias son diferentes, lo que requiere una prueba post hoc."
+    ],
+    "nivel_pedido": "critico",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La opción 0 es correcta porque el estudiante confunde el rechazo de la hipótesis nula (que solo indica que al menos un grupo difiere) con la identificación de todas las diferencias entre grupos, lo cual es un error conceptual."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La opción 1 es incorrecta porque el supuesto de homocedasticidad no fue ignorado; el test de Levene mostró p=0.912 > 0.05, confirmando homogeneidad de varianzas."
+      },
+      {
+       "opcion": 2,
+       "correcta": true,
+       "motivo": "La opción 2 es correcta porque el estudiante sobregeneraliza la conclusión al asumir que todas las medias son diferentes sin evidencia directa (como pruebas post hoc)."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La opción 3 es incorrecta porque el estudiante rechazó la hipótesis nula (p=1.5e-06 < 0.05), no la aceptó."
+      }
+     ],
+     "nivel_real": "reflexivo",
+     "valido": false,
+     "opciones_verdaderas": [
+      0,
+      2
+     ],
+     "segundos": 81.7,
+     "tokens": 2213
+    }
+   },
+   {
+    "nivel": "receptivo",
+    "ra": "RA3",
+    "foco": "Receptivo",
+    "contexto": "En la evaluación del tráfico de red de la Cooperativa de ahorro ficticia 'Coop. Andina', se realizaron comparaciones entre los Segmentos A y B utilizando métodos estadísticos.",
+    "pregunta": "¿Qué tipo de prueba estadística se utilizó para comparar las medias de los Segmentos A y B?",
+    "opciones": [
+     {
+      "texto": "Prueba t de Student para muestras independientes",
+      "justificacion": "La prueba t de Student fue utilizada para comparar las medias de los Segmentos A y B, ya que se compararon dos grupos independientes.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Prueba chi-cuadrado para independencia",
+      "justificacion": "Esta prueba se utiliza para datos categóricos y no es aplicable al comparar medias continuas de dos grupos.",
+      "error_que_representa": "uso inadecuado de la prueba"
+     },
+     {
+      "texto": "Prueba ANOVA de un factor",
+      "justificacion": "El ANOVA se utilizó para comparar más de dos grupos, no para dos grupos específicos como A y B.",
+      "error_que_representa": "confusión entre pruebas para múltiples comparaciones"
+     },
+     {
+      "texto": "Prueba de Wilcoxon para muestras pareadas",
+      "justificacion": "Esta prueba se usa para datos pareados o relacionados, no para comparar dos grupos independientes.",
+      "error_que_representa": "uso inadecuado de la prueba"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El contexto menciona una comparación entre dos grupos (A y B) con varianzas iguales, lo que sugiere una prueba t para muestras independientes.",
+     "La prueba t es la más adecuada para comparar medias de dos grupos cuando se cumplen las condiciones de normalidad y homocedasticidad."
+    ],
+    "nivel_pedido": "receptivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La prueba t de Student para muestras independientes se menciona explícitamente en los resultados como 'Prueba t A vs B (varianzas iguales)', con estadístico t(58)=-1.32 y p=0.192. Esto coincide con la comparación de dos grupos independientes (Segmento A vs B) bajo la suposición de varianzas iguales, que se justifica por el resultado de Levene (p=0.912 > 0.05)."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La prueba chi-cuadrado se utiliza para datos categóricos y pruebas de independencia entre variables, lo cual no se aplica al comparar medias de variables continuas (tráfico de red en Mbps)."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "El ANOVA de un factor se utilizó para comparar tres segmentos (A, B, C), no para comparar directamente A y B. La pregunta específica pide la prueba para A vs B, por lo que el ANOVA no es la prueba utilizada para esa comparación directa."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La prueba de Wilcoxon es para muestras pareadas o dependientes, mientras que los segmentos A y B son independientes. Además, los resultados muestran que se usó una prueba t (con varianzas iguales) en lugar de una prueba no paramétrica."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 35.2,
+     "tokens": 961
+    }
+   },
+   {
+    "nivel": "resolutivo",
+    "ra": "RA3",
+    "foco": "Resolutivo",
+    "contexto": "Se compararon los Segmentos A y B utilizando una prueba t de Student, obteniendo un valor p de 0.192.",
+    "pregunta": "¿Qué decisión se debe tomar sobre la hipótesis nula de la comparación entre los Segmentos A y B según el valor p obtenido?",
+    "opciones": [
+     {
+      "texto": "Rechazar la hipótesis nula, ya que el valor p es menor que 0.05",
+      "justificacion": "El valor p es mayor que 0.05, por lo que no hay evidencia suficiente para rechazar la hipótesis nula.",
+      "error_que_representa": "interpretación errónea del valor p"
+     },
+     {
+      "texto": "Aceptar la hipótesis nula, ya que el valor p es mayor que 0.05",
+      "justificacion": "El valor p es mayor que 0.05, lo que indica que no se tiene evidencia suficiente para rechazar la hipótesis nula.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Rechazar la hipótesis nula, ya que el valor p es mayor que 0.05",
+      "justificacion": "El valor p mayor que 0.05 indica que no se puede rechazar la hipótesis nula.",
+      "error_que_representa": "confusión entre rechazo y no rechazo"
+     },
+     {
+      "texto": "Aceptar la hipótesis nula, ya que el valor p es menor que 0.05",
+      "justificacion": "El valor p es mayor que 0.05, por lo que no se puede aceptar la hipótesis nula con base en este valor.",
+      "error_que_representa": "confusión entre aceptación y no rechazo"
+     }
+    ],
+    "correcta": 1,
+    "razonamiento": [
+     "El valor p obtenido es 0.192, que es mayor que el nivel de significancia común de 0.05.",
+     "Por lo tanto, no hay evidencia estadística suficiente para rechazar la hipótesis nula, lo que implica que no se puede concluir que las medias de los Segmentos A y B sean diferentes."
+    ],
+    "nivel_pedido": "resolutivo",
+    "fallos": [
+     "casi duplicado del ítem 6"
+    ],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": false,
+       "motivo": "Incorrecto. El valor p=0.192 es mayor que 0.05, por lo que no se rechaza la hipótesis nula. La opción afirma lo contrario."
+      },
+      {
+       "opcion": 1,
+       "correcta": true,
+       "motivo": "Correcto. El valor p=0.192 > 0.05, por lo que se acepta la hipótesis nula (no hay evidencia suficiente para rechazarla)."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "Incorrecto. El valor p=0.192 es mayor que 0.05, por lo que no se rechaza la hipótesis nula. La opción afirma lo contrario."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "Incorrecto. El valor p=0.192 es mayor que 0.05, por lo que no se rechaza la hipótesis nula. La opción confunde la condición de rechazo."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      1
+     ],
+     "segundos": 31.6,
+     "tokens": 861
+    }
+   },
+   {
+    "nivel": "resolutivo",
+    "ra": "RA3",
+    "foco": "Resolutivo: ¿Qué se puede afirmar sobre la media del Segmento C en comparación con la media del Segmento A?",
+    "contexto": "Se dispone de los siguientes resultados calculados: la media del Segmento C es 139.8 Mbps, mientras que la del Segmento A es 117.8 Mbps. El intervalo de confianza del 95% para la media del Segmento C es [133.8; 145.8].",
+    "pregunta": "¿Qué se puede afirmar sobre la media del Segmento C en comparación con la media del Segmento A?",
+    "opciones": [
+     {
+      "texto": "La media del Segmento C es significativamente mayor que la del Segmento A.",
+      "justificacion": "El intervalo de confianza del Segmento C no incluye la media del Segmento A, lo que indica que hay una diferencia estadísticamente significativa.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "No hay evidencia suficiente para afirmar que las medias sean diferentes.",
+      "justificacion": "Este error surge de no interpretar correctamente el intervalo de confianza, que muestra una diferencia clara.",
+      "error_que_representa": "no interpretar el intervalo de confianza como indicador de diferencia"
+     },
+     {
+      "texto": "Las medias son iguales debido a que el valor p del ANOVA es menor que 0.05.",
+      "justificacion": "El valor p del ANOVA indica que hay diferencias entre al menos dos grupos, pero no entre los específicos mencionados.",
+      "error_que_representa": "confundir rechazo de H0 en ANOVA con diferencias específicas"
+     },
+     {
+      "texto": "La media del Segmento C está dentro del intervalo de confianza del Segmento A.",
+      "justificacion": "Este error se debe a una mala interpretación del intervalo de confianza, ya que el intervalo del Segmento C no incluye la media del Segmento A.",
+      "error_que_representa": "malinterpretar el intervalo de confianza como rango de valores para otro grupo"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El intervalo de confianza del Segmento C es [133.8; 145.8], lo que significa que estamos seguros al 95% de que la verdadera media está dentro de ese rango.",
+     "La media del Segmento A es 117.8 Mbps, que está por debajo del límite inferior del intervalo de confianza del Segmento C, por lo que no puede estar dentro de ese rango."
+    ],
+    "nivel_pedido": "resolutivo",
+    "fallos": [
+     "la pregunta contiene una opción"
+    ],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "El intervalo de confianza del 95% del Segmento C ([133.8; 145.8]) no contiene la media del Segmento A (117.8), lo que indica que la diferencia entre las medias es estadísticamente significativa. Esto se debe a que el valor de la media de C (139.8) está claramente por encima del intervalo de confianza de A, lo que justifica que la media de C sea significativamente mayor que la de A."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La ausencia de evidencia suficiente se refiere a la falta de comparación directa entre C y A. Sin embargo, el intervalo de confianza de C no contiene la media de A, lo que sí proporciona evidencia de diferencia significativa. Por lo tanto, esta opción es incorrecta."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "El valor p del ANOVA (1.5e-06) indica que al menos un grupo difiere, pero no especifica qué grupos. Para comparar C y A, se requiere una prueba post hoc o un intervalo de confianza directo. Esta opción confunde el resultado del ANOVA con una comparación específica entre C y A."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "No se proporciona el intervalo de confianza del Segmento A, por lo que no es posible afirmar si la media de C está dentro de ese intervalo. Esta opción es incorrecta debido a la falta de información necesaria para su evaluación."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 96.6,
+     "tokens": 2623
+    }
+   },
+   {
+    "nivel": "reflexivo",
+    "ra": "RA3",
+    "foco": "Reflexivo: ¿Qué implicación práctica tiene que el intervalo de confianza del Segmento C no incluya la media del Segmento A en el contexto del monitoreo de seguridad digital?",
+    "contexto": "En el contexto del monitoreo de seguridad digital, los segmentos de red representan diferentes áreas de la infraestructura tecnológica de una organización ficticia llamada 'Coop. Andina'. El Segmento C corresponde a servidores web, mientras que el Segmento A corresponde a oficinas.",
+    "pregunta": "¿Qué implicación práctica tiene que el intervalo de confianza del Segmento C no incluya la media del Segmento A en el contexto del monitoreo de seguridad digital?",
+    "opciones": [
+     {
+      "texto": "Indica que el tráfico en los servidores web es significativamente más alto que en las oficinas, lo que podría sugerir un uso inusual o potencial amenaza.",
+      "justificacion": "Esta opción refleja correctamente la interpretación del intervalo de confianza y su relevancia en la detección de anomalías.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Implica que no hay diferencias significativas entre los segmentos, por lo que no se requiere acción.",
+      "justificacion": "Este error surge de no interpretar adecuadamente el intervalo de confianza como indicador de diferencia.",
+      "error_que_representa": "no interpretar el intervalo de confianza como indicador de diferencia"
+     },
+     {
+      "texto": "Significa que los servidores web están funcionando de manera normal y no hay riesgo de seguridad.",
+      "justificacion": "Este error se debe a una interpretación errónea del intervalo de confianza, que no indica normalidad, sino diferencia.",
+      "error_que_representa": "confundir intervalo de confianza con indicador de normalidad"
+     },
+     {
+      "texto": "Indica que el tráfico en los servidores web es menor que el de las oficinas, lo que sugiere un uso inadecuado de recursos.",
+      "justificacion": "Este error se debe a una mala interpretación del intervalo de confianza, que no compara directamente los valores de los segmentos.",
+      "error_que_representa": "malinterpretar el intervalo de confianza como comparación directa de valores"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El intervalo de confianza del Segmento C no incluye la media del Segmento A, lo que sugiere que existe una diferencia estadísticamente significativa entre ambos.",
+     "En el contexto del monitoreo de seguridad digital, esto podría indicar un comportamiento anómalo en el Segmento C, lo que requiere una revisión adicional para descartar un posible ataque o fallo en el sistema."
+    ],
+    "nivel_pedido": "reflexivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La opción 0 es correcta porque el intervalo de confianza del Segmento C no incluye la media del Segmento A, lo que indica una diferencia estadísticamente significativa. Esto sugiere que el tráfico en los servidores web es significativamente más alto que en las oficinas, lo cual podría indicar un uso inusual o una amenaza potencial en el monitoreo de seguridad digital."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La opción 1 es incorrecta porque el intervalo de confianza del Segmento C no incluye la media del Segmento A, lo que implica una diferencia significativa. Por lo tanto, no se puede afirmar que no haya diferencias entre los segmentos."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La opción 2 es incorrecta porque el intervalo de confianza del Segmento C no incluye la media del Segmento A, lo que indica una diferencia significativa. Esto no implica necesariamente que los servidores web estén funcionando de manera normal, ya que la diferencia podría ser relevante para la seguridad."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La opción 3 es incorrecta porque el intervalo de confianza del Segmento C está por encima de la media del Segmento A (117.8 Mbps), lo que indica que el tráfico en los servidores web es significativamente más alto, no menor."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 47.3,
+     "tokens": 1280
+    }
+   }
+  ],
+  "elegidos": [
+   0,
+   4,
+   1,
+   5,
+   9,
+   2,
+   6,
+   3
+  ],
+  "ficha": {
+   "contenido": {
+    "titulo": "Ficha de Estudio - Clase M3-S4: Hipótesis Estadísticas y Análisis de Varianza (ANOVA)",
+    "objetivo": "Aplicar pruebas de hipótesis y ANOVA para diferenciar estadísticamente patrones de tráfico normal de posibles ataques en redes de una organización ficticia.",
+    "ideas_clave": [
+     "Pruebas de hipótesis permiten evaluar si hay diferencias significativas entre grupos.",
+     "El ANOVA compara medias de más de dos grupos para detectar variabilidad entre ellos.",
+     "La normalidad y homogeneidad de varianzas son requisitos previos para aplicar pruebas paramétricas.",
+     "Los intervalos de confianza ayudan a estimar rangos poblacionales y comparar medias."
+    ],
+    "ejemplo_resuelto": {
+     "situacion": "En la Cooperativa de ahorro ficticia 'Coop. Andina', se registraron 30 mediciones de tráfico de red por segmento (A, B y C) durante un mes. Se desea comparar si existen diferencias significativas en el tráfico promedio entre los segmentos.",
+     "pasos": [
+      "1. Verificar normalidad de los datos usando Shapiro-Wilk: p = 0.053 (A), 0.319 (B), 0.496 (C) → Todos superan 0.05, por lo que se asume normalidad.",
+      "2. Verificar homogeneidad de varianzas con Levene: p = 0.912 > 0.05 → Varianzas son homogéneas.",
+      "3. Realizar ANOVA de un factor: F(2,87) = 15.71, p = 1.5e-06 < 0.05 → Se rechaza H0 de medias iguales. Hay diferencias significativas entre al menos dos segmentos.",
+      "4. Comparar medias individuales: t-test A vs B (varianzas iguales) → t(58) = -1.32, p = 0.192 > 0.05 → No hay evidencia de diferencia entre A y B.",
+      "5. Calcular intervalo de confianza del 95% para el segmento C: [133.8; 145.8] → No contiene la media de A (117.8), lo que sugiere que C es significativamente diferente de A."
+     ],
+     "conclusion": "El ANOVA muestra que hay diferencias significativas entre los segmentos, pero solo la comparación entre C y A es estadísticamente significativa. Los intervalos de confianza ayudan a confirmar estas diferencias."
+    },
+    "errores_frecuentes": [
+     "No verificar normalidad antes de usar pruebas paramétricas.",
+     "Ignorar el resultado de Levene y asumir varianzas iguales sin evidencia.",
+     "Interpretar el ANOVA como prueba definitiva para comparar todos los pares de grupos sin usar post-hoc.",
+     "Confundir el rechazo de H0 con la certeza de que existe una diferencia real."
+    ],
+    "relacion_con_el_ra": "Esta clase refuerza el RA3: contrastar hipótesis y estimar parámetros poblacionales para validar el comportamiento de los datos y fundamentar decisiones algorítmicas. La aplicación de pruebas T y ANOVA permite validar si los patrones de tráfico son significativamente diferentes, lo cual es clave para detectar anomalías en sistemas de seguridad digital.",
+    "preguntas_autocomprobacion": [
+     "¿Qué indica que los datos cumplen con el supuesto de normalidad en este caso? ¿Por qué es importante?",
+     "¿Por qué se rechaza la hipótesis nula en el ANOVA pero no se encuentra diferencia entre los segmentos A y B?",
+     "¿Qué significa que el intervalo de confianza del 95% del segmento C no contiene la media del segmento A?"
+    ]
+   },
+   "segundos": 35.1
+  }
+ },
+ {
+  "clase": "tic_M3S1",
+  "version": 3,
+  "calculado": "",
+  "generados": [
+   {
+    "nivel": "receptivo",
+    "ra": "RA2",
+    "foco": "Receptivo",
+    "contexto": "En el ámbito de la ciberseguridad, la confidencialidad se refiere a la protección de la información contra accesos no autorizados.",
+    "pregunta": "¿Qué significa la confidencialidad en el contexto de la ciberseguridad de sistemas de software? ¿Cómo se relaciona con la protección de datos?",
+    "opciones": [
+     {
+      "texto": "La confidencialidad se refiere a la capacidad de un sistema para garantizar la disponibilidad de los datos en todo momento.",
+      "justificacion": "Esta opción confunde confidencialidad con disponibilidad, un principio de seguridad diferente.",
+      "error_que_representa": "confusión entre principios de seguridad"
+     },
+     {
+      "texto": "La confidencialidad se refiere a la protección de la información sensible contra accesos no autorizados y su divulgación no deseada.",
+      "justificacion": "Esta opción describe correctamente la confidencialidad y su relación con la protección de datos.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "La confidencialidad se refiere a la capacidad de un sistema para mantener la integridad de los datos durante su transmisión.",
+      "justificacion": "Esta opción confunde confidencialidad con integridad, otro principio de seguridad.",
+      "error_que_representa": "confusión entre principios de seguridad"
+     },
+     {
+      "texto": "La confidencialidad se refiere a la protección de los datos mediante mecanismos de cifrado, pero no tiene relación con la protección de datos.",
+      "justificacion": "Esta opción niega la relación entre confidencialidad y protección de datos, lo cual es incorrecto.",
+      "error_que_representa": "desconocimiento del concepto"
+     }
+    ],
+    "correcta": 1,
+    "razonamiento": [
+     "El concepto de confidencialidad se basa en la protección de la información contra accesos no autorizados, lo cual está directamente relacionado con la protección de datos.",
+     "La confidencialidad es uno de los tres pilares fundamentales de la seguridad de la información, junto con la integridad y la disponibilidad."
+    ],
+    "nivel_pedido": "receptivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": false,
+       "motivo": "La opción confunde la confidencialidad con la disponibilidad. La disponibilidad se refiere a la accesibilidad de los datos, mientras que la confidencialidad se enfoca en su protección contra accesos no autorizados."
+      },
+      {
+       "opcion": 1,
+       "correcta": true,
+       "motivo": "La opción define correctamente la confidencialidad como la protección de información sensible contra accesos no autorizados y su divulgación no deseada, alineándose con el concepto técnico de ciberseguridad."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La opción describe la integridad de los datos (protección contra modificaciones no autorizadas) en lugar de la confidencialidad. La integridad es un componente diferente del triángulo CIA."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La opción afirma que la confidencialidad no tiene relación con la protección de datos, lo cual es incorrecto. Los mecanismos de cifrado (como parte de la confidencialidad) son esenciales para proteger datos sensibles."
+      }
+     ],
+     "nivel_real": "reflexivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      1
+     ],
+     "segundos": 24.9,
+     "tokens": 677
+    }
+   },
+   {
+    "nivel": "resolutivo",
+    "ra": "RA3",
+    "foco": "Resolutivo",
+    "contexto": "Se ha detectado un incidente de seguridad en una organización ficticia llamada 'Hospital San Rafael', donde se han expuesto datos médicos de pacientes debido a una brecha de seguridad en el sistema de gestión de historiales clínicos.",
+    "pregunta": "Dado un incidente de seguridad digital, identifica los activos afectados, las amenazas posibles y las vulnerabilidades que podrían haber sido explotadas.",
+    "opciones": [
+     {
+      "texto": "Los activos afectados son los datos médicos de los pacientes; las amenazas incluyen el robo de información y la exposición no autorizada; las vulnerabilidades son la falta de cifrado en la transmisión de datos.",
+      "justificacion": "Esta opción identifica correctamente los activos, amenazas y vulnerabilidades del incidente descrito.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Los activos afectados son los servidores del hospital; las amenazas incluyen el malware y el phishing; las vulnerabilidades son la falta de actualizaciones de software.",
+      "justificacion": "Esta opción describe correctamente los activos y amenazas, pero ignora las vulnerabilidades específicas del incidente.",
+      "error_que_representa": "ignorar vulnerabilidades específicas"
+     },
+     {
+      "texto": "Los activos afectados son los usuarios del sistema; las amenazas incluyen la pérdida de datos y la corrupción de archivos; las vulnerabilidades son la falta de concienciación de seguridad.",
+      "justificacion": "Esta opción confunde los activos con los usuarios y no identifica las vulnerabilidades relevantes al incidente.",
+      "error_que_representa": "confusión entre activos y usuarios"
+     },
+     {
+      "texto": "Los activos afectados son los dispositivos de almacenamiento; las amenazas incluyen el acceso remoto no autorizado y la pérdida física de dispositivos; las vulnerabilidades son la falta de protocolos de respaldo.",
+      "justificacion": "Esta opción describe correctamente algunos activos y amenazas, pero no identifica las vulnerabilidades específicas del incidente.",
+      "error_que_representa": "ignorar vulnerabilidades específicas"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "Para resolver este ítem, es necesario identificar los activos que se han visto comprometidos en el incidente, como los datos médicos de los pacientes.",
+     "Las amenazas posibles incluyen la exposición no autorizada de información, lo cual puede ocurrir si no se implementan medidas adecuadas de protección.",
+     "Las vulnerabilidades pueden ser la falta de cifrado en la transmisión de datos, lo cual facilita el acceso no autorizado a la información sensible."
+    ],
+    "nivel_pedido": "resolutivo",
+    "fallos": [
+     "la pregunta no termina en '?'"
+    ],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "Los datos médicos de los pacientes son activos críticos en un hospital. Las amenazas mencionadas (robo de información y exposición no autorizada) son directamente vinculadas a la exposición de datos sensibles. La vulnerabilidad de falta de cifrado en la transmisión de datos es técnicamente exacta, ya que la falta de encriptación facilita la interceptación de datos en tránsito, lo cual es común en incidentes de exposición de información médica."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "Los servidores son activos relevantes, pero la exposición de datos médicos no se reduce únicamente a un ataque contra servidores. Las amenazas mencionadas (malware y phishing) son posibles, pero la vulnerabilidad de 'falta de actualizaciones de software' no se vincula directamente al incidente descrito, que se centró en la exposición de datos, no en un ataque contra servidores."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "Los usuarios no son activos en sí mismos, sino personas que interactúan con los sistemas. Las amenazas mencionadas (pérdida de datos y corrupción de archivos) no son las más relevantes en un incidente de exposición de datos. La vulnerabilidad de 'falta de concienciación de seguridad' es un factor secundario, ya que el incidente se enfocó en una brecha técnica (no humana)."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "Los dispositivos de almacenamiento son activos, pero el incidente no menciona pérdida física de dispositivos. Las amenazas (acceso remoto no autorizado y pérdida física) son parciales, ya que el incidente se centró en exposición de datos, no en la pérdida física. La vulnerabilidad de 'falta de protocolos de respaldo' no se relaciona directamente con la exposición de datos, que implica confidencialidad, no disponibilidad."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 39.0,
+     "tokens": 1066
+    }
+   },
+   {
+    "nivel": "reflexivo",
+    "ra": "RA3",
+    "foco": "Explica cómo una vulnerabilidad en el sistema de autenticación puede afectar la integridad de los datos almacenados en un servidor.",
+    "contexto": "Una organización ficticia llamada 'InnovaTech' utiliza un sistema de autenticación basado en contraseñas simples para gestionar sus servidores de almacenamiento de datos sensibles.",
+    "pregunta": "¿Cómo una vulnerabilidad en el sistema de autenticación puede afectar la integridad de los datos almacenados en un servidor?",
+    "opciones": [
+     {
+      "texto": "La vulnerabilidad permite el acceso no autorizado a los datos, lo que podría modificarlos sin dejar registro.",
+      "justificacion": "Esta opción describe correctamente cómo un acceso no autorizado puede alterar la integridad de los datos.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "La vulnerabilidad no tiene impacto directo en la integridad, solo en la confidencialidad.",
+      "justificacion": "Esta opción confunde integridad con confidencialidad, ignorando que la integridad se refiere a la corrección y autenticidad de los datos.",
+      "error_que_representa": "confundir integridad con confidencialidad"
+     },
+     {
+      "texto": "La vulnerabilidad afecta solo la disponibilidad, ya que se bloquea el acceso al servidor.",
+      "justificacion": "Esta opción equivoca la integridad con la disponibilidad, ignorando que la integridad se refiere a la corrección de los datos.",
+      "error_que_representa": "confundir integridad con disponibilidad"
+     },
+     {
+      "texto": "La vulnerabilidad aumenta el riesgo de pérdida de datos, pero no afecta su integridad.",
+      "justificacion": "Esta opción ignora que la pérdida de datos puede implicar una alteración de su integridad, especialmente si se modifican o corrompen.",
+      "error_que_representa": "ignorar el impacto en la integridad"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "Primero, se debe reconocer que la integridad se refiere a la corrección, autenticidad y no alteración de los datos.",
+     "Luego, se debe analizar cómo una falla en el sistema de autenticación puede permitir que usuarios no autorizados accedan y modifiquen los datos, comprometiendo su integridad."
+    ],
+    "nivel_pedido": "reflexivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La vulnerabilidad en la autenticación permite acceso no autorizado, lo que facilita modificaciones no autorizadas a los datos. Esto directamente afecta la integridad al alterar la exactitud o completitud de los datos almacenados."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La vulnerabilidad en la autenticación puede afectar tanto la confidencialidad (acceso no autorizado) como la integridad (modificaciones no autorizadas). La opción ignora el impacto en la integridad."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La vulnerabilidad en la autenticación no bloquea el acceso, sino que permite acceso no autorizado. Esto no afecta la disponibilidad, sino que compromete la confidencialidad e integridad."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La vulnerabilidad puede aumentar el riesgo de pérdida o alteración de datos (integridad comprometida), no solo de pérdida. La opción desestima el impacto directo en la integridad."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 27.7,
+     "tokens": 751
+    }
+   },
+   {
+    "nivel": "critico",
+    "ra": "RA3",
+    "foco": "Evalúa si la propuesta de usar contraseñas simples para usuarios internos es adecuada, considerando el riesgo de acceso no autorizado.",
+    "contexto": "Una organización ficticia llamada 'SaludFutura' propone utilizar contraseñas simples para usuarios internos en su sistema de gestión de pacientes.",
+    "pregunta": "¿Es adecuada la propuesta de usar contraseñas simples para usuarios internos, considerando el riesgo de acceso no autorizado?",
+    "opciones": [
+     {
+      "texto": "No es adecuada, ya que las contraseñas simples son fácilmente adivinables y aumentan el riesgo de acceso no autorizado.",
+      "justificacion": "Esta opción identifica correctamente el riesgo y justifica la inadecuación de las contraseñas simples.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Es adecuada, ya que los usuarios internos tienen conocimiento del sistema y pueden manejar mejor las contraseñas.",
+      "justificacion": "Esta opción sobregeneraliza la confianza en los usuarios internos, ignorando que cualquier persona puede intentar acceder no autorizado.",
+      "error_que_representa": "sobregeneralizar la confianza en usuarios internos"
+     },
+     {
+      "texto": "Es adecuada, ya que las contraseñas simples son más fáciles de recordar y reducen errores de autenticación.",
+      "justificacion": "Esta opción ignora el riesgo de seguridad, priorizando la comodidad sobre la protección de los datos.",
+      "error_que_representa": "priorizar comodidad sobre seguridad"
+     },
+     {
+      "texto": "Es adecuada, ya que las contraseñas simples son suficientes para proteger sistemas internos sin necesidad de complejidad.",
+      "justificacion": "Esta opción ignora que los sistemas internos también son objetivos para ataques internos o maliciosos, por lo que la seguridad debe ser alta.",
+      "error_que_representa": "ignorar el riesgo de ataques internos"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "Primero, se debe evaluar los riesgos de usar contraseñas simples, que son fácilmente adivinables y vulnerables a ataque de fuerza bruta.",
+     "Luego, se debe justificar que, aunque los usuarios internos puedan tener mayor confianza, esto no elimina el riesgo de acceso no autorizado, especialmente si hay malintención o errores humanos."
+    ],
+    "nivel_pedido": "critico",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La opción es correcta porque las contraseñas simples son vulnerables a ataques de fuerza bruta y diccionario, lo que incrementa significativamente el riesgo de acceso no autorizado. La seguridad no depende de la familiaridad del usuario con el sistema, sino de la complejidad de la contraseña."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "Es incorrecta porque la familiaridad del usuario con el sistema no garantiza seguridad. Las contraseñas simples siguen siendo débiles, incluso para usuarios internos, y no mitigan el riesgo de accesos no autorizados."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "Es incorrecta porque, aunque las contraseñas simples puedan ser más fáciles de recordar, la reducción de errores de autenticación no compensa el alto riesgo de seguridad. La facilidad de recordación no justifica la vulnerabilidad a ataques."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "Es incorrecta porque la supuesta 'suficiencia' de contraseñas simples para sistemas internos es un mito. Los sistemas internos también son objetivos para ciberataques, y la complejidad de las contraseñas es esencial para prevenir accesos no autorizados."
+      }
+     ],
+     "nivel_real": "reflexivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 26.9,
+     "tokens": 734
+    }
+   },
+   {
+    "nivel": "receptivo",
+    "ra": "RA2",
+    "foco": "Receptivo",
+    "contexto": "En un sistema de gestión de datos para una cooperativa agrícola, los sistemas operativos son responsables de administrar los recursos del hardware y facilitar la ejecución de programas.",
+    "pregunta": "¿Cuál es la función principal de los sistemas operativos en la seguridad de un entorno de software?",
+    "opciones": [
+     {
+      "texto": "Gestionar el acceso físico a los servidores.",
+      "justificacion": "Esta opción se refiere a aspectos físicos y no a la seguridad lógica del entorno de software.",
+      "error_que_representa": "Confusión entre seguridad física y seguridad lógica"
+     },
+     {
+      "texto": "Facilitar la ejecución segura de programas y la gestión de recursos del sistema.",
+      "justificacion": "Esta opción describe correctamente la función principal de los sistemas operativos en el entorno de software.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Proteger contra virus y malware mediante mecanismos automáticos.",
+      "justificacion": "La protección contra virus y malware es una función de antivirus y sistemas de seguridad, no exclusivamente de los sistemas operativos.",
+      "error_que_representa": "Sobrecarga de funciones del sistema operativo"
+     },
+     {
+      "texto": "Controlar el flujo de datos entre dispositivos conectados a internet.",
+      "justificacion": "El control de datos entre dispositivos conectados es una función más específica y corresponde a protocolos de red y firewalls.",
+      "error_que_representa": "Confusión entre sistemas operativos y protocolos de red"
+     }
+    ],
+    "correcta": 1,
+    "razonamiento": [
+     "El sistema operativo actúa como intermediario entre el hardware y los programas, gestionando recursos y permitiendo la ejecución segura de tareas.",
+     "La seguridad en este contexto se refiere a la protección de los recursos del sistema y la correcta ejecución de los programas, lo cual es responsabilidad directa del sistema operativo."
+    ],
+    "nivel_pedido": "receptivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": false,
+       "motivo": "La gestión del acceso físico a servidores no es una función principal de los sistemas operativos. Esta tarea corresponde a medidas de seguridad física, no al ámbito de gestión de recursos por el sistema operativo."
+      },
+      {
+       "opcion": 1,
+       "correcta": true,
+       "motivo": "La función principal de los sistemas operativos en la seguridad es facilitar la ejecución segura de programas mediante control de recursos, permisos y aislamiento de procesos, lo cual es técnicamente exacto."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La protección contra virus y malware es una función secundaria de los sistemas operativos. Esta tarea generalmente requiere software especializado como antivirus, no es una responsabilidad primaria del sistema operativo."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "Controlar el flujo de datos entre dispositivos conectados a internet no es la función principal de los sistemas operativos en seguridad. Esta actividad se enmarca en la gestión de redes, no en la seguridad de entornos de software."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      1
+     ],
+     "segundos": 31.4,
+     "tokens": 858
+    }
+   },
+   {
+    "nivel": "resolutivo",
+    "ra": "RA3",
+    "foco": "Resolutivo",
+    "contexto": "Una cooperativa de agricultura maneja datos sensibles de sus socios y utiliza un sistema de gestión de datos local. Se requiere mejorar la seguridad del sistema.",
+    "pregunta": "Propón tres controles básicos de seguridad que podrían aplicarse a un sistema de gestión de datos en una organización ficticia, como una cooperativa de agricultura.",
+    "opciones": [
+     {
+      "texto": "Implementar autenticación de dos factores para todos los usuarios.",
+      "justificacion": "Esta opción es efectiva pero puede ser excesiva para un sistema local sin necesidad de alto nivel de seguridad.",
+      "error_que_representa": "Aplicar un control innecesariamente complejo"
+     },
+     {
+      "texto": "Utilizar contraseñas fuertes y cambiarlas periódicamente.",
+      "justificacion": "Esta opción es básica y efectiva para prevenir accesos no autorizados, especialmente en sistemas locales.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Realizar copias de seguridad periódicas y almacenarlas en ubicaciones seguras.",
+      "justificacion": "Esta opción es fundamental para mitigar riesgos de pérdida de datos, pero no previene accesos no autorizados.",
+      "error_que_representa": "Priorizar controles de recuperación sobre controles preventivos"
+     },
+     {
+      "texto": "Instalar actualizaciones de seguridad regularmente en el sistema operativo.",
+      "justificacion": "Las actualizaciones son esenciales para corregir vulnerabilidades, pero no cubren todas las amenazas de seguridad.",
+      "error_que_representa": "Depender exclusivamente de actualizaciones sin otros controles"
+     }
+    ],
+    "correcta": 1,
+    "razonamiento": [
+     "Los controles básicos deben ser simples, efectivos y aplicables a un sistema local sin necesidad de infraestructura compleja.",
+     "Las contraseñas fuertes son un control básico que previene accesos no autorizados, lo cual es clave en un sistema de gestión de datos sensible."
+    ],
+    "nivel_pedido": "resolutivo",
+    "fallos": [
+     "la pregunta no termina en '?'"
+    ],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La autenticación de dos factores (2FA) es un control básico de seguridad efectivo que reduce el riesgo de acceso no autorizado, incluso si las contraseñas se comprometen."
+      },
+      {
+       "opcion": 1,
+       "correcta": true,
+       "motivo": "Las contraseñas fuertes son esenciales para prevenir accesos no autorizados, aunque el cambio periódico de contraseñas puede no ser siempre recomendado por expertos. Sin embargo, se considera un control básico en contextos de seguridad."
+      },
+      {
+       "opcion": 2,
+       "correcta": true,
+       "motivo": "Las copias de seguridad periódicas y su almacenamiento seguro son fundamentales para garantizar la recuperación de datos en caso de fallos, ataques o accidentes."
+      },
+      {
+       "opcion": 3,
+       "correcta": true,
+       "motivo": "Las actualizaciones de seguridad regulares son esenciales para corregir vulnerabilidades y mantener la integridad del sistema operativo."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": false,
+     "opciones_verdaderas": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "segundos": 43.8,
+     "tokens": 1195
+    }
+   },
+   {
+    "nivel": "reflexivo",
+    "ra": "RA2",
+    "foco": "Analiza cómo la falta de actualizaciones de software puede generar riesgos de seguridad y afectar la disponibilidad de los servicios.",
+    "contexto": "Una organización ficticia llamada 'InnovaTech' utiliza un sistema de gestión de proyectos basado en software antiguo que no ha sido actualizado durante más de cinco años. Este sistema es responsable de administrar proyectos de infraestructura en zonas rurales de Ecuador.",
+    "pregunta": "¿Cómo la falta de actualizaciones de software puede afectar la disponibilidad de los servicios en una organización como InnovaTech?",
+    "opciones": [
+     {
+      "texto": "Puede causar fallos en la interfaz gráfica del sistema, dificultando el acceso a los datos.",
+      "justificacion": "Este error no aborda directamente el impacto en la disponibilidad, sino en la usabilidad.",
+      "error_que_representa": "desvío del foco del problema"
+     },
+     {
+      "texto": "Puede exponer el sistema a vulnerabilidades conocidas, permitiendo accesos no autorizados y paradas del servicio.",
+      "justificacion": "Esta opción identifica correctamente el impacto en la disponibilidad por exposición a vulnerabilidades.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Puede mejorar la estabilidad del sistema, reduciendo errores de programación.",
+      "justificacion": "Este es un efecto contrario al planteado, refleja una comprensión errónea del impacto de no actualizar.",
+      "error_que_representa": "confusión entre beneficios y riesgos"
+     },
+     {
+      "texto": "Puede aumentar la velocidad de procesamiento, mejorando la experiencia del usuario.",
+      "justificacion": "Este efecto no está relacionado con la disponibilidad, sino con la performance.",
+      "error_que_representa": "ignorar el impacto en la disponibilidad"
+     }
+    ],
+    "correcta": 1,
+    "razonamiento": [
+     "La falta de actualizaciones deja al sistema expuesto a vulnerabilidades conocidas.",
+     "Estas vulnerabilidades pueden ser explotadas por atacantes, causando interrupciones en el servicio."
+    ],
+    "nivel_pedido": "reflexivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": false,
+       "motivo": "Aunque la falta de actualizaciones podría causar problemas de interfaz, el impacto principal en la disponibilidad de servicios está relacionado con vulnerabilidades de seguridad, no con fallos específicos en la interfaz gráfica."
+      },
+      {
+       "opcion": 1,
+       "correcta": true,
+       "motivo": "La falta de actualizaciones expone el sistema a vulnerabilidades conocidas, lo que puede permitir accesos no autorizados, ataques cibernéticos y paradas del servicio, afectando directamente la disponibilidad de los servicios."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La falta de actualizaciones suele generar más errores y estabilidad reducida, no mejorarla. Esta opción contradice el funcionamiento básico de los sistemas informáticos."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "Los sistemas obsoletos suelen tener menor rendimiento y mayor riesgo de fallos, no mayor velocidad. Esta opción es técnicamente incorrecta."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      1
+     ],
+     "segundos": 25.1,
+     "tokens": 686
+    }
+   },
+   {
+    "nivel": "critico",
+    "ra": "RA3",
+    "foco": "Justifica si la implementación de un sistema de respaldo automático es suficiente para garantizar la disponibilidad de los datos en una organización ficticia.",
+    "contexto": "Una cooperativa ficticia llamada 'AgroSur' maneja datos críticos de producción agrícola y utiliza un sistema de respaldo automático para almacenar copias de seguridad en la nube.",
+    "pregunta": "¿Es suficiente la implementación de un sistema de respaldo automático para garantizar la disponibilidad de los datos en AgroSur?",
+    "opciones": [
+     {
+      "texto": "Sí, ya que el respaldo automático garantiza que los datos puedan recuperarse en cualquier momento.",
+      "justificacion": "Esta opción ignora el riesgo de que el respaldo no sea accesible o no esté actualizado.",
+      "error_que_representa": "ignorar la necesidad de validación del respaldo"
+     },
+     {
+      "texto": "No, ya que el respaldo automático no previene fallos en la infraestructura ni ataques cibernéticos.",
+      "justificacion": "Esta opción identifica correctamente que el respaldo solo es una parte de la solución.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Sí, ya que el respaldo automático cubre todos los riesgos posibles en un entorno de datos.",
+      "justificacion": "Esta opción sobregeneraliza la eficacia del respaldo automático.",
+      "error_que_representa": "sobregeneralización"
+     },
+     {
+      "texto": "No, ya que el respaldo automático no debe ser la única medida de seguridad implementada.",
+      "justificacion": "Esta opción es parcialmente correcta, pero no justifica claramente la insuficiencia del respaldo solo.",
+      "error_que_representa": "incompletitud en la justificación"
+     }
+    ],
+    "correcta": 1,
+    "razonamiento": [
+     "El respaldo automático es una medida importante, pero no aborda todas las amenazas a la disponibilidad.",
+     "Se requieren controles complementarios como actualizaciones, monitoreo y protección de acceso."
+    ],
+    "nivel_pedido": "critico",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": false,
+       "motivo": "La afirmación es incorrecta porque un sistema de respaldo automático no garantiza la disponibilidad de los datos en todos los escenarios. No previene fallos en la infraestructura, ataques cibernéticos o errores humanos que puedan afectar la accesibilidad de los datos incluso con respaldos."
+      },
+      {
+       "opcion": 1,
+       "correcta": true,
+       "motivo": "Es técnicamente exacto. El respaldo automático no previene fallos en la infraestructura (ej. fallos de hardware, desastres naturales) ni ataques cibernéticos (ej. ransomware, corrupción de datos), lo cual compromete la disponibilidad de los datos si no se combinan con medidas adicionales."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La afirmación es falsa. No existe un sistema de respaldo que cubra todos los riesgos posibles, como errores humanos, desastres naturales o ataques cibernéticos avanzados que puedan comprometer tanto los datos como los respaldos."
+      },
+      {
+       "opcion": 3,
+       "correcta": true,
+       "motivo": "Es técnicamente exacto. El respaldo automático debe complementarse con otras medidas de seguridad, como redundancia, control de acceso y monitoreo, para garantizar la disponibilidad de los datos en todos los escenarios posibles."
+      }
+     ],
+     "nivel_real": "reflexivo",
+     "valido": false,
+     "opciones_verdaderas": [
+      1,
+      3
+     ],
+     "segundos": 69.3,
+     "tokens": 1893
+    }
+   },
+   {
+    "nivel": "receptivo",
+    "ra": "RA2",
+    "foco": "Receptivo",
+    "contexto": "En el proceso de selección de soluciones tecnológicas, se utiliza una herramienta para comparar alternativas basándose en criterios definidos.",
+    "pregunta": "¿Qué es la matriz de decisión y cuál es su utilidad en la selección de soluciones tecnológicas?",
+    "opciones": [
+     {
+      "texto": "Es una tabla que compara alternativas según criterios de relevancia, permitiendo elegir la más adecuada para el contexto.",
+      "justificacion": "Esta opción describe correctamente la función de la matriz de decisión en la selección de soluciones tecnológicas.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Es un documento que detalla los riesgos asociados a cada solución tecnológica, sin comparar alternativas.",
+      "justificacion": "Esta opción confunde la matriz de decisión con un análisis de riesgos, que es una herramienta diferente.",
+      "error_que_representa": "confundir matriz de decisión con análisis de riesgos"
+     },
+     {
+      "texto": "Es un tipo de software que automatiza la selección de soluciones tecnológicas según parámetros predefinidos.",
+      "justificacion": "Esta opción describe una herramienta tecnológica, mientras que la matriz de decisión es una metodología manual.",
+      "error_que_representa": "confundir matriz de decisión con herramienta automatizada"
+     },
+     {
+      "texto": "Es un formato para registrar los costos de implementación de cada solución tecnológica, sin analizar su eficacia.",
+      "justificacion": "Esta opción limita la matriz de decisión a aspectos económicos, ignorando otros criterios relevantes.",
+      "error_que_representa": "ignorar múltiples criterios en la matriz de decisión"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "La matriz de decisión es una herramienta utilizada para evaluar alternativas basándose en criterios definidos, lo que facilita la toma de decisiones informadas.",
+     "Su utilidad radica en permitir comparar diferentes soluciones tecnológicas según sus características y prioridades del contexto."
+    ],
+    "nivel_pedido": "receptivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La opción describe correctamente la matriz de decisión como una herramienta que compara alternativas mediante criterios de relevancia, permitiendo elegir la más adecuada. Es técnicamente exacta."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La opción menciona riesgos y no comparación de alternativas, lo cual desvía del propósito principal de la matriz de decisión, que es evaluar alternativas basadas en múltiples criterios."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La opción confunde la matriz de decisión con un software, cuando en realidad es una herramienta metodológica, no un tipo de software. No es técnicamente exacta."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La opción limita la matriz de decisión solo a costos de implementación, ignorando su enfoque en múltiples criterios de evaluación. Es incorrecta."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 31.6,
+     "tokens": 860
+    }
+   },
+   {
+    "nivel": "resolutivo",
+    "ra": "RA3",
+    "foco": "Resolutivo",
+    "contexto": "Se deben comparar dos controles de seguridad: autenticación biométrica vs. contraseñas con encriptación, utilizando una matriz de decisión.",
+    "pregunta": "Aplica la matriz de decisión para comparar dos controles de seguridad: autenticación biométrica vs. contraseñas con encriptación.",
+    "opciones": [
+     {
+      "texto": "Autenticación biométrica tiene mayor seguridad, pero menor facilidad de uso, mientras que contraseñas con encriptación son más simples pero menos seguras.",
+      "justificacion": "Esta opción compara correctamente ambos controles, señalando ventajas y desventajas en términos de seguridad y usabilidad.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Contraseñas con encriptación son siempre más seguras que la autenticación biométrica, independientemente del contexto.",
+      "justificacion": "Esta opción sobregeneraliza, asumiendo que una solución es siempre mejor que otra sin considerar el contexto.",
+      "error_que_representa": "sobregeneralizar"
+     },
+     {
+      "texto": "La autenticación biométrica no requiere mantenimiento, por lo que es más económica que las contraseñas con encriptación.",
+      "justificacion": "Esta opción ignora factores como el costo de implementación y la necesidad de infraestructura para la biométrica.",
+      "error_que_representa": "ignorar supuestos relevantes"
+     },
+     {
+      "texto": "Ambos controles son igualmente efectivos en todos los contextos, por lo que no hay necesidad de elegir uno sobre otro.",
+      "justificacion": "Esta opción no reconoce diferencias clave entre los controles y no justifica la elección en base a criterios.",
+      "error_que_representa": "no reconocer diferencias entre alternativas"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "Para aplicar la matriz de decisión, se deben evaluar los controles según criterios como seguridad, facilidad de uso, costo, viabilidad y compatibilidad con el contexto.",
+     "La autenticación biométrica ofrece alta seguridad pero puede requerir infraestructura y mantenerse, mientras que las contraseñas encriptadas son más simples pero menos seguras si no se manejan adecuadamente."
+    ],
+    "nivel_pedido": "resolutivo",
+    "fallos": [
+     "la pregunta no termina en '?'",
+     "la pregunta contiene una opción"
+    ],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La opción 0 es técnicamente correcta porque reconoce los trade-offs entre seguridad y facilidad de uso. La autenticación biométrica puede ser más segura debido a su naturaleza única, pero puede ser menos práctica en contextos con restricciones de privacidad o accesibilidad. Las contraseñas encriptadas son más simples de implementar y gestionar, pero su seguridad depende de la calidad de la encriptación y la gestión de claves."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La opción 1 es incorrecta porque afirma que las contraseñas encriptadas son 'siempre' más seguras, lo cual no es cierto. La seguridad de la autenticación biométrica puede superar la de contraseñas encriptadas en ciertos contextos, dependiendo de factores como el tipo de biométrico (huella, iris vs. voz) y la implementación de la encriptación."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La opción 2 es incorrecta porque la autenticación biométrica puede requerir mantenimiento (ej.: actualización de sensores, manejo de errores de reconocimiento) y su costo inicial suele ser mayor que el de sistemas basados en contraseñas. Además, la seguridad no se mide solo por la ausencia de mantenimiento."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La opción 3 es incorrecta porque ambos controles tienen diferentes niveles de efectividad según el contexto. Por ejemplo, las contraseñas encriptadas son más adecuadas para entornos con altas exigencias de privacidad, mientras que la autenticación biométrica puede ser más eficaz en aplicaciones con limitaciones de almacenamiento o redes inestables."
+      }
+     ],
+     "nivel_real": "reflexivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 31.3,
+     "tokens": 852
+    }
+   },
+   {
+    "nivel": "resolutivo",
+    "ra": "RA2",
+    "foco": "Identifica los riesgos principales de un sistema de gestión de datos en una organización ficticia, como una clínica privada, y clasifícalos según su probabilidad e impacto.",
+    "contexto": "Una clínica privada utiliza un sistema de gestión de datos para administrar historiales médicos, citas y facturación. Durante un análisis de seguridad, se identificaron los siguientes riesgos: pérdida de datos por fallo de hardware, accesos no autorizados a registros médicos, y corrupción de datos por malware.",
+    "pregunta": "¿Cuál es la clasificación correcta de los riesgos mencionados según su probabilidad e impacto?",
+    "opciones": [
+     {
+      "texto": "Pérdida de datos por fallo de hardware: alto impacto, medio probabilidad; accesos no autorizados: alto impacto, alto probabilidad; corrupción de datos por malware: medio impacto, alto probabilidad",
+      "justificacion": "Esta opción clasifica los riesgos de manera coherente con la probabilidad y el impacto observados en sistemas de gestión de datos, considerando que los accesos no autorizados son más probables y tienen alto impacto, mientras que la corrupción por malware es menos probable pero aún significativa.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "Pérdida de datos por fallo de hardware: medio impacto, alto probabilidad; accesos no autorizados: alto impacto, medio probabilidad; corrupción de datos por malware: alto impacto, medio probabilidad",
+      "justificacion": "Esta opción confunde la probabilidad de los riesgos, especialmente el de pérdida de datos por fallo de hardware, que es menos probable que los accesos no autorizados.",
+      "error_que_representa": "confusión entre probabilidad y impacto"
+     },
+     {
+      "texto": "Pérdida de datos por fallo de hardware: alto impacto, alto probabilidad; accesos no autorizados: medio impacto, medio probabilidad; corrupción de datos por malware: medio impacto, bajo probabilidad",
+      "justificacion": "Esta opción sobreestima la probabilidad del fallo de hardware y subestima el impacto de los accesos no autorizados, lo que refleja una mala interpretación de los riesgos en un sistema de gestión de datos.",
+      "error_que_representa": "sobreestimación de probabilidad y subestimación de impacto"
+     },
+     {
+      "texto": "Pérdida de datos por fallo de hardware: medio impacto, bajo probabilidad; accesos no autorizados: medio impacto, alto probabilidad; corrupción de datos por malware: alto impacto, medio probabilidad",
+      "justificacion": "Esta opción clasifica los riesgos de forma inconsistente, especialmente en cuanto a la corrupción por malware, que tiene un alto impacto pero no necesariamente una probabilidad media.",
+      "error_que_representa": "inconsistencia en la clasificación de riesgos"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El nivel resolutivo requiere aplicar un método de clasificación de riesgos basado en probabilidad e impacto, lo que implica analizar cada riesgo según su frecuencia y consecuencias.",
+     "La pérdida de datos por fallo de hardware tiene un impacto alto pero una probabilidad media, ya que no ocurre con frecuencia pero puede afectar severamente la operación.",
+     "Los accesos no autorizados son más probables y tienen un impacto alto debido a la exposición de información sensible.",
+     "La corrupción de datos por malware es menos probable pero tiene un impacto alto, por lo que se le asigna una probabilidad media."
+    ],
+    "nivel_pedido": "resolutivo",
+    "fallos": [],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": false,
+       "motivo": "La clasificación de la corrupción de datos por malware como 'medio impacto' es incorrecta. Malware suele tener un impacto alto debido a la pérdida de integridad y confidencialidad de los datos. Además, el acceso no autorizado se clasifica como 'alto impacto, alto probabilidad', lo cual es razonable, pero la pérdida de datos por hardware se clasifica como 'alto impacto, medio probabilidad', lo cual podría ser excesivamente optimista si no hay mecanismos de respaldo."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "La pérdida de datos por hardware se clasifica como 'medio impacto, alto probabilidad', lo cual es incorrecto. Un fallo de hardware puede tener un impacto alto si no se tienen mecanismos de respaldo. El acceso no autorizado se clasifica como 'alto impacto, medio probabilidad', lo cual podría ser excesivamente conservador, y la corrupción por malware se clasifica como 'alto impacto, medio probabilidad', lo cual ignora su alta probabilidad en entornos conectados."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "La corrupción de datos por malware se clasifica como 'medio impacto, bajo probabilidad', lo cual es incorrecto. El malware es una amenaza común en sistemas conectados, por lo que su probabilidad es alta. Además, el acceso no autorizado se clasifica como 'medio impacto, medio probabilidad', lo cual subestima el impacto de violaciones de privacidad en la salud."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "La pérdida de datos por hardware se clasifica como 'medio impacto, bajo probabilidad', lo cual es incorrecto. Si no hay respaldo, el impacto es alto y la probabilidad podría ser alta. El acceso no autorizado se clasifica como 'medio impacto, alto probabilidad', lo cual subestima su impacto. La corrupción por malware se clasifica como 'alto impacto, medio probabilidad', lo cual ignora su alta probabilidad en entornos con conectividad."
+      }
+     ],
+     "nivel_real": "resolutivo",
+     "valido": false,
+     "opciones_verdaderas": [],
+     "segundos": 88.3,
+     "tokens": 2402
+    }
+   },
+   {
+    "nivel": "reflexivo",
+    "ra": "RA3",
+    "foco": "Reflexivo: Interpreta cómo la falta de controles preventivos puede llevar a la exposición de datos sensibles y afectar la reputación de una organización.",
+    "contexto": "Una organización ficticia, llamada 'Clínica Soluciones', utiliza un sistema de gestión de datos para manejar información médica. Sin embargo, no ha implementado controles preventivos adecuados, como autenticación fuerte o cifrado de datos.",
+    "pregunta": "¿Cómo la falta de controles preventivos puede afectar la reputación de la organización?",
+    "opciones": [
+     {
+      "texto": "La exposición de datos sensibles puede generar desconfianza en los pacientes y reducir el número de clientes.",
+      "justificacion": "Esta opción interpreta correctamente cómo la falta de controles preventivos puede llevar a la exposición de datos y, en consecuencia, a una pérdida de confianza en la organización.",
+      "error_que_representa": "ninguno"
+     },
+     {
+      "texto": "La falta de controles preventivos no afecta directamente la reputación, ya que los clientes no se preocupan por la seguridad.",
+      "justificacion": "Esta opción ignora el impacto de la seguridad en la confianza de los usuarios, lo cual es un error conceptual en la interpretación de los riesgos.",
+      "error_que_representa": "ignorar el impacto en la reputación"
+     },
+     {
+      "texto": "La exposición de datos sensibles solo afecta la seguridad, no la reputación de la organización.",
+      "justificacion": "Esta opción confunde la seguridad con la reputación, ignorando que la exposición de datos puede tener consecuencias legales y de imagen.",
+      "error_que_representa": "confusión entre seguridad y reputación"
+     },
+     {
+      "texto": "La falta de controles preventivos no genera problemas legales, por lo que no afecta la reputación.",
+      "justificacion": "Esta opción sobregeneraliza y no reconoce que la exposición de datos puede llevar a sanciones y daño a la reputación.",
+      "error_que_representa": "sobregeneralización del impacto"
+     }
+    ],
+    "correcta": 0,
+    "razonamiento": [
+     "El nivel reflexivo implica interpretar cómo los riesgos de seguridad pueden tener consecuencias más amplias, como el daño a la reputación de una organización.",
+     "La falta de controles preventivos deja expuestos los datos sensibles, lo que puede resultar en filtraciones o accesos no autorizados.",
+     "Esto genera desconfianza en los clientes, quienes pueden abandonar la organización, afectando su reputación y su capacidad para atraer nuevos usuarios.",
+     "Además, puede provocar sanciones legales o multas, lo que también impacta negativamente la imagen pública de la organización."
+    ],
+    "nivel_pedido": "reflexivo",
+    "fallos": [
+     "la pregunta contiene una opción"
+    ],
+    "revision": {
+     "veredictos": [
+      {
+       "opcion": 0,
+       "correcta": true,
+       "motivo": "La exposición de datos sensibles debido a la falta de controles preventivos como autenticación fuerte o cifrado puede generar desconfianza en pacientes, afectando su confianza en la institución y llevando a una disminución en la base de clientes. Esto es técnicamente exacto, ya que la seguridad de la información está directamente relacionada con la reputación de organizaciones que manejan datos sensibles."
+      },
+      {
+       "opcion": 1,
+       "correcta": false,
+       "motivo": "Esta opción es incorrecta. Los clientes, especialmente en sectores como la salud, sí se preocupan por la seguridad de sus datos. Una falta de controles preventivos puede generar preocupación, afectando directamente la reputación de la organización."
+      },
+      {
+       "opcion": 2,
+       "correcta": false,
+       "motivo": "Esta opción es técnicamente incorrecta. La exposición de datos sensibles no solo afecta la seguridad, sino que también impacta la reputación de la organización al generar desconfianza, daño a la imagen y posibles consecuencias legales."
+      },
+      {
+       "opcion": 3,
+       "correcta": false,
+       "motivo": "Esta opción es falsa. La falta de controles preventivos puede generar problemas legales (como incumplimiento de normativas de privacidad) y afectar la reputación de la organización, incluso si no se detecta una brecha explícita."
+      }
+     ],
+     "nivel_real": "reflexivo",
+     "valido": true,
+     "opciones_verdaderas": [
+      0
+     ],
+     "segundos": 27.6,
+     "tokens": 751
+    }
+   }
+  ],
+  "elegidos": [
+   0,
+   4,
+   1,
+   9,
+   10,
+   2,
+   6,
+   3
+  ],
+  "ficha": {
+   "contenido": {
+    "titulo": "FICHA DE ESTUDIO - Clase M3-S1: Ciberseguridad en Ingeniería",
+    "objetivo": "Reforzar el entendimiento de cómo aplicar principios de ciberseguridad en el diseño y evaluación de soluciones tecnológicas en el ámbito de la ingeniería, con énfasis en la identificación de riesgos y selección de controles.",
+    "ideas_clave": [
+     "Ciberseguridad en ingeniería: protección de activos tecnológicos contra amenazas y vulnerabilidades.",
+     "Confidencialidad, integridad y disponibilidad (C-I-D) como pilares fundamentales de la seguridad.",
+     "Matriz de riesgos: análisis de amenazas, vulnerabilidades y consecuencias.",
+     "Controles de seguridad: autenticación, respaldo, actualización, protección de datos.",
+     "Selección de controles basada en criterios técnicos, económicos y legales."
+    ],
+    "ejemplo_resuelto": {
+     "situacion": "Una cooperativa de salud, llamada **SaludFutura**, ha detectado una brecha de seguridad en su sistema de gestión de pacientes. Los registros médicos están expuestos a accesos no autorizados debido a una falla en el protocolo de autenticación. Además, no se realizan respaldos periódicos, lo que podría comprometer la disponibilidad de los datos.",
+     "pasos": [
+      "Identificar activos: sistemas de gestión de pacientes, bases de datos, historiales médicos.",
+      "Analizar amenazas: accesos no autorizados, pérdida de datos, interrupción de servicios.",
+      "Evaluar vulnerabilidades: fallo en autenticación, falta de respaldos.",
+      "Determinar consecuencias: exposición de información sensible, pérdida de confianza, interrupción de operaciones.",
+      "Calcular riesgos: alta probabilidad de acceso no autorizado, alto impacto en privacidad y operatividad.",
+      "Proporcionar controles: implementar autenticación multifactor, establecer horarios de respaldo automatizado, actualizar sistemas regularmente."
+     ],
+     "conclusion": "La implementación de controles de seguridad adecuados reducirá significativamente los riesgos en SaludFutura y garantizará la continuidad del servicio."
+    },
+    "errores_frecuentes": [
+     "No identificar claramente los activos afectados en un incidente de seguridad.",
+     "Asociar controles generales con amenazas sin vincularlos específicamente.",
+     "Ignorar el impacto económico o legal en la selección de controles.",
+     "No priorizar riesgos según su probabilidad e impacto."
+    ],
+    "relacion_con_el_ra": "Esta clase contribuye directamente a los Resultados de Aprendizaje RA2 y RA3, ya que permite al estudiante aplicar metodologías de evaluación de riesgos y selección de controles de seguridad, habilidades esenciales para diseñar soluciones tecnológicas seguras en el ámbito de la ingeniería.",
+    "preguntas_autocomprobacion": [
+     "¿Cuál es el principal factor que debe considerarse al priorizar controles de seguridad en un sistema de información? ?",
+     "¿Qué consecuencias puede tener la falta de respaldos periódicos en un sistema de gestión de pacientes? ?",
+     "¿Por qué es importante vincular cada control con una amenaza específica en el análisis de riesgos? ?"
+    ]
+   },
+   "segundos": 27.1
+  }
+ }
+]

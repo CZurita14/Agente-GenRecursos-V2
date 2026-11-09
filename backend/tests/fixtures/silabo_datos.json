@@ -1,0 +1,372 @@
+{
+  "facultad": "FACULTAD DE INGENIERIAS",
+  "carrera": "SOFTWARE",
+  "periodo": {
+    "codigo": "B26",
+    "inicio": "2026-10-05",
+    "fin": "2027-03-01"
+  },
+  "proyecto_formativo": {
+    "nombre": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+    "codigo": "B26-SOFT-3-56146-1727",
+    "version": "1.0",
+    "aprobado": "2026-10-06",
+    "uoc": "TITULACION",
+    "nivel": 3,
+    "modalidad": "EN LINEA",
+    "creditos": 3.0,
+    "horas": {
+      "total": 144,
+      "contacto": 72,
+      "autonomo": 24,
+      "practico": 48
+    },
+    "horario": [
+      {
+        "dia": "miercoles",
+        "inicio": "20:00",
+        "fin": "20:59"
+      },
+      {
+        "dia": "jueves",
+        "inicio": "20:00",
+        "fin": "20:59"
+      }
+    ]
+  },
+  "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+  "competencia_pf": "",
+  "metacompetencia": "Pensamiento sociocrítico y sistémico para la toma de decisiones estratégicas",
+  "resultados_aprendizaje": [
+    {
+      "id": "RA1",
+      "texto": "Comprende de manera sólida y precisa los principios fundamentales de análisis de datos y estadísticas en ingeniería, demostrando un dominio claro y la capacidad de aplicarlos correctamente en diferentes contextos y situaciones.",
+      "evidencia": "Una base de datos simulada y estructurada (CSV/JSON) que contenga registros de eventos digitales en el contexto ecuatoriano (ej. intentos de inicio de sesión, volumen de tráfico de red, direcciones IP, tiempos de respuesta). Se acompaña de un reporte descriptivo generado en JASP."
+    },
+    {
+      "id": "RA2",
+      "texto": "Aplica de manera efectiva y precisa las técnicas de análisis de datos en la resolución de problemas de ingeniería, demostrando un dominio sólido y obteniendo resultados confiables para la toma de decisiones.",
+      "evidencia": "Un esquema de reglas condicionales y probabilidades calculadas (utilizando Numiqo), aplicando el Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad."
+    },
+    {
+      "id": "RA3",
+      "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+      "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+    },
+    {
+      "id": "RA4",
+      "texto": "Evalúa modelos estadísticos predictivos (regresión y series temporales) mediante inferencia computacional, para integrarlos como parámetros matemáticos dentro de soluciones de software funcionales y fiables.",
+      "evidencia": "Los coeficientes matemáticos de un modelo de series temporales o regresión logística entrenado en JASP, junto con un protocolo de validación estocástica (pruebas de estrés matemático)."
+    }
+  ],
+  "problema": {
+    "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+    "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+    "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+  },
+  "pis": {
+    "nombre": "Desarrollo de soluciones de software para el monitoreo y gestión de la seguridad digital en Ecuador.",
+    "aporte": "Este módulo aporta el sustento cuantitativo (el \"motor lógico\") del software de seguridad. Provee los umbrales de detección de anomalías fundamentados en inferencia estadística (intervalos de confianza) y las reglas predictivas necesarias para que los estudiantes programen las condicionales y alertas de seguridad dentro del código fuente del sistema."
+  },
+  "metodologias": [
+    "Clase Invertida",
+    "Aprendizaje Basado en Problemas (ABP)",
+    "Aprendizaje Cooperativo (AC)"
+  ],
+  "momentos": [
+    {
+      "numero": 2,
+      "titulo": "Planeación y Diseño - Modelado Probabilístico de Riesgos y Vulnerabilidades.",
+      "fecha_inicio": "2026-10-14",
+      "fecha_fin": "2026-10-15",
+      "ra": [
+        "RA2"
+      ],
+      "evidencia": "Matriz Probabilística de Riesgos y Vulnerabilidades: Un esquema analítico de reglas condicionales y probabilidades calculadas (utilizando Numiqo), aplicando el Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad. Este esquema define la lógica matemática (condicionales algorítmicas) que alimentará el motor de decisiones y alertas del software de monitoreo.",
+      "recursos": "Escenarios: Entorno virtual (clases sincrónicas) y trabajo autónomo aplicado al PIS de ciberseguridad. Recursos: Calculadora Numiqo para la comprobación exacta de probabilidades discretas y continuas; guías de modelado matemático; y los requerimientos del proyecto de desarrollo de software.",
+      "politica_ia": "Se autoriza el uso de IA generativa como apoyo heurístico para plantear estructuras lógicas o comprender distribuciones probabilísticas complejas. El estudiante tiene la obligación de auditar críticamente cada sugerencia, validando los cálculos manualmente mediante la calculadora Numiqo para garantizar la exactitud matemática de las reglas de seguridad, asumiendo total autoría sobre la matriz entregada.",
+      "rubrica": [
+        {
+          "indicador": "Cálculo de probabilidades con Numiqo y Teorema de Bayes / Distribuciones",
+          "niveles": {
+            "receptivo": "Identifica los conceptos básicos del Teorema de Bayes o distribuciones probabilísticas, pero presenta errores al realizar los cálculos mecánicos sobre los datos de seguridad.",
+            "resolutivo": "Calcula correctamente las probabilidades utilizando Numiqo, aplicando fórmulas del Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad.",
+            "reflexivo": "Analiza los resultados de las probabilidades calculadas, explicando el significado y la relevancia de estos valores dentro del contexto de los riesgos de seguridad evaluados.",
+            "critico": "Evalúa la idoneidad del modelo probabilístico utilizado (Bayes o distribución específica), justificando su precisión frente a posibles sesgos en los datos de seguridad.",
+            "cocreativo": "Formula nuevos enfoques estadísticos, combinando distribuciones o modelos para predecir vulnerabilidades y riesgos con un nivel de exactitud superior al estándar."
+          }
+        },
+        {
+          "indicador": "Estructuración del esquema analítico de reglas condicionales",
+          "niveles": {
+            "receptivo": "Registra algunas reglas condicionales de manera aislada, sin lograr conformar un esquema analítico integrado que relacione adecuadamente los riesgos.",
+            "resolutivo": "Elabora un esquema analítico completo que organiza de manera coherente las reglas condicionales y los riesgos identificados en la matriz probabilística.",
+            "reflexivo": "Interpreta las interrelaciones dentro del esquema analítico, comprendiendo cómo la variación en una condición de riesgo afecta la probabilidad general de vulnerabilidad.",
+            "critico": "Juzga la solidez del esquema de reglas condicionales, detectando posibles escenarios o vectores de riesgo que el esquema inicial no contemplaba para corregirlos.",
+            "cocreativo": "Diseña un modelo de reglas condicionales escalable y dinámico, capaz de adaptarse e integrar nuevos parámetros de riesgo a medida que evoluciona el entorno digital."
+          }
+        },
+        {
+          "indicador": "Definición de la lógica matemática para el motor de decisiones y alertas",
+          "niveles": {
+            "receptivo": "Describe la lógica matemática requerida de forma ambigua, presentando condicionales algorítmicas que no son viables para alimentar un software de monitoreo.",
+            "resolutivo": "Define con precisión las condicionales algorítmicas que estructuran la lógica matemática necesaria para el funcionamiento del motor de decisiones y alertas del software.",
+            "reflexivo": "Argumenta cómo la lógica matemática (condicionales algorítmicas) establecida permitirá al software de monitoreo tomar decisiones oportunas ante amenazas específicas.",
+            "critico": "Optimiza la lógica matemática y los umbrales de alerta del motor de decisiones para garantizar la reducción significativa de falsos positivos y mejorar el tiempo de respuesta.",
+            "cocreativo": "Crea una propuesta arquitectónica de toma de decisiones predictiva que trasciende el diseño original, aportando un alto nivel de innovación algorítmica al software de monitoreo."
+          }
+        }
+      ],
+      "sesiones": [
+        {
+          "id": "M2-S1",
+          "numero": 1,
+          "fecha": "2026-10-14",
+          "semana_periodo": 2,
+          "docente": {
+            "texto": "modelando distribuciones",
+            "horas": 6.0,
+            "asincronica": {
+              "texto": "asincrónicas.",
+              "horas": 5.0
+            }
+          },
+          "practico": {
+            "texto": "Uso intensivo de Numiqo para resolver problemas de probabilidad discreta y continua.",
+            "horas": 4.0
+          },
+          "autonomo": {
+            "texto": "Resolución de la primera mitad del cuestionario de probabilidad",
+            "horas": 2.0
+          },
+          "contenidos": [
+            "DISTRIBUCIONES ESTADÍSTICAS"
+          ],
+          "entregables": []
+        },
+        {
+          "id": "M2-S2",
+          "numero": 2,
+          "fecha": "2026-10-15",
+          "semana_periodo": 2,
+          "docente": {
+            "texto": "sobre análisis de datos multidimensionales y Teorema de Bayes",
+            "horas": 6.0,
+            "asincronica": {
+              "texto": "asincrónicas",
+              "horas": 5.0
+            }
+          },
+          "practico": {
+            "texto": "Uso de JASP para generar gráficos de dispersión multivariantes y matrices de correlación visual.",
+            "horas": 4.0
+          },
+          "autonomo": {
+            "texto": "Resolución del cuestionario de probabilidad utilizando exclusivamente Numiqo.",
+            "horas": 2.0
+          },
+          "contenidos": [
+            "DISTRIBUCIONES ESTADÍSTICAS"
+          ],
+          "entregables": []
+        }
+      ]
+    },
+    {
+      "numero": 3,
+      "titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+      "fecha_inicio": "2026-10-21",
+      "fecha_fin": "2026-10-29",
+      "ra": [
+        "RA3"
+      ],
+      "evidencia": "Definición Inferencial de Umbrales de Seguridad: Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. ataques DDoS). Esta evidencia justifica numéricamente los valores de corte exactos que el algoritmo del software utilizará para disparar alertas críticas de intrusión.",
+      "recursos": "Escenarios: Entorno virtual de aprendizaje (sesiones sincrónicas) y entorno de trabajo autónomo aplicado al reto tecnológico. Recursos: Software JASP para la ejecución fluida de pruebas paramétricas y ANOVA; datasets con variables de tráfico de red; y el documento de requerimientos del Proyecto Interdisciplinario Socioformativo (PIS) de seguridad digital.",
+      "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+      "rubrica": [
+        {
+          "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP",
+          "niveles": {
+            "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+            "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad.",
+            "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+            "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+            "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables."
+          }
+        },
+        {
+          "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)",
+          "niveles": {
+            "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+            "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento.",
+            "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+            "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+            "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal."
+          }
+        },
+        {
+          "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas",
+          "niveles": {
+            "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+            "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión.",
+            "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+            "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+            "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas."
+          }
+        }
+      ],
+      "sesiones": [
+        {
+          "id": "M3-S1",
+          "numero": 1,
+          "fecha": "2026-10-21",
+          "semana_periodo": 3,
+          "docente": {
+            "texto": "sobre la lógica del muestreo",
+            "horas": 6.0,
+            "asincronica": {
+              "texto": "de tutoría asincrónica.",
+              "horas": 5.0
+            }
+          },
+          "practico": {
+            "texto": "Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+            "horas": 4.0
+          },
+          "autonomo": {
+            "texto": "Estructuración preliminar del diseño muestral del proyecto integrador.",
+            "horas": 2.0
+          },
+          "contenidos": [
+            "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS"
+          ],
+          "entregables": []
+        },
+        {
+          "id": "M3-S2",
+          "numero": 2,
+          "fecha": "2026-10-22",
+          "semana_periodo": 3,
+          "docente": {
+            "texto": "sobre estimación de parámetros",
+            "horas": 6.0,
+            "asincronica": {
+              "texto": "de tutoría asincrónica.",
+              "horas": 5.0
+            }
+          },
+          "practico": {
+            "texto": "Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+            "horas": 4.0
+          },
+          "autonomo": {
+            "texto": "Redacción final del diseño muestral.",
+            "horas": 2.0
+          },
+          "contenidos": [
+            "PARÁMETROS ESTADÍSTICOS"
+          ],
+          "entregables": []
+        },
+        {
+          "id": "M3-S3",
+          "numero": 3,
+          "fecha": "2026-10-28",
+          "semana_periodo": 4,
+          "docente": {
+            "texto": "formulando $H_0/H_1$ y analizando el valor $p$",
+            "horas": 6.0,
+            "asincronica": {
+              "texto": "asincrónicas.",
+              "horas": 5.0
+            }
+          },
+          "practico": {
+            "texto": "Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+            "horas": 4.0
+          },
+          "autonomo": {
+            "texto": "Organización de las variables para el reporte metodológico.",
+            "horas": 2.0
+          },
+          "contenidos": [
+            "HIPÓTESIS DE GRUPOS"
+          ],
+          "entregables": []
+        },
+        {
+          "id": "M3-S4",
+          "numero": 4,
+          "fecha": "2026-10-29",
+          "semana_periodo": 4,
+          "docente": {
+            "texto": "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+            "horas": 6.0,
+            "asincronica": {
+              "texto": "asincrónicas.",
+              "horas": 5.0
+            }
+          },
+          "practico": {
+            "texto": "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+            "horas": 4.0
+          },
+          "autonomo": {
+            "texto": "Redacción del reporte argumentando la elección de las pruebas estadísticas.",
+            "horas": 2.0
+          },
+          "contenidos": [
+            "HIPÓTESIS ESTADÍSTICAS"
+          ],
+          "entregables": []
+        }
+      ]
+    }
+  ],
+  "rubrica_producto_final": [
+    {
+      "indicador": "Dataset depurado",
+      "niveles": {
+        "receptivo": "Identifica errores básicos y valores nulos en el dataset siguiendo instrucciones, presentando una limpieza superficial.",
+        "resolutivo": "Ejecuta la limpieza del dataset aplicando técnicas estadísticas estándar para tratar valores atípicos y faltantes.",
+        "reflexivo": "Analiza el impacto de la depuración en la integridad de los datos, justificando los métodos estadísticos elegidos.",
+        "critico": "Evalúa la calidad del dataset frente a estándares de ciberseguridad, garantizando alta fiabilidad para el modelado.",
+        "cocreativo": "Diseña un proceso o script automatizado para la depuración continua del dataset, adaptable a nuevas fuentes de datos."
+      }
+    },
+    {
+      "indicador": "Matrices probabilísticas de vulnerabilidades",
+      "niveles": {
+        "receptivo": "Registra datos en matrices de vulnerabilidad de forma mecánica, con cálculos de probabilidad incompletos o básicos.",
+        "resolutivo": "Calcula correctamente las probabilidades y construye matrices estándar para identificar vulnerabilidades comunes.",
+        "reflexivo": "Interpreta los resultados de las matrices, correlacionando diferentes vulnerabilidades para entender su impacto conjunto.",
+        "critico": "Valora el riesgo sistémico integrando matrices complejas, priorizando la mitigación de vulnerabilidades críticas.",
+        "cocreativo": "Formula nuevos modelos probabilísticos que anticipan vectores de ataque emergentes o no convencionales."
+      }
+    },
+    {
+      "indicador": "Sustentación inferencial de umbrales para anomalías",
+      "niveles": {
+        "receptivo": "Describe teóricamente qué es un umbral de anomalía sin aplicar pruebas inferenciales rigurosas.",
+        "resolutivo": "Aplica pruebas de inferencia estadística básicas para definir los umbrales de detección de anomalías.",
+        "reflexivo": "Argumenta la elección de los niveles de confianza y significancia en la definición de los umbrales estadísticos.",
+        "critico": "Optimiza los umbrales establecidos mediante análisis crítico para minimizar falsos positivos y falsos negativos en escenarios reales.",
+        "cocreativo": "Genera un enfoque inferencial dinámico donde los umbrales se adaptan autónomamente al comportamiento cambiante de la red."
+      }
+    },
+    {
+      "indicador": "Parámetros matemáticos del algoritmo predictivo",
+      "niveles": {
+        "receptivo": "Lista los parámetros matemáticos necesarios para el algoritmo, pero carecen de la estructura lista para codificación.",
+        "resolutivo": "Determina los parámetros matemáticos del algoritmo predictivo para que funcione en condiciones operativas estándar.",
+        "reflexivo": "Relaciona la configuración de los parámetros matemáticos con su impacto directo en la precisión y eficiencia del algoritmo.",
+        "critico": "Fundamenta la robustez de los parámetros frente a posibles ataques adversarios, asegurando una codificación óptima y segura.",
+        "cocreativo": "Proyecta parámetros matemáticos para un algoritmo predictivo inédito, estructurado colaborativamente para su integración inmediata en sistemas de defensa."
+      }
+    }
+  ],
+  "bibliografia": {
+    "basica": [],
+    "complementaria": []
+  }
+}

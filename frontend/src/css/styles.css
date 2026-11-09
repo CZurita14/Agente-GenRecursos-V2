@@ -1,0 +1,112 @@
+@import "tailwindcss";
+@source "../";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-app: rgb(var(--uti-bg));
+  --color-app-soft: rgb(var(--uti-bg-soft));
+  --color-surface: rgb(var(--uti-surface));
+  --color-fg: rgb(var(--uti-text));
+  --color-muted: rgb(var(--uti-text-muted));
+  --color-line: rgb(var(--uti-border));
+  --color-brand: rgb(var(--uti-brand));
+  --color-brand-soft: rgb(var(--uti-brand-soft));
+  --color-highlight: rgb(var(--uti-highlight));
+  --color-highlight-hover: rgb(var(--uti-highlight-hover));
+  --color-highlight-soft: rgb(var(--uti-highlight-soft));
+  --color-action: rgb(var(--uti-action));
+  --color-action-hover: rgb(var(--uti-action-hover));
+  --color-action-ink: rgb(var(--uti-action-ink));
+  --color-destructive: rgb(var(--uti-destructive));
+  --color-header: rgb(var(--uti-header));
+  --color-header-soft: rgb(var(--uti-header-soft));
+  --color-header-border: rgb(var(--uti-header-border));
+  --color-header-muted: rgb(var(--uti-header-muted));
+  --color-success: rgb(var(--uti-success));
+  --color-success-soft: rgb(var(--uti-success-soft));
+  --color-warning: rgb(var(--uti-warning));
+  --color-warning-soft: rgb(var(--uti-warning-soft));
+  --color-danger: rgb(var(--uti-danger));
+  --color-danger-soft: rgb(var(--uti-danger-soft));
+  --color-info: rgb(var(--uti-info));
+  --color-info-soft: rgb(var(--uti-info-soft));
+}
+
+/* Única fuente de colores. Canales RGB para admitir modificadores /30, /60, etc.
+   Los fondos suaves son opacos: su contraste no depende del contenedor. */
+:root {
+  color-scheme: light;
+  --uti-bg: 244 240 249;
+  --uti-bg-soft: 234 227 244;
+  --uti-surface: 255 255 255;
+  --uti-text: 44 21 71;
+  --uti-text-muted: 110 89 135;
+  --uti-border: 226 217 238;
+  --uti-brand: 44 21 71;
+  --uti-brand-soft: 230 227 233;
+  --uti-highlight: 245 112 33;
+  --uti-highlight-hover: 224 94 16;
+  --uti-highlight-soft: 255 237 224;
+  --uti-action: 154 57 0;
+  --uti-action-ink: 154 57 0;
+  --uti-action-hover: 123 45 0;
+  --uti-destructive: 180 20 55;
+  --uti-header: 44 21 71;
+  --uti-header-soft: 33 19 54;
+  --uti-header-border: 82 55 112;
+  --uti-header-muted: 205 190 223;
+  --uti-success: 4 100 70;
+  --uti-success-soft: 226 246 237;
+  --uti-warning: 133 69 0;
+  --uti-warning-soft: 255 242 213;
+  --uti-danger: 180 20 55;
+  --uti-danger-soft: 255 231 236;
+  --uti-info: 29 78 180;
+  --uti-info-soft: 232 240 255;
+}
+.dark {
+  color-scheme: dark;
+  --uti-bg: 21 11 36;
+  --uti-bg-soft: 33 19 54;
+  --uti-surface: 38 22 61;
+  --uti-text: 245 240 251;
+  --uti-text-muted: 183 167 204;
+  --uti-border: 80 57 106;
+  --uti-brand: 190 155 245;
+  --uti-brand-soft: 59 36 87;
+  --uti-highlight: 245 112 33;
+  --uti-highlight-hover: 255 131 64;
+  --uti-highlight-soft: 72 39 32;
+  --uti-action-ink: 255 175 119;
+  --uti-success: 93 231 178;
+  --uti-success-soft: 27 58 51;
+  --uti-warning: 255 211 89;
+  --uti-warning-soft: 62 48 36;
+  --uti-danger: 255 153 170;
+  --uti-danger-soft: 66 32 53;
+  --uti-info: 151 196 255;
+  --uti-info-soft: 33 43 82;
+}
+html, body, #root { min-height: 100%; margin: 0; padding: 0; }
+body {
+  background-color: rgb(var(--uti-bg));
+  color: rgb(var(--uti-text));
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid rgb(var(--uti-action-ink));
+  outline-offset: 3px;
+}
+.skip-link {
+  position: fixed; top: 0.5rem; left: 0.5rem; z-index: 100;
+  padding: 0.75rem 1rem; background: rgb(var(--uti-surface));
+  color: rgb(var(--uti-text)); border-radius: 0.5rem;
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; scroll-behavior: auto !important;
+  }
+}

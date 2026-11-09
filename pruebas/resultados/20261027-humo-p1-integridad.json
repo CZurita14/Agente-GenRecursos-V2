@@ -1,0 +1,2380 @@
+{
+ "resumen": {
+  "segundos": 735.66,
+  "llamadas": 20,
+  "tokens_entrada": 52939,
+  "tokens_salida": 16555
+ },
+ "llamadas": [
+  {
+   "rol": "worker",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 86.038,
+   "tokens": [
+    2720,
+    2290
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 30.288,
+   "tokens": [
+    2553,
+    831
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 50.84,
+   "tokens": [
+    2530,
+    1400
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 25.517,
+   "tokens": [
+    2527,
+    704
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 26.824,
+   "tokens": [
+    2581,
+    736
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 19.884,
+   "tokens": [
+    2832,
+    523
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 21.469,
+   "tokens": [
+    2818,
+    566
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 141.809,
+   "tokens": [
+    2808,
+    576
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 30.649,
+   "tokens": [
+    2865,
+    810
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 31.92,
+   "tokens": [
+    2533,
+    879
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 32.485,
+   "tokens": [
+    2544,
+    894
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 35.898,
+   "tokens": [
+    2562,
+    989
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 27.643,
+   "tokens": [
+    2615,
+    758
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 21.802,
+   "tokens": [
+    2847,
+    575
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 30.996,
+   "tokens": [
+    2889,
+    820
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 39.326,
+   "tokens": [
+    2554,
+    1079
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+   "segundos": 26.096,
+   "tokens": [
+    2607,
+    713
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+   "segundos": 12.228,
+   "tokens": [
+    2232,
+    322
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+   "segundos": 21.214,
+   "tokens": [
+    2237,
+    564
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+   "segundos": 19.437,
+   "tokens": [
+    3085,
+    526
+   ],
+   "ok": true
+  }
+ ],
+ "trabajos": {
+  "06159fb6-f8ac-4a88-92d0-5acaf01e12c0": {
+   "herramienta": "ficha_clase",
+   "clase": "M2-S1",
+   "estado": "listo",
+   "mensajes": [
+    {
+     "tipo": "Encargo",
+     "cuerpo": {
+      "nivel": 3,
+      "ambito": {
+       "id": "M2-S1",
+       "tipo": "clase"
+      },
+      "carrera": "SOFTWARE",
+      "codigo_pf": "B26-SOFT-3-56146-1727",
+      "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+      "herramienta": "ficha_clase",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "version_silabo": "1.0",
+      "perfil_dificultad": "fundamentacion"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [],
+      "ronda": 0,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA2",
+         "texto": "Aplica de manera efectiva y precisa las técnicas de análisis de datos en la resolución de problemas de ingeniería, demostrando un dominio sólido y obteniendo resultados confiables para la toma de decisiones.",
+         "evidencia": "Un esquema de reglas condicionales y probabilidades calculadas (utilizando Numiqo), aplicando el Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad."
+        }
+       ],
+       "fecha": "2026-10-14",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad del modelo probabilístico utilizado (Bayes o distribución específica), justificando su precisión frente a posibles sesgos en los datos de seguridad.",
+          "receptivo": "Identifica los conceptos básicos del Teorema de Bayes o distribuciones probabilísticas, pero presenta errores al realizar los cálculos mecánicos sobre los datos de seguridad.",
+          "reflexivo": "Analiza los resultados de las probabilidades calculadas, explicando el significado y la relevancia de estos valores dentro del contexto de los riesgos de seguridad evaluados.",
+          "cocreativo": "Formula nuevos enfoques estadísticos, combinando distribuciones o modelos para predecir vulnerabilidades y riesgos con un nivel de exactitud superior al estándar.",
+          "resolutivo": "Calcula correctamente las probabilidades utilizando Numiqo, aplicando fórmulas del Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad."
+         },
+         "indicador": "Cálculo de probabilidades con Numiqo y Teorema de Bayes / Distribuciones"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la solidez del esquema de reglas condicionales, detectando posibles escenarios o vectores de riesgo que el esquema inicial no contemplaba para corregirlos.",
+          "receptivo": "Registra algunas reglas condicionales de manera aislada, sin lograr conformar un esquema analítico integrado que relacione adecuadamente los riesgos.",
+          "reflexivo": "Interpreta las interrelaciones dentro del esquema analítico, comprendiendo cómo la variación en una condición de riesgo afecta la probabilidad general de vulnerabilidad.",
+          "cocreativo": "Diseña un modelo de reglas condicionales escalable y dinámico, capaz de adaptarse e integrar nuevos parámetros de riesgo a medida que evoluciona el entorno digital.",
+          "resolutivo": "Elabora un esquema analítico completo que organiza de manera coherente las reglas condicionales y los riesgos identificados en la matriz probabilística."
+         },
+         "indicador": "Estructuración del esquema analítico de reglas condicionales"
+        },
+        {
+         "niveles": {
+          "critico": "Optimiza la lógica matemática y los umbrales de alerta del motor de decisiones para garantizar la reducción significativa de falsos positivos y mejorar el tiempo de respuesta.",
+          "receptivo": "Describe la lógica matemática requerida de forma ambigua, presentando condicionales algorítmicas que no son viables para alimentar un software de monitoreo.",
+          "reflexivo": "Argumenta cómo la lógica matemática (condicionales algorítmicas) establecida permitirá al software de monitoreo tomar decisiones oportunas ante amenazas específicas.",
+          "cocreativo": "Crea una propuesta arquitectónica de toma de decisiones predictiva que trasciende el diseño original, aportando un alto nivel de innovación algorítmica al software de monitoreo.",
+          "resolutivo": "Define con precisión las condicionales algorítmicas que estructuran la lógica matemática necesaria para el funcionamiento del motor de decisiones y alertas del software."
+         },
+         "indicador": "Definición de la lógica matemática para el motor de decisiones y alertas"
+        }
+       ],
+       "clase_id": "M2-S1",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "DISTRIBUCIONES ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "modelando distribuciones",
+        "asincrónicas.",
+        "Uso intensivo de Numiqo para resolver problemas de probabilidad discreta y continua.",
+        "Resolución de la primera mitad del cuestionario de probabilidad"
+       ],
+       "politica_ia": "Se autoriza el uso de IA generativa como apoyo heurístico para plantear estructuras lógicas o comprender distribuciones probabilísticas complejas. El estudiante tiene la obligación de auditar críticamente cada sugerencia, validando los cálculos manualmente mediante la calculadora Numiqo para garantizar la exactitud matemática de las reglas de seguridad, asumiendo total autoría sobre la matriz entregada.",
+       "momento_titulo": "Planeación y Diseño - Modelado Probabilístico de Riesgos y Vulnerabilidades.",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+      "ya_generado": [],
+      "devoluciones": [],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 0,
+      "tokens": [
+       2232,
+       322
+      ],
+      "contenido": [
+       {
+        "ideas_clave": [
+         "El uso de distribuciones estadísticas permite modelar y predecir vulnerabilidades en sistemas de información.",
+         "Numiqo es una herramienta clave para calcular probabilidades y aplicar el Teorema de Bayes en el análisis de riesgos de seguridad.",
+         "La construcción de un esquema de reglas condicionales ayuda a organizar y evaluar riesgos en un contexto de seguridad digital.",
+         "La modelación probabilística es fundamental para el diseño de algoritmos predictivos que detecten amenazas en tiempo real."
+        ],
+        "relacion_ra": "La clase se enfoca en aplicar técnicas de análisis de datos y modelado probabilístico para resolver problemas de seguridad, lo cual se alinea directamente con el Resultado de Aprendizaje RA2, que exige la aplicación efectiva de métodos estadísticos en la toma de decisiones en ingeniería.",
+        "errores_frecuentes": [
+         "No utilizar correctamente Numiqo para calcular probabilidades, lo que lleva a resultados inexactos.",
+         "Ignorar el Teorema de Bayes al analizar datos de seguridad, lo que limita la precisión del modelo.",
+         "No estructurar adecuadamente el esquema de reglas condicionales, lo que dificulta la interpretación de riesgos.",
+         "No validar los cálculos manualmente, lo que puede resultar en errores en la matriz probabilística."
+        ]
+       }
+      ],
+      "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 2,
+      "plan": [],
+      "ronda": 0,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA2",
+         "texto": "Aplica de manera efectiva y precisa las técnicas de análisis de datos en la resolución de problemas de ingeniería, demostrando un dominio sólido y obteniendo resultados confiables para la toma de decisiones.",
+         "evidencia": "Un esquema de reglas condicionales y probabilidades calculadas (utilizando Numiqo), aplicando el Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad."
+        }
+       ],
+       "fecha": "2026-10-14",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad del modelo probabilístico utilizado (Bayes o distribución específica), justificando su precisión frente a posibles sesgos en los datos de seguridad.",
+          "receptivo": "Identifica los conceptos básicos del Teorema de Bayes o distribuciones probabilísticas, pero presenta errores al realizar los cálculos mecánicos sobre los datos de seguridad.",
+          "reflexivo": "Analiza los resultados de las probabilidades calculadas, explicando el significado y la relevancia de estos valores dentro del contexto de los riesgos de seguridad evaluados.",
+          "cocreativo": "Formula nuevos enfoques estadísticos, combinando distribuciones o modelos para predecir vulnerabilidades y riesgos con un nivel de exactitud superior al estándar.",
+          "resolutivo": "Calcula correctamente las probabilidades utilizando Numiqo, aplicando fórmulas del Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad."
+         },
+         "indicador": "Cálculo de probabilidades con Numiqo y Teorema de Bayes / Distribuciones"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la solidez del esquema de reglas condicionales, detectando posibles escenarios o vectores de riesgo que el esquema inicial no contemplaba para corregirlos.",
+          "receptivo": "Registra algunas reglas condicionales de manera aislada, sin lograr conformar un esquema analítico integrado que relacione adecuadamente los riesgos.",
+          "reflexivo": "Interpreta las interrelaciones dentro del esquema analítico, comprendiendo cómo la variación en una condición de riesgo afecta la probabilidad general de vulnerabilidad.",
+          "cocreativo": "Diseña un modelo de reglas condicionales escalable y dinámico, capaz de adaptarse e integrar nuevos parámetros de riesgo a medida que evoluciona el entorno digital.",
+          "resolutivo": "Elabora un esquema analítico completo que organiza de manera coherente las reglas condicionales y los riesgos identificados en la matriz probabilística."
+         },
+         "indicador": "Estructuración del esquema analítico de reglas condicionales"
+        },
+        {
+         "niveles": {
+          "critico": "Optimiza la lógica matemática y los umbrales de alerta del motor de decisiones para garantizar la reducción significativa de falsos positivos y mejorar el tiempo de respuesta.",
+          "receptivo": "Describe la lógica matemática requerida de forma ambigua, presentando condicionales algorítmicas que no son viables para alimentar un software de monitoreo.",
+          "reflexivo": "Argumenta cómo la lógica matemática (condicionales algorítmicas) establecida permitirá al software de monitoreo tomar decisiones oportunas ante amenazas específicas.",
+          "cocreativo": "Crea una propuesta arquitectónica de toma de decisiones predictiva que trasciende el diseño original, aportando un alto nivel de innovación algorítmica al software de monitoreo.",
+          "resolutivo": "Define con precisión las condicionales algorítmicas que estructuran la lógica matemática necesaria para el funcionamiento del motor de decisiones y alertas del software."
+         },
+         "indicador": "Definición de la lógica matemática para el motor de decisiones y alertas"
+        }
+       ],
+       "clase_id": "M2-S1",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "DISTRIBUCIONES ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "modelando distribuciones",
+        "asincrónicas.",
+        "Uso intensivo de Numiqo para resolver problemas de probabilidad discreta y continua.",
+        "Resolución de la primera mitad del cuestionario de probabilidad"
+       ],
+       "politica_ia": "Se autoriza el uso de IA generativa como apoyo heurístico para plantear estructuras lógicas o comprender distribuciones probabilísticas complejas. El estudiante tiene la obligación de auditar críticamente cada sugerencia, validando los cálculos manualmente mediante la calculadora Numiqo para garantizar la exactitud matemática de las reglas de seguridad, asumiendo total autoría sobre la matriz entregada.",
+       "momento_titulo": "Planeación y Diseño - Modelado Probabilístico de Riesgos y Vulnerabilidades.",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+      "ya_generado": [],
+      "devoluciones": [],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 2,
+      "ronda": 0,
+      "tokens": [
+       2237,
+       564
+      ],
+      "contenido": [
+       {
+        "ejemplo": {
+         "pasos": [
+          "Identificar los eventos relevantes: A = 'intrusión ocurre entre 10:00 y 11:00', B = 'se detecta una intrusión'.",
+          "Calcular la probabilidad a priori P(B) = 0.15.",
+          "Determinar la probabilidad condicional P(A|B): Según los datos, durante el periodo de 10:00 a 11:00 se detectaron 12 intrusiones de un total de 100 eventos de intrusión. Por lo tanto, P(A|B) = 12/100 = 0.12.",
+          "Aplicar el Teorema de Bayes: P(B|A) = [P(A|B) * P(B)] / P(A).",
+          "Calcular P(A): La probabilidad de que una intrusión ocurra entre 10:00 y 11:00 es 12/100 = 0.12.",
+          "Reemplazar los valores: P(B|A) = (0.12 * 0.15) / 0.12 = 0.15."
+         ],
+         "enunciado": "Un sistema de monitoreo de seguridad detecta intrusiones en una red corporativa. Se ha recopilado un conjunto de datos que indica cuántas veces se han detectado intrusiones en diferentes horarios del día. A partir de los siguientes datos, calcule la probabilidad de que una intrusión ocurra entre las 10:00 y 11:00 horas usando el Teorema de Bayes, considerando que la probabilidad a priori de intrusión es del 0.15.",
+         "resultado": "La probabilidad de que una intrusión ocurra entre las 10:00 y 11:00 horas, dado que se detecta una intrusión, es de 0.15."
+        },
+        "autocomprobacion": [
+         "¿Qué significa la probabilidad a priori en el contexto del Teorema de Bayes?",
+         "¿Cómo se interpreta el valor de P(A|B) en este caso?",
+         "¿Por qué se utiliza el Teorema de Bayes en este tipo de análisis?",
+         "¿Qué papel juega la probabilidad condicional en la determinación de P(B|A)?",
+         "¿Cuál es el resultado final del cálculo realizado?"
+        ]
+       }
+      ],
+      "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "ficha",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Cierre",
+     "cuerpo": {
+      "estado": "listo",
+      "tokens": [
+       7554,
+       1412
+      ],
+      "recurso_id": "cfae75b6-e5fa-480b-a8a9-7b19ffa76f05",
+      "trabajo_id": "06159fb6-f8ac-4a88-92d0-5acaf01e12c0",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    }
+   ]
+  },
+  "0bacc749-bbd0-418c-9f1a-189416b7e6db": {
+   "herramienta": "cuestionario",
+   "clase": "M3-S4",
+   "estado": "requiere_revision",
+   "mensajes": [
+    {
+     "tipo": "Encargo",
+     "cuerpo": {
+      "nivel": 3,
+      "ambito": {
+       "id": "M3-S4",
+       "tipo": "clase"
+      },
+      "carrera": "SOFTWARE",
+      "codigo_pf": "B26-SOFT-3-56146-1727",
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "herramienta": "cuestionario",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "version_silabo": "1.0",
+      "perfil_dificultad": "fundamentacion"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "foco": "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "nivel": "receptivo",
+        "item_id": "i1"
+       },
+       {
+        "foco": "HIPÓTESIS ESTADÍSTICAS",
+        "nivel": "resolutivo",
+        "item_id": "i2"
+       },
+       {
+        "foco": "asincrónicas.",
+        "nivel": "resolutivo",
+        "item_id": "i3"
+       },
+       {
+        "foco": "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "nivel": "reflexivo",
+        "item_id": "i4"
+       }
+      ],
+      "ronda": 0,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-29",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3-S4",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "asincrónicas.",
+        "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "Redacción del reporte argumentando la elección de las pruebas estadísticas."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "ya_generado": [],
+      "devoluciones": [],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 0,
+      "tokens": [
+       2720,
+       2290
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "nivel": "receptivo",
+        "item_id": "i1",
+        "contexto": "Un equipo de ciberseguridad analiza el tráfico de red de una empresa para detectar posibles ataques DDoS. Para ello, recopila datos de tráfico durante tres días distintos y quiere comparar la media del tráfico entre esos días usando pruebas estadísticas.",
+        "correcta": 0,
+        "opciones": [
+         {
+          "texto": "Determinar si hay diferencias significativas en la media del tráfico entre los tres días analizados.",
+          "justificacion": "Esta opción describe correctamente el propósito de las pruebas de hipótesis y ANOVA en comparar medias entre grupos.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "Calcular el promedio del tráfico de red en cada día sin realizar comparaciones.",
+          "justificacion": "Este enfoque no implica la comparación entre grupos, lo cual es el objetivo principal de las pruebas de hipótesis y ANOVA.",
+          "error_que_representa": "ignorar el propósito de las pruebas estadísticas"
+         },
+         {
+          "texto": "Calcular la correlación entre el tráfico de red y la hora del día.",
+          "justificacion": "Este enfoque no corresponde a las pruebas de hipótesis ni al ANOVA, que se usan para comparar medias entre grupos.",
+          "error_que_representa": "confundir el propósito de las pruebas estadísticas"
+         },
+         {
+          "texto": "Identificar la causa exacta de un aumento en el tráfico de red.",
+          "justificacion": "Las pruebas de hipótesis y ANOVA no permiten identificar causas, solo detectar diferencias estadísticas.",
+          "error_que_representa": "sobregeneralizar los resultados"
+         }
+        ],
+        "pregunta": "¿Cuál es el propósito principal de utilizar pruebas de hipótesis y análisis de varianza (ANOVA) en este contexto?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "El nivel receptivo requiere reconocer el propósito de las pruebas de hipótesis y ANOVA en el contexto de comparación de medias entre grupos.",
+         "La opción correcta identifica correctamente que el objetivo es determinar si hay diferencias significativas entre las medias de los tres días."
+        ]
+       },
+       {
+        "ra": "RA3",
+        "foco": "HIPÓTESIS ESTADÍSTICAS",
+        "nivel": "resolutivo",
+        "item_id": "i2",
+        "contexto": "Un sistema de monitoreo de red detecta picos de tráfico sospechosos. Para validar si estos picos son ataques DDoS, se realizan pruebas estadísticas sobre muestras de tráfico normal y sospechoso.",
+        "correcta": 2,
+        "opciones": [
+         {
+          "texto": "H₀: μ_normal < μ_sospechoso",
+          "justificacion": "Esta hipótesis nula asume una dirección específica, lo cual no es adecuado para una comparación bilateral.",
+          "error_que_representa": "priorizar sin criterio"
+         },
+         {
+          "texto": "H₀: μ_normal ≠ μ_sospechoso",
+          "justificacion": "Esta hipótesis nula establece una diferencia, lo cual es contrario al enfoque de la hipótesis nula que siempre asume igualdad.",
+          "error_que_representa": "confundir H₀ con H₁"
+         },
+         {
+          "texto": "H₀: μ_normal = μ_sospechoso",
+          "justificacion": "Esta hipótesis nula establece que no hay diferencia significativa entre las medias de las dos muestras.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "H₀: μ_normal > μ_sospechoso",
+          "justificacion": "Esta hipótesis nula asume una dirección específica, lo cual no es adecuado para una comparación bilateral.",
+          "error_que_representa": "priorizar sin criterio"
+         }
+        ],
+        "pregunta": "¿Qué tipo de hipótesis nula se debe plantear para comparar la media del tráfico entre muestras de tráfico normal y sospechoso?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "En el nivel resolutivo, se requiere aplicar correctamente el procedimiento de plantear una hipótesis nula.",
+         "La opción correcta establece que la hipótesis nula asume que no hay diferencia entre las medias, lo cual es el enfoque estándar en pruebas de hipótesis."
+        ]
+       },
+       {
+        "ra": "RA3",
+        "foco": "asincrónicas.",
+        "nivel": "resolutivo",
+        "item_id": "i3",
+        "contexto": "Un equipo de ciberseguridad está analizando datos de tráfico de red en un entorno asincrónico, donde los eventos de tráfico no ocurren en intervalos regulares. Para validar si hay diferencias en la intensidad del tráfico en diferentes momentos del día, se deciden usar pruebas estadísticas.",
+        "correcta": 1,
+        "opciones": [
+         {
+          "texto": "Prueba T de Student",
+          "justificacion": "La prueba T es adecuada cuando se comparan medias de dos grupos independientes, pero no es ideal para datos asincrónicos.",
+          "error_que_representa": "ignorar el contexto de los datos"
+         },
+         {
+          "texto": "Análisis de Varianza (ANOVA)",
+          "justificacion": "El ANOVA es adecuado para comparar medias entre más de dos grupos, lo cual es útil cuando se tienen múltiples momentos del día.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "Prueba de Chi-cuadrado",
+          "justificacion": "La prueba de chi-cuadrado se usa para datos categóricos, no para comparar medias continuas.",
+          "error_que_representa": "confundir tipos de datos"
+         },
+         {
+          "texto": "Prueba de Kolmogorov-Smirnov",
+          "justificacion": "Esta prueba se usa para comparar distribuciones, no para comparar medias entre grupos.",
+          "error_que_representa": "ignorar el propósito de la prueba"
+         }
+        ],
+        "pregunta": "¿Cuál es el tipo de prueba estadística más adecuada para comparar la intensidad del tráfico en diferentes momentos del día en este contexto?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "El nivel resolutivo implica aplicar el método adecuado según las características del problema.",
+         "La opción correcta selecciona el ANOVA, que es adecuado para comparar medias entre múltiples grupos, lo cual es necesario cuando se analizan diferentes momentos del día."
+        ]
+       },
+       {
+        "ra": "RA3",
+        "foco": "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "nivel": "reflexivo",
+        "item_id": "i4",
+        "contexto": "Un estudiante utiliza JASP para ejecutar una prueba T y un ANOVA para comparar el tráfico de red en tres días distintos. Luego, verifica los estadísticos críticos ($t$ o $F$) con Numiqo. Al revisar los resultados, observa que el valor de $p$ es menor que el nivel de significancia (α = 0.05).",
+        "correcta": 3,
+        "opciones": [
+         {
+          "texto": "No se puede concluir nada con base en los resultados obtenidos.",
+          "justificacion": "Esta opción ignora el significado del valor de $p$ y no interpreta el resultado.",
+          "error_que_representa": "ignorar el resultado estadístico"
+         },
+         {
+          "texto": "Se acepta la hipótesis nula, lo que indica que no hay diferencias significativas entre los grupos.",
+          "justificacion": "Esta opción confunde el rechazo de la hipótesis nula con su aceptación, lo cual es un error común.",
+          "error_que_representa": "confundir no rechazar H₀ con aceptarla"
+         },
+         {
+          "texto": "Se debe realizar una prueba adicional para confirmar los resultados.",
+          "justificacion": "Esta opción sobrestima la necesidad de más análisis, cuando el resultado ya es concluyente.",
+          "error_que_representa": "sobregeneralizar los resultados"
+         },
+         {
+          "texto": "Se rechaza la hipótesis nula, lo que sugiere que hay diferencias significativas entre los grupos analizados.",
+          "justificacion": "Esta opción interpreta correctamente el resultado estadístico, señalando que se rechaza la hipótesis nula.",
+          "error_que_representa": "ninguno"
+         }
+        ],
+        "pregunta": "¿Qué implicación tiene que el valor de $p$ sea menor que el nivel de significancia en este contexto?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "En el nivel reflexivo, se requiere interpretar el resultado estadístico y entender su implicación en el contexto del problema.",
+         "La opción correcta interpreta que el valor de $p$ menor que α significa que se rechaza la hipótesis nula, lo que sugiere diferencias significativas entre los grupos analizados."
+        ]
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La pregunta aborda el propósito de aplicar pruebas estadísticas para comparar medias (RA3), que es un componente esencial del entregable técnico que debe redactar el estudiante para diferenciar tráfico normal de ataques.",
+        "item_id": "i1",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La definición de la hipótesis nula es un componente esencial del análisis estadístico requerido para validar la detección de anomalías en el entregable, ya que forma la base para el contraste de hipótesis en JASP.",
+        "item_id": "i2",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La selección del tipo de prueba estadística es un componente esencial del análisis inferencial requerido para el entregable, ya que implica validar la idoneidad de las pruebas para diferenciar tráfico normal de ataques.",
+        "item_id": "i3",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La interpretación del valor de p es un componente esencial del análisis estadístico requerido para el entregable, ya que permite validar la significancia de las diferencias entre grupos de tráfico.",
+        "item_id": "i4",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 1,
+      "motivos": {
+       "i1": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La pregunta aborda el propósito de aplicar pruebas estadísticas para comparar medias (RA3), que es un componente esencial del entregable técnico que debe redactar el estudiante para diferenciar tráfico normal de ataques.",
+       "i2": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La definición de la hipótesis nula es un componente esencial del análisis estadístico requerido para validar la detección de anomalías en el entregable, ya que forma la base para el contraste de hipótesis en JASP.",
+       "i3": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La selección del tipo de prueba estadística es un componente esencial del análisis inferencial requerido para el entregable, ya que implica validar la idoneidad de las pruebas para diferenciar tráfico normal de ataques.",
+       "i4": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La interpretación del valor de p es un componente esencial del análisis estadístico requerido para el entregable, ya que permite validar la significancia de las diferencias entre grupos de tráfico."
+      },
+      "pendientes": [
+       "i1",
+       "i2",
+       "i3",
+       "i4"
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 1,
+      "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La pregunta aborda el propósito de aplicar pruebas estadísticas para comparar medias (RA3), que es un componente esencial del entregable técnico que debe redactar el estudiante para diferenciar tráfico normal de ataques.",
+      "item_id": "i1",
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "foco": "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "nivel": "receptivo",
+        "item_id": "i1"
+       }
+      ],
+      "ronda": 1,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-29",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3-S4",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "asincrónicas.",
+        "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "Redacción del reporte argumentando la elección de las pruebas estadísticas."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "ya_generado": [
+       "¿Qué tipo de hipótesis nula se debe plantear para comparar la media del tráfico entre muestras de tráfico normal y sospechoso?",
+       "¿Cuál es el tipo de prueba estadística más adecuada para comparar la intensidad del tráfico en diferentes momentos del día en este contexto?",
+       "¿Qué implicación tiene que el valor de $p$ sea menor que el nivel de significancia en este contexto?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 1,
+        "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La pregunta aborda el propósito de aplicar pruebas estadísticas para comparar medias (RA3), que es un componente esencial del entregable técnico que debe redactar el estudiante para diferenciar tráfico normal de ataques.",
+        "item_id": "i1",
+        "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+        "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+       }
+      ],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 1,
+      "tokens": [
+       2832,
+       523
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "nivel": "receptivo",
+        "item_id": "i1",
+        "contexto": "Un equipo de ciberseguridad está analizando el tráfico de red en una empresa para detectar posibles ataques DDoS. Para ello, recopiló datos de tráfico en tres momentos del día: mañana, tarde y noche. El objetivo es determinar si hay diferencias significativas en la intensidad del tráfico entre estos momentos.",
+        "correcta": 3,
+        "opciones": [
+         {
+          "texto": "Prueba t de Student para medias independientes",
+          "justificacion": "Esta prueba se usa cuando se comparan dos grupos, no tres.",
+          "error_que_representa": "confundir la prueba adecuada para múltiples grupos"
+         },
+         {
+          "texto": "Prueba de Kolmogorov-Smirnov",
+          "justificacion": "Esta prueba se utiliza para comprobar la normalidad de los datos, no para comparar medias.",
+          "error_que_representa": "seleccionar una prueba inapropiada para el objetivo"
+         },
+         {
+          "texto": "Prueba de chi-cuadrado",
+          "justificacion": "Esta prueba se usa para datos categóricos, no para comparar medias continuas.",
+          "error_que_representa": "seleccionar una prueba inapropiada para el tipo de variable"
+         },
+         {
+          "texto": "Análisis de Varianza (ANOVA)",
+          "justificacion": "Esta prueba es adecuada para comparar medias de tres o más grupos.",
+          "error_que_representa": "ninguno"
+         }
+        ],
+        "pregunta": "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "La situación describe la comparación de medias entre tres grupos (mañana, tarde, noche).",
+         "La prueba de hipótesis que permite comparar medias de tres o más grupos es el ANOVA."
+        ]
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 1,
+      "motivos": {
+       "i1": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La pregunta aborda el propósito de aplicar pruebas estadísticas para comparar medias (RA3), que es un componente esencial del entregable técnico que debe redactar el estudiante para diferenciar tráfico normal de ataques.",
+       "i2": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La definición de la hipótesis nula es un componente esencial del análisis estadístico requerido para validar la detección de anomalías en el entregable, ya que forma la base para el contraste de hipótesis en JASP.",
+       "i3": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La selección del tipo de prueba estadística es un componente esencial del análisis inferencial requerido para el entregable, ya que implica validar la idoneidad de las pruebas para diferenciar tráfico normal de ataques.",
+       "i4": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La interpretación del valor de p es un componente esencial del análisis estadístico requerido para el entregable, ya que permite validar la significancia de las diferencias entre grupos de tráfico."
+      },
+      "pendientes": [
+       "i2",
+       "i3",
+       "i4"
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 1,
+      "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La definición de la hipótesis nula es un componente esencial del análisis estadístico requerido para validar la detección de anomalías en el entregable, ya que forma la base para el contraste de hipótesis en JASP.",
+      "item_id": "i2",
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "foco": "HIPÓTESIS ESTADÍSTICAS",
+        "nivel": "resolutivo",
+        "item_id": "i2"
+       }
+      ],
+      "ronda": 1,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-29",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3-S4",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "asincrónicas.",
+        "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "Redacción del reporte argumentando la elección de las pruebas estadísticas."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "ya_generado": [
+       "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Cuál es el tipo de prueba estadística más adecuada para comparar la intensidad del tráfico en diferentes momentos del día en este contexto?",
+       "¿Qué implicación tiene que el valor de $p$ sea menor que el nivel de significancia en este contexto?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 1,
+        "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La definición de la hipótesis nula es un componente esencial del análisis estadístico requerido para validar la detección de anomalías en el entregable, ya que forma la base para el contraste de hipótesis en JASP.",
+        "item_id": "i2",
+        "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+        "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+       }
+      ],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 1,
+      "tokens": [
+       2818,
+       566
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "HIPÓTESIS ESTADÍSTICAS",
+        "nivel": "resolutivo",
+        "item_id": "i2",
+        "contexto": "En un sistema de monitoreo de redes, se recopiló información sobre el tráfico de datos durante tres momentos del día: mañana, tarde y noche. Se desea determinar si hay diferencias significativas en la intensidad del tráfico entre estos momentos.",
+        "correcta": 2,
+        "opciones": [
+         {
+          "texto": "La intensidad del tráfico está influenciada por factores externos como la hora del día.",
+          "justificacion": "Esta opción introduce una variable externa no considerada en la hipótesis nula.",
+          "error_que_representa": "prioriza sin criterio"
+         },
+         {
+          "texto": "El tráfico tiene una distribución normal en todos los momentos del día.",
+          "justificacion": "Esta opción se refiere a un supuesto de normalidad, no a la hipótesis nula.",
+          "error_que_representa": "ignora un supuesto necesario"
+         },
+         {
+          "texto": "La intensidad del tráfico es igual en todos los momentos del día.",
+          "justificacion": "Esta opción refleja la hipótesis nula, que establece que no hay diferencias significativas entre los grupos.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "La intensidad del tráfico es diferente en al menos un momento del día.",
+          "justificacion": "Esta opción describe la hipótesis alternativa, no la nula.",
+          "error_que_representa": "confunde hipótesis nula con hipótesis alternativa"
+         }
+        ],
+        "pregunta": "¿Cuál es la hipótesis nula que se debe plantear para comparar la intensidad del tráfico entre los tres momentos del día?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "Para comparar la intensidad del tráfico entre tres grupos (mañana, tarde, noche), se debe plantear una hipótesis nula que indique que no hay diferencias significativas entre ellos.",
+         "La hipótesis nula es fundamental en el contraste de hipótesis, ya que sirve como punto de partida para el análisis estadístico y permite evaluar si los resultados observados son consistentes con ella."
+        ]
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 1,
+      "motivos": {
+       "i1": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La pregunta aborda el propósito de aplicar pruebas estadísticas para comparar medias (RA3), que es un componente esencial del entregable técnico que debe redactar el estudiante para diferenciar tráfico normal de ataques.",
+       "i2": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La definición de la hipótesis nula es un componente esencial del análisis estadístico requerido para validar la detección de anomalías en el entregable, ya que forma la base para el contraste de hipótesis en JASP.",
+       "i3": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La selección del tipo de prueba estadística es un componente esencial del análisis inferencial requerido para el entregable, ya que implica validar la idoneidad de las pruebas para diferenciar tráfico normal de ataques.",
+       "i4": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La interpretación del valor de p es un componente esencial del análisis estadístico requerido para el entregable, ya que permite validar la significancia de las diferencias entre grupos de tráfico."
+      },
+      "pendientes": [
+       "i3",
+       "i4"
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 1,
+      "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La selección del tipo de prueba estadística es un componente esencial del análisis inferencial requerido para el entregable, ya que implica validar la idoneidad de las pruebas para diferenciar tráfico normal de ataques.",
+      "item_id": "i3",
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "foco": "asincrónicas.",
+        "nivel": "resolutivo",
+        "item_id": "i3"
+       }
+      ],
+      "ronda": 1,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-29",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3-S4",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "asincrónicas.",
+        "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "Redacción del reporte argumentando la elección de las pruebas estadísticas."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "ya_generado": [
+       "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Cuál es la hipótesis nula que se debe plantear para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Qué implicación tiene que el valor de $p$ sea menor que el nivel de significancia en este contexto?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 1,
+        "motivo": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La selección del tipo de prueba estadística es un componente esencial del análisis inferencial requerido para el entregable, ya que implica validar la idoneidad de las pruebas para diferenciar tráfico normal de ataques.",
+        "item_id": "i3",
+        "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+        "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+       }
+      ],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 1,
+      "tokens": [
+       2808,
+       576
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "asincrónicas",
+        "nivel": "resolutivo",
+        "item_id": "i3",
+        "contexto": "Un equipo de ciberseguridad está analizando el tráfico de red en una empresa durante tres momentos del día: mañana, tarde y noche. Para evaluar si hay diferencias significativas en la intensidad del tráfico entre estos momentos, se han recogido muestras aleatorias de 200 paquetes por momento. Los datos se han cargado en JASP y se requiere elegir el tipo de prueba estadística adecuada para realizar la comparación.",
+        "correcta": 2,
+        "opciones": [
+         {
+          "texto": "Prueba T de Student para medias independientes",
+          "justificacion": "Esta prueba se usa para comparar dos grupos, no tres momentos del día.",
+          "error_que_representa": "uso inapropiado de la prueba T para más de dos grupos"
+         },
+         {
+          "texto": "Prueba de Chi-cuadrado para independencia",
+          "justificacion": "Esta prueba se usa para datos categóricos, no para comparar medias continuas.",
+          "error_que_representa": "uso inapropiado de la prueba Chi-cuadrado para medias"
+         },
+         {
+          "texto": "Análisis de Varianza (ANOVA)",
+          "justificacion": "Esta prueba es adecuada para comparar medias de tres o más grupos independientes.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "Prueba de Kolmogorov-Smirnov",
+          "justificacion": "Esta prueba se usa para verificar la normalidad de los datos, no para comparar medias.",
+          "error_que_representa": "uso inapropiado de la prueba Kolmogorov-Smirnov para comparar medias"
+         }
+        ],
+        "pregunta": "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "Para comparar la intensidad del tráfico entre tres momentos del día, se requiere una prueba que permita comparar medias de más de dos grupos.",
+         "La prueba de ANOVA es la más adecuada en este contexto, ya que evalúa si existen diferencias estadísticamente significativas entre las medias de tres o más grupos independientes."
+        ]
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 1,
+      "motivos": {
+       "i1": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La pregunta aborda el propósito de aplicar pruebas estadísticas para comparar medias (RA3), que es un componente esencial del entregable técnico que debe redactar el estudiante para diferenciar tráfico normal de ataques.",
+       "i2": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La definición de la hipótesis nula es un componente esencial del análisis estadístico requerido para validar la detección de anomalías en el entregable, ya que forma la base para el contraste de hipótesis en JASP.",
+       "i3": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La selección del tipo de prueba estadística es un componente esencial del análisis inferencial requerido para el entregable, ya que implica validar la idoneidad de las pruebas para diferenciar tráfico normal de ataques.",
+       "i4": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La interpretación del valor de p es un componente esencial del análisis estadístico requerido para el entregable, ya que permite validar la significancia de las diferencias entre grupos de tráfico."
+      },
+      "pendientes": [
+       "i4"
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 1,
+      "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La interpretación del valor de p es un componente esencial del análisis estadístico requerido para el entregable, ya que permite validar la significancia de las diferencias entre grupos de tráfico.",
+      "item_id": "i4",
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "foco": "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "nivel": "reflexivo",
+        "item_id": "i4"
+       }
+      ],
+      "ronda": 1,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-29",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3-S4",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "asincrónicas.",
+        "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "Redacción del reporte argumentando la elección de las pruebas estadísticas."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "ya_generado": [
+       "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Cuál es la hipótesis nula que se debe plantear para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 1,
+        "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La interpretación del valor de p es un componente esencial del análisis estadístico requerido para el entregable, ya que permite validar la significancia de las diferencias entre grupos de tráfico.",
+        "item_id": "i4",
+        "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+        "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+       }
+      ],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 1,
+      "tokens": [
+       2865,
+       810
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "nivel": "reflexivo",
+        "item_id": "i4",
+        "contexto": "Un equipo de ciberseguridad analiza el tráfico de red en tres momentos del día: mañana, tarde y noche. Para determinar si hay diferencias significativas en la intensidad del tráfico entre estos momentos, el equipo decide realizar pruebas de hipótesis. Utiliza JASP para calcular los estadísticos y Numiqo para verificar los valores críticos de $F$ manualmente.",
+        "correcta": 3,
+        "opciones": [
+         {
+          "texto": "Se concluye que el tráfico es uniforme en todos los momentos del día, independientemente de los resultados obtenidos.",
+          "justificacion": "Esta opción sobregeneraliza los resultados, ignorando que la no rechazo de la hipótesis nula no implica necesariamente que los grupos sean iguales.",
+          "error_que_representa": "sobregeneralizar"
+         },
+         {
+          "texto": "Se acepta la hipótesis nula, lo que significa que no hay diferencias estadísticamente significativas entre los grupos.",
+          "justificacion": "Esta opción confunde la no rechazo de la hipótesis nula con su aceptación, lo cual es un error común en la interpretación de resultados estadísticos.",
+          "error_que_representa": "confundir no rechazar H0 con aceptarla"
+         },
+         {
+          "texto": "Se determina que el tráfico sigue una distribución normal, por lo que se pueden aplicar pruebas no paramétricas.",
+          "justificacion": "Esta opción introduce un supuesto no verificado (distribución normal) sin base en los datos, lo cual es un error de interpretación.",
+          "error_que_representa": "ignorar un supuesto"
+         },
+         {
+          "texto": "Se rechaza la hipótesis nula, lo que sugiere que hay diferencias significativas entre los grupos.",
+          "justificacion": "Esta opción interpreta correctamente el resultado del análisis de varianza (ANOVA), ya que un valor de $F$ menor que el valor crítico indica que no se rechaza la hipótesis nula.",
+          "error_que_representa": "ninguno"
+         }
+        ],
+        "pregunta": "¿Qué implicación tiene que el valor de $F$ calculado en JASP sea menor que el valor crítico obtenido en Numiqo?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "La comparación de la intensidad del tráfico entre tres momentos del día requiere un análisis de varianza (ANOVA) debido a que se comparan más de dos grupos.",
+         "En JASP se calcula el valor de $F$, que mide la variabilidad entre grupos frente a la variabilidad dentro de los grupos.",
+         "El valor crítico de $F$ se obtiene en Numiqo y sirve como umbral para decidir si se rechaza la hipótesis nula.",
+         "Si el valor de $F$ calculado es menor que el valor crítico, no se rechaza la hipótesis nula, lo que implica que no hay diferencias estadísticamente significativas entre los grupos."
+        ]
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 1,
+      "motivos": {
+       "i1": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La pregunta aborda el propósito de aplicar pruebas estadísticas para comparar medias (RA3), que es un componente esencial del entregable técnico que debe redactar el estudiante para diferenciar tráfico normal de ataques.",
+       "i2": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La definición de la hipótesis nula es un componente esencial del análisis estadístico requerido para validar la detección de anomalías en el entregable, ya que forma la base para el contraste de hipótesis en JASP.",
+       "i3": "resuelve el entregable Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: La selección del tipo de prueba estadística es un componente esencial del análisis inferencial requerido para el entregable, ya que implica validar la idoneidad de las pruebas para diferenciar tráfico normal de ataques.",
+       "i4": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La interpretación del valor de p es un componente esencial del análisis estadístico requerido para el entregable, ya que permite validar la significancia de las diferencias entre grupos de tráfico."
+      },
+      "pendientes": [],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "i1",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La formulación correcta de la hipótesis nula es un paso esencial para realizar el análisis estadístico requerido en el entregable, que incluye comparar medias entre grupos (momentos del día) mediante pruebas como ANOVA.",
+        "item_id": "i2",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "",
+        "item_id": "i3",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La pregunta aborda la interpretación de resultados estadísticos clave (F y valor crítico) que son esenciales para el análisis requerido en el entregable, aunque no resuelve directamente el documento completo.; además, el revisor considera correcta la opción 2, no la 4",
+        "item_id": "i4",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 2,
+      "motivos": {
+       "i2": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La formulación correcta de la hipótesis nula es un paso esencial para realizar el análisis estadístico requerido en el entregable, que incluye comparar medias entre grupos (momentos del día) mediante pruebas como ANOVA.",
+       "i4": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La pregunta aborda la interpretación de resultados estadísticos clave (F y valor crítico) que son esenciales para el análisis requerido en el entregable, aunque no resuelve directamente el documento completo.; además, el revisor considera correcta la opción 2, no la 4"
+      },
+      "pendientes": [
+       "i2",
+       "i4"
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 2,
+      "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La formulación correcta de la hipótesis nula es un paso esencial para realizar el análisis estadístico requerido en el entregable, que incluye comparar medias entre grupos (momentos del día) mediante pruebas como ANOVA.",
+      "item_id": "i2",
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "foco": "HIPÓTESIS ESTADÍSTICAS",
+        "nivel": "resolutivo",
+        "item_id": "i2"
+       }
+      ],
+      "ronda": 2,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-29",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3-S4",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "asincrónicas.",
+        "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "Redacción del reporte argumentando la elección de las pruebas estadísticas."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "ya_generado": [
+       "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Qué implicación tiene que el valor de $F$ calculado en JASP sea menor que el valor crítico obtenido en Numiqo?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 2,
+        "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La formulación correcta de la hipótesis nula es un paso esencial para realizar el análisis estadístico requerido en el entregable, que incluye comparar medias entre grupos (momentos del día) mediante pruebas como ANOVA.",
+        "item_id": "i2",
+        "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+        "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+       }
+      ],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 2,
+      "tokens": [
+       2847,
+       575
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "HIPÓTESIS ESTADÍSTICAS",
+        "nivel": "resolutivo",
+        "item_id": "i2",
+        "contexto": "Un equipo de ciberseguridad analiza los registros de tráfico de red de una empresa durante tres momentos del día: mañana, tarde y noche. El objetivo es determinar si hay diferencias significativas en la intensidad del tráfico entre estos momentos, lo cual podría indicar un posible ataque DDoS durante algún periodo.",
+        "correcta": 2,
+        "opciones": [
+         {
+          "texto": "No existe relación entre el momento del día y la intensidad del tráfico.",
+          "justificacion": "Esta opción sugiere una correlación, pero no aborda la comparación de medias entre grupos.",
+          "error_que_representa": "prioriza sin criterio"
+         },
+         {
+          "texto": "El tráfico durante la noche es significativamente mayor que en la mañana.",
+          "justificacion": "Esta opción establece una comparación específica entre dos momentos, pero no aborda la comparación global entre los tres momentos del día.",
+          "error_que_representa": "ignora el supuesto de comparación global"
+         },
+         {
+          "texto": "La intensidad del tráfico es igual en todos los momentos del día.",
+          "justificacion": "Esta opción refleja la hipótesis nula, que establece que no hay diferencias significativas entre los grupos.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "La intensidad del tráfico es diferente en al menos un momento del día.",
+          "justificacion": "Esta opción describe la hipótesis alternativa, no la nula.",
+          "error_que_representa": "confunde hipótesis nula con hipótesis alternativa"
+         }
+        ],
+        "pregunta": "¿Cuál es la hipótesis nula que debe plantearse para comparar la intensidad del tráfico entre los tres momentos del día?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "Para comparar la intensidad del tráfico entre tres momentos del día, se debe plantear una hipótesis nula que indique que no hay diferencias significativas entre los grupos.",
+         "La hipótesis nula es fundamental en el análisis de varianza (ANOVA), ya que define el estado del mundo que se asume verdadero antes de realizar la prueba."
+        ]
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 2,
+      "motivos": {
+       "i2": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La formulación correcta de la hipótesis nula es un paso esencial para realizar el análisis estadístico requerido en el entregable, que incluye comparar medias entre grupos (momentos del día) mediante pruebas como ANOVA.",
+       "i4": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La pregunta aborda la interpretación de resultados estadísticos clave (F y valor crítico) que son esenciales para el análisis requerido en el entregable, aunque no resuelve directamente el documento completo.; además, el revisor considera correcta la opción 2, no la 4"
+      },
+      "pendientes": [
+       "i4"
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 2,
+      "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La pregunta aborda la interpretación de resultados estadísticos clave (F y valor crítico) que son esenciales para el análisis requerido en el entregable, aunque no resuelve directamente el documento completo.; además, el revisor considera correcta la opción 2, no la 4",
+      "item_id": "i4",
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "foco": "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "nivel": "reflexivo",
+        "item_id": "i4"
+       }
+      ],
+      "ronda": 2,
+      "estilo": {
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-29",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3-S4",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+        "asincrónicas.",
+        "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "Redacción del reporte argumentando la elección de las pruebas estadísticas."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": []
+      },
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "ya_generado": [
+       "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Cuál es la hipótesis nula que debe plantearse para comparar la intensidad del tráfico entre los tres momentos del día?",
+       "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 2,
+        "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La pregunta aborda la interpretación de resultados estadísticos clave (F y valor crítico) que son esenciales para el análisis requerido en el entregable, aunque no resuelve directamente el documento completo.; además, el revisor considera correcta la opción 2, no la 4",
+        "item_id": "i4",
+        "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+        "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+       }
+      ],
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 2,
+      "tokens": [
+       2889,
+       820
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "nivel": "reflexivo",
+        "item_id": "i4",
+        "contexto": "Un equipo de ciberseguridad analiza el tráfico de red en tres momentos del día: mañana, tarde y noche. Para detectar posibles ataques DDoS, deciden realizar una prueba de hipótesis para comparar la intensidad del tráfico entre estos momentos. Usan JASP para ejecutar la prueba ANOVA y Numiqo para verificar manualmente los estadísticos críticos.",
+        "correcta": 0,
+        "opciones": [
+         {
+          "texto": "Se rechaza la hipótesis nula y se concluye que no hay diferencias significativas entre los grupos.",
+          "justificacion": "Este error confunde la interpretación de los valores F y críticos. Si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula, no se concluye que no haya diferencias.",
+          "error_que_representa": "confundir no rechazar H0 con aceptarla"
+         },
+         {
+          "texto": "Se acepta la hipótesis nula y se concluye que no hay diferencias significativas entre los grupos.",
+          "justificacion": "Si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula, lo que significa que no hay evidencia suficiente para afirmar que existen diferencias significativas entre los grupos.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "Se acepta la hipótesis nula y se concluye que hay diferencias significativas entre los grupos.",
+          "justificacion": "Este error sobregeneraliza la interpretación. Si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula, por lo que no se puede concluir que haya diferencias significativas.",
+          "error_que_representa": "sobregeneralizar"
+         },
+         {
+          "texto": "Se rechaza la hipótesis nula y se concluye que hay diferencias significativas entre los grupos.",
+          "justificacion": "La comparación entre el valor F calculado y el valor crítico permite decidir si se rechaza la hipótesis nula. Si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula.",
+          "error_que_representa": "ninguno"
+         }
+        ],
+        "pregunta": "¿Qué implicación tiene que el valor F calculado en JASP sea menor que el valor crítico obtenido en Numiqo?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "Primero, se debe entender que el valor F calculado en JASP es el estadístico de prueba obtenido del análisis ANOVA.",
+         "Luego, se compara este valor con el valor crítico obtenido en Numiqo, que corresponde al umbral para rechazar la hipótesis nula.",
+         "Finalmente, se interpreta que si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula, lo que indica que no hay evidencia suficiente para afirmar que existan diferencias significativas entre los grupos."
+        ]
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 2,
+      "motivos": {
+       "i2": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La formulación correcta de la hipótesis nula es un paso esencial para realizar el análisis estadístico requerido en el entregable, que incluye comparar medias entre grupos (momentos del día) mediante pruebas como ANOVA.",
+       "i4": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La pregunta aborda la interpretación de resultados estadísticos clave (F y valor crítico) que son esenciales para el análisis requerido en el entregable, aunque no resuelve directamente el documento completo.; además, el revisor considera correcta la opción 2, no la 4"
+      },
+      "pendientes": [],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "i1",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La formulación de la hipótesis nula es un componente fundamental del análisis estadístico requerido en el entregable, ya que permite validar el comportamiento de los datos y fundamentar decisiones algorítmicas.",
+        "item_id": "i2",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "",
+        "item_id": "i3",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "el revisor considera correcta la opción 2, no la 1",
+        "item_id": "i4",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    },
+    {
+     "tipo": "Cierre",
+     "cuerpo": {
+      "estado": "requiere_revision",
+      "tokens": [
+       45385,
+       15143
+      ],
+      "recurso_id": "cdec3f64-107e-4046-90f4-9b411df67847",
+      "trabajo_id": "0bacc749-bbd0-418c-9f1a-189416b7e6db",
+      "asignatura_id": "59449dfa-db3d-4bc3-9bfb-1bb2f57da66d"
+     }
+    }
+   ]
+  }
+ },
+ "recursos": [
+  {
+   "herramienta": "cuestionario",
+   "estado": "requiere_revision",
+   "contenido": [
+    {
+     "ra": "RA3",
+     "foco": "sobre Pruebas de hipótesis y Análisis de varianza (ANOVA)",
+     "nivel": "receptivo",
+     "item_id": "i1",
+     "contexto": "Un equipo de ciberseguridad está analizando el tráfico de red en una empresa para detectar posibles ataques DDoS. Para ello, recopiló datos de tráfico en tres momentos del día: mañana, tarde y noche. El objetivo es determinar si hay diferencias significativas en la intensidad del tráfico entre estos momentos.",
+     "correcta": 3,
+     "opciones": [
+      {
+       "texto": "Prueba t de Student para medias independientes",
+       "justificacion": "Esta prueba se usa cuando se comparan dos grupos, no tres.",
+       "error_que_representa": "confundir la prueba adecuada para múltiples grupos"
+      },
+      {
+       "texto": "Prueba de Kolmogorov-Smirnov",
+       "justificacion": "Esta prueba se utiliza para comprobar la normalidad de los datos, no para comparar medias.",
+       "error_que_representa": "seleccionar una prueba inapropiada para el objetivo"
+      },
+      {
+       "texto": "Prueba de chi-cuadrado",
+       "justificacion": "Esta prueba se usa para datos categóricos, no para comparar medias continuas.",
+       "error_que_representa": "seleccionar una prueba inapropiada para el tipo de variable"
+      },
+      {
+       "texto": "Análisis de Varianza (ANOVA)",
+       "justificacion": "Esta prueba es adecuada para comparar medias de tres o más grupos.",
+       "error_que_representa": "ninguno"
+      }
+     ],
+     "pregunta": "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+     "contenido": "HIPÓTESIS ESTADÍSTICAS",
+     "razonamiento": [
+      "La situación describe la comparación de medias entre tres grupos (mañana, tarde, noche).",
+      "La prueba de hipótesis que permite comparar medias de tres o más grupos es el ANOVA."
+     ]
+    },
+    {
+     "ra": "RA3",
+     "foco": "HIPÓTESIS ESTADÍSTICAS",
+     "nivel": "resolutivo",
+     "item_id": "i2",
+     "contexto": "Un equipo de ciberseguridad analiza los registros de tráfico de red de una empresa durante tres momentos del día: mañana, tarde y noche. El objetivo es determinar si hay diferencias significativas en la intensidad del tráfico entre estos momentos, lo cual podría indicar un posible ataque DDoS durante algún periodo.",
+     "correcta": 2,
+     "opciones": [
+      {
+       "texto": "No existe relación entre el momento del día y la intensidad del tráfico.",
+       "justificacion": "Esta opción sugiere una correlación, pero no aborda la comparación de medias entre grupos.",
+       "error_que_representa": "prioriza sin criterio"
+      },
+      {
+       "texto": "El tráfico durante la noche es significativamente mayor que en la mañana.",
+       "justificacion": "Esta opción establece una comparación específica entre dos momentos, pero no aborda la comparación global entre los tres momentos del día.",
+       "error_que_representa": "ignora el supuesto de comparación global"
+      },
+      {
+       "texto": "La intensidad del tráfico es igual en todos los momentos del día.",
+       "justificacion": "Esta opción refleja la hipótesis nula, que establece que no hay diferencias significativas entre los grupos.",
+       "error_que_representa": "ninguno"
+      },
+      {
+       "texto": "La intensidad del tráfico es diferente en al menos un momento del día.",
+       "justificacion": "Esta opción describe la hipótesis alternativa, no la nula.",
+       "error_que_representa": "confunde hipótesis nula con hipótesis alternativa"
+      }
+     ],
+     "pregunta": "¿Cuál es la hipótesis nula que debe plantearse para comparar la intensidad del tráfico entre los tres momentos del día?",
+     "contenido": "HIPÓTESIS ESTADÍSTICAS",
+     "razonamiento": [
+      "Para comparar la intensidad del tráfico entre tres momentos del día, se debe plantear una hipótesis nula que indique que no hay diferencias significativas entre los grupos.",
+      "La hipótesis nula es fundamental en el análisis de varianza (ANOVA), ya que define el estado del mundo que se asume verdadero antes de realizar la prueba."
+     ]
+    },
+    {
+     "ra": "RA3",
+     "foco": "asincrónicas",
+     "nivel": "resolutivo",
+     "item_id": "i3",
+     "contexto": "Un equipo de ciberseguridad está analizando el tráfico de red en una empresa durante tres momentos del día: mañana, tarde y noche. Para evaluar si hay diferencias significativas en la intensidad del tráfico entre estos momentos, se han recogido muestras aleatorias de 200 paquetes por momento. Los datos se han cargado en JASP y se requiere elegir el tipo de prueba estadística adecuada para realizar la comparación.",
+     "correcta": 2,
+     "opciones": [
+      {
+       "texto": "Prueba T de Student para medias independientes",
+       "justificacion": "Esta prueba se usa para comparar dos grupos, no tres momentos del día.",
+       "error_que_representa": "uso inapropiado de la prueba T para más de dos grupos"
+      },
+      {
+       "texto": "Prueba de Chi-cuadrado para independencia",
+       "justificacion": "Esta prueba se usa para datos categóricos, no para comparar medias continuas.",
+       "error_que_representa": "uso inapropiado de la prueba Chi-cuadrado para medias"
+      },
+      {
+       "texto": "Análisis de Varianza (ANOVA)",
+       "justificacion": "Esta prueba es adecuada para comparar medias de tres o más grupos independientes.",
+       "error_que_representa": "ninguno"
+      },
+      {
+       "texto": "Prueba de Kolmogorov-Smirnov",
+       "justificacion": "Esta prueba se usa para verificar la normalidad de los datos, no para comparar medias.",
+       "error_que_representa": "uso inapropiado de la prueba Kolmogorov-Smirnov para comparar medias"
+      }
+     ],
+     "pregunta": "¿Qué tipo de prueba estadística se debería utilizar para comparar la intensidad del tráfico entre los tres momentos del día?",
+     "contenido": "HIPÓTESIS ESTADÍSTICAS",
+     "razonamiento": [
+      "Para comparar la intensidad del tráfico entre tres momentos del día, se requiere una prueba que permita comparar medias de más de dos grupos.",
+      "La prueba de ANOVA es la más adecuada en este contexto, ya que evalúa si existen diferencias estadísticamente significativas entre las medias de tres o más grupos independientes."
+     ]
+    },
+    {
+     "ra": "RA3",
+     "foco": "Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+     "nivel": "reflexivo",
+     "item_id": "i4",
+     "contexto": "Un equipo de ciberseguridad analiza el tráfico de red en tres momentos del día: mañana, tarde y noche. Para detectar posibles ataques DDoS, deciden realizar una prueba de hipótesis para comparar la intensidad del tráfico entre estos momentos. Usan JASP para ejecutar la prueba ANOVA y Numiqo para verificar manualmente los estadísticos críticos.",
+     "correcta": 0,
+     "opciones": [
+      {
+       "texto": "Se rechaza la hipótesis nula y se concluye que no hay diferencias significativas entre los grupos.",
+       "justificacion": "Este error confunde la interpretación de los valores F y críticos. Si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula, no se concluye que no haya diferencias.",
+       "error_que_representa": "confundir no rechazar H0 con aceptarla"
+      },
+      {
+       "texto": "Se acepta la hipótesis nula y se concluye que no hay diferencias significativas entre los grupos.",
+       "justificacion": "Si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula, lo que significa que no hay evidencia suficiente para afirmar que existen diferencias significativas entre los grupos.",
+       "error_que_representa": "ninguno"
+      },
+      {
+       "texto": "Se acepta la hipótesis nula y se concluye que hay diferencias significativas entre los grupos.",
+       "justificacion": "Este error sobregeneraliza la interpretación. Si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula, por lo que no se puede concluir que haya diferencias significativas.",
+       "error_que_representa": "sobregeneralizar"
+      },
+      {
+       "texto": "Se rechaza la hipótesis nula y se concluye que hay diferencias significativas entre los grupos.",
+       "justificacion": "La comparación entre el valor F calculado y el valor crítico permite decidir si se rechaza la hipótesis nula. Si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula.",
+       "error_que_representa": "ninguno"
+      }
+     ],
+     "pregunta": "¿Qué implicación tiene que el valor F calculado en JASP sea menor que el valor crítico obtenido en Numiqo?",
+     "contenido": "HIPÓTESIS ESTADÍSTICAS",
+     "razonamiento": [
+      "Primero, se debe entender que el valor F calculado en JASP es el estadístico de prueba obtenido del análisis ANOVA.",
+      "Luego, se compara este valor con el valor crítico obtenido en Numiqo, que corresponde al umbral para rechazar la hipótesis nula.",
+      "Finalmente, se interpreta que si el valor F es menor que el valor crítico, no se rechaza la hipótesis nula, lo que indica que no hay evidencia suficiente para afirmar que existan diferencias significativas entre los grupos."
+     ]
+    }
+   ],
+   "evidencia": {
+    "ra": [
+     "RA3"
+    ],
+    "agente": "ingenierias",
+    "tokens": [
+     45385,
+     15143
+    ],
+    "momento": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+    "borrador": true,
+    "clase_id": "M3-S4",
+    "contenidos": [
+     "HIPÓTESIS ESTADÍSTICAS"
+    ],
+    "tabla_real": {
+     "critico": 0,
+     "receptivo": 1,
+     "reflexivo": 1,
+     "resolutivo": 2
+    },
+    "veredictos": {
+     "i1": "ok",
+     "i2": "resuelve el entregable Documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques: La formulación de la hipótesis nula es un componente fundamental del análisis estadístico requerido en el entregable, ya que permite validar el comportamiento de los datos y fundamentar decisiones algorítmicas.",
+     "i3": "ok",
+     "i4": "el revisor considera correcta la opción 2, no la 1"
+    },
+    "devoluciones": 6,
+    "verificaciones": {
+     "i1": [],
+     "i2": [],
+     "i3": [
+      "enunciado casi duplicado de otro ya generado"
+     ],
+     "i4": []
+    },
+    "motivos_revision": [],
+    "perfil_dificultad": "fundamentacion",
+    "tabla_planificada": {
+     "critico": 0,
+     "receptivo": 1,
+     "reflexivo": 1,
+     "resolutivo": 2
+    }
+   }
+  },
+  {
+   "herramienta": "ficha_clase",
+   "estado": "listo",
+   "contenido": {
+    "aplicacion": {
+     "ejemplo": {
+      "pasos": [
+       "Identificar los eventos relevantes: A = 'intrusión ocurre entre 10:00 y 11:00', B = 'se detecta una intrusión'.",
+       "Calcular la probabilidad a priori P(B) = 0.15.",
+       "Determinar la probabilidad condicional P(A|B): Según los datos, durante el periodo de 10:00 a 11:00 se detectaron 12 intrusiones de un total de 100 eventos de intrusión. Por lo tanto, P(A|B) = 12/100 = 0.12.",
+       "Aplicar el Teorema de Bayes: P(B|A) = [P(A|B) * P(B)] / P(A).",
+       "Calcular P(A): La probabilidad de que una intrusión ocurra entre 10:00 y 11:00 es 12/100 = 0.12.",
+       "Reemplazar los valores: P(B|A) = (0.12 * 0.15) / 0.12 = 0.15."
+      ],
+      "enunciado": "Un sistema de monitoreo de seguridad detecta intrusiones en una red corporativa. Se ha recopilado un conjunto de datos que indica cuántas veces se han detectado intrusiones en diferentes horarios del día. A partir de los siguientes datos, calcule la probabilidad de que una intrusión ocurra entre las 10:00 y 11:00 horas usando el Teorema de Bayes, considerando que la probabilidad a priori de intrusión es del 0.15.",
+      "resultado": "La probabilidad de que una intrusión ocurra entre las 10:00 y 11:00 horas, dado que se detecta una intrusión, es de 0.15."
+     },
+     "autocomprobacion": [
+      "¿Qué significa la probabilidad a priori en el contexto del Teorema de Bayes?",
+      "¿Cómo se interpreta el valor de P(A|B) en este caso?",
+      "¿Por qué se utiliza el Teorema de Bayes en este tipo de análisis?",
+      "¿Qué papel juega la probabilidad condicional en la determinación de P(B|A)?",
+      "¿Cuál es el resultado final del cálculo realizado?"
+     ]
+    },
+    "conceptual": {
+     "ideas_clave": [
+      "El uso de distribuciones estadísticas permite modelar y predecir vulnerabilidades en sistemas de información.",
+      "Numiqo es una herramienta clave para calcular probabilidades y aplicar el Teorema de Bayes en el análisis de riesgos de seguridad.",
+      "La construcción de un esquema de reglas condicionales ayuda a organizar y evaluar riesgos en un contexto de seguridad digital.",
+      "La modelación probabilística es fundamental para el diseño de algoritmos predictivos que detecten amenazas en tiempo real."
+     ],
+     "relacion_ra": "La clase se enfoca en aplicar técnicas de análisis de datos y modelado probabilístico para resolver problemas de seguridad, lo cual se alinea directamente con el Resultado de Aprendizaje RA2, que exige la aplicación efectiva de métodos estadísticos en la toma de decisiones en ingeniería.",
+     "errores_frecuentes": [
+      "No utilizar correctamente Numiqo para calcular probabilidades, lo que lleva a resultados inexactos.",
+      "Ignorar el Teorema de Bayes al analizar datos de seguridad, lo que limita la precisión del modelo.",
+      "No estructurar adecuadamente el esquema de reglas condicionales, lo que dificulta la interpretación de riesgos.",
+      "No validar los cálculos manualmente, lo que puede resultar en errores en la matriz probabilística."
+     ]
+    }
+   },
+   "evidencia": {
+    "ra": [
+     "RA2"
+    ],
+    "agente": "ingenierias",
+    "tokens": [
+     7554,
+     1412
+    ],
+    "momento": "Planeación y Diseño - Modelado Probabilístico de Riesgos y Vulnerabilidades.",
+    "borrador": false,
+    "clase_id": "M2-S1",
+    "contenidos": [
+     "DISTRIBUCIONES ESTADÍSTICAS"
+    ],
+    "tabla_real": {},
+    "veredictos": {
+     "ficha": "ok"
+    },
+    "devoluciones": 0,
+    "verificaciones": {
+     "ficha": []
+    },
+    "motivos_revision": [],
+    "perfil_dificultad": "fundamentacion",
+    "tabla_planificada": {}
+   }
+  }
+ ]
+}

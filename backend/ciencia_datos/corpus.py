@@ -1,0 +1,118 @@
+"""Corpus de entrenamiento: fragmentos académicos de los sílabos, sin datos personales.
+
+Solo se lee `SilaboUTI`, que por construcción no tiene perfil docente ni contacto.
+Como segunda barrera, se descarta todo fragmento con correos, ORCID o números largos.
+Nada de este módulo imprime ni registra texto de los sílabos.
+"""
+import re
+from dataclasses import dataclass
+from pathlib import Path
+
+from app.silabo.lector.ensamblar import leer_silabo
+from app.silabo.modelo import SilaboUTI
+from ciencia_datos.origen import es_simulado
+
+_PERSONAL = re.compile(
+    r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+"      # correo
+    r"|\b\d{4}-\d{4}-\d{4}-\d{3}[\dXx]\b"  # ORCID
+    r"|\d{7,}"                           # teléfono, cédula u otra secuencia larga
+    # Título (sin distinguir mayúsculas) y punto, con espacio opcional, seguido de una palabra con
+    # mayúscula inicial: "Dra. Ana", "Dr.Juan"; no "Ing. de requisitos".
+    r"|(?<!\w)(?i:Dra?|Ing|Mgs|M\.?Sc|Mgtr|Mg|Mtra|Mtr|Lic|Lcd[oa]|Abg|Arq|Prof|Econ)\.\s*[A-ZÁÉÍÓÚÑ]"
+    r"|(?<!\w)(?i:Ph\.?D)\.?\s+[A-ZÁÉÍÓÚÑ]"
+)
+
+
+@dataclass(frozen=True)
+class Fragmento:
+    codigo_pf: str
+    facultad: str
+    carrera: str
+    momento: int | None
+    tipo: str
+    texto: str
+
+
+def tiene_datos_personales(texto: str) -> bool:
+    """Si el texto parece traer correo, ORCID, número largo o un título con nombre propio."""
+    return _PERSONAL.search(" ".join(texto.split())) is not None
+
+
+def _limpio(texto: str) -> str | None:
+    t = " ".join(texto.split())
+    return t if t and not tiene_datos_personales(t) else None
+
+
+def fragmentos(silabo: SilaboUTI) -> list[Fragmento]:
+    """Contenidos, actividades, resultados y evidencias; sin vacíos ni repetidos."""
+    base = (silabo.proyecto_formativo.codigo, silabo.facultad, silabo.carrera)
+    crudos: list[tuple[int | None, str, str]] = [
+        (None, "resultado", r.texto) for r in silabo.resultados_aprendizaje
+    ]
+    for m in silabo.momentos:
+        crudos.append((m.numero, "evidencia", m.evidencia))
+        for s in m.sesiones:
+            crudos += [(m.numero, "contenido", c) for c in s.contenidos]
+            crudos += [
+                (m.numero, "actividad", t)
+                for t in (s.docente.texto, s.practico.texto, s.autonomo.texto)
+            ]
+    vistos: set[str] = set()
+    salida: list[Fragmento] = []
+    for momento, tipo, texto in crudos:
+        t = _limpio(texto)
+        if t is None or t in vistos:
+            continue
+        vistos.add(t)
+        salida.append(Fragmento(*base, momento, tipo, t))
+    return salida
+
+
+def leer_carpeta(carpeta: Path | list[Path]) -> tuple[list[SilaboUTI], list[str]]:
+    """Los sílabos de `leer_con_origen`, sin su ruta; acepta una carpeta o varias."""
+    con_origen, rechazados = leer_con_origen(carpeta)
+    return [s for s, _ in con_origen], rechazados
+
+
+def por_carpeta(rutas: list[Path], raiz: Path) -> dict[str, int]:
+    """Cuántas rutas hay por carpeta de primer nivel bajo `raiz` (`.` si están en ella), sin nombres de archivo."""
+    cuenta: dict[str, int] = {}
+    for ruta in rutas:
+        partes = ruta.relative_to(raiz).parts
+        nombre = partes[0] if len(partes) > 1 else "."
+        cuenta[nombre] = cuenta.get(nombre, 0) + 1
+    return dict(sorted(cuenta.items()))
+
+
+def leer_con_origen(carpeta: Path | list[Path]) -> tuple[list[tuple[SilaboUTI, Path]], list[str]]:
+    """Lee `*.pdf` y `*.json` (un `SilaboUTI` serializado) de una carpeta, o de varias, y sus subcarpetas.
+
+    Un PDF con código `SIM-` se rechaza: el prefijo marca lo simulado y un PDF solo puede ser real.
+
+    Conserva una versión por código de proyecto formativo: la de `aprobado` más
+    reciente y, a igualdad, la de mayor nombre de archivo. Devuelve también los
+    nombres de archivo rechazados, sin el motivo, que podría contener texto.
+    """
+    elegidos: dict[str, tuple[tuple, SilaboUTI, Path]] = {}
+    rechazados: list[str] = []
+    carpetas = carpeta if isinstance(carpeta, (list, tuple)) else [carpeta]
+    rutas = [r for c in carpetas for r in sorted(Path(c).rglob("*"))]
+    for ruta in rutas:
+        if ruta.suffix.lower() not in (".pdf", ".json") or not ruta.is_file():
+            continue
+        try:
+            datos = ruta.read_bytes()
+            if ruta.suffix.lower() == ".pdf":
+                silabo = leer_silabo(datos)
+                if es_simulado(silabo.proyecto_formativo.codigo):
+                    raise ValueError("un PDF no puede usar el prefijo simulado")
+            else:
+                silabo = SilaboUTI.model_validate_json(datos)
+        except Exception:
+            rechazados.append(ruta.name)
+            continue
+        clave = (silabo.proyecto_formativo.aprobado, ruta.name)
+        codigo = silabo.proyecto_formativo.codigo
+        if codigo not in elegidos or clave > elegidos[codigo][0]:
+            elegidos[codigo] = (clave, silabo, ruta)
+    return [(s, r) for _, s, r in elegidos.values()], rechazados

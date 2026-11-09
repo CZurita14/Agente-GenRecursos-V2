@@ -1,0 +1,31 @@
+# Sílabos reales: contienen datos personales del docente (teléfono, correo,
+# ORCID) y firmas electrónicas. No se versionan; las pruebas usan copias
+# anonimizadas.
+Silabos/
+
+# Entorno y secretos
+.env
+.venv/
+__pycache__/
+*.log
+
+# Herramienta de análisis REA (clon con su propio repositorio)
+rea/
+
+# Pruebas y espacio de trabajo de los agentes de construcción
+.pytest_cache/
+*.egg-info/
+.superpowers/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Ciencia de datos: modelos, datos derivados y entorno de entrenamiento
+modelos/
+datos_cd/
+# Informes de la prueba de humo: no son un resultado que se versione
+pruebas/ciencia_datos/*-humo.json
+# Informes del modelo preliminar (textos simulados): no son un resultado que se versione
+pruebas/ciencia_datos/*-preliminar.json
+.venv-ciencia/

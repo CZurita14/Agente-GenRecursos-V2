@@ -1,0 +1,96 @@
+# Catálogo de facultades y carreras (definido por el usuario el 2026-10-20)
+# y asignación de la documentación de DOCS_CARRERAS a cada carrera.
+#
+# - sigla: las marcadas "provisional" no las indicó el usuario; se reemplazan
+#   cuando se confirmen.
+# - nombres_alt: variantes con que aparece el nombre en los sílabos.
+# - carpetas: subcarpetas de DOCS_CARRERAS cuyos archivos pertenecen a la carrera.
+# - archivos: asignación archivo por archivo cuando una carpeta mezcla carreras.
+
+facultades:
+  - sigla: FING
+    nombre: Facultad de Ingenierías
+    nombres_alt: [FACULTAD DE INGENIERIAS, FACULTAD DE INGENIERÍAS]
+    carreras:
+      - {nombre: Tecnologías de la Información, nivel: grado}
+      - {nombre: Industrial, nivel: grado, nombres_alt: [INGENIERIA INDUSTRIAL, INDUSTRIAL], carpetas: [ing industrial]}
+      - {nombre: Ingeniería Civil, nivel: grado, nombres_alt: [CIVIL]}
+      - {nombre: Software, nivel: grado, nombres_alt: [SOFTWARE, INGENIERIA DE SOFTWARE], carpetas: [Software]}
+      - {nombre: Mecatrónica, nivel: grado, nombres_alt: [MECATRONICA], carpetas: [Mecatronica]}
+      - {nombre: Electricidad, nivel: grado, nombres_alt: [ELECTRICIDAD]}
+
+  - sigla: FADA
+    nombre: Facultad de Arquitectura, Diseño y Artes
+    carreras:
+      - {nombre: Diseño de Productos, nivel: grado}
+      - {nombre: Diseño de Medios Interactivos, nivel: grado}
+      - {nombre: Arquitectura, nivel: grado}
+
+  - sigla: FACEAN
+    nombre: Facultad de Ciencias Económicas, Administrativas y Negocios
+    carreras:
+      - {nombre: Economía, nivel: grado}
+      - {nombre: Finanzas y Negocios Digitales, nivel: grado, carpetas: [Finanzas y Negocios Digitales]}
+      - {nombre: Administración de Empresas, nivel: grado, carpetas: [Administración de Empresas]}
+      - {nombre: Negocios Internacionales, nivel: grado, carpetas: [Negocios Internacionales]}
+      - {nombre: Inteligencia de Negocios, nivel: grado, carpetas: [Inteligencia de Negocios]}
+      - {nombre: Marketing Digital, nivel: grado, carpetas: [Marketing Digital]}
+      - {nombre: Contabilidad y Auditoría, nivel: grado, carpetas: [Contabilidad y Auditoría]}
+      - nombre: Maestría en Administración de Empresas mención Innovación y Dirección Estratégica
+        nivel: posgrado
+        archivos: [Posgrados/ADMINISTRACIÓN DE EMPRESAS CON MENCIÓN EN INNOVACIÓN Y DIRECCIÓN ESTRATÉGICA.pdf]
+      - nombre: Maestría en Finanzas mención Dirección Financiera
+        nivel: posgrado
+        archivos: [Posgrados/FINANZAS MENCION DIRECCION FINANCIERA.pdf]
+      - nombre: Maestría en Gerencia Tributaria
+        nivel: posgrado
+        archivos: [Posgrados/GERENCIA TRIBUTARIA.pdf]
+      - nombre: Maestría en Inteligencia de Negocios y Ciencia de Datos
+        nivel: posgrado
+        archivos: [Posgrados/INTELIGENCIA DE NEGOCIOS Y CIENCIA DE DATOS.pdf]
+
+  - sigla: FCED            # provisional
+    nombre: Facultad de Ciencias de la Educación
+    carreras:
+      - {nombre: Pedagogía de la Actividad Física y Deporte, nivel: grado, carpetas: [Pedagogia de la actividad fisica y del deporte]}
+      - {nombre: Educación Inicial, nivel: grado, carpetas: [Ed. Inicial]}
+      - {nombre: Educación Básica, nivel: grado, carpetas: [Ed. Basica]}
+      - {nombre: Pedagogía de los Idiomas Nacionales y Extranjeros, nivel: grado, carpetas: [Idiomas]}
+
+  - sigla: FCMA            # provisional
+    nombre: Facultad de Ciencias del Medio Ambiente
+    carreras: []
+
+  - sigla: FCSBH           # provisional
+    nombre: Facultad de Ciencias de la Salud y Bienestar Humano
+    carreras:
+      - {nombre: Fisioterapia, nivel: grado}
+      - {nombre: Enfermería, nivel: grado, carpetas: [Enfermeria]}
+      - {nombre: Medicina, nivel: grado, carpetas: [Medicina]}
+      - {nombre: Odontología, nivel: grado, carpetas: [Odontologia]}
+
+  - sigla: FCSH            # provisional
+    nombre: Facultad de Ciencias Sociales y Humanas
+    carreras:
+      - nombre: Psicología
+        nivel: grado
+        archivos: [Psicologia/MALLA DISTANCIA.docx, Psicologia/MALLA EN LÍNEA.docx]
+      - nombre: Psicología Educativa      # asignación por nombre de archivo; por confirmar
+        nivel: grado
+        archivos: [Psicologia/malla educativa.pdf]
+      - {nombre: Psicología Clínica, nivel: grado, carpetas: [Psicologia Clinica]}
+      - {nombre: Maestría en Psicología, nivel: posgrado, carpetas: [Psicologia Maestria]}
+
+  - sigla: FJCP            # provisional
+    nombre: Facultad de Jurisprudencia y Ciencias Políticas
+    carreras:
+      - {nombre: Derecho, nivel: grado}
+      - {nombre: Ciencias Políticas y Relaciones Internacionales, nivel: grado}
+
+# Archivos o carpetas que no se cargan, con su motivo.
+excluir:
+  - {ruta: Diseño Grafico, motivo: "Carrera fuera del catálogo; pendiente de confirmar si hubo rediseño (usuario, 2026-10-20)"}
+  - {ruta: Inteligencia de Negocios/Planta Docente.pdf, motivo: datos personales de docentes}
+  - {ruta: Negocios Internacionales/MATRIZPLANTADOCENTE NEGOCIOSINTERNACIONALES.pdf, motivo: datos personales de docentes}
+  - {ruta: Posgrados/ANEXO 0577. REQUERIMIENTO DE PERSONAL DOCENTE POSGRADO - B26 - FACEAN.xlsx, motivo: gestión de personal, no currículo}
+  - {ruta: Psicologia/RV_ POrtafolio docente PSICOLOGIA, motivo: duplicados exactos de Psicologia y Psicologia Maestria}

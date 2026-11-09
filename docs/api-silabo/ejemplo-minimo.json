@@ -1,0 +1,77 @@
+{
+  "facultad": "Facultad de Ingenierías",
+  "carrera": "Tecnologías de la Información",
+  "periodo": {
+    "codigo": "2026-1",
+    "inicio": "2026-03-02",
+    "fin": "2026-06-21"
+  },
+  "proyecto_formativo": {
+    "codigo": "TI-0301",
+    "nombre": "Bases de datos relacionales",
+    "version": "2",
+    "aprobado": "2026-01-15",
+    "nivel": 3
+  },
+  "competencia_perfil": "Diseña soluciones de información que responden a necesidades de organizaciones del territorio.",
+  "resultados_aprendizaje": [
+    {
+      "id": "RA1",
+      "texto": "Modela datos de un caso real con el modelo entidad-relación.",
+      "evidencia": "Diagrama entidad-relación validado"
+    }
+  ],
+  "problema": {
+    "descripcion": "Las organizaciones comunitarias registran sus datos en hojas sueltas y los pierden.",
+    "reto": "Diseñar una base de datos que conserve y relacione esos registros.",
+    "producto_final": "Base de datos normalizada con consultas documentadas"
+  },
+  "momentos": [
+    {
+      "numero": 1,
+      "titulo": "Modelado conceptual",
+      "fecha_inicio": "2026-03-02",
+      "fecha_fin": "2026-03-29",
+      "ra": ["RA1"],
+      "evidencia": "Diagrama entidad-relación del caso",
+      "politica_ia": "Se permite IA para revisar la redacción, no para generar el diagrama.",
+      "rubrica": [
+        {
+          "indicador": "Identifica entidades y relaciones",
+          "niveles": {
+            "receptivo": "Nombra entidades sin relaciones.",
+            "resolutivo": "Relaciona entidades con cardinalidad correcta.",
+            "reflexivo": "Justifica cada relación con el caso.",
+            "critico": "Evalúa alternativas de modelado.",
+            "cocreativo": "Propone mejoras con la organización."
+          }
+        }
+      ],
+      "sesiones": [
+        {
+          "id": "M1-S1",
+          "numero": 1,
+          "fecha": "2026-03-03",
+          "semana_periodo": 1,
+          "contenidos": ["Entidades, atributos y relaciones"],
+          "docente": {"texto": "Explica el modelo entidad-relación con un caso de inventario."},
+          "practico": {"texto": "Modelan en parejas el registro de socios de una cooperativa."},
+          "autonomo": {"texto": "Leen el capítulo de modelado y resuelven el cuestionario."},
+          "entregables": ["Borrador del diagrama"]
+        }
+      ]
+    }
+  ],
+  "rubrica_producto_final": [
+    {
+      "indicador": "Normalización de la base de datos",
+      "niveles": {
+        "receptivo": "Tablas sin normalizar.",
+        "resolutivo": "Tablas en tercera forma normal.",
+        "reflexivo": "Explica las decisiones de normalización.",
+        "critico": "Evalúa el costo de desnormalizar.",
+        "cocreativo": "Ajusta el diseño con los usuarios."
+      }
+    }
+  ]
+}

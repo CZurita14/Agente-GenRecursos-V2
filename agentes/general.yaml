@@ -1,0 +1,10 @@
+# agentes/general.yaml: agente para facultades no reconocidas (spec §4.3).
+# Sin conocimiento de carrera: el estilo queda vacío.
+id: general
+facultad: null
+estilo:
+  tipos_de_caso: []
+  software_habitual: []
+  vocabulario: ""
+herramientas_recomendadas:
+  clase: [ficha_clase, cuestionario]

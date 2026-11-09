@@ -1,0 +1,904 @@
+[
+ {
+  "clase": "datos_M3S4",
+  "version": 2,
+  "calculado": "Cooperativa de ahorro ficticia 'Coop. Andina': tráfico de red en Mbps, 30 mediciones por segmento.\nSegmento A (oficinas): media 117.8, desv. 16.9\nSegmento B (cajeros): media 123.2, desv. 14.4\nSegmento C (servidores web): media 139.8, desv. 16.1\nShapiro-Wilk p: A=0.053, B=0.319, C=0.496\nLevene: estadístico=0.09, p=0.912\nANOVA de un factor: F(2, 87)=15.71, p=1.5e-06; F crítico (α=0,05)=3.10\nPrueba t A vs B (varianzas iguales): t(58)=-1.32, p=0.192\nIC 95 % de la media de C: [133.8; 145.8]",
+  "hechos": [
+   "Normalidad: todos los p de Shapiro-Wilk superan 0,05.",
+   "Homogeneidad de varianzas: Levene p=0.912 > 0,05, se asume homogeneidad.",
+   "ANOVA: F=15.71 > F crítico 3.10; se rechaza H0 de medias iguales.",
+   "El ANOVA no dice qué segmentos difieren; para eso hace falta una prueba post hoc (por ejemplo, Tukey).",
+   "t A vs B: p=0.192 > 0,05, sin evidencia de diferencia.",
+   "El IC 95 % de C no contiene la media de A (117.8)."
+  ],
+  "lotes": [
+   {
+    "niveles": [
+     "receptivo",
+     "resolutivo",
+     "resolutivo",
+     "reflexivo"
+    ],
+    "items": [
+     {
+      "nivel": "receptivo",
+      "ra": "RA3",
+      "foco": "Receptivo: Reconocimiento de los supuestos de normalidad y homogeneidad de varianzas",
+      "contexto": "La Cooperativa de ahorro 'Coop. Andina' recopiló datos de tráfico de red en tres segmentos. Se realizaron pruebas de normalidad y homogeneidad de varianzas para validar los supuestos estadísticos.",
+      "pregunta": "¿Cuál es el resultado de la prueba de normalidad para el Segmento A?",
+      "opciones": [
+       {
+        "texto": "p = 0.053",
+        "justificacion": "Este valor indica que no se rechaza la hipótesis de normalidad, ya que es mayor que 0.05."
+       },
+       {
+        "texto": "p = 0.319",
+        "justificacion": "Este valor corresponde al Segmento B, no al Segmento A."
+       },
+       {
+        "texto": "p = 0.496",
+        "justificacion": "Este valor corresponde al Segmento C, no al Segmento A."
+       },
+       {
+        "texto": "p = 0.912",
+        "justificacion": "Este valor corresponde a la prueba de homogeneidad de varianzas, no a la de normalidad."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel receptivo implica reconocer los resultados de las pruebas de normalidad y homogeneidad de varianzas sin realizar cálculos ni interpretaciones profundas.",
+       "La prueba de normalidad se aplica a cada segmento individualmente, y el valor p del Segmento A es 0.053, lo cual indica que no se rechaza la hipótesis de normalidad."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "foco": "Resolutivo: Aplicación de la prueba de ANOVA para comparar medias de tráfico entre segmentos",
+      "contexto": "La Cooperativa de ahorro 'Coop. Andina' realizó un ANOVA para comparar las medias de tráfico entre tres segmentos de red. Los resultados muestran una significancia estadística.",
+      "pregunta": "¿Qué conclusión se puede extraer del ANOVA en este caso?",
+      "opciones": [
+       {
+        "texto": "No hay diferencias significativas entre las medias de los segmentos.",
+        "justificacion": "Este es un error, ya que el valor F es significativo (p = 1.5e-06)."
+       },
+       {
+        "texto": "Se rechaza la hipótesis de que las medias son iguales.",
+        "justificacion": "Este es el resultado correcto, ya que F = 15.71 > F crítico = 3.10."
+       },
+       {
+        "texto": "Se acepta la hipótesis de que las medias son iguales.",
+        "justificacion": "Este es un error, ya que el ANOVA rechaza la hipótesis nula."
+       },
+       {
+        "texto": "No se puede concluir nada con los datos disponibles.",
+        "justificacion": "Este es un error, ya que se tienen resultados estadísticamente significativos."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "El nivel resolutivo implica aplicar un procedimiento estadístico a una situación nueva, como el uso del ANOVA para comparar medias.",
+       "El ANOVA rechaza la hipótesis nula de que las medias son iguales, lo que indica que al menos un segmento difiere significativamente de los demás."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "foco": "Resolutivo: Cálculo e interpretación del intervalo de confianza del segmento C",
+      "contexto": "El Segmento C de la Cooperativa de ahorro 'Coop. Andina' tiene un intervalo de confianza del 95% para la media de [133.8; 145.8].",
+      "pregunta": "¿Qué se puede inferir del intervalo de confianza del Segmento C?",
+      "opciones": [
+       {
+        "texto": "La media del Segmento C no contiene la media del Segmento A.",
+        "justificacion": "Este es el resultado correcto, ya que el intervalo no incluye la media de A (117.8)."
+       },
+       {
+        "texto": "La media del Segmento C es significativamente diferente de la media del Segmento B.",
+        "justificacion": "Este es un error, ya que no se comparó directamente con B en el intervalo de confianza."
+       },
+       {
+        "texto": "El intervalo de confianza indica que la media del Segmento C es 139.8 Mbps con un error estándar de 16.1.",
+        "justificacion": "Este es un error, ya que el intervalo de confianza no indica el error estándar, sino el rango de valores posibles."
+       },
+       {
+        "texto": "El intervalo de confianza muestra que la media del Segmento C es mayor que la media de los otros segmentos.",
+        "justificacion": "Este es un error, ya que no se comparan directamente con los demás segmentos en este intervalo."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel resolutivo implica aplicar un procedimiento estadístico a una situación nueva, como el cálculo e interpretación de un intervalo de confianza.",
+       "El intervalo de confianza del Segmento C no contiene la media del Segmento A, lo que sugiere una diferencia estadísticamente significativa."
+      ]
+     },
+     {
+      "nivel": "reflexivo",
+      "ra": "RA3",
+      "foco": "Reflexivo: Análisis de la relación entre los resultados del ANOVA y la detección de anomalías",
+      "contexto": "El ANOVA mostró diferencias significativas entre los segmentos de tráfico de la Cooperativa de ahorro 'Coop. Andina', lo que podría indicar anomalías en la red.",
+      "pregunta": "¿Cómo se puede utilizar el resultado del ANOVA para detectar anomalías en la red?",
+      "opciones": [
+       {
+        "texto": "El ANOVA permite identificar cuál segmento es el que tiene el tráfico más alto.",
+        "justificacion": "Este es un error, ya que el ANOVA no identifica cuál segmento es el más alto, solo que hay diferencias."
+       },
+       {
+        "texto": "El ANOVA indica que al menos un segmento difiere significativamente de los demás, lo que podría indicar un comportamiento anómalo.",
+        "justificacion": "Este es el resultado correcto, ya que el ANOVA rechaza la hipótesis de medias iguales."
+       },
+       {
+        "texto": "El ANOVA permite determinar con certeza cuál segmento es el que está bajo ataque.",
+        "justificacion": "Este es un error, ya que el ANOVA no identifica el origen del tráfico anómalo."
+       },
+       {
+        "texto": "El ANOVA es insuficiente para detectar anomalías y requiere de pruebas post hoc.",
+        "justificacion": "Este es un error, ya que el ANOVA es útil para detectar diferencias, aunque requiere pruebas post hoc para identificar cuáles segmentos difieren."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "El nivel reflexivo implica analizar y relacionar los resultados con el problema planteado, como la detección de anomalías en la red.",
+       "El ANOVA indica que hay diferencias significativas entre los segmentos, lo que podría sugerir un comportamiento anómalo, aunque se requieren pruebas post hoc para identificar cuáles segmentos difieren."
+      ]
+     }
+    ],
+    "uso": {
+     "prompt_tokens": 1873,
+     "total_tokens": 3779,
+     "completion_tokens": 1906,
+     "prompt_tokens_details": null
+    },
+    "segundos": 62.7,
+    "verificacion": [
+     [],
+     [],
+     [
+      "la pregunta contiene una opción"
+     ],
+     []
+    ],
+    "revision": [
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "motivo": "El p-valor de normalidad para el Segmento A es 0.053 (Shapiro-Wilk), que es el valor exacto proporcionado en los resultados.",
+      "coincide_con_clave": true,
+      "segundos": 14.6,
+      "tokens": 445
+     },
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "motivo": "El ANOVA muestra F=15.71 > F crítico 3.10 y p=1.5e-06 < 0.05, lo que rechaza H0 de medias iguales. Opción 0 es correcta.",
+      "coincide_con_clave": true,
+      "segundos": 17.5,
+      "tokens": 519
+     },
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "motivo": "El intervalo de confianza de C ([133.8; 145.8]) no contiene la media de A (117.8), lo que indica que la media de C es significativamente diferente de A. La opción 0 es correcta, mientras que la opción 3 no se puede inferir directamente del intervalo de C sin comparación adicional.",
+      "coincide_con_clave": true,
+      "segundos": 119.8,
+      "tokens": 3699
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "motivo": "El ANOVA indica diferencias significativas entre segmentos, lo que sugiere comportamientos anómalos, pero no identifica específicamente cuáles. Para detectar anomalías, se requiere análisis adicional (post-hoc), aunque el resultado inicial ya señala la necesidad de investigar.",
+      "coincide_con_clave": true,
+      "segundos": 34.2,
+      "tokens": 1061
+     }
+    ]
+   },
+   {
+    "niveles": [
+     "receptivo",
+     "resolutivo",
+     "reflexivo",
+     "critico"
+    ],
+    "items": [
+     {
+      "nivel": "receptivo",
+      "ra": "RA3",
+      "foco": "Identificación de los tipos de pruebas estadísticas aplicadas en el análisis",
+      "contexto": "La Cooperativa de ahorro 'Coop. Andina' analiza el tráfico de red en tres segmentos para detectar anomalías. Se aplicaron pruebas de hipótesis y ANOVA para comparar las medias de los segmentos.",
+      "pregunta": "¿Cuáles pruebas estadísticas se aplicaron para comparar las medias de los segmentos de tráfico de red?",
+      "opciones": [
+       {
+        "texto": "Prueba t de Student y ANOVA de un factor",
+        "justificacion": "Las pruebas t y ANOVA son las utilizadas para comparar medias entre grupos, como se indica en los resultados calculados."
+       },
+       {
+        "texto": "Prueba de chi-cuadrado y ANOVA de un factor",
+        "justificacion": "La prueba de chi-cuadrado se usa para datos categóricos, no para comparar medias continuas."
+       },
+       {
+        "texto": "Prueba de Kolmogorov-Smirnov y ANOVA de un factor",
+        "justificacion": "La prueba de Kolmogorov-Smirnov se usa para verificar normalidad, no para comparar medias."
+       },
+       {
+        "texto": "Prueba de Levene y ANOVA de un factor",
+        "justificacion": "La prueba de Levene se usa para verificar homogeneidad de varianzas, no para comparar medias."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El contexto indica que se compararon medias entre segmentos, lo que implica la necesidad de pruebas de comparación de medias.",
+       "Los resultados calculados mencionan pruebas t y ANOVA, lo que confirma que estas son las pruebas aplicadas."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "foco": "Determinación de la significancia estadística del contraste entre segmentos A y B",
+      "contexto": "Se realizó una prueba t para comparar las medias de los segmentos A y B, obteniendo un valor p de 0.192.",
+      "pregunta": "¿Qué se puede concluir sobre la significancia estadística del contraste entre los segmentos A y B?",
+      "opciones": [
+       {
+        "texto": "No hay evidencia estadística de diferencia entre los segmentos A y B",
+        "justificacion": "El valor p de 0.192 es mayor que 0.05, lo que indica que no se rechaza la hipótesis nula."
+       },
+       {
+        "texto": "Se rechaza la hipótesis nula de igualdad de medias entre A y B",
+        "justificacion": "El valor p es menor que 0.05, lo cual no se cumple en este caso."
+       },
+       {
+        "texto": "Se acepta la hipótesis alternativa de diferencia entre A y B",
+        "justificacion": "El valor p no es menor que 0.05, por lo que no se acepta la hipótesis alternativa."
+       },
+       {
+        "texto": "Se confirma que los segmentos A y B tienen medias idénticas",
+        "justificacion": "El valor p no permite confirmar que las medias sean idénticas, solo que no hay evidencia de diferencia."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El valor p es un indicador de la probabilidad de observar los resultados si la hipótesis nula fuera cierta.",
+       "Un valor p mayor que 0.05 indica que no hay evidencia suficiente para rechazar la hipótesis nula."
+      ]
+     },
+     {
+      "nivel": "reflexivo",
+      "ra": "RA3",
+      "foco": "Evaluación de la idoneidad de la elección de las pruebas estadísticas",
+      "contexto": "Se aplicaron pruebas t y ANOVA para comparar medias entre segmentos, considerando la normalidad y homogeneidad de varianzas.",
+      "pregunta": "¿Por qué se considera adecuada la elección de las pruebas estadísticas aplicadas?",
+      "opciones": [
+       {
+        "texto": "Porque se verificaron los supuestos de normalidad y homogeneidad de varianzas",
+        "justificacion": "La elección de pruebas paramétricas como t y ANOVA depende de la verificación de los supuestos de normalidad y homogeneidad."
+       },
+       {
+        "texto": "Porque se usaron pruebas no paramétricas para evitar sesgos",
+        "justificacion": "Las pruebas no paramétricas no se aplicaron, por lo que esta opción es incorrecta."
+       },
+       {
+        "texto": "Porque se aplicaron pruebas de correlación para evitar errores de tipo I",
+        "justificacion": "Las pruebas de correlación no se usaron, por lo que esta opción es incorrecta."
+       },
+       {
+        "texto": "Porque se usaron pruebas de significancia para comparar varianzas",
+        "justificacion": "Las pruebas de significancia se usaron para comparar medias, no varianzas."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "La elección de pruebas paramétricas como t y ANOVA requiere verificar los supuestos de normalidad y homogeneidad de varianzas.",
+       "Los resultados muestran que los supuestos se cumplen, lo que justifica el uso de estas pruebas."
+      ]
+     },
+     {
+      "nivel": "critico",
+      "ra": "RA3",
+      "foco": "Evaluación de la precisión de los umbrales de seguridad propuestos",
+      "contexto": "Se calculó un intervalo de confianza del 95% para la media del Segmento C, que es [133.8; 145.8].",
+      "pregunta": "¿Qué se puede evaluar sobre la precisión de los umbrales de seguridad propuestos?",
+      "opciones": [
+       {
+        "texto": "El intervalo de confianza no incluye la media del Segmento A, lo que sugiere un posible ataque",
+        "justificacion": "El intervalo de confianza de C no contiene la media de A, lo que puede indicar una diferencia significativa."
+       },
+       {
+        "texto": "El intervalo de confianza es muy amplio, lo que reduce la precisión de los umbrales",
+        "justificacion": "El intervalo no es amplio, y la precisión no se ve afectada por su tamaño."
+       },
+       {
+        "texto": "El intervalo de confianza se calculó sin verificar la normalidad de los datos",
+        "justificacion": "La normalidad fue verificada y se cumplió, por lo que la elección del intervalo fue adecuada."
+       },
+       {
+        "texto": "El intervalo de confianza no es suficiente para justificar la seguridad del Segmento C",
+        "justificacion": "El intervalo proporciona una estimación precisa de la media, lo que lo hace útil para establecer umbrales."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El intervalo de confianza permite estimar la media con un margen de error, lo que ayuda a establecer umbrales de seguridad.",
+       "La no inclusión de la media de A dentro del intervalo de C sugiere una posible diferencia significativa, lo que puede indicar un ataque."
+      ]
+     }
+    ],
+    "uso": {
+     "prompt_tokens": 1948,
+     "total_tokens": 3758,
+     "completion_tokens": 1810,
+     "prompt_tokens_details": null
+    },
+    "segundos": 59.2,
+    "verificacion": [
+     [],
+     [],
+     [],
+     []
+    ],
+    "revision": [
+     {
+      "respuesta": 2,
+      "otra_opcion_defendible": false,
+      "nivel_real": "resolutivo",
+      "motivo": "El ANOVA de un factor se aplicó para comparar las medias de los tres segmentos, y la prueba t de Student se usó para comparar específicamente A vs B. Las otras opciones no combinan tests adecuados para comparar medias.",
+      "coincide_con_clave": true,
+      "segundos": 20.9,
+      "tokens": 643
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "resolutivo",
+      "motivo": "El valor p=0.192 > 0.05 no proporciona evidencia suficiente para rechazar la hipótesis nula de igualdad de medias entre A y B. La opción 3 refleja correctamente esta conclusión.",
+      "coincide_con_clave": true,
+      "segundos": 18.9,
+      "tokens": 582
+     },
+     {
+      "respuesta": 1,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "motivo": "Se verificaron los supuestos de normalidad (Shapiro-Wilk p > 0.05) y homogeneidad de varianzas (Levene p = 0.912), permitiendo usar pruebas paramétricas como ANOVA y t-tests, que son adecuadas bajo estas condiciones.",
+      "coincide_con_clave": true,
+      "segundos": 26.0,
+      "tokens": 800
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "motivo": "El intervalo de confianza no incluye la media de A, lo que sugiere que la media de C es significativamente diferente, lo que podría indicar un comportamiento anormal que podría relacionarse con un ataque. Aunque la pregunta se enfoca en la precisión, la ausencia de la media de A en el intervalo de C implica una posible discrepancia relevante para la seguridad.",
+      "coincide_con_clave": true,
+      "segundos": 93.6,
+      "tokens": 2890
+     }
+    ]
+   }
+  ],
+  "focos": [
+   {
+    "foco": "Receptivo: Reconocimiento de los supuestos de normalidad y homogeneidad de varianzas",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Resolutivo: Aplicación de la prueba de ANOVA para comparar medias de tráfico entre segmentos",
+    "usa_resultados_calculados": true
+   },
+   {
+    "foco": "Resolutivo: Cálculo e interpretación del intervalo de confianza del segmento C",
+    "usa_resultados_calculados": true
+   },
+   {
+    "foco": "Reflexivo: Análisis de la relación entre los resultados del ANOVA y la detección de anomalías",
+    "usa_resultados_calculados": true
+   },
+   {
+    "foco": "Receptivo: Identificación de los tipos de pruebas estadísticas aplicadas en el análisis",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Resolutivo: Determinación de la significancia estadística del contraste entre segmentos A y B",
+    "usa_resultados_calculados": true
+   },
+   {
+    "foco": "Reflexivo: Evaluación de la idoneidad de la elección de las pruebas estadísticas",
+    "usa_resultados_calculados": true
+   },
+   {
+    "foco": "Crítico: Evaluación de la precisión de los umbrales de seguridad propuestos",
+    "usa_resultados_calculados": true
+   }
+  ],
+  "ficha": {
+   "contenido": {
+    "titulo": "FICHA DE ESTUDIO: Clase M3-S4 – Hipótesis Estadísticas",
+    "objetivo": "Reforzar el uso de pruebas de hipótesis e intervalos de confianza para analizar datos de tráfico de red, con enfoque en la detección de anomalías en sistemas de seguridad digital.",
+    "ideas_clave": [
+     "Prueba de hipótesis: proceso para decidir si una hipótesis nula (H₀) debe ser rechazada.",
+     "Intervalo de confianza (IC): rango de valores que probablemente contenga el parámetro poblacional.",
+     "ANOVA: análisis de varianza para comparar medias de más de dos grupos.",
+     "Prueba t: comparación de medias entre dos grupos bajo supuestos de normalidad y varianza homogénea.",
+     "Supuestos estadísticos: normalidad (Shapiro-Wilk), homogeneidad de varianzas (Levene)."
+    ],
+    "ejemplo_resuelto": {
+     "situacion": "La Cooperativa de ahorro 'Coop. Andina' monitorea el tráfico de red en tres segmentos: A (oficinas), B (cajeros) y C (servidores web). Se obtuvieron 30 mediciones por segmento, con medias y desviaciones estándar reportadas. Se necesita determinar si hay diferencias significativas entre los segmentos.",
+     "pasos": [
+      "1. **Verificar supuestos**: Se analizan los p-valor de Shapiro-Wilk (A=0.053, B=0.319, C=0.496) y Levene (p=0.912). Todos los p-valor superan 0.05, por lo que se asume normalidad y homogeneidad de varianzas.",
+      "2. **Realizar ANOVA de un factor**: Se calcula F(2,87)=15.71, p=1.5e-06. El valor F es mayor que el F crítico (α=0.05)=3.10, por lo que se rechaza H₀ de medias iguales. Esto indica que al menos un segmento tiene una media significativamente diferente.",
+      "3. **Comparar segmentos específicos**: Se realiza una prueba t entre A y B (varianzas iguales), obteniendo t(58)=-1.32, p=0.192. Como p > 0.05, no se rechaza H₀, lo que sugiere que no hay diferencia significativa entre A y B.",
+      "4. **Intervalo de confianza para C**: Se calcula el IC 95% de la media de C como [133.8; 145.8]. Este intervalo no contiene la media de A (117.8), lo que sugiere que C es significativamente diferente de A."
+     ],
+     "conclusion": "El ANOVA indica diferencias entre los segmentos, pero la prueba t entre A y B no confirma una diferencia significativa. El intervalo de confianza de C sugiere que este segmento tiene un tráfico significativamente diferente a A."
+    },
+    "errores_frecuentes": [
+     "1. **No verificar supuestos**: Algunos estudiantes ignoran la normalidad o la homogeneidad de varianzas antes de aplicar pruebas estadísticas.",
+     "2. **Interpretar ANOVA como prueba definitiva**: El ANOVA solo indica que hay diferencias, pero no cuáles. Se requiere una prueba post hoc para identificar qué pares difieren.",
+     "3. **Comparar medias sin usar IC**: Algunos estudiantes confían solo en p-valor sin considerar el intervalo de confianza, lo que puede llevar a conclusiones erróneas."
+    ],
+    "relacion_con_el_ra": "Esta clase refuerza el **RA3** (Contrastar hipótesis operativas y estimar parámetros poblacionales) al aplicar pruebas de hipótesis e intervalos de confianza en un contexto real de seguridad digital. Permite al estudiante validar el comportamiento de los datos y fundamentar decisiones algorítmicas en un sistema de monitoreo de red.",
+    "preguntas_autocomprobacion": [
+     "¿Qué prueba estadística se utiliza para comparar medias entre más de dos grupos y cuál es su resultado clave? (p=1.5e-06)",
+     "¿Por qué el ANOVA no es suficiente para determinar qué segmentos difieren y qué se necesita después? (prueba post hoc)",
+     "¿Qué indica el intervalo de confianza del segmento C y cómo se relaciona con la media del segmento A? (no contiene la media de A)"
+    ]
+   },
+   "uso": {
+    "prompt_tokens": 1787,
+    "total_tokens": 2889,
+    "completion_tokens": 1102,
+    "prompt_tokens_details": null
+   },
+   "segundos": 35.7
+  }
+ },
+ {
+  "clase": "tic_M3S1",
+  "version": 2,
+  "calculado": "",
+  "hechos": [],
+  "lotes": [
+   {
+    "niveles": [
+     "receptivo",
+     "resolutivo",
+     "resolutivo",
+     "reflexivo"
+    ],
+    "items": [
+     {
+      "nivel": "receptivo",
+      "ra": "RA2",
+      "foco": "Reconocimiento de conceptos básicos de ciberseguridad en ingeniería",
+      "contexto": "Una empresa de logística en Guayaquil utiliza un sistema de gestión de inventarios basado en la nube. El sistema maneja datos sensibles de clientes y proveedores.",
+      "pregunta": "¿Cuál de los siguientes es un principio fundamental de la ciberseguridad en sistemas de información?",
+      "opciones": [
+       {
+        "texto": "La confidencialidad de los datos",
+        "justificacion": "Es un principio básico de ciberseguridad que garantiza que solo personas autorizadas puedan acceder a la información."
+       },
+       {
+        "texto": "La automatización de procesos",
+        "justificacion": "No es un principio de ciberseguridad, sino una característica de sistemas de gestión modernos."
+       },
+       {
+        "texto": "La reducción de costos operativos",
+        "justificacion": "No está directamente relacionado con los principios de ciberseguridad, sino con la eficiencia operativa."
+       },
+       {
+        "texto": "La integración de sistemas externos",
+        "justificacion": "Puede aumentar los riesgos de seguridad si no se gestiona adecuadamente, pero no es un principio fundamental de ciberseguridad."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel receptivo requiere reconocer conceptos básicos sin necesidad de aplicarlos en un contexto nuevo.",
+       "La confidencialidad es un pilar fundamental de la seguridad de la información, junto con la integridad y la disponibilidad."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "foco": "Identificación de activos, amenazas y vulnerabilidades en un contexto de seguridad digital",
+      "contexto": "Una cooperativa de transporte en Quito utiliza un sistema de gestión de flotas con acceso remoto. El sistema almacena información de rutas, vehículos y conductores.",
+      "pregunta": "¿Cuál es un activo crítico en el sistema de gestión de flotas de la cooperativa?",
+      "opciones": [
+       {
+        "texto": "Los datos de rutas y vehículos",
+        "justificacion": "Son información sensible que, si se compromete, afecta la operación y la seguridad de la cooperativa."
+       },
+       {
+        "texto": "El software de gestión",
+        "justificacion": "Es importante, pero no es el activo más crítico en términos de impacto en la operación."
+       },
+       {
+        "texto": "Los vehículos registrados",
+        "justificacion": "Son activos físicos, pero no están directamente expuestos a amenazas digitales en este contexto."
+       },
+       {
+        "texto": "El acceso remoto al sistema",
+        "justificacion": "Es una característica del sistema, no un activo en sí mismo, aunque puede ser un punto de entrada para amenazas."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel resolutivo implica aplicar conocimientos a una situación específica, identificando elementos clave en un contexto real.",
+       "Los datos de rutas y vehículos son activos críticos porque su compromiso puede afectar la operación, la seguridad y la privacidad."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "foco": "Propuesta de controles básicos de seguridad para mitigar riesgos en un sistema de información",
+      "contexto": "Una escuela de educación superior en Cotopaxi utiliza un sistema de gestión académica en la nube. El sistema almacena información de estudiantes, profesores y cursos.",
+      "pregunta": "¿Cuál de los siguientes controles básicos se debe implementar para proteger los datos del sistema de gestión académica?",
+      "opciones": [
+       {
+        "texto": "Actualización periódica del software",
+        "justificacion": "Es fundamental para corregir vulnerabilidades y mantener la seguridad del sistema."
+       },
+       {
+        "texto": "Uso de contraseñas simples",
+        "justificacion": "No es recomendado, ya que reduce la seguridad del acceso al sistema."
+       },
+       {
+        "texto": "Almacenamiento en dispositivos locales",
+        "justificacion": "Puede aumentar el riesgo de pérdida de datos si no se maneja adecuadamente."
+       },
+       {
+        "texto": "Uso de redes públicas sin encriptación",
+        "justificacion": "Aumenta el riesgo de interceptación de datos sensibles en el sistema."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel resolutivo implica aplicar controles de seguridad en un contexto específico, basándose en principios establecidos.",
+       "La actualización periódica del software es un control básico que previene la exposición a vulnerabilidades conocidas."
+      ]
+     },
+     {
+      "nivel": "reflexivo",
+      "ra": "RA3",
+      "foco": "Análisis de la relación entre amenazas, vulnerabilidades y consecuencias en términos de confidencialidad, integridad y disponibilidad",
+      "contexto": "Una clínica de salud en Guayaquir utiliza un sistema de gestión de pacientes en la nube. El sistema maneja información médica sensible.",
+      "pregunta": "¿Cuál consecuencia es más crítica si se compromete la integridad de los datos del sistema de gestión de pacientes?",
+      "opciones": [
+       {
+        "texto": "Pérdida de acceso a los datos",
+        "justificacion": "Afecta la disponibilidad, pero no necesariamente la integridad de los datos."
+       },
+       {
+        "texto": "Alteración de los registros médicos",
+        "justificacion": "Afecta la integridad, lo que puede llevar a diagnósticos incorrectos y riesgos para la salud de los pacientes."
+       },
+       {
+        "texto": "Exposición de datos sensibles",
+        "justificacion": "Afecta la confidencialidad, pero no necesariamente la integridad de los datos."
+       },
+       {
+        "texto": "Dificultad en la recuperación de datos",
+        "justificacion": "Puede afectar la disponibilidad, pero no necesariamente la integridad de los datos."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "El nivel reflexivo implica analizar cómo las amenazas y vulnerabilidades afectan los tres pilares de la seguridad: confidencialidad, integridad y disponibilidad.",
+       "La alteración de los registros médicos afecta directamente la integridad, lo que puede tener consecuencias graves para la salud de los pacientes."
+      ]
+     }
+    ],
+    "uso": {
+     "prompt_tokens": 1492,
+     "total_tokens": 3019,
+     "completion_tokens": 1527,
+     "prompt_tokens_details": null
+    },
+    "segundos": 56.4,
+    "verificacion": [
+     [],
+     [],
+     [],
+     []
+    ],
+    "revision": [
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "motivo": "La confidencialidad es un principio fundamental de la ciberseguridad (CIA triad), garantizando que los datos sensibles no sean accesibles a terceros no autorizados.",
+      "coincide_con_clave": true,
+      "segundos": 21.5,
+      "tokens": 585
+     },
+     {
+      "respuesta": 1,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "motivo": "Los datos de rutas y vehículos son esenciales para la gestión del sistema, ya que sin ellos no se puede operar adecuadamente.",
+      "coincide_con_clave": true,
+      "segundos": 47.0,
+      "tokens": 1281
+     },
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "resolutivo",
+      "motivo": "Las actualizaciones periódicas del software son esenciales para corregir vulnerabilidades y mantener la seguridad del sistema.",
+      "coincide_con_clave": true,
+      "segundos": 13.2,
+      "tokens": 357
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "critico",
+      "motivo": "La alteración de registros médicos compromete directamente la seguridad y efectividad del tratamiento, pudiendo causar daños a los pacientes.",
+      "coincide_con_clave": true,
+      "segundos": 18.9,
+      "tokens": 513
+     }
+    ]
+   },
+   {
+    "niveles": [
+     "receptivo",
+     "resolutivo",
+     "reflexivo",
+     "critico"
+    ],
+    "items": [
+     {
+      "nivel": "receptivo",
+      "ra": "RA2",
+      "foco": "Reconocimiento de la importancia de la matriz de decisión en la selección de soluciones tecnológicas",
+      "contexto": "La cooperativa de transporte urbano 'RutaSegura' ha identificado la necesidad de implementar un sistema de gestión de flotas con integración de GPS y monitoreo en tiempo real. Para evaluar diferentes soluciones tecnológicas, se ha construido una matriz de decisión que incluye criterios como costo, escalabilidad, seguridad y compatibilidad con los dispositivos existentes.",
+      "pregunta": "¿Cuál es la función principal de la matriz de decisión en la selección de soluciones tecnológicas?",
+      "opciones": [
+       {
+        "texto": "Determinar el costo total de implementación del sistema",
+        "justificacion": "Esta opción se enfoca en un aspecto cuantitativo, pero no aborda la función general de la matriz, que incluye múltiples criterios de evaluación."
+       },
+       {
+        "texto": "Comparar diferentes opciones tecnológicas según criterios relevantes",
+        "justificacion": "Esta opción describe correctamente la función principal de la matriz de decisión, que es facilitar la comparación entre alternativas basándose en múltiples factores."
+       },
+       {
+        "texto": "Identificar los riesgos asociados a la implementación del sistema",
+        "justificacion": "Esta opción se refiere a un aspecto de análisis de riesgos, no a la función de la matriz de decisión, que se centra en la evaluación de alternativas."
+       },
+       {
+        "texto": "Definir el alcance funcional del sistema de gestión de flotas",
+        "justificacion": "Esta opción se refiere a la definición de requisitos funcionales, no a la función de la matriz de decisión, que se enfoca en la evaluación de alternativas."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "La matriz de decisión es una herramienta que permite evaluar múltiples alternativas basándose en criterios específicos, lo que facilita la toma de decisiones informadas.",
+       "En este caso, la cooperativa necesita comparar diferentes soluciones tecnológicas, por lo que la matriz ayuda a analizar cada opción según factores como costo, escalabilidad y seguridad."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "foco": "Priorización de controles de seguridad según su eficacia, costo y viabilidad en un contexto de implementación",
+      "contexto": "La empresa de logística 'LogiExpress' ha decidido implementar un sistema de gestión de inventarios con acceso remoto. Para garantizar la seguridad, se han identificado tres controles: autenticación de usuarios, encriptación de datos y actualización periódica del sistema. Cada control tiene un costo estimado y un nivel de eficacia.",
+      "pregunta": "¿Cuál control de seguridad debe priorizarse en la implementación del sistema de gestión de inventarios?",
+      "opciones": [
+       {
+        "texto": "Autenticación de usuarios",
+        "justificacion": "Esta opción no considera el impacto de no implementar encriptación, que podría comprometer la confidencialidad de los datos sensibles."
+       },
+       {
+        "texto": "Encriptación de datos",
+        "justificacion": "Esta opción prioriza un control esencial para proteger la confidencialidad, pero ignora el costo y la viabilidad de implementación a corto plazo."
+       },
+       {
+        "texto": "Actualización periódica del sistema",
+        "justificacion": "Esta opción se enfoca en la prevención de vulnerabilidades, pero no aborda directamente la protección de los datos en tránsito o en reposo."
+       },
+       {
+        "texto": "Autenticación de usuarios y encriptación de datos",
+        "justificacion": "Esta opción prioriza los controles más efectivos para garantizar la confidencialidad y la integridad de los datos, considerando su impacto en la seguridad del sistema."
+       }
+      ],
+      "correcta": 3,
+      "razonamiento": [
+       "La seguridad de un sistema de gestión de inventarios depende de múltiples factores, incluyendo la protección de los datos en tránsito y en reposo.",
+       "La autenticación de usuarios y la encriptación de datos son controles clave que, al priorizarse, garantizan la confidencialidad y la integridad de la información, lo cual es esencial para la operación segura del sistema."
+      ]
+     },
+     {
+      "nivel": "reflexivo",
+      "ra": "RA3",
+      "foco": "Interpretación de la matriz de riesgo para evaluar la viabilidad de una solución tecnológica",
+      "contexto": "La escuela de arte 'ArteCreativo' ha implementado un sistema de gestión de proyectos con acceso a internet. Para evaluar la viabilidad de la solución, se ha construido una matriz de riesgo que incluye amenazas, vulnerabilidades, impacto y probabilidad.",
+      "pregunta": "¿Qué indicador de la matriz de riesgo permite identificar la importancia de una amenaza en la solución tecnológica?",
+      "opciones": [
+       {
+        "texto": "Impacto de la amenaza",
+        "justificacion": "Esta opción se enfoca en el daño potencial, pero no considera la probabilidad de que la amenaza ocurra, lo que limita su utilidad para priorizar riesgos."
+       },
+       {
+        "texto": "Probabilidad de ocurrencia de la amenaza",
+        "justificacion": "Esta opción evalúa la frecuencia con que podría ocurrir la amenaza, pero no refleja el daño potencial que podría causar."
+       },
+       {
+        "texto": "Vulnerabilidad del sistema",
+        "justificacion": "Esta opción se refiere a la debilidad del sistema, pero no indica la gravedad del impacto si la amenaza se materializa."
+       },
+       {
+        "texto": "Producto de impacto y probabilidad",
+        "justificacion": "Esta opción representa el nivel de riesgo total, combinando el daño potencial con la probabilidad de ocurrencia, lo que permite priorizar riesgos de manera efectiva."
+       }
+      ],
+      "correcta": 3,
+      "razonamiento": [
+       "La matriz de riesgo se basa en la evaluación de múltiples factores para determinar el nivel de riesgo de una amenaza.",
+       "El producto de impacto y probabilidad permite identificar qué amenazas son más críticas, ya que combinan el daño potencial con la probabilidad de que ocurra, lo que ayuda a priorizar acciones de mitigación."
+      ]
+     },
+     {
+      "nivel": "critico",
+      "ra": "RA3",
+      "foco": "Evaluación crítica de la viabilidad técnica, ética y legal de una configuración tecnológica en un sistema de información",
+      "contexto": "La clínica de salud 'SaludIntegral' ha implementado un sistema de gestión de pacientes con acceso remoto. Para garantizar la seguridad, se ha elegido una configuración tecnológica que incluye encriptación de datos, autenticación de usuarios y actualización periódica. Sin embargo, se han identificado riesgos éticos y legales relacionados con la privacidad de los datos.",
+      "pregunta": "¿Cuál factor debe priorizarse al evaluar la viabilidad de la configuración tecnológica en el sistema de gestión de pacientes?",
+      "opciones": [
+       {
+        "texto": "Eficiencia del sistema en la gestión de datos",
+        "justificacion": "Esta opción se enfoca en la funcionalidad, pero no aborda los aspectos éticos y legales que son esenciales para la operación segura del sistema."
+       },
+       {
+        "texto": "Costo de implementación y mantenimiento",
+        "justificacion": "Esta opción se centra en aspectos económicos, pero no considera la viabilidad técnica ni los requisitos éticos y legales para la protección de la información."
+       },
+       {
+        "texto": "Cumplimiento de normativas de privacidad",
+        "justificacion": "Esta opción prioriza un aspecto crítico para la viabilidad legal del sistema, ya que la protección de los datos personales es un requisito fundamental en la gestión de pacientes."
+       },
+       {
+        "texto": "Eficacia de los controles de seguridad implementados",
+        "justificacion": "Esta opción se enfoca en la seguridad, pero no aborda la viabilidad ética y legal, que son indispensables para la operación del sistema."
+       }
+      ],
+      "correcta": 2,
+      "razonamiento": [
+       "La viabilidad de una configuración tecnológica en un sistema de información no se limita a aspectos técnicos, sino que debe considerar también los requisitos éticos y legales.",
+       "El cumplimiento de normativas de privacidad es un factor crítico para la operación legal del sistema, ya que la protección de los datos personales es un derecho fundamental y un requisito legal obligatorio."
+      ]
+     }
+    ],
+    "uso": {
+     "prompt_tokens": 1604,
+     "total_tokens": 3703,
+     "completion_tokens": 2099,
+     "prompt_tokens_details": null
+    },
+    "segundos": 77.4,
+    "verificacion": [
+     [],
+     [],
+     [],
+     []
+    ],
+    "revision": [
+     {
+      "respuesta": 2,
+      "otra_opcion_defendible": false,
+      "nivel_real": "resolutivo",
+      "motivo": "La matriz de decisión permite evaluar y comparar opciones tecnológicas según múltiples criterios, facilitando la toma de decisiones informadas en contextos complejos como la selección de sistemas de gestión de flotas.",
+      "coincide_con_clave": true,
+      "segundos": 18.0,
+      "tokens": 487
+     },
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": true,
+      "nivel_real": "critico",
+      "motivo": "La combinación de autenticación y encriptación cubre ambos aspectos fundamentales: acceso controlado y protección de datos, lo que maximiza la seguridad en un sistema remoto.",
+      "coincide_con_clave": true,
+      "segundos": 63.4,
+      "tokens": 1731
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "resolutivo",
+      "motivo": "El producto de impacto y probabilidad representa el riesgo total, que indica la importancia de la amenaza en la solución tecnológica.",
+      "coincide_con_clave": true,
+      "segundos": 29.8,
+      "tokens": 814
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "critico",
+      "motivo": "El cumplimiento de normativas de privacidad es fundamental para mitigar riesgos legales y éticos, superando la eficacia técnica o costos.",
+      "coincide_con_clave": true,
+      "segundos": 21.8,
+      "tokens": 593
+     }
+    ]
+   }
+  ],
+  "focos": [
+   {
+    "foco": "Reconocimiento de conceptos básicos de ciberseguridad en ingeniería",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Identificación de activos, amenazas y vulnerabilidades en un contexto de seguridad digital",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Propuesta de controles básicos de seguridad para mitigar riesgos en un sistema de información",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Análisis de la relación entre amenazas, vulnerabilidades y consecuencias en términos de confidencialidad, integridad y disponibilidad",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Reconocimiento de la importancia de la matriz de decisión en la selección de soluciones tecnológicas",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Priorización de controles de seguridad según su eficacia, costo y viabilidad en un contexto de implementación",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Interpretación de la matriz de riesgo para evaluar la viabilidad de una solución tecnológica",
+    "usa_resultados_calculados": false
+   },
+   {
+    "foco": "Evaluación crítica de la viabilidad técnica, ética y legal de una configuración tecnológica en un sistema de información",
+    "usa_resultados_calculados": false
+   }
+  ],
+  "ficha": {
+   "contenido": {
+    "titulo": "FICHA DE ESTUDIO - Clase M3-S1: Ciberseguridad en Ingeniería y Evaluación de Controles",
+    "objetivo": "Reflexionar sobre la evaluación de riesgos y selección de controles de seguridad en el contexto de sistemas de información, aplicando los conceptos aprendidos a una situación profesional concreta.",
+    "ideas_clave": [
+     "Riesgos en sistemas de información: amenazas, vulnerabilidades y consecuencias.",
+     "Confidencialidad, integridad y disponibilidad (C-I-D) como principios fundamentales de seguridad.",
+     "Controles preventivos y correctivos: autenticación, respaldo, actualización, protección de datos.",
+     "Matriz de riesgos: análisis de probabilidad e impacto para priorizar acciones.",
+     "Selección de controles: eficacia, costo, viabilidad y protección de datos."
+    ],
+    "ejemplo_resuelto": {
+     "situacion": "Una cooperativa de agricultura sostenible, llamada 'AgroVerde', utiliza un sistema de gestión de cultivos basado en la nube. Recientemente, se detectó un incidente de seguridad: un usuario no autorizado accedió a los datos de los agricultores, incluyendo información sensible sobre sus cultivos y sus métodos de producción.",
+     "pasos": [
+      "Identificación de activos: datos de los agricultores, sistema de gestión, bases de datos en la nube.",
+      "Identificación de amenazas: acceso no autorizado, brechas en la autenticación, falta de actualización de contraseñas.",
+      "Identificación de vulnerabilidades: contraseñas débiles, falta de encriptación de datos, no uso de autenticación de dos factores.",
+      "Análisis de consecuencias: pérdida de confidencialidad, riesgo de daño a la reputación de la cooperativa, posibilidad de uso malicioso de los datos.",
+      "Relación con C-I-D: pérdida de confidencialidad, riesgo de alteración de datos (integridad), afectación a la operación (disponibilidad).",
+      "Selección de controles: implementar autenticación de dos factores, encriptar datos, actualizar contraseñas, realizar auditorías de seguridad."
+     ],
+     "conclusion": "La implementación de controles preventivos como la autenticación de dos factores y la encriptación de datos reduce significativamente los riesgos de acceso no autorizado, garantizando la confidencialidad y la integridad de los datos."
+    },
+    "errores_frecuentes": [
+     "No identificar correctamente las amenazas y vulnerabilidades, lo que lleva a una evaluación incompleta del riesgo.",
+     "No relacionar los controles con las amenazas específicas, lo que reduce su eficacia.",
+     "Ignorar el impacto en la confidencialidad, integridad y disponibilidad, lo que limita la evaluación de riesgos.",
+     "No priorizar acciones según su probabilidad e impacto, lo que genera una gestión ineficiente de la seguridad."
+    ],
+    "relacion_con_el_ra": "Esta clase refuerza los resultados de aprendizaje RA2 y RA3: mejora los procesos de ingeniería a través de tecnologías de la información y evalúa soluciones de tecnología de la información para la ingeniería. Al analizar riesgos y seleccionar controles, el estudiante aplica los conceptos teóricos a una situación práctica, lo que refuerza su capacidad de resolver problemas de seguridad en sistemas de información.",
+    "preguntas_autocomprobacion": [
+     "¿Qué tipo de amenazas y vulnerabilidades podrían afectar la confidencialidad de los datos en un sistema de gestión de cultivos en la nube? ¿Cómo se relacionan con la seguridad del sistema?",
+     "¿Cuáles son los controles preventivos y correctivos más efectivos para proteger los datos de una cooperativa de agricultura sostenible? ¿Por qué?",
+     "¿Cómo se debe priorizar la selección de controles de seguridad según la probabilidad e impacto de los riesgos? ¿Qué consecuencias podría tener no priorizar adecuadamente?"
+    ]
+   },
+   "uso": {
+    "prompt_tokens": 1409,
+    "total_tokens": 2359,
+    "completion_tokens": 950,
+    "prompt_tokens_details": null
+   },
+   "segundos": 35.2
+  }
+ }
+]

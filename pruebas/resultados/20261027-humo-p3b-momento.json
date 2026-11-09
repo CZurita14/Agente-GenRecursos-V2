@@ -1,0 +1,2315 @@
+{
+ "resumen": {
+  "segundos": 502.76,
+  "llamadas": 17,
+  "max_tokens_llamada": 5614
+ },
+ "llamadas": [
+  {
+   "rol": "worker",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 80.653,
+   "tokens": [
+    3199,
+    2415
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 31.242,
+   "tokens": [
+    2867,
+    960
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 24.857,
+   "tokens": [
+    2787,
+    775
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 24.232,
+   "tokens": [
+    2838,
+    755
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 29.611,
+   "tokens": [
+    2852,
+    925
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 19.858,
+   "tokens": [
+    3161,
+    590
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 24.866,
+   "tokens": [
+    3183,
+    751
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 30.601,
+   "tokens": [
+    2812,
+    958
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 37.345,
+   "tokens": [
+    2906,
+    1173
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 28.996,
+   "tokens": [
+    3194,
+    863
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+   "segundos": 33.891,
+   "tokens": [
+    2950,
+    1065
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "2647c46b-75c1-4bc7-a3c0-15e41926d1c9",
+   "segundos": 19.92,
+   "tokens": [
+    2702,
+    583
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "2647c46b-75c1-4bc7-a3c0-15e41926d1c9",
+   "segundos": 16.396,
+   "tokens": [
+    3135,
+    513
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "c4efd8bd-8660-4856-8069-ff0adc59cdfd",
+   "segundos": 21.035,
+   "tokens": [
+    2684,
+    620
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "c4efd8bd-8660-4856-8069-ff0adc59cdfd",
+   "segundos": 33.418,
+   "tokens": [
+    3196,
+    1053
+   ],
+   "ok": true
+  },
+  {
+   "rol": "worker",
+   "trabajo_id": "f7376181-b686-4b3a-b78a-e373de3d7b3c",
+   "segundos": 24.136,
+   "tokens": [
+    3187,
+    714
+   ],
+   "ok": true
+  },
+  {
+   "rol": "revisor",
+   "trabajo_id": "f7376181-b686-4b3a-b78a-e373de3d7b3c",
+   "segundos": 18.692,
+   "tokens": [
+    3736,
+    546
+   ],
+   "ok": true
+  }
+ ],
+ "trabajos": {
+  "f7376181-b686-4b3a-b78a-e373de3d7b3c": {
+   "herramienta": "guia_producto_final",
+   "clase": "asignatura",
+   "estado": "listo",
+   "mensajes": [
+    {
+     "tipo": "Encargo",
+     "cuerpo": {
+      "nivel": 3,
+      "ambito": {
+       "id": "asignatura",
+       "tipo": "asignatura"
+      },
+      "carrera": "SOFTWARE",
+      "codigo_pf": "B26-SOFT-3-56146-1727",
+      "trabajo_id": "f7376181-b686-4b3a-b78a-e373de3d7b3c",
+      "herramienta": "guia_producto_final",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "version_silabo": "1.0",
+      "perfil_dificultad": "fundamentacion"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [],
+      "ronda": 0,
+      "estilo": {
+       "escenarios": [
+        "tiempos de respuesta de una API REST",
+        "fallos de compilación en un repositorio Git",
+        "consultas lentas en una base de datos relacional",
+        "consumo de memoria de microservicios en contenedores",
+        "defectos reportados por versión de una aplicación móvil",
+        "tiempos de carga de una tienda en línea",
+        "intentos de inicio de sesión fallidos en un portal institucional",
+        "cobertura de pruebas automatizadas por módulo"
+       ],
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA1",
+         "texto": "Comprende de manera sólida y precisa los principios fundamentales de análisis de datos y estadísticas en ingeniería, demostrando un dominio claro y la capacidad de aplicarlos correctamente en diferentes contextos y situaciones.",
+         "evidencia": "Una base de datos simulada y estructurada (CSV/JSON) que contenga registros de eventos digitales en el contexto ecuatoriano (ej. intentos de inicio de sesión, volumen de tráfico de red, direcciones IP, tiempos de respuesta). Se acompaña de un reporte descriptivo generado en JASP."
+        },
+        {
+         "id": "RA2",
+         "texto": "Aplica de manera efectiva y precisa las técnicas de análisis de datos en la resolución de problemas de ingeniería, demostrando un dominio sólido y obteniendo resultados confiables para la toma de decisiones.",
+         "evidencia": "Un esquema de reglas condicionales y probabilidades calculadas (utilizando Numiqo), aplicando el Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad."
+        },
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        },
+        {
+         "id": "RA4",
+         "texto": "Evalúa modelos estadísticos predictivos (regresión y series temporales) mediante inferencia computacional, para integrarlos como parámetros matemáticos dentro de soluciones de software funcionales y fiables.",
+         "evidencia": "Los coeficientes matemáticos de un modelo de series temporales o regresión logística entrenado en JASP, junto con un protocolo de validación estocástica (pruebas de estrés matemático)."
+        }
+       ],
+       "fecha": "2026-10-05",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la calidad del dataset frente a estándares de ciberseguridad, garantizando alta fiabilidad para el modelado.",
+          "receptivo": "Identifica errores básicos y valores nulos en el dataset siguiendo instrucciones, presentando una limpieza superficial.",
+          "reflexivo": "Analiza el impacto de la depuración en la integridad de los datos, justificando los métodos estadísticos elegidos.",
+          "cocreativo": "Diseña un proceso o script automatizado para la depuración continua del dataset, adaptable a nuevas fuentes de datos.",
+          "resolutivo": "Ejecuta la limpieza del dataset aplicando técnicas estadísticas estándar para tratar valores atípicos y faltantes."
+         },
+         "indicador": "Dataset depurado"
+        },
+        {
+         "niveles": {
+          "critico": "Valora el riesgo sistémico integrando matrices complejas, priorizando la mitigación de vulnerabilidades críticas.",
+          "receptivo": "Registra datos en matrices de vulnerabilidad de forma mecánica, con cálculos de probabilidad incompletos o básicos.",
+          "reflexivo": "Interpreta los resultados de las matrices, correlacionando diferentes vulnerabilidades para entender su impacto conjunto.",
+          "cocreativo": "Formula nuevos modelos probabilísticos que anticipan vectores de ataque emergentes o no convencionales.",
+          "resolutivo": "Calcula correctamente las probabilidades y construye matrices estándar para identificar vulnerabilidades comunes."
+         },
+         "indicador": "Matrices probabilísticas de vulnerabilidades"
+        },
+        {
+         "niveles": {
+          "critico": "Optimiza los umbrales establecidos mediante análisis crítico para minimizar falsos positivos y falsos negativos en escenarios reales.",
+          "receptivo": "Describe teóricamente qué es un umbral de anomalía sin aplicar pruebas inferenciales rigurosas.",
+          "reflexivo": "Argumenta la elección de los niveles de confianza y significancia en la definición de los umbrales estadísticos.",
+          "cocreativo": "Genera un enfoque inferencial dinámico donde los umbrales se adaptan autónomamente al comportamiento cambiante de la red.",
+          "resolutivo": "Aplica pruebas de inferencia estadística básicas para definir los umbrales de detección de anomalías."
+         },
+         "indicador": "Sustentación inferencial de umbrales para anomalías"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la robustez de los parámetros frente a posibles ataques adversarios, asegurando una codificación óptima y segura.",
+          "receptivo": "Lista los parámetros matemáticos necesarios para el algoritmo, pero carecen de la estructura lista para codificación.",
+          "reflexivo": "Relaciona la configuración de los parámetros matemáticos con su impacto directo en la precisión y eficiencia del algoritmo.",
+          "cocreativo": "Proyecta parámetros matemáticos para un algoritmo predictivo inédito, estructurado colaborativamente para su integración inmediata en sistemas de defensa.",
+          "resolutivo": "Determina los parámetros matemáticos del algoritmo predictivo para que funcione en condiciones operativas estándar."
+         },
+         "indicador": "Parámetros matemáticos del algoritmo predictivo"
+        }
+       ],
+       "clase_id": "asignatura",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "DISTRIBUCIONES ESTADÍSTICAS",
+        "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "PARÁMETROS ESTADÍSTICOS",
+        "HIPÓTESIS DE GRUPOS",
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "M2: Planeación y Diseño - Modelado Probabilístico de Riesgos y Vulnerabilidades.",
+        "M3: Resolución del Problema - Inferencia Estadística para la Detección de Anomalías"
+       ],
+       "politica_ia": "M2: Se autoriza el uso de IA generativa como apoyo heurístico para plantear estructuras lógicas o comprender distribuciones probabilísticas complejas. El estudiante tiene la obligación de auditar críticamente cada sugerencia, validando los cálculos manualmente mediante la calculadora Numiqo para garantizar la exactitud matemática de las reglas de seguridad, asumiendo total autoría sobre la matriz entregada.; M3: Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": [
+        "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación.",
+        "Matriz Probabilística de Riesgos y Vulnerabilidades: Un esquema analítico de reglas condicionales y probabilidades calculadas (utilizando Numiqo), aplicando el Teorema de Bayes o distribuciones de probabilidad sobre los datos de seguridad. Este esquema define la lógica matemática (condicionales algorítmicas) que alimentará el motor de decisiones y alertas del software de monitoreo.",
+        "Definición Inferencial de Umbrales de Seguridad: Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. ataques DDoS). Esta evidencia justifica numéricamente los valores de corte exactos que el algoritmo del software utilizará para disparar alertas críticas de intrusión."
+       ]
+      },
+      "trabajo_id": "f7376181-b686-4b3a-b78a-e373de3d7b3c",
+      "ya_generado": [],
+      "devoluciones": [],
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 0,
+      "tokens": [
+       3187,
+       714
+      ],
+      "contenido": [
+       {
+        "ruta": [
+         {
+          "aporte": "La actividad M2, 'Planeación y Diseño - Modelado Probabilístico de Riesgos y Vulnerabilidades', aporta al producto final al proporcionar un esquema analítico de reglas condicionales y probabilidades calculadas, que servirá como base para el diseño del motor lógico y predictivo del software de monitoreo de seguridad.",
+          "momento": "M2"
+         },
+         {
+          "aporte": "La actividad M3, 'Resolución del Problema - Inferencia Estadística para la Detección de Anomalías', aporta al producto final al permitir la aplicación de técnicas de inferencia estadística para definir umbrales de detección de anomalías, lo cual es fundamental para la correcta identificación de patrones anómalos en los datos.",
+          "momento": "M3"
+         }
+        ],
+        "criterios": [
+         {
+          "indicador": "Dataset depurado",
+          "como_prepararse": "Se debe asegurar la calidad del dataset al aplicar técnicas estadísticas estándar para tratar valores atípicos y faltantes, garantizando que los datos sean confiables para el modelado estadístico."
+         },
+         {
+          "indicador": "Matrices probabilísticas de vulnerabilidades",
+          "como_prepararse": "Es necesario calcular correctamente las probabilidades y construir matrices estándar para identificar vulnerabilidades comunes, asegurando que los cálculos se realicen con herramientas como Numiqo."
+         },
+         {
+          "indicador": "Sustentación inferencial de umbrales para anomalías",
+          "como_prepararse": "Se debe aplicar pruebas de inferencia estadística básicas para definir los umbrales de detección de anomalías, lo que permitirá establecer criterios numéricos claros para la identificación de patrones inusuales."
+         },
+         {
+          "indicador": "Parámetros matemáticos del algoritmo predictivo",
+          "como_prepararse": "Se debe determinar los parámetros matemáticos del algoritmo predictivo para que funcione en condiciones operativas estándar, asegurando que los resultados sean aplicables y replicables."
+         }
+        ],
+        "recomendaciones": [
+         "Utilizar herramientas como JASP y Numiqo de manera complementaria, ya que cada una tiene funciones específicas en el análisis y modelado de datos.",
+         "Documentar cada paso del proceso de análisis para facilitar la revisión y la integración del trabajo en el portafolio final.",
+         "Revisar críticamente las interpretaciones de los estadísticos obtenidos, especialmente los valores p y F de Fisher, antes de incorporarlos al reporte final.",
+         "Asegurar que los umbrales definidos en la sustentación inferencial estén respaldados por pruebas estadísticas rigurosas y no solo por suposiciones teóricas.",
+         "Integrar los resultados obtenidos en cada momento de la actividad en un marco coherente que refleje el flujo lógico del proyecto de análisis y modelado estadístico."
+        ]
+       }
+      ],
+      "trabajo_id": "f7376181-b686-4b3a-b78a-e373de3d7b3c",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "guia_final",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "f7376181-b686-4b3a-b78a-e373de3d7b3c",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Cierre",
+     "cuerpo": {
+      "estado": "listo",
+      "tokens": [
+       6923,
+       1260
+      ],
+      "recurso_id": "1cea2de7-0f3e-475b-81f4-e90c4006771d",
+      "trabajo_id": "f7376181-b686-4b3a-b78a-e373de3d7b3c",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    }
+   ]
+  },
+  "c4efd8bd-8660-4856-8069-ff0adc59cdfd": {
+   "herramienta": "estudio_caso",
+   "clase": "M3",
+   "estado": "listo",
+   "mensajes": [
+    {
+     "tipo": "Encargo",
+     "cuerpo": {
+      "nivel": 3,
+      "ambito": {
+       "id": "M3",
+       "tipo": "momento"
+      },
+      "carrera": "SOFTWARE",
+      "codigo_pf": "B26-SOFT-3-56146-1727",
+      "trabajo_id": "c4efd8bd-8660-4856-8069-ff0adc59cdfd",
+      "herramienta": "estudio_caso",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "version_silabo": "1.0",
+      "perfil_dificultad": "fundamentacion"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [],
+      "ronda": 0,
+      "estilo": {
+       "escenarios": [
+        "tiempos de respuesta de una API REST",
+        "fallos de compilación en un repositorio Git",
+        "consultas lentas en una base de datos relacional",
+        "consumo de memoria de microservicios en contenedores",
+        "defectos reportados por versión de una aplicación móvil",
+        "tiempos de carga de una tienda en línea",
+        "intentos de inicio de sesión fallidos en un portal institucional",
+        "cobertura de pruebas automatizadas por módulo"
+       ],
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-21",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "PARÁMETROS ESTADÍSTICOS",
+        "HIPÓTESIS DE GRUPOS",
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+        "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": [
+        "Definición Inferencial de Umbrales de Seguridad: Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. ataques DDoS). Esta evidencia justifica numéricamente los valores de corte exactos que el algoritmo del software utilizará para disparar alertas críticas de intrusión."
+       ]
+      },
+      "trabajo_id": "c4efd8bd-8660-4856-8069-ff0adc59cdfd",
+      "ya_generado": [],
+      "devoluciones": [],
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 0,
+      "tokens": [
+       2684,
+       620
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "caso": "En un sistema de gestión de información en Ecuador, se reportan consultas lentas en una base de datos relacional que maneja registros de usuarios de una plataforma educativa en línea. La base de datos contiene 120.000 registros y se utiliza para generar reportes de actividad diaria. Los administradores observan que ciertas consultas tardan más de 5 segundos en completarse, lo que afecta la experiencia del usuario. Se decide realizar un análisis estadístico para determinar si estas consultas lentas están relacionadas con un aumento en la carga de datos o con un comportamiento anómalo en el sistema.",
+        "escenario": "consultas lentas en una base de datos relacional",
+        "preguntas": [
+         {
+          "nivel": "receptivo",
+          "pregunta": "¿Qué parámetros estadísticos se deben calcular para evaluar el rendimiento de las consultas en la base de datos?",
+          "respuesta_orientativa": "Se deben calcular parámetros como la media, la mediana, la desviación estándar y los percentiles de los tiempos de respuesta de las consultas, para identificar patrones y variaciones en el desempeño."
+         },
+         {
+          "nivel": "resolutivo",
+          "pregunta": "¿Cómo se puede usar JASP para calcular los intervalos de confianza de los tiempos de respuesta de las consultas?",
+          "respuesta_orientativa": "En JASP, se puede cargar el conjunto de datos de tiempos de respuesta, seleccionar la variable correspondiente y utilizar la función de intervalos de confianza para obtener un rango que represente con alta probabilidad la verdadera media de los tiempos de consulta."
+         },
+         {
+          "nivel": "reflexivo",
+          "pregunta": "¿Qué implicaciones tiene la detección de consultas lentas en términos de seguridad y rendimiento del sistema?",
+          "respuesta_orientativa": "La detección de consultas lentas puede indicar un aumento en la carga de datos, una posible inyección de SQL o un comportamiento anómalo que podría comprometer la seguridad del sistema. Esto requiere una revisión de las consultas y una mejora en la estructura de la base de datos."
+         },
+         {
+          "nivel": "critico",
+          "pregunta": "¿Cómo se puede integrar la inferencia estadística en el diseño de un algoritmo de monitoreo de seguridad para detectar consultas anómalas?",
+          "respuesta_orientativa": "Se puede integrar la inferencia estadística al definir umbrales de tiempo de respuesta basados en intervalos de confianza calculados. Si una consulta excede estos umbrales, se genera una alerta que indica un posible comportamiento anómalo, permitiendo una intervención temprana."
+         }
+        ]
+       }
+      ],
+      "trabajo_id": "c4efd8bd-8660-4856-8069-ff0adc59cdfd",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "caso",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "c4efd8bd-8660-4856-8069-ff0adc59cdfd",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Cierre",
+     "cuerpo": {
+      "estado": "listo",
+      "tokens": [
+       5880,
+       1673
+      ],
+      "recurso_id": "afc57754-63e3-4f04-9026-32acd23a621f",
+      "trabajo_id": "c4efd8bd-8660-4856-8069-ff0adc59cdfd",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    }
+   ]
+  },
+  "2647c46b-75c1-4bc7-a3c0-15e41926d1c9": {
+   "herramienta": "guia_evidencia",
+   "clase": "M3",
+   "estado": "listo",
+   "mensajes": [
+    {
+     "tipo": "Encargo",
+     "cuerpo": {
+      "nivel": 3,
+      "ambito": {
+       "id": "M3",
+       "tipo": "momento"
+      },
+      "carrera": "SOFTWARE",
+      "codigo_pf": "B26-SOFT-3-56146-1727",
+      "trabajo_id": "2647c46b-75c1-4bc7-a3c0-15e41926d1c9",
+      "herramienta": "guia_evidencia",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "version_silabo": "1.0",
+      "perfil_dificultad": "fundamentacion"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [],
+      "ronda": 0,
+      "estilo": {
+       "escenarios": [
+        "tiempos de respuesta de una API REST",
+        "fallos de compilación en un repositorio Git",
+        "consultas lentas en una base de datos relacional",
+        "consumo de memoria de microservicios en contenedores",
+        "defectos reportados por versión de una aplicación móvil",
+        "tiempos de carga de una tienda en línea",
+        "intentos de inicio de sesión fallidos en un portal institucional",
+        "cobertura de pruebas automatizadas por módulo"
+       ],
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-21",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "PARÁMETROS ESTADÍSTICOS",
+        "HIPÓTESIS DE GRUPOS",
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+        "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": [
+        "Definición Inferencial de Umbrales de Seguridad: Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. ataques DDoS). Esta evidencia justifica numéricamente los valores de corte exactos que el algoritmo del software utilizará para disparar alertas críticas de intrusión."
+       ]
+      },
+      "trabajo_id": "2647c46b-75c1-4bc7-a3c0-15e41926d1c9",
+      "ya_generado": [],
+      "devoluciones": [],
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 0,
+      "tokens": [
+       2702,
+       583
+      ],
+      "contenido": [
+       {
+        "autochequeo": [
+         "¿Usé JASP correctamente para calcular intervalos de confianza y ejecutar pruebas de hipótesis?",
+         "¿Justifiqué numéricamente los umbrales de alerta con base en los resultados estadísticos?",
+         "¿Verifiqué los supuestos estadísticos antes de realizar las pruebas?",
+         "¿Explicé claramente cómo diferencio el tráfico normal del anómalo usando análisis inferencial?",
+         "¿Mi documento refleja una comprensión sólida de los conceptos estadísticos aplicados?"
+        ],
+        "que_se_pide": "El estudiante debe crear un documento técnico que use pruebas de hipótesis e intervalos de confianza en JASP para diferenciar tráfico normal de posibles ataques, justificando numéricamente los umbrales de alerta para el algoritmo.",
+        "como_se_valora": [
+         {
+          "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP",
+          "que_observar": "Se evalúa si el estudiante usa correctamente JASP para calcular intervalos de confianza y ejecutar pruebas de hipótesis, sin errores en los cálculos o selección de métodos."
+         },
+         {
+          "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)",
+          "que_observar": "Se verifica si el documento establece una diferenciación clara entre patrones normales y anómalos, usando análisis estadístico sólido y justificación técnica."
+         },
+         {
+          "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas",
+          "que_observar": "Se analiza si los umbrales de alerta están respaldados con cálculos estadísticos específicos, mostrando cómo se determinaron numéricamente."
+         }
+        ],
+        "errores_comunes": [
+         "Uso incorrecto de herramientas como JASP o Numiqo, lo que genera resultados inexactos.",
+         "No justificar adecuadamente los umbrales de alerta, dejando la decisión subjetiva.",
+         "Ignorar la verificación de supuestos estadísticos (como Shapiro-Wilk o Levene) antes de realizar pruebas.",
+         "No interpretar correctamente el valor p o los estadísticos críticos, lo que afecta la validez del análisis.",
+         "Presentar resultados sin contextualizarlos en el ámbito de la seguridad informática."
+        ]
+       }
+      ],
+      "trabajo_id": "2647c46b-75c1-4bc7-a3c0-15e41926d1c9",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "guia",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "2647c46b-75c1-4bc7-a3c0-15e41926d1c9",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Cierre",
+     "cuerpo": {
+      "estado": "listo",
+      "tokens": [
+       5837,
+       1096
+      ],
+      "recurso_id": "4ec53be2-f018-4094-926c-7d9f3e5d3c7a",
+      "trabajo_id": "2647c46b-75c1-4bc7-a3c0-15e41926d1c9",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    }
+   ]
+  },
+  "0aa99e73-f803-48aa-925a-57ecb9d00262": {
+   "herramienta": "simulacro",
+   "clase": "M3",
+   "estado": "requiere_revision",
+   "mensajes": [
+    {
+     "tipo": "Encargo",
+     "cuerpo": {
+      "nivel": 3,
+      "ambito": {
+       "id": "M3",
+       "tipo": "momento"
+      },
+      "carrera": "SOFTWARE",
+      "codigo_pf": "B26-SOFT-3-56146-1727",
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "herramienta": "simulacro",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "version_silabo": "1.0",
+      "perfil_dificultad": "fundamentacion"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "caso": "consultas lentas en una base de datos relacional",
+        "foco": "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+        "nivel": "receptivo",
+        "item_id": "i1"
+       },
+       {
+        "caso": "consumo de memoria de microservicios en contenedores",
+        "foco": "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "nivel": "resolutivo",
+        "item_id": "i2"
+       },
+       {
+        "caso": "defectos reportados por versión de una aplicación móvil",
+        "foco": "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "nivel": "resolutivo",
+        "item_id": "i3"
+       },
+       {
+        "caso": "tiempos de carga de una tienda en línea",
+        "foco": "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "nivel": "reflexivo",
+        "item_id": "i4"
+       }
+      ],
+      "ronda": 0,
+      "estilo": {
+       "escenarios": [
+        "tiempos de respuesta de una API REST",
+        "fallos de compilación en un repositorio Git",
+        "consultas lentas en una base de datos relacional",
+        "consumo de memoria de microservicios en contenedores",
+        "defectos reportados por versión de una aplicación móvil",
+        "tiempos de carga de una tienda en línea",
+        "intentos de inicio de sesión fallidos en un portal institucional",
+        "cobertura de pruebas automatizadas por módulo"
+       ],
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-21",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "PARÁMETROS ESTADÍSTICOS",
+        "HIPÓTESIS DE GRUPOS",
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+        "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": [
+        "Definición Inferencial de Umbrales de Seguridad: Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. ataques DDoS). Esta evidencia justifica numéricamente los valores de corte exactos que el algoritmo del software utilizará para disparar alertas críticas de intrusión."
+       ]
+      },
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "ya_generado": [],
+      "devoluciones": [],
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 0,
+      "tokens": [
+       3199,
+       2415
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+        "nivel": "receptivo",
+        "item_id": "i1",
+        "contexto": "En un sistema de base de datos relacional, se detectaron consultas lentas que afectaban el rendimiento del sistema. Para investigar, se tomó una muestra aleatoria de 100 consultas y se midió el tiempo de respuesta promedio. El tiempo promedio fue de 2,5 segundos con una desviación estándar de 0,8 segundos.",
+        "correcta": 1,
+        "opciones": [
+         {
+          "texto": "Determinar el promedio exacto del tiempo de respuesta de todas las consultas en la base de datos.",
+          "justificacion": "Esta opción confunde el propósito de los intervalos de confianza con la estimación puntual.",
+          "error_que_representa": "confundir estimación puntual con intervalo de confianza"
+         },
+         {
+          "texto": "Estimar el rango de valores dentro del cual se encuentra el promedio verdadero del tiempo de respuesta con un nivel de confianza determinado.",
+          "justificacion": "Esta opción describe correctamente el propósito de los intervalos de confianza.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "Verificar si el tiempo promedio de las consultas es significativamente diferente de 2 segundos.",
+          "justificacion": "Esta opción describe una prueba de hipótesis, no el cálculo de intervalos de confianza.",
+          "error_que_representa": "confundir intervalo de confianza con prueba de hipótesis"
+         },
+         {
+          "texto": "Calcular la probabilidad de que una consulta específica sea lenta.",
+          "justificacion": "Esta opción se refiere a un cálculo de probabilidad, no a la estimación de parámetros poblacionales.",
+          "error_que_representa": "confundir probabilidad con estimación de parámetros"
+         }
+        ],
+        "pregunta": "¿Cuál es el objetivo principal del cálculo de intervalos de confianza en este contexto?",
+        "contenido": "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "razonamiento": [
+         "El cálculo de intervalos de confianza se usa para estimar el rango de valores dentro del cual se encuentra el parámetro poblacional (promedio de tiempo de respuesta) con un nivel de confianza determinado.",
+         "La opción correcta reconoce que el objetivo es estimar el promedio verdadero con incertidumbre, lo cual es el propósito fundamental de los intervalos de confianza."
+        ]
+       },
+       {
+        "ra": "RA3",
+        "foco": "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software.",
+        "nivel": "resolutivo",
+        "item_id": "i2",
+        "contexto": "Un equipo de desarrollo observó que algunos microservicios en contenedores consumían más memoria de lo esperado. Para analizar, se recopiló un dataset de 500 registros con el uso de memoria (en MB) de estos microservicios.",
+        "correcta": 3,
+        "opciones": [
+         {
+          "texto": "La mediana del consumo de memoria.",
+          "justificacion": "Esta opción es válida, pero no es el parámetro más común para describir el comportamiento central en este contexto.",
+          "error_que_representa": "priorizar sin criterio"
+         },
+         {
+          "texto": "La moda del consumo de memoria.",
+          "justificacion": "Esta opción describe el valor más frecuente, pero no el comportamiento promedio.",
+          "error_que_representa": "ignorar un supuesto"
+         },
+         {
+          "texto": "La varianza del consumo de memoria.",
+          "justificacion": "Esta opción describe la dispersión, no el comportamiento promedio.",
+          "error_que_representa": "confundir dispersión con promedio"
+         },
+         {
+          "texto": "La media del consumo de memoria.",
+          "justificacion": "Esta opción es correcta, ya que la media es el parámetro más adecuado para describir el comportamiento promedio del consumo de memoria.",
+          "error_que_representa": "ninguno"
+         }
+        ],
+        "pregunta": "¿Qué tipo de parámetro se debe estimar para comprender el comportamiento promedio del consumo de memoria?",
+        "contenido": "PARÁMETROS ESTADÍSTICOS",
+        "razonamiento": [
+         "La media es el parámetro más común para describir el comportamiento promedio de un conjunto de datos cuantitativos, especialmente cuando se busca entender el uso promedio de recursos como la memoria.",
+         "La opción correcta identifica correctamente que la media es el parámetro necesario para comprender el comportamiento promedio del consumo de memoria."
+        ]
+       },
+       {
+        "ra": "RA3",
+        "foco": "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "nivel": "resolutivo",
+        "item_id": "i3",
+        "contexto": "Una empresa de desarrollo móvil detectó que la cantidad de defectos reportados variaba según la versión de su aplicación. Se recopilaron datos de 100 usuarios por versión, y se realizó una prueba de normalidad y homocedasticidad.",
+        "correcta": 2,
+        "opciones": [
+         {
+          "texto": "$H_0$: No hay diferencia significativa en la media de defectos entre versiones.",
+          "justificacion": "Esta opción es ambigua y no define claramente la hipótesis nula.",
+          "error_que_representa": "sobregeneralizar"
+         },
+         {
+          "texto": "$H_0$: La media de defectos es mayor en la última versión.",
+          "justificacion": "Esta opción representa una hipótesis alternativa, no la nula.",
+          "error_que_representa": "confundir $H_0$ con $H_1$"
+         },
+         {
+          "texto": "$H_0$: La media de defectos es igual en todas las versiones.",
+          "justificacion": "Esta opción describe correctamente la hipótesis nula para comparar medias entre grupos.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "$H_0$: La media de defectos es menor en la última versión.",
+          "justificacion": "Esta opción también representa una hipótesis alternativa, no la nula.",
+          "error_que_representa": "confundir $H_0$ con $H_1$"
+         }
+        ],
+        "pregunta": "¿Cuál es la hipótesis nula ($H_0$) que se debe probar para comparar las medias de defectos entre versiones?",
+        "contenido": "HIPÓTESIS DE GRUPOS",
+        "razonamiento": [
+         "La hipótesis nula ($H_0$) establece que no hay diferencia significativa entre los grupos, lo cual es fundamental para realizar una prueba de comparación de medias.",
+         "La opción correcta describe claramente la hipótesis nula, lo cual es esencial para el análisis estadístico."
+        ]
+       },
+       {
+        "ra": "RA3",
+        "foco": "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+        "nivel": "reflexivo",
+        "item_id": "i4",
+        "contexto": "Un equipo de desarrollo observó que los tiempos de carga de una tienda en línea variaban según el dispositivo utilizado (móvil, tableta o computadora). Se recopilaron datos de 150 usuarios y se realizó un ANOVA para comparar las medias.",
+        "correcta": 2,
+        "opciones": [
+         {
+          "texto": "No se puede concluir nada con base en el valor $p$ obtenido.",
+          "justificacion": "Esta opción es incorrecta, ya que el valor $p$ permite hacer una decisión estadística.",
+          "error_que_representa": "ignorar un supuesto"
+         },
+         {
+          "texto": "Se acepta la hipótesis nula y se concluye que no hay diferencias entre los grupos.",
+          "justificacion": "Esta opción es incorrecta, ya que un valor $p$ menor que 0,05 indica que la hipótesis nula no es probable.",
+          "error_que_representa": "confundir no rechazar $H_0$ con aceptarla"
+         },
+         {
+          "texto": "Se rechaza la hipótesis nula y se concluye que hay diferencias significativas entre los grupos.",
+          "justificacion": "Esta opción es correcta, ya que un valor $p$ menor que 0,05 indica que la hipótesis nula es improbable.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "Se rechaza la hipótesis alternativa y se concluye que no hay diferencias entre los grupos.",
+          "justificacion": "Esta opción es incorrecta, ya que el rechazo de la hipótesis nula implica que la hipótesis alternativa es más probable.",
+          "error_que_representa": "confundir $H_0$ con $H_1$"
+         }
+        ],
+        "pregunta": "¿Qué implicación tiene que el valor $p$ obtenido sea menor que 0,05 en este análisis?",
+        "contenido": "HIPÓTESIS ESTADÍSTICAS",
+        "razonamiento": [
+         "Un valor $p$ menor que 0,05 indica que la probabilidad de observar los resultados bajo la hipótesis nula es muy baja, por lo que se rechaza la hipótesis nula.",
+         "La opción correcta interpreta correctamente el resultado del análisis estadístico, lo cual es fundamental para tomar decisiones basadas en datos."
+        ]
+       }
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "i1",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La estimación de la media es un componente fundamental del análisis estadístico para establecer umbrales de seguridad, como se requiere en el entregable. La pregunta se alinea con el objetivo de validar el comportamiento de los datos mediante parámetros poblacionales.",
+        "item_id": "i2",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La formulación correcta de H0 es un pilar del análisis estadístico requerido para el entregable, ya que permite validar si las diferencias observadas en defectos son significativas o no.; además, el revisor considera correctas las opciones 1 y 3",
+        "item_id": "i3",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "",
+        "item_id": "i4",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 1,
+      "motivos": {
+       "i2": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La estimación de la media es un componente fundamental del análisis estadístico para establecer umbrales de seguridad, como se requiere en el entregable. La pregunta se alinea con el objetivo de validar el comportamiento de los datos mediante parámetros poblacionales.",
+       "i3": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La formulación correcta de H0 es un pilar del análisis estadístico requerido para el entregable, ya que permite validar si las diferencias observadas en defectos son significativas o no.; además, el revisor considera correctas las opciones 1 y 3"
+      },
+      "pendientes": [
+       "i2",
+       "i3"
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 1,
+      "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La estimación de la media es un componente fundamental del análisis estadístico para establecer umbrales de seguridad, como se requiere en el entregable. La pregunta se alinea con el objetivo de validar el comportamiento de los datos mediante parámetros poblacionales.",
+      "item_id": "i2",
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "caso": "consumo de memoria de microservicios en contenedores",
+        "foco": "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "nivel": "resolutivo",
+        "item_id": "i2"
+       }
+      ],
+      "ronda": 1,
+      "estilo": {
+       "escenarios": [
+        "tiempos de respuesta de una API REST",
+        "fallos de compilación en un repositorio Git",
+        "consultas lentas en una base de datos relacional",
+        "consumo de memoria de microservicios en contenedores",
+        "defectos reportados por versión de una aplicación móvil",
+        "tiempos de carga de una tienda en línea",
+        "intentos de inicio de sesión fallidos en un portal institucional",
+        "cobertura de pruebas automatizadas por módulo"
+       ],
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-21",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "PARÁMETROS ESTADÍSTICOS",
+        "HIPÓTESIS DE GRUPOS",
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+        "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": [
+        "Definición Inferencial de Umbrales de Seguridad: Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. ataques DDoS). Esta evidencia justifica numéricamente los valores de corte exactos que el algoritmo del software utilizará para disparar alertas críticas de intrusión."
+       ]
+      },
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "ya_generado": [
+       "¿Cuál es el objetivo principal del cálculo de intervalos de confianza en este contexto?",
+       "¿Cuál es la hipótesis nula ($H_0$) que se debe probar para comparar las medias de defectos entre versiones?",
+       "¿Qué implicación tiene que el valor $p$ obtenido sea menor que 0,05 en este análisis?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 1,
+        "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La estimación de la media es un componente fundamental del análisis estadístico para establecer umbrales de seguridad, como se requiere en el entregable. La pregunta se alinea con el objetivo de validar el comportamiento de los datos mediante parámetros poblacionales.",
+        "item_id": "i2",
+        "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+        "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+       }
+      ],
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 1,
+      "tokens": [
+       3161,
+       590
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "nivel": "resolutivo",
+        "item_id": "i2",
+        "contexto": "En un sistema de monitoreo de recursos en contenedores, se ha recopilado un conjunto de datos que muestra el consumo de memoria de 100 microservicios durante 30 días. Se necesita estimar el promedio poblacional del consumo de memoria para establecer umbrales de seguridad.",
+        "correcta": 3,
+        "opciones": [
+         {
+          "texto": "500 MB",
+          "justificacion": "Este valor no considera el error estándar, lo cual es esencial para estimar el promedio poblacional con precisión.",
+          "error_que_representa": "Ignora el error estándar en la estimación del promedio poblacional"
+         },
+         {
+          "texto": "535 MB",
+          "justificacion": "Este valor excede el rango de la media muestral y no se justifica con los datos proporcionados.",
+          "error_que_representa": "Aplica una corrección no justificada al valor de la media muestral"
+         },
+         {
+          "texto": "515 MB",
+          "justificacion": "Este valor se obtiene al sumar el error estándar al promedio muestral, lo cual no es correcto para estimar el promedio poblacional.",
+          "error_que_representa": "Aplica incorrectamente el error estándar para estimar el promedio poblacional"
+         },
+         {
+          "texto": "520 MB",
+          "justificacion": "Este valor corresponde a la media muestral, no a la estimación del promedio poblacional.",
+          "error_que_representa": "Confunde la media muestral con la estimación del promedio poblacional"
+         }
+        ],
+        "pregunta": "¿Cuál es el valor estimado del promedio poblacional del consumo de memoria de los microservicios, si la media muestral es 520 MB y el error estándar es 15 MB?",
+        "contenido": "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "razonamiento": [
+         "Para estimar el promedio poblacional, se utiliza la media muestral como punto de estimación.",
+         "El error estándar se usa para calcular intervalos de confianza, no para ajustar directamente la media muestral."
+        ]
+       }
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 1,
+      "motivos": {
+       "i2": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La estimación de la media es un componente fundamental del análisis estadístico para establecer umbrales de seguridad, como se requiere en el entregable. La pregunta se alinea con el objetivo de validar el comportamiento de los datos mediante parámetros poblacionales.",
+       "i3": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La formulación correcta de H0 es un pilar del análisis estadístico requerido para el entregable, ya que permite validar si las diferencias observadas en defectos son significativas o no.; además, el revisor considera correctas las opciones 1 y 3"
+      },
+      "pendientes": [
+       "i3"
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 1,
+      "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La formulación correcta de H0 es un pilar del análisis estadístico requerido para el entregable, ya que permite validar si las diferencias observadas en defectos son significativas o no.; además, el revisor considera correctas las opciones 1 y 3",
+      "item_id": "i3",
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "caso": "defectos reportados por versión de una aplicación móvil",
+        "foco": "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "nivel": "resolutivo",
+        "item_id": "i3"
+       }
+      ],
+      "ronda": 1,
+      "estilo": {
+       "escenarios": [
+        "tiempos de respuesta de una API REST",
+        "fallos de compilación en un repositorio Git",
+        "consultas lentas en una base de datos relacional",
+        "consumo de memoria de microservicios en contenedores",
+        "defectos reportados por versión de una aplicación móvil",
+        "tiempos de carga de una tienda en línea",
+        "intentos de inicio de sesión fallidos en un portal institucional",
+        "cobertura de pruebas automatizadas por módulo"
+       ],
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-21",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "PARÁMETROS ESTADÍSTICOS",
+        "HIPÓTESIS DE GRUPOS",
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+        "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": [
+        "Definición Inferencial de Umbrales de Seguridad: Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. ataques DDoS). Esta evidencia justifica numéricamente los valores de corte exactos que el algoritmo del software utilizará para disparar alertas críticas de intrusión."
+       ]
+      },
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "ya_generado": [
+       "¿Cuál es el objetivo principal del cálculo de intervalos de confianza en este contexto?",
+       "¿Cuál es el valor estimado del promedio poblacional del consumo de memoria de los microservicios, si la media muestral es 520 MB y el error estándar es 15 MB?",
+       "¿Qué implicación tiene que el valor $p$ obtenido sea menor que 0,05 en este análisis?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 1,
+        "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La formulación correcta de H0 es un pilar del análisis estadístico requerido para el entregable, ya que permite validar si las diferencias observadas en defectos son significativas o no.; además, el revisor considera correctas las opciones 1 y 3",
+        "item_id": "i3",
+        "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+        "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+       }
+      ],
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 1,
+      "tokens": [
+       3183,
+       751
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "nivel": "resolutivo",
+        "item_id": "i3",
+        "contexto": "En un proyecto de seguridad informática, se analizan los defectos reportados en tres versiones de una aplicación móvil: V1, V2 y V3. Para comparar la cantidad de errores entre las versiones, se recopila una muestra aleatoria de 100 reportes por versión. Se utiliza JASP para realizar una prueba de hipótesis y verificar los supuestos de normalidad y homocedasticidad.",
+        "correcta": 2,
+        "opciones": [
+         {
+          "texto": "La cantidad de defectos en las tres versiones es estadísticamente diferente.",
+          "justificacion": "Esta opción describe la hipótesis alternativa ($H_1$), no la hipótesis nula.",
+          "error_que_representa": "confunde $H_0$ con $H_1$"
+         },
+         {
+          "texto": "La media de defectos en V1 es igual a la media de defectos en V2, y la media de defectos en V2 es igual a la media de defectos en V3.",
+          "justificacion": "Esta opción es incorrecta porque la hipótesis nula para ANOVA no requiere comparar cada par de medias, sino que establece que todas las medias son iguales.",
+          "error_que_representa": "confunde la comparación de pares con la comparación global"
+         },
+         {
+          "texto": "La media de defectos en V1 es igual a la media de defectos en V2 y V3.",
+          "justificacion": "Esta opción describe correctamente la hipótesis nula para comparar medias entre tres grupos, lo cual es necesario para una prueba ANOVA.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "No hay diferencia significativa en la cantidad de defectos entre las tres versiones.",
+          "justificacion": "Esta opción es una interpretación de la hipótesis nula, pero no la formula correctamente.",
+          "error_que_representa": "interpreta en lugar de formular"
+         }
+        ],
+        "pregunta": "¿Cuál es la hipótesis nula ($H_0$) que se debe plantear para comparar la cantidad de defectos entre las tres versiones de la aplicación móvil?",
+        "contenido": "HIPÓTESIS DE GRUPOS",
+        "razonamiento": [
+         "Para comparar la cantidad de defectos entre tres versiones de una aplicación móvil, se utiliza una prueba de ANOVA, que requiere una hipótesis nula que afirme que todas las medias son iguales.",
+         "La hipótesis nula ($H_0$) es: 'La media de defectos en V1 es igual a la media de defectos en V2 y V3'.",
+         "Las otras opciones son incorrectas porque o bien confunden la hipótesis nula con la alternativa, o bien interpretan en lugar de formular."
+        ]
+       }
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 1,
+      "motivos": {
+       "i2": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La estimación de la media es un componente fundamental del análisis estadístico para establecer umbrales de seguridad, como se requiere en el entregable. La pregunta se alinea con el objetivo de validar el comportamiento de los datos mediante parámetros poblacionales.",
+       "i3": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La formulación correcta de H0 es un pilar del análisis estadístico requerido para el entregable, ya que permite validar si las diferencias observadas en defectos son significativas o no.; además, el revisor considera correctas las opciones 1 y 3"
+      },
+      "pendientes": [],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "i1",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "",
+        "item_id": "i2",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La pregunta sobre la hipótesis nula es un componente esencial para el análisis estadístico que justifica los umbrales de seguridad en el entregable, al formular la base para pruebas de hipótesis y comparaciones entre grupos.; además, el revisor considera correctas las opciones 2 y 4",
+        "item_id": "i3",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "",
+        "item_id": "i4",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 2,
+      "motivos": {
+       "i3": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La pregunta sobre la hipótesis nula es un componente esencial para el análisis estadístico que justifica los umbrales de seguridad en el entregable, al formular la base para pruebas de hipótesis y comparaciones entre grupos.; además, el revisor considera correctas las opciones 2 y 4"
+      },
+      "pendientes": [
+       "i3"
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Devolucion",
+     "cuerpo": {
+      "ronda": 2,
+      "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La pregunta sobre la hipótesis nula es un componente esencial para el análisis estadístico que justifica los umbrales de seguridad en el entregable, al formular la base para pruebas de hipótesis y comparaciones entre grupos.; además, el revisor considera correctas las opciones 2 y 4",
+      "item_id": "i3",
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "TareaLote",
+     "cuerpo": {
+      "lote": 1,
+      "plan": [
+       {
+        "caso": "defectos reportados por versión de una aplicación móvil",
+        "foco": "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "nivel": "resolutivo",
+        "item_id": "i3"
+       }
+      ],
+      "ronda": 2,
+      "estilo": {
+       "escenarios": [
+        "tiempos de respuesta de una API REST",
+        "fallos de compilación en un repositorio Git",
+        "consultas lentas en una base de datos relacional",
+        "consumo de memoria de microservicios en contenedores",
+        "defectos reportados por versión de una aplicación móvil",
+        "tiempos de carga de una tienda en línea",
+        "intentos de inicio de sesión fallidos en un portal institucional",
+        "cobertura de pruebas automatizadas por módulo"
+       ],
+       "vocabulario": "agentes/glosarios/ingenierias.md",
+       "tipos_de_caso": [
+        "datasets",
+        "código",
+        "arquitectura de sistemas",
+        "incidentes de seguridad"
+       ],
+       "software_habitual": [
+        "JASP",
+        "Numiqo",
+        "Git",
+        "Visual Studio Code"
+       ]
+      },
+      "contexto": {
+       "ra": [
+        {
+         "id": "RA3",
+         "texto": "Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.",
+         "evidencia": "Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar picos de tráfico normales de posibles ataques (ej. ataques DDoS)."
+        }
+       ],
+       "fecha": "2026-10-21",
+       "nivel": 3,
+       "carrera": "SOFTWARE",
+       "rubrica": [
+        {
+         "niveles": {
+          "critico": "Evalúa la idoneidad de las pruebas estadísticas seleccionadas, validando el rigor metodológico para asegurar que el análisis inferencial sea altamente confiable.",
+          "receptivo": "Reconoce teóricamente las pruebas de hipótesis, pero procesa los datos en JASP de forma incompleta o presenta errores en el cálculo de los intervalos de confianza.",
+          "reflexivo": "Analiza los resultados estadísticos arrojados por JASP, explicando la relación entre los intervalos de confianza calculados y el comportamiento de la red.",
+          "cocreativo": "Diseña un modelo inferencial robusto que combina múltiples pruebas estadísticas en JASP, adaptándolo para contextos de red altamente variables.",
+          "resolutivo": "Aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza utilizando JASP para procesar los datos de seguridad."
+         },
+         "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP"
+        },
+        {
+         "niveles": {
+          "critico": "Juzga la precisión de la diferenciación, anticipando escenarios de falsos positivos o negativos y proponiendo ajustes para mejorar la detección.",
+          "receptivo": "Identifica diferencias básicas entre tráfico normal y anómalo, pero no logra establecer una diferenciación estadística clara basada en el procesamiento de datos.",
+          "reflexivo": "Argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque, comprendiendo el contexto operativo de la red.",
+          "cocreativo": "Formula nuevos parámetros o técnicas de análisis estadístico para identificar patrones de ataques DDoS emergentes que intentan camuflarse como tráfico normal.",
+          "resolutivo": "Establece la diferenciación estadística entre los picos de tráfico normales y los posibles ataques (como DDoS) utilizando los resultados inferenciales del documento."
+         },
+         "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)"
+        },
+        {
+         "niveles": {
+          "critico": "Fundamenta la elección de los valores de corte exactos, demostrando mediante análisis crítico que optimizan el rendimiento del sistema y minimizan el riesgo de intrusión.",
+          "receptivo": "Describe posibles umbrales de seguridad, pero los valores de corte carecen de una justificación numérica exacta que respalde al algoritmo del software.",
+          "reflexivo": "Interpreta el impacto operativo que tendrán los valores de corte definidos sobre la sensibilidad y eficacia del algoritmo del software de monitoreo.",
+          "cocreativo": "Estructura un modelo de umbrales dinámicos, donde la justificación numérica permita que los valores de corte se adapten o recalculen automáticamente frente a nuevas amenazas.",
+          "resolutivo": "Define numéricamente los valores de corte exactos, justificándolos con los datos inferenciales para que el algoritmo dispare las alertas críticas de intrusión."
+         },
+         "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas"
+        }
+       ],
+       "clase_id": "M3",
+       "problema": {
+        "reto": "¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?",
+        "descripcion": "En Ecuador, la creciente utilización de sistemas de información, aplicaciones web y móviles, bases de datos, plataformas transaccionales, servicios en la nube, sistemas de autenticación, portales institucionales y APIs incrementa la necesidad de desarrollar software que considere desde sus primeras etapas criterios de seguridad, disponibilidad, integridad y protección de la información. En julio de 2025, el 71,3 % de los hogares ecuatorianos tenía acceso a Internet y el 80,1 % de las personas de cinco años o más utilizaba Internet, frente al 66,0 % y 77,2 %, respectivamente, registrados en 2024, evidenciando una creciente dependencia de los servicios digitales [1]. Esta dependencia se desarrolla en un entorno donde los sistemas presentan amenazas y vulnerabilidades reales. Durante el primer semestre de 2025, EcuCERT reportó 220.228 direcciones IP notificadas con incidentes o vulnerabilidades, además de eventos asociados con malware, fuga de contraseñas, sitios comprometidos, ransomware y filtraciones de datos; entre los sectores afectados consta expresamente el desarrollo de software. Territorialmente, EcuCERT identificó 36 sistemas vulnerables en Ambato, ubicándola entre las cinco ciudades del país con mayor número registrado en ese informe [2]. Asimismo, la Fiscalía General del Estado registró 8.256 noticias del delito relacionadas con los principales tipos penales informáticos entre agosto de 2014 y julio de 2025, de las cuales 1.606 correspondieron a 2024 y 1.007 a los primeros siete meses de 2025 [3]. Desde la Ingeniería de Software, este escenario plantea la necesidad de avanzar desde el diseño lógico de soluciones hacia su implementación funcional, mediante programas capaces de procesar datos, aplicar reglas de decisión, identificar condiciones anómalas, generar alertas o respuestas y registrar eventos para apoyar la gestión de situaciones que puedan comprometer sistemas de información. El PIS abordará esta necesidad mediante casos de estudio asignados a los equipos a partir de un banco previamente definido, utilizando datos controlados o simulados y manteniendo un alcance académico",
+        "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
+       },
+       "codigo_pf": "B26-SOFT-3-56146-1727",
+       "asignatura": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+       "contenidos": [
+        "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+        "PARÁMETROS ESTADÍSTICOS",
+        "HIPÓTESIS DE GRUPOS",
+        "HIPÓTESIS ESTADÍSTICAS"
+       ],
+       "actividades": [
+        "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+        "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+        "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual."
+       ],
+       "politica_ia": "Se permite el uso de IA generativa (como Claude o ChatGPT) como asistente metodológico para interpretar de forma preliminar los estadísticos de prueba (ej. valor p, F de Fisher). Sin embargo, el estudiante debe auditar críticamente estas interpretaciones frente a la teoría estadística y el contexto de la ciberseguridad, asegurando que no existan sesgos o \"alucinaciones\" al definir los umbrales críticos de las alertas. El estudiante asume la responsabilidad ética y autoría total del reporte.",
+       "momento_titulo": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+       "version_silabo": "1.0",
+       "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
+       "entregables_momento": [
+        "Definición Inferencial de Umbrales de Seguridad: Un documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. ataques DDoS). Esta evidencia justifica numéricamente los valores de corte exactos que el algoritmo del software utilizará para disparar alertas críticas de intrusión."
+       ]
+      },
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "ya_generado": [
+       "¿Cuál es el objetivo principal del cálculo de intervalos de confianza en este contexto?",
+       "¿Cuál es el valor estimado del promedio poblacional del consumo de memoria de los microservicios, si la media muestral es 520 MB y el error estándar es 15 MB?",
+       "¿Qué implicación tiene que el valor $p$ obtenido sea menor que 0,05 en este análisis?"
+      ],
+      "devoluciones": [
+       {
+        "ronda": 2,
+        "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La pregunta sobre la hipótesis nula es un componente esencial para el análisis estadístico que justifica los umbrales de seguridad en el entregable, al formular la base para pruebas de hipótesis y comparaciones entre grupos.; además, el revisor considera correctas las opciones 2 y 4",
+        "item_id": "i3",
+        "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+        "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+       }
+      ],
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed",
+      "instrucciones": "",
+      "resultados_calculados": []
+     }
+    },
+    {
+     "tipo": "EntregaLote",
+     "cuerpo": {
+      "lote": 1,
+      "ronda": 2,
+      "tokens": [
+       3194,
+       863
+      ],
+      "contenido": [
+       {
+        "ra": "RA3",
+        "foco": "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+        "nivel": "resolutivo",
+        "item_id": "i3",
+        "contexto": "En un proyecto de seguridad digital, se analiza la frecuencia de defectos reportados por versión de una aplicación móvil. Se recopilan datos de tres versiones de la aplicación: V1.2, V1.3 y V1.4, obteniendo las siguientes medias de defectos por semana: 12, 15 y 18 respectivamente. Se realiza un análisis de varianza (ANOVA) para determinar si hay diferencias estadísticamente significativas en la cantidad de defectos entre las versiones. El valor $p$ obtenido es 0.024, y los supuestos de normalidad (Shapiro-Wilk) y homocedasticidad (Levene) se cumplen.",
+        "correcta": 2,
+        "opciones": [
+         {
+          "texto": "$H_0$: La cantidad de defectos en las tres versiones de la aplicación sigue una distribución normal.",
+          "justificacion": "Esta opción confunde la hipótesis nula con el supuesto de normalidad (Shapiro-Wilk), que es un requisito previo para el ANOVA, no la hipótesis nula del análisis mismo.",
+          "error_que_representa": "ignorar un supuesto o una norma"
+         },
+         {
+          "texto": "$H_0$: La cantidad de defectos en las tres versiones de la aplicación es igual a la media general.",
+          "justificacion": "Esta opción confunde la hipótesis nula del ANOVA con una comparación de medias individuales, lo cual no es correcto en este tipo de prueba.",
+          "error_que_representa": "confundir no rechazar $H_0$ con aceptarla"
+         },
+         {
+          "texto": "$H_0$: No hay diferencia estadística entre la cantidad de defectos en las tres versiones de la aplicación.",
+          "justificacion": "Esta opción describe correctamente la hipótesis nula que se debe probar en un ANOVA, ya que establece que no hay diferencias significativas entre los grupos.",
+          "error_que_representa": "ninguno"
+         },
+         {
+          "texto": "$H_0$: La varianza de defectos es igual entre las tres versiones de la aplicación.",
+          "justificacion": "Esta opción describe el supuesto de homocedasticidad (Levene), no la hipótesis nula del ANOVA. Es un error de confusión entre supuestos y hipótesis.",
+          "error_que_representa": "confundir supuesto con hipótesis"
+         }
+        ],
+        "pregunta": "¿Cuál es la hipótesis nula que se debe probar en este análisis?",
+        "contenido": "HIPÓTESIS DE GRUPOS",
+        "razonamiento": [
+         "El análisis de varianza (ANOVA) se utiliza para comparar medias de tres o más grupos. En este caso, los grupos son las versiones de la aplicación móvil (V1.2, V1.3 y V1.4).",
+         "La hipótesis nula ($H_0$) en un ANOVA establece que no hay diferencias estadísticamente significativas entre las medias de los grupos. Esto significa que todas las medias son iguales.",
+         "La opción correcta refleja esta idea, mientras que las demás opciones confunden conceptos clave, como la hipótesis nula con los supuestos previos del análisis."
+        ]
+       }
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "CheckpointRevision",
+     "cuerpo": {
+      "ronda": 2,
+      "motivos": {
+       "i3": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La pregunta sobre la hipótesis nula es un componente esencial para el análisis estadístico que justifica los umbrales de seguridad en el entregable, al formular la base para pruebas de hipótesis y comparaciones entre grupos.; además, el revisor considera correctas las opciones 2 y 4"
+      },
+      "pendientes": [],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Veredicto",
+     "cuerpo": {
+      "resultados": [
+       {
+        "motivo": "",
+        "item_id": "i1",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "",
+        "item_id": "i2",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La pregunta aborda la formulación de hipótesis estadísticas (H0/H1) y la interpretación de resultados de pruebas de hipótesis, que son componentes clave del entregable solicitado. La comprensión de la hipótesis nula en un ANOVA es esencial para validar la diferenciación estadística entre grupos (versiones de la aplicación) en el contexto del análisis de seguridad.",
+        "item_id": "i3",
+        "revisor": "devuelto",
+        "fallos_verificacion": []
+       },
+       {
+        "motivo": "",
+        "item_id": "i4",
+        "revisor": "ok",
+        "fallos_verificacion": []
+       }
+      ],
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    },
+    {
+     "tipo": "Cierre",
+     "cuerpo": {
+      "estado": "requiere_revision",
+      "tokens": [
+       32749,
+       11230
+      ],
+      "recurso_id": "79011903-679e-4943-bdf4-39e080d8bd35",
+      "trabajo_id": "0aa99e73-f803-48aa-925a-57ecb9d00262",
+      "asignatura_id": "b60627d6-f129-46e6-83dc-3d808f7099ed"
+     }
+    }
+   ]
+  }
+ },
+ "recursos": [
+  {
+   "herramienta": "simulacro",
+   "estado": "requiere_revision",
+   "contenido": [
+    {
+     "ra": "RA3",
+     "foco": "M3-S1: sobre la lógica del muestreo Cálculo de intervalos de confianza paso a paso usando las funciones de distribución de Numiqo para entender el error estándar.",
+     "nivel": "receptivo",
+     "item_id": "i1",
+     "contexto": "En un sistema de base de datos relacional, se detectaron consultas lentas que afectaban el rendimiento del sistema. Para investigar, se tomó una muestra aleatoria de 100 consultas y se midió el tiempo de respuesta promedio. El tiempo promedio fue de 2,5 segundos con una desviación estándar de 0,8 segundos.",
+     "correcta": 1,
+     "opciones": [
+      {
+       "texto": "Determinar el promedio exacto del tiempo de respuesta de todas las consultas en la base de datos.",
+       "justificacion": "Esta opción confunde el propósito de los intervalos de confianza con la estimación puntual.",
+       "error_que_representa": "confundir estimación puntual con intervalo de confianza"
+      },
+      {
+       "texto": "Estimar el rango de valores dentro del cual se encuentra el promedio verdadero del tiempo de respuesta con un nivel de confianza determinado.",
+       "justificacion": "Esta opción describe correctamente el propósito de los intervalos de confianza.",
+       "error_que_representa": "ninguno"
+      },
+      {
+       "texto": "Verificar si el tiempo promedio de las consultas es significativamente diferente de 2 segundos.",
+       "justificacion": "Esta opción describe una prueba de hipótesis, no el cálculo de intervalos de confianza.",
+       "error_que_representa": "confundir intervalo de confianza con prueba de hipótesis"
+      },
+      {
+       "texto": "Calcular la probabilidad de que una consulta específica sea lenta.",
+       "justificacion": "Esta opción se refiere a un cálculo de probabilidad, no a la estimación de parámetros poblacionales.",
+       "error_que_representa": "confundir probabilidad con estimación de parámetros"
+      }
+     ],
+     "pregunta": "¿Cuál es el objetivo principal del cálculo de intervalos de confianza en este contexto?",
+     "contenido": "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+     "razonamiento": [
+      "El cálculo de intervalos de confianza se usa para estimar el rango de valores dentro del cual se encuentra el parámetro poblacional (promedio de tiempo de respuesta) con un nivel de confianza determinado.",
+      "La opción correcta reconoce que el objetivo es estimar el promedio verdadero con incertidumbre, lo cual es el propósito fundamental de los intervalos de confianza."
+     ]
+    },
+    {
+     "ra": "RA3",
+     "foco": "M3-S2: sobre estimación de parámetros Automatización del proceso en JASP para estimar parámetros poblacionales desde una base de datos de software",
+     "nivel": "resolutivo",
+     "item_id": "i2",
+     "contexto": "En un sistema de monitoreo de recursos en contenedores, se ha recopilado un conjunto de datos que muestra el consumo de memoria de 100 microservicios durante 30 días. Se necesita estimar el promedio poblacional del consumo de memoria para establecer umbrales de seguridad.",
+     "correcta": 3,
+     "opciones": [
+      {
+       "texto": "500 MB",
+       "justificacion": "Este valor no considera el error estándar, lo cual es esencial para estimar el promedio poblacional con precisión.",
+       "error_que_representa": "Ignora el error estándar en la estimación del promedio poblacional"
+      },
+      {
+       "texto": "535 MB",
+       "justificacion": "Este valor excede el rango de la media muestral y no se justifica con los datos proporcionados.",
+       "error_que_representa": "Aplica una corrección no justificada al valor de la media muestral"
+      },
+      {
+       "texto": "515 MB",
+       "justificacion": "Este valor se obtiene al sumar el error estándar al promedio muestral, lo cual no es correcto para estimar el promedio poblacional.",
+       "error_que_representa": "Aplica incorrectamente el error estándar para estimar el promedio poblacional"
+      },
+      {
+       "texto": "520 MB",
+       "justificacion": "Este valor corresponde a la media muestral, no a la estimación del promedio poblacional.",
+       "error_que_representa": "Confunde la media muestral con la estimación del promedio poblacional"
+      }
+     ],
+     "pregunta": "¿Cuál es el valor estimado del promedio poblacional del consumo de memoria de los microservicios, si la media muestral es 520 MB y el error estándar es 15 MB?",
+     "contenido": "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+     "razonamiento": [
+      "Para estimar el promedio poblacional, se utiliza la media muestral como punto de estimación.",
+      "El error estándar se usa para calcular intervalos de confianza, no para ajustar directamente la media muestral."
+     ]
+    },
+    {
+     "ra": "RA3",
+     "foco": "M3-S3: formulando $H_0/H_1$ y analizando el valor $p$ Verificación de supuestos previos (Shapiro-Wilk, Levene) en JASP.",
+     "nivel": "resolutivo",
+     "item_id": "i3",
+     "contexto": "En un proyecto de seguridad digital, se analiza la frecuencia de defectos reportados por versión de una aplicación móvil. Se recopilan datos de tres versiones de la aplicación: V1.2, V1.3 y V1.4, obteniendo las siguientes medias de defectos por semana: 12, 15 y 18 respectivamente. Se realiza un análisis de varianza (ANOVA) para determinar si hay diferencias estadísticamente significativas en la cantidad de defectos entre las versiones. El valor $p$ obtenido es 0.024, y los supuestos de normalidad (Shapiro-Wilk) y homocedasticidad (Levene) se cumplen.",
+     "correcta": 2,
+     "opciones": [
+      {
+       "texto": "$H_0$: La cantidad de defectos en las tres versiones de la aplicación sigue una distribución normal.",
+       "justificacion": "Esta opción confunde la hipótesis nula con el supuesto de normalidad (Shapiro-Wilk), que es un requisito previo para el ANOVA, no la hipótesis nula del análisis mismo.",
+       "error_que_representa": "ignorar un supuesto o una norma"
+      },
+      {
+       "texto": "$H_0$: La cantidad de defectos en las tres versiones de la aplicación es igual a la media general.",
+       "justificacion": "Esta opción confunde la hipótesis nula del ANOVA con una comparación de medias individuales, lo cual no es correcto en este tipo de prueba.",
+       "error_que_representa": "confundir no rechazar $H_0$ con aceptarla"
+      },
+      {
+       "texto": "$H_0$: No hay diferencia estadística entre la cantidad de defectos en las tres versiones de la aplicación.",
+       "justificacion": "Esta opción describe correctamente la hipótesis nula que se debe probar en un ANOVA, ya que establece que no hay diferencias significativas entre los grupos.",
+       "error_que_representa": "ninguno"
+      },
+      {
+       "texto": "$H_0$: La varianza de defectos es igual entre las tres versiones de la aplicación.",
+       "justificacion": "Esta opción describe el supuesto de homocedasticidad (Levene), no la hipótesis nula del ANOVA. Es un error de confusión entre supuestos y hipótesis.",
+       "error_que_representa": "confundir supuesto con hipótesis"
+      }
+     ],
+     "pregunta": "¿Cuál es la hipótesis nula que se debe probar en este análisis?",
+     "contenido": "HIPÓTESIS DE GRUPOS",
+     "razonamiento": [
+      "El análisis de varianza (ANOVA) se utiliza para comparar medias de tres o más grupos. En este caso, los grupos son las versiones de la aplicación móvil (V1.2, V1.3 y V1.4).",
+      "La hipótesis nula ($H_0$) en un ANOVA establece que no hay diferencias estadísticamente significativas entre las medias de los grupos. Esto significa que todas las medias son iguales.",
+      "La opción correcta refleja esta idea, mientras que las demás opciones confunden conceptos clave, como la hipótesis nula con los supuestos previos del análisis."
+     ]
+    },
+    {
+     "ra": "RA3",
+     "foco": "M3-S4: sobre Pruebas de hipótesis y Análisis de varianza (ANOVA) Ejecución de Pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos ($Z$ o $F$) de forma manual.",
+     "nivel": "reflexivo",
+     "item_id": "i4",
+     "contexto": "Un equipo de desarrollo observó que los tiempos de carga de una tienda en línea variaban según el dispositivo utilizado (móvil, tableta o computadora). Se recopilaron datos de 150 usuarios y se realizó un ANOVA para comparar las medias.",
+     "correcta": 2,
+     "opciones": [
+      {
+       "texto": "No se puede concluir nada con base en el valor $p$ obtenido.",
+       "justificacion": "Esta opción es incorrecta, ya que el valor $p$ permite hacer una decisión estadística.",
+       "error_que_representa": "ignorar un supuesto"
+      },
+      {
+       "texto": "Se acepta la hipótesis nula y se concluye que no hay diferencias entre los grupos.",
+       "justificacion": "Esta opción es incorrecta, ya que un valor $p$ menor que 0,05 indica que la hipótesis nula no es probable.",
+       "error_que_representa": "confundir no rechazar $H_0$ con aceptarla"
+      },
+      {
+       "texto": "Se rechaza la hipótesis nula y se concluye que hay diferencias significativas entre los grupos.",
+       "justificacion": "Esta opción es correcta, ya que un valor $p$ menor que 0,05 indica que la hipótesis nula es improbable.",
+       "error_que_representa": "ninguno"
+      },
+      {
+       "texto": "Se rechaza la hipótesis alternativa y se concluye que no hay diferencias entre los grupos.",
+       "justificacion": "Esta opción es incorrecta, ya que el rechazo de la hipótesis nula implica que la hipótesis alternativa es más probable.",
+       "error_que_representa": "confundir $H_0$ con $H_1$"
+      }
+     ],
+     "pregunta": "¿Qué implicación tiene que el valor $p$ obtenido sea menor que 0,05 en este análisis?",
+     "contenido": "HIPÓTESIS ESTADÍSTICAS",
+     "razonamiento": [
+      "Un valor $p$ menor que 0,05 indica que la probabilidad de observar los resultados bajo la hipótesis nula es muy baja, por lo que se rechaza la hipótesis nula.",
+      "La opción correcta interpreta correctamente el resultado del análisis estadístico, lo cual es fundamental para tomar decisiones basadas en datos."
+     ]
+    }
+   ],
+   "evidencia": {
+    "ra": [
+     "RA3"
+    ],
+    "agente": "ingenierias",
+    "tokens": [
+     32749,
+     11230
+    ],
+    "momento": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+    "borrador": true,
+    "clase_id": "M3",
+    "contenidos": [
+     "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+     "PARÁMETROS ESTADÍSTICOS",
+     "HIPÓTESIS DE GRUPOS",
+     "HIPÓTESIS ESTADÍSTICAS"
+    ],
+    "tabla_real": {
+     "critico": 0,
+     "receptivo": 1,
+     "reflexivo": 1,
+     "resolutivo": 2
+    },
+    "veredictos": {
+     "i1": "ok",
+     "i2": "ok",
+     "i3": "resuelve el entregable Definición Inferencial de Umbrales de Seguridad: La pregunta aborda la formulación de hipótesis estadísticas (H0/H1) y la interpretación de resultados de pruebas de hipótesis, que son componentes clave del entregable solicitado. La comprensión de la hipótesis nula en un ANOVA es esencial para validar la diferenciación estadística entre grupos (versiones de la aplicación) en el contexto del análisis de seguridad.",
+     "i4": "ok"
+    },
+    "devoluciones": 3,
+    "verificaciones": {
+     "i1": [],
+     "i2": [],
+     "i3": [],
+     "i4": []
+    },
+    "motivos_revision": [],
+    "perfil_dificultad": "fundamentacion",
+    "tabla_planificada": {
+     "critico": 0,
+     "receptivo": 1,
+     "reflexivo": 1,
+     "resolutivo": 2
+    }
+   }
+  },
+  {
+   "herramienta": "guia_evidencia",
+   "estado": "listo",
+   "contenido": {
+    "guia": {
+     "autochequeo": [
+      "¿Usé JASP correctamente para calcular intervalos de confianza y ejecutar pruebas de hipótesis?",
+      "¿Justifiqué numéricamente los umbrales de alerta con base en los resultados estadísticos?",
+      "¿Verifiqué los supuestos estadísticos antes de realizar las pruebas?",
+      "¿Explicé claramente cómo diferencio el tráfico normal del anómalo usando análisis inferencial?",
+      "¿Mi documento refleja una comprensión sólida de los conceptos estadísticos aplicados?"
+     ],
+     "que_se_pide": "El estudiante debe crear un documento técnico que use pruebas de hipótesis e intervalos de confianza en JASP para diferenciar tráfico normal de posibles ataques, justificando numéricamente los umbrales de alerta para el algoritmo.",
+     "como_se_valora": [
+      {
+       "indicador": "Aplicación de pruebas de hipótesis e intervalos de confianza en JASP",
+       "que_observar": "Se evalúa si el estudiante usa correctamente JASP para calcular intervalos de confianza y ejecutar pruebas de hipótesis, sin errores en los cálculos o selección de métodos."
+      },
+      {
+       "indicador": "Diferenciación estadística de tráfico normal vs. posibles ataques (ej. DDoS)",
+       "que_observar": "Se verifica si el documento establece una diferenciación clara entre patrones normales y anómalos, usando análisis estadístico sólido y justificación técnica."
+      },
+      {
+       "indicador": "Justificación numérica de los valores de corte para el algoritmo de alertas",
+       "que_observar": "Se analiza si los umbrales de alerta están respaldados con cálculos estadísticos específicos, mostrando cómo se determinaron numéricamente."
+      }
+     ],
+     "errores_comunes": [
+      "Uso incorrecto de herramientas como JASP o Numiqo, lo que genera resultados inexactos.",
+      "No justificar adecuadamente los umbrales de alerta, dejando la decisión subjetiva.",
+      "Ignorar la verificación de supuestos estadísticos (como Shapiro-Wilk o Levene) antes de realizar pruebas.",
+      "No interpretar correctamente el valor p o los estadísticos críticos, lo que afecta la validez del análisis.",
+      "Presentar resultados sin contextualizarlos en el ámbito de la seguridad informática."
+     ]
+    }
+   },
+   "evidencia": {
+    "ra": [
+     "RA3"
+    ],
+    "agente": "ingenierias",
+    "tokens": [
+     5837,
+     1096
+    ],
+    "momento": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+    "borrador": false,
+    "clase_id": "M3",
+    "contenidos": [
+     "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+     "PARÁMETROS ESTADÍSTICOS",
+     "HIPÓTESIS DE GRUPOS",
+     "HIPÓTESIS ESTADÍSTICAS"
+    ],
+    "tabla_real": {},
+    "veredictos": {
+     "guia": "ok"
+    },
+    "devoluciones": 0,
+    "verificaciones": {
+     "guia": []
+    },
+    "motivos_revision": [],
+    "perfil_dificultad": "fundamentacion",
+    "tabla_planificada": {}
+   }
+  },
+  {
+   "herramienta": "estudio_caso",
+   "estado": "listo",
+   "contenido": {
+    "caso": {
+     "ra": "RA3",
+     "caso": "En un sistema de gestión de información en Ecuador, se reportan consultas lentas en una base de datos relacional que maneja registros de usuarios de una plataforma educativa en línea. La base de datos contiene 120.000 registros y se utiliza para generar reportes de actividad diaria. Los administradores observan que ciertas consultas tardan más de 5 segundos en completarse, lo que afecta la experiencia del usuario. Se decide realizar un análisis estadístico para determinar si estas consultas lentas están relacionadas con un aumento en la carga de datos o con un comportamiento anómalo en el sistema.",
+     "escenario": "consultas lentas en una base de datos relacional",
+     "preguntas": [
+      {
+       "nivel": "receptivo",
+       "pregunta": "¿Qué parámetros estadísticos se deben calcular para evaluar el rendimiento de las consultas en la base de datos?",
+       "respuesta_orientativa": "Se deben calcular parámetros como la media, la mediana, la desviación estándar y los percentiles de los tiempos de respuesta de las consultas, para identificar patrones y variaciones en el desempeño."
+      },
+      {
+       "nivel": "resolutivo",
+       "pregunta": "¿Cómo se puede usar JASP para calcular los intervalos de confianza de los tiempos de respuesta de las consultas?",
+       "respuesta_orientativa": "En JASP, se puede cargar el conjunto de datos de tiempos de respuesta, seleccionar la variable correspondiente y utilizar la función de intervalos de confianza para obtener un rango que represente con alta probabilidad la verdadera media de los tiempos de consulta."
+      },
+      {
+       "nivel": "reflexivo",
+       "pregunta": "¿Qué implicaciones tiene la detección de consultas lentas en términos de seguridad y rendimiento del sistema?",
+       "respuesta_orientativa": "La detección de consultas lentas puede indicar un aumento en la carga de datos, una posible inyección de SQL o un comportamiento anómalo que podría comprometer la seguridad del sistema. Esto requiere una revisión de las consultas y una mejora en la estructura de la base de datos."
+      },
+      {
+       "nivel": "critico",
+       "pregunta": "¿Cómo se puede integrar la inferencia estadística en el diseño de un algoritmo de monitoreo de seguridad para detectar consultas anómalas?",
+       "respuesta_orientativa": "Se puede integrar la inferencia estadística al definir umbrales de tiempo de respuesta basados en intervalos de confianza calculados. Si una consulta excede estos umbrales, se genera una alerta que indica un posible comportamiento anómalo, permitiendo una intervención temprana."
+      }
+     ]
+    }
+   },
+   "evidencia": {
+    "ra": [
+     "RA3"
+    ],
+    "agente": "ingenierias",
+    "tokens": [
+     5880,
+     1673
+    ],
+    "momento": "Resolución del Problema - Inferencia Estadística para la Detección de Anomalías",
+    "borrador": false,
+    "clase_id": "M3",
+    "contenidos": [
+     "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+     "PARÁMETROS ESTADÍSTICOS",
+     "HIPÓTESIS DE GRUPOS",
+     "HIPÓTESIS ESTADÍSTICAS"
+    ],
+    "tabla_real": {},
+    "veredictos": {
+     "caso": "ok"
+    },
+    "devoluciones": 0,
+    "verificaciones": {
+     "caso": []
+    },
+    "motivos_revision": [],
+    "perfil_dificultad": "fundamentacion",
+    "tabla_planificada": {}
+   }
+  },
+  {
+   "herramienta": "guia_producto_final",
+   "estado": "listo",
+   "contenido": {
+    "guia_final": {
+     "ruta": [
+      {
+       "aporte": "La actividad M2, 'Planeación y Diseño - Modelado Probabilístico de Riesgos y Vulnerabilidades', aporta al producto final al proporcionar un esquema analítico de reglas condicionales y probabilidades calculadas, que servirá como base para el diseño del motor lógico y predictivo del software de monitoreo de seguridad.",
+       "momento": "M2"
+      },
+      {
+       "aporte": "La actividad M3, 'Resolución del Problema - Inferencia Estadística para la Detección de Anomalías', aporta al producto final al permitir la aplicación de técnicas de inferencia estadística para definir umbrales de detección de anomalías, lo cual es fundamental para la correcta identificación de patrones anómalos en los datos.",
+       "momento": "M3"
+      }
+     ],
+     "criterios": [
+      {
+       "indicador": "Dataset depurado",
+       "como_prepararse": "Se debe asegurar la calidad del dataset al aplicar técnicas estadísticas estándar para tratar valores atípicos y faltantes, garantizando que los datos sean confiables para el modelado estadístico."
+      },
+      {
+       "indicador": "Matrices probabilísticas de vulnerabilidades",
+       "como_prepararse": "Es necesario calcular correctamente las probabilidades y construir matrices estándar para identificar vulnerabilidades comunes, asegurando que los cálculos se realicen con herramientas como Numiqo."
+      },
+      {
+       "indicador": "Sustentación inferencial de umbrales para anomalías",
+       "como_prepararse": "Se debe aplicar pruebas de inferencia estadística básicas para definir los umbrales de detección de anomalías, lo que permitirá establecer criterios numéricos claros para la identificación de patrones inusuales."
+      },
+      {
+       "indicador": "Parámetros matemáticos del algoritmo predictivo",
+       "como_prepararse": "Se debe determinar los parámetros matemáticos del algoritmo predictivo para que funcione en condiciones operativas estándar, asegurando que los resultados sean aplicables y replicables."
+      }
+     ],
+     "recomendaciones": [
+      "Utilizar herramientas como JASP y Numiqo de manera complementaria, ya que cada una tiene funciones específicas en el análisis y modelado de datos.",
+      "Documentar cada paso del proceso de análisis para facilitar la revisión y la integración del trabajo en el portafolio final.",
+      "Revisar críticamente las interpretaciones de los estadísticos obtenidos, especialmente los valores p y F de Fisher, antes de incorporarlos al reporte final.",
+      "Asegurar que los umbrales definidos en la sustentación inferencial estén respaldados por pruebas estadísticas rigurosas y no solo por suposiciones teóricas.",
+      "Integrar los resultados obtenidos en cada momento de la actividad en un marco coherente que refleje el flujo lógico del proyecto de análisis y modelado estadístico."
+     ]
+    }
+   },
+   "evidencia": {
+    "ra": [
+     "RA1",
+     "RA2",
+     "RA3",
+     "RA4"
+    ],
+    "agente": "ingenierias",
+    "tokens": [
+     6923,
+     1260
+    ],
+    "momento": "ANALISIS DE DATOS Y ESTADISTICA PARA INGENIERIA",
+    "borrador": false,
+    "clase_id": "asignatura",
+    "contenidos": [
+     "DISTRIBUCIONES ESTADÍSTICAS",
+     "ESTIMACIÓN DE PARÁMETROS ESTADÍSTICOS",
+     "PARÁMETROS ESTADÍSTICOS",
+     "HIPÓTESIS DE GRUPOS",
+     "HIPÓTESIS ESTADÍSTICAS"
+    ],
+    "tabla_real": {},
+    "veredictos": {
+     "guia_final": "ok"
+    },
+    "devoluciones": 0,
+    "verificaciones": {
+     "guia_final": []
+    },
+    "motivos_revision": [],
+    "perfil_dificultad": "fundamentacion",
+    "tabla_planificada": {}
+   }
+  }
+ ]
+}

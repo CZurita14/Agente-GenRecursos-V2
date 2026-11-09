@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uti.edu.ec/generador-recursos/silabo-api.schema.json",
+  "title": "Sílabo UTI para el Generador de Recursos",
+  "description": "Solo los apartados académicos que consume el sistema. No incluye la sección I (perfil y contacto del docente) ni la VII (firmas): la API no debe enviarlos. Las claves marcadas como opcionales no se usan hoy y pueden omitirse.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["facultad", "carrera", "periodo", "proyecto_formativo", "competencia_perfil", "resultados_aprendizaje", "problema", "momentos"],
+  "properties": {
+    "facultad": {"type": "string", "minLength": 1, "description": "Nombre oficial de la facultad, como en el catálogo."},
+    "carrera": {"type": "string", "minLength": 1, "description": "Nombre oficial de la carrera."},
+    "periodo": {
+      "type": "object", "additionalProperties": false, "required": ["codigo", "inicio", "fin"],
+      "properties": {
+        "codigo": {"type": "string"},
+        "inicio": {"type": "string", "format": "date"},
+        "fin": {"type": "string", "format": "date"}
+      }
+    },
+    "proyecto_formativo": {
+      "type": "object", "additionalProperties": false,
+      "required": ["codigo", "nombre", "version", "aprobado", "nivel"],
+      "properties": {
+        "codigo": {"type": "string", "minLength": 1, "description": "Identificador estable del proyecto formativo; separa entrenamiento y prueba."},
+        "nombre": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "aprobado": {"type": "string", "format": "date", "description": "Fecha de aprobación; elige la versión vigente."},
+        "nivel": {"type": "integer", "minimum": 1},
+        "uoc": {"type": "string", "description": "Opcional: no se usa hoy."},
+        "modalidad": {"type": "string", "description": "Opcional: no se usa hoy."},
+        "creditos": {"type": "number", "description": "Opcional: no se usa hoy."},
+        "horas": {"type": "object", "description": "Opcional: no se usa hoy."},
+        "horario": {"type": "array", "description": "Opcional: no se usa hoy."}
+      }
+    },
+    "competencia_perfil": {"type": "string", "minLength": 1},
+    "competencia_pf": {"type": "string", "description": "Opcional: no se usa hoy; candidato a entrar al contexto."},
+    "metacompetencia": {"type": "string", "description": "Opcional: no se usa hoy."},
+    "resultados_aprendizaje": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "texto", "evidencia"],
+        "properties": {
+          "id": {"type": "string", "description": "Referenciado desde momentos[].ra."},
+          "texto": {"type": "string", "minLength": 1},
+          "evidencia": {"type": "string"}
+        }
+      }
+    },
+    "problema": {
+      "type": "object", "additionalProperties": false, "required": ["descripcion", "reto", "producto_final"],
+      "properties": {
+        "descripcion": {"type": "string"},
+        "reto": {"type": "string"},
+        "producto_final": {"type": "string"}
+      }
+    },
+    "momentos": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["numero", "titulo", "fecha_inicio", "fecha_fin", "ra", "evidencia", "politica_ia", "rubrica", "sesiones"],
+        "properties": {
+          "numero": {"type": "integer", "minimum": 1},
+          "titulo": {"type": "string", "minLength": 1},
+          "fecha_inicio": {"type": "string", "format": "date"},
+          "fecha_fin": {"type": "string", "format": "date"},
+          "ra": {"type": "array", "items": {"type": "string"}, "description": "Ids de resultados_aprendizaje."},
+          "evidencia": {"type": "string"},
+          "politica_ia": {"type": "string"},
+          "recursos": {"type": "string", "description": "Opcional: no se usa hoy."},
+          "rubrica": {"type": "array", "items": {"$ref": "#/$defs/fila_rubrica"}},
+          "sesiones": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["id", "numero", "fecha", "semana_periodo", "contenidos", "docente", "practico", "autonomo"],
+              "properties": {
+                "id": {"type": "string", "description": "Forma M<momento>-S<n>, p. ej. M2-S1."},
+                "numero": {"type": "integer", "minimum": 1},
+                "fecha": {"type": "string", "format": "date"},
+                "semana_periodo": {"type": "integer", "minimum": 1},
+                "contenidos": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+                "docente": {
+                  "type": "object", "additionalProperties": false, "required": ["texto"],
+                  "properties": {
+                    "texto": {"type": "string"},
+                    "horas": {"type": "number"},
+                    "asincronica": {"type": ["object", "null"], "properties": {"texto": {"type": "string"}, "horas": {"type": "number"}}}
+                  }
+                },
+                "practico": {"$ref": "#/$defs/actividad"},
+                "autonomo": {"$ref": "#/$defs/actividad"},
+                "entregables": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          }
+        }
+      }
+    },
+    "rubrica_producto_final": {"type": "array", "items": {"$ref": "#/$defs/fila_rubrica"}},
+    "pis": {"type": "object", "description": "Opcional: fuera del contexto hasta tener sílabos reales."},
+    "metodologias": {"type": "array", "items": {"type": "string"}, "description": "Opcional: fuera del contexto hasta tener sílabos reales."},
+    "bibliografia": {"type": "object", "description": "Opcional: fuera del contexto hasta tener sílabos reales."}
+  },
+  "$defs": {
+    "actividad": {
+      "type": "object", "additionalProperties": false, "required": ["texto"],
+      "properties": {"texto": {"type": "string"}, "horas": {"type": "number"}}
+    },
+    "fila_rubrica": {
+      "type": "object", "additionalProperties": false, "required": ["indicador", "niveles"],
+      "properties": {
+        "indicador": {"type": "string"},
+        "niveles": {"type": "object", "additionalProperties": {"type": "string"}, "description": "Clave del nivel (receptivo, resolutivo, reflexivo, critico, cocreativo) y su descriptor."}
+      }
+    }
+  }
+}

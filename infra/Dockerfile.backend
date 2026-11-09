@@ -1,0 +1,24 @@
+FROM python:3.13-slim@sha256:2d44738ebf4ce5f63b9d9ea871e9c7cfdc0426f7b0c97cac915fd88ded1d86bb AS runtime
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/app/backend \
+    MPLCONFIGDIR=/tmp/matplotlib HOME=/tmp OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+WORKDIR /app
+COPY backend/requirements.lock /app/backend/requirements.lock
+RUN pip install --no-cache-dir --no-deps -r /app/backend/requirements.lock && pip check \
+    && groupadd --gid 10001 recurso && useradd --uid 10001 --gid 10001 --no-create-home recurso
+COPY backend/app /app/backend/app
+COPY backend/worker.py /app/backend/worker.py
+COPY agentes /app/agentes
+COPY kb/catalogo.yaml /app/kb/catalogo.yaml
+COPY docs/privacidad-borrador.md /app/docs/privacidad-borrador.md
+WORKDIR /app/backend
+USER 10001:10001
+CMD ["uvicorn", "app.api.aplicacion:crear_app", "--factory", "--host", "0.0.0.0", "--port", "8001", "--no-proxy-headers", "--no-access-log"]
+
+FROM runtime AS pruebas
+USER root
+RUN pip install --no-cache-dir pytest==9.1.1
+# ciencia_datos y PyTorch no entran en la imagen: tampoco sus pruebas ni la marca modelo.
+COPY backend/tests /app/backend/tests
+RUN rm -f /app/backend/tests/test_cd_*.py
+USER 10001:10001
+CMD ["python", "-m", "pytest", "-q", "-m", "not servidor and not modelo", "-o", "cache_dir=/tmp/pytest-cache"]

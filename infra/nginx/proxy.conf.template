@@ -1,0 +1,63 @@
+pid /tmp/nginx.pid;
+error_log /dev/stderr crit;
+events { worker_connections 512; }
+http {
+    access_log off;
+    server_tokens off;
+    client_body_temp_path /tmp/client_temp;
+    proxy_temp_path /tmp/proxy_temp;
+    # Raíz de solo lectura: ningún temporal en /var/cache/nginx.
+    fastcgi_temp_path /tmp/fastcgi_temp;
+    uwsgi_temp_path /tmp/uwsgi_temp;
+    scgi_temp_path /tmp/scgi_temp;
+    limit_req_zone $binary_remote_addr zone=general:10m rate=10r/s;
+    limit_req_status 429;
+    client_max_body_size 10m;
+    client_body_timeout 30s;
+    send_timeout 60s;
+    server {
+        listen 8080;
+        server_name _;
+        # El destino no se deriva de Host ni de cabeceras reenviadas.
+        return 308 https://${DOMINIO}:${PUERTO_HTTPS}$request_uri;
+    }
+    server {
+        listen 8443 ssl;
+        server_name ${DOMINIO};
+        ssl_certificate /etc/tls/fullchain.pem;
+        ssl_certificate_key /etc/tls/privkey.pem;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_session_tickets off;
+        add_header Strict-Transport-Security "max-age=31536000" always;
+        add_header X-Content-Type-Options nosniff always;
+        add_header Referrer-Policy no-referrer always;
+        add_header X-Frame-Options DENY always;
+        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'" always;
+        location = /salud { access_log off; return 200 'ok'; }
+        location ^~ /api/salud/ { return 404; }
+        location = /api/salud { return 404; }
+        location /api/ {
+            limit_req zone=general burst=30 nodelay;
+            proxy_pass http://api:8001/;
+            proxy_set_header Host ${DOMINIO};
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header Forwarded "";
+            proxy_connect_timeout 5s;
+            proxy_read_timeout 65s;
+            proxy_request_buffering off;
+            proxy_buffering off;
+            proxy_hide_header Cache-Control;
+            add_header Cache-Control "private, no-store" always;
+            # add_header dentro de location no debe suprimir las cabeceras de seguridad.
+            add_header Strict-Transport-Security "max-age=31536000" always;
+            add_header X-Content-Type-Options nosniff always;
+            add_header Referrer-Policy no-referrer always;
+            add_header X-Frame-Options DENY always;
+            add_header Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; sandbox" always;
+        }
+        location / { proxy_pass http://web:8080; proxy_set_header Host ${DOMINIO}; }
+    }
+}

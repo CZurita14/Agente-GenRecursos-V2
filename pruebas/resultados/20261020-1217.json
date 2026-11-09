@@ -1,0 +1,826 @@
+[
+ {
+  "clase": "datos_M3S4",
+  "contexto": "ASIGNATURA: Análisis de Datos y Estadística para Ingeniería · carrera Software · 3.º nivel\nCOMPETENCIA: Analiza datos estructurados provenientes de bases de datos organizacionales mediante métodos estadísticos, para fundamentar la toma de decisiones estratégicas en la resolución de problemas de ingeniería, garantizando la integridad de la información con actuación ética, pensamiento sociocrítico y comunicación efectiva de los resultados.\nPROBLEMA DEL TERRITORIO: En Ecuador crece la dependencia de servicios digitales; en el primer semestre de 2025 EcuCERT reportó 220.228 direcciones IP con incidentes o vulnerabilidades. El PIS aborda casos de monitoreo de seguridad digital con datos controlados o simulados.\nRETO: ¿Cómo estructurar y modelar estadísticamente los datos de eventos de red para fundamentar el motor lógico y predictivo de una solución de software orientada al monitoreo de la seguridad digital en Ecuador?\nMomento 3: Resolución del Problema - Inferencia Estadística para la Detección de Anomalías\nRESULTADOS DE APRENDIZAJE:\n- RA3: Contrasta hipótesis operativas y estima parámetros poblacionales utilizando estadística inferencial clásica (pruebas paramétricas y ANOVA), para validar el comportamiento de los datos y fundamentar las decisiones algorítmicas.\nEVIDENCIA DEL MOMENTO: Definición Inferencial de Umbrales de Seguridad: documento técnico que utiliza pruebas de hipótesis e intervalos de confianza (procesados en JASP) para diferenciar estadísticamente picos de tráfico normales de posibles ataques (ej. DDoS) y justifica numéricamente los valores de corte del algoritmo.\nCLASE M3-S4 (jueves 29/10/2026):\n- Contenidos: Hipótesis estadísticas\n- Con el docente: Sobre pruebas de hipótesis y análisis de varianza (ANOVA).\n- Práctico-experimental: Ejecución de pruebas T y ANOVA clásicas en JASP. Uso de Numiqo para verificar estadísticos críticos (Z o F) de forma manual.\n- Trabajo autónomo: Redacción del reporte argumentando la elección de las pruebas estadísticas.\n- Clases anteriores del momento: Lógica del muestreo, estimación de parámetros e intervalos de confianza; formulación de H0/H1, valor p y verificación de supuestos (Shapiro-Wilk, Levene).\nRÚBRICA DEL MOMENTO (indicadores):\n- Aplicación de pruebas de hipótesis e intervalos de confianza en JASP: Resolutivo: aplica correctamente las pruebas de hipótesis y calcula los intervalos de confianza en JASP. Reflexivo: analiza los resultados explicando la relación entre los intervalos y el comportamiento de la red. Crítico: evalúa la idoneidad de las pruebas seleccionadas, validando el rigor metodológico.\n- Diferenciación estadística de tráfico normal vs. posibles ataques: Resolutivo: establece la diferencia estadística entre picos normales y posibles ataques. Reflexivo: argumenta los criterios técnicos y estadísticos que diferencian un pico legítimo de un ataque. Crítico: juzga la precisión de la diferenciación anticipando falsos positivos o negativos.\nPOLÍTICA DE IA DEL MOMENTO: Se permite IA generativa como asistente metodológico para interpretar estadísticos de prueba; el estudiante audita críticamente las interpretaciones y asume la autoría total del reporte.\nENTREGABLES QUE NO SE DEBEN RESOLVER: Reporte que argumenta la elección de las pruebas estadísticas (trabajo autónomo); Evidencia del momento: umbrales de seguridad del proyecto",
+  "lotes": [
+   {
+    "niveles": [
+     "receptivo",
+     "resolutivo",
+     "resolutivo",
+     "reflexivo"
+    ],
+    "items": [
+     {
+      "nivel": "receptivo",
+      "ra": "RA3",
+      "contenido": "¿Cuál es el propósito principal de utilizar pruebas de hipótesis en el análisis de tráfico de red para detectar anomalías?",
+      "contexto": "En el contexto del monitoreo de seguridad digital, se requiere identificar patrones anómalos en el tráfico de red para prevenir ataques como DDoS.",
+      "enunciado": "A. Verificar si los datos de tráfico de red siguen una distribución normal.\nB. Comparar la media de tráfico entre diferentes segmentos de red.\nC. Determinar si un pico de tráfico es estadísticamente significativo para considerarlo como posible ataque.\nD. Calcular la varianza del tráfico para predecir futuras fluctuaciones.",
+      "opciones": [
+       {
+        "texto": "A. Verificar si los datos de tráfico de red siguen una distribución normal.",
+        "justificacion": "Esta opción se refiere a una prueba de normalidad, que es un supuesto previo en pruebas paramétricas, pero no es el propósito principal de las pruebas de hipótesis en este contexto."
+       },
+       {
+        "texto": "B. Comparar la media de tráfico entre diferentes segmentos de red.",
+        "justificacion": "Aunque comparar medias es una aplicación de pruebas de hipótesis, no aborda directamente la detección de anomalías en el tráfico de red."
+       },
+       {
+        "texto": "C. Determinar si un pico de tráfico es estadísticamente significativo para considerarlo como posible ataque.",
+        "justificacion": "Correcto. La prueba de hipótesis permite evaluar si un pico de tráfico es estadísticamente significativo, lo que puede indicar un ataque."
+       },
+       {
+        "texto": "D. Calcular la varianza del tráfico para predecir futuras fluctuaciones.",
+        "justificacion": "La varianza es una medida de dispersión, pero no es el propósito directo de las pruebas de hipótesis en este contexto."
+       }
+      ],
+      "correcta": 2,
+      "razonamiento": [
+       "El propósito de las pruebas de hipótesis es evaluar si un resultado observado es estadísticamente significativo, lo que permite identificar patrones anómalos.",
+       "En el contexto de seguridad digital, se busca detectar picos de tráfico que podrían indicar un ataque, por lo que se requiere evaluar si dichos picos son significativos."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "contenido": "¿Qué tipo de prueba estadística se debe utilizar para comparar la media de tráfico entre dos segmentos de red, asumiendo que los datos son normalmente distribuidos?",
+      "contexto": "Se dispone de datos de tráfico de red en dos segmentos de una red corporativa, con muestras de tamaño n=50 cada uno, y se quiere comparar si hay diferencias significativas en la media de tráfico entre ambos segmentos.",
+      "enunciado": "A. Prueba de Chi-cuadrado\nB. Prueba T de Student\nC. Prueba ANOVA\nD. Prueba de Kolmogorov-Smirnov",
+      "opciones": [
+       {
+        "texto": "A. Prueba de Chi-cuadrado",
+        "justificacion": "Esta prueba se utiliza para comparar distribuciones categóricas, no medias numéricas, por lo que no es adecuada para este caso."
+       },
+       {
+        "texto": "B. Prueba T de Student",
+        "justificacion": "Correcto. La prueba T de Student se utiliza para comparar medias de dos grupos independientes, asumiendo normalidad y varianza homogénea."
+       },
+       {
+        "texto": "C. Prueba ANOVA",
+        "justificacion": "ANOVA se utiliza para comparar medias de más de dos grupos, no dos, por lo que no es adecuada para este caso."
+       },
+       {
+        "texto": "D. Prueba de Kolmogorov-Smirnov",
+        "justificacion": "Esta prueba se utiliza para verificar la normalidad de un conjunto de datos, no para comparar medias entre grupos."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "La comparación de medias entre dos grupos independientes se realiza mediante la prueba T de Student, siempre que los datos sean normalmente distribuidos y se cumplan los supuestos de varianza homogénea.",
+       "La prueba T de Student es la opción correcta en este contexto, ya que se ajusta a los requisitos del problema planteado."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "contenido": "¿Qué tipo de prueba estadística se debe utilizar para comparar la media de tráfico entre tres segmentos de red, asumiendo que los datos son normalmente distribuidos?",
+      "contexto": "Se dispone de datos de tráfico de red en tres segmentos de una red corporativa, con muestras de tamaño n=60 cada uno, y se quiere comparar si hay diferencias significativas en la media de tráfico entre los tres segmentos.",
+      "enunciado": "A. Prueba de Chi-cuadrado\nB. Prueba T de Student\nC. Prueba ANOVA\nD. Prueba de Kolmogorov-Smirnov",
+      "opciones": [
+       {
+        "texto": "A. Prueba de Chi-cuadrado",
+        "justificacion": "Esta prueba se utiliza para comparar distribuciones categóricas, no medias numéricas, por lo que no es adecuada para este caso."
+       },
+       {
+        "texto": "B. Prueba T de Student",
+        "justificacion": "La prueba T de Student se utiliza para comparar medias de dos grupos, no tres, por lo que no es adecuada para este caso."
+       },
+       {
+        "texto": "C. Prueba ANOVA",
+        "justificacion": "Correcto. La prueba ANOVA se utiliza para comparar medias de tres o más grupos, siempre que los datos sean normalmente distribuidos y se cumplan los supuestos de varianza homogénea."
+       },
+       {
+        "texto": "D. Prueba de Kolmogorov-Smirnov",
+        "justificacion": "Esta prueba se utiliza para verificar la normalidad de un conjunto de datos, no para comparar medias entre grupos."
+       }
+      ],
+      "correcta": 2,
+      "razonamiento": [
+       "La comparación de medias entre más de dos grupos se realiza mediante la prueba ANOVA, siempre que los datos sean normalmente distribuidos y se cumplan los supuestos de varianza homogénea.",
+       "La prueba ANOVA es la opción correcta en este contexto, ya que se ajusta a los requisitos del problema planteado."
+      ]
+     },
+     {
+      "nivel": "reflexivo",
+      "ra": "RA3",
+      "contenido": "¿Por qué es importante validar los supuestos de normalidad y varianza homogénea antes de aplicar una prueba de hipótesis en el análisis de tráfico de red?",
+      "contexto": "En el análisis de tráfico de red, se utilizan pruebas de hipótesis para detectar anomalías, lo que implica comparar medias o varianzas entre diferentes segmentos de red.",
+      "enunciado": "A. Para garantizar que los resultados sean estadísticamente significativos.\nB. Para asegurar que los datos sigan una distribución normal, lo cual es un supuesto de las pruebas paramétricas.\nC. Para determinar si los datos son suficientemente grandes para realizar la prueba.\nD. Para calcular el tamaño de la muestra necesario para detectar un ataque.",
+      "opciones": [
+       {
+        "texto": "A. Para garantizar que los resultados sean estadísticamente significativos.",
+        "justificacion": "La significancia estadística no depende directamente de los supuestos de normalidad y varianza, sino de la probabilidad de error tipo I."
+       },
+       {
+        "texto": "B. Para asegurar que los datos sigan una distribución normal, lo cual es un supuesto de las pruebas paramétricas.",
+        "justificacion": "Correcto. Las pruebas paramétricas como la prueba T o ANOVA asumen que los datos siguen una distribución normal, por lo que es fundamental validar este supuesto antes de aplicarlas."
+       },
+       {
+        "texto": "C. Para determinar si los datos son suficientemente grandes para realizar la prueba.",
+        "justificacion": "El tamaño de la muestra no se determina mediante la validación de supuestos, sino por el diseño del estudio."
+       },
+       {
+        "texto": "D. Para calcular el tamaño de la muestra necesario para detectar un ataque.",
+        "justificacion": "El tamaño de la muestra se calcula mediante métodos de potencia estadística, no mediante la validación de supuestos."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "La validación de los supuestos es un paso fundamental en el análisis estadístico, ya que garantiza que los resultados obtenidos sean válidos y confiables.",
+       "En el contexto del análisis de tráfico de red, las pruebas paramétricas como la prueba T o ANOVA requieren que los datos sigan una distribución normal y que las varianzas sean homogéneas, lo que justifica la necesidad de validar estos supuestos antes de aplicarlas."
+      ]
+     }
+    ],
+    "uso": {
+     "prompt_tokens": 1303,
+     "total_tokens": 3536,
+     "completion_tokens": 2233,
+     "prompt_tokens_details": null
+    },
+    "segundos": 72.6,
+    "verificacion": [
+     [],
+     [],
+     [
+      "casi duplicado del ítem 2"
+     ],
+     []
+    ],
+    "revision": [
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "El ítem resuelve el entregable 'Evidencia del momento: umbrales de seguridad del proyecto' al requerir determinar si un pico de tráfico es estadísticamente significativo, lo cual es fundamental para establecer umbrales de seguridad basados en pruebas de hipótesis y análisis de varianza. El nivel cognitivo es reflexivo ya que implica interpretar resultados estadísticos para tomar decisiones en el contexto del monitoreo de seguridad.",
+      "coincide_con_clave": true,
+      "segundos": 5.2
+     },
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "receptivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La prueba T de Student es la opción correcta porque se utiliza para comparar medias de dos grupos independientes cuando se cumplen los supuestos de normalidad y varianza homogénea. Los datos son continuos (tráfico de red) y se comparan dos segmentos, lo que corresponde a una prueba T de Student. La prueba ANOVA se usa para tres o más grupos, no para dos. La prueba de Chi-cuadrado se aplica a datos categóricos, y la prueba de Kolmogorov-Smirnov se usa para verificar normalidad, no para comparar medias.",
+      "coincide_con_clave": true,
+      "segundos": 6.2
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La pregunta busca comparar medias entre tres grupos independientes, lo cual se resuelve con ANOVA (opción C). La prueba T de Student (opción B) se usa para comparar dos grupos, no tres. La prueba de Chi-cuadrado (opción A) se usa para datos categóricos, no para comparar medias. La prueba de Kolmogorov-Smirnov (opción D) se usa para verificar normalidad, no para comparar medias. El ítem resuelve el entregable 'Diferenciación estadística de tráfico normal vs. posibles ataques' al validar si hay diferencias significativas entre segmentos de red.",
+      "coincide_con_clave": true,
+      "segundos": 6.5
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "receptivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción B es correcta porque el supuesto de normalidad es fundamental para las pruebas paramétricas, que se utilizan comúnmente en el análisis de tráfico de red. Las pruebas paramétricas como la prueba T o ANOVA requieren que los datos sigan una distribución normal para garantizar la validez de los resultados. La opción B responde directamente a la necesidad de verificar este supuesto antes de aplicar estas pruebas, lo cual es parte del proceso de validación de los datos en el análisis estadístico. Las otras opciones no abordan directamente el supuesto de normalidad, que es clave para la elección y aplicación de pruebas paramétricas en este contexto.",
+      "coincide_con_clave": true,
+      "segundos": 6.6
+     }
+    ]
+   },
+   {
+    "niveles": [
+     "receptivo",
+     "resolutivo",
+     "reflexivo",
+     "critico"
+    ],
+    "items": [
+     {
+      "nivel": "receptivo",
+      "ra": "RA3",
+      "contenido": "¿Cuál es el objetivo principal de aplicar pruebas de hipótesis en el análisis del tráfico de red para detectar anomalías?",
+      "contexto": "En el contexto del monitoreo de seguridad digital, se requiere identificar si ciertos picos de tráfico son estadísticamente significativos para considerarlos como posibles ataques.",
+      "enunciado": "¿Cuál es el objetivo principal de aplicar pruebas de hipótesis en el análisis del tráfico de red para detectar anomalías?",
+      "opciones": [
+       {
+        "texto": "A. Para garantizar que los resultados sean estadísticamente significativos.",
+        "justificacion": "Correcta. La prueba de hipótesis busca determinar si los resultados observados son estadísticamente significativos, lo que permite tomar decisiones basadas en evidencia."
+       },
+       {
+        "texto": "B. Para asegurar que los datos sigan una distribución normal, lo cual es necesario para aplicar pruebas paramétricas.",
+        "justificacion": "Incorrecta. Aunque la normalidad es un supuesto para algunas pruebas, no es el objetivo principal de la prueba de hipótesis."
+       },
+       {
+        "texto": "C. Para calcular los intervalos de confianza de los parámetros poblacionales.",
+        "justificacion": "Incorrecta. Los intervalos de confianza son una herramienta complementaria, no el objetivo principal de la prueba de hipótesis."
+       },
+       {
+        "texto": "D. Para comparar la media de tráfico entre diferentes segmentos de red.",
+        "justificacion": "Incorrecta. Esta es una aplicación específica de la prueba de hipótesis, pero no su objetivo principal."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El objetivo de las pruebas de hipótesis es evaluar si los datos observados son consistentes con una hipótesis planteada, lo que permite tomar decisiones basadas en evidencia.",
+       "La significancia estadística es el criterio fundamental para determinar si un resultado es debidamente atribuido a un cambio real o a la variabilidad aleatoria."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "contenido": "¿Qué prueba estadística se debe aplicar para comparar la media del tráfico de red entre tres segmentos de red diferentes?",
+      "contexto": "En un sistema de monitoreo de seguridad digital, se registran tres segmentos de red con diferentes patrones de tráfico, y se busca determinar si existen diferencias significativas entre ellos.",
+      "enunciado": "¿Qué prueba estadística se debe aplicar para comparar la media del tráfico de red entre tres segmentos de red diferentes?",
+      "opciones": [
+       {
+        "texto": "A. Prueba de Chi-cuadrado",
+        "justificacion": "Incorrecta. Esta prueba se utiliza para datos categóricos, no para comparar medias."
+       },
+       {
+        "texto": "B. Prueba T de Student",
+        "justificacion": "Incorrecta. Esta prueba se utiliza para comparar medias entre dos grupos, no tres."
+       },
+       {
+        "texto": "C. Prueba ANOVA",
+        "justificacion": "Correcta. La ANOVA es la prueba adecuada para comparar medias entre tres o más grupos."
+       },
+       {
+        "texto": "D. Prueba de Kolmogorov-Smirnov",
+        "justificacion": "Incorrecta. Esta prueba se utiliza para verificar la normalidad de los datos, no para comparar medias."
+       }
+      ],
+      "correcta": 2,
+      "razonamiento": [
+       "La prueba ANOVA se utiliza cuando se quiere comparar medias entre más de dos grupos, lo cual es el caso de tres segmentos de red.",
+       "La prueba T de Student se limita a comparar dos grupos, lo que no es adecuado en este escenario."
+      ]
+     },
+     {
+      "nivel": "reflexivo",
+      "ra": "RA3",
+      "contenido": "¿Por qué es importante verificar los supuestos de normalidad antes de aplicar una prueba de hipótesis en el análisis del tráfico de red?",
+      "contexto": "En el contexto del monitoreo de seguridad digital, se deben validar los supuestos estadísticos para garantizar la validez de los resultados obtenidos.",
+      "enunciado": "¿Por qué es importante verificar los supuestos de normalidad antes de aplicar una prueba de hipótesis en el análisis del tráfico de red?",
+      "opciones": [
+       {
+        "texto": "A. Para asegurar que los datos sigan una distribución normal, lo cual es necesario para aplicar pruebas paramétricas.",
+        "justificacion": "Correcta. Las pruebas paramétricas como la ANOVA o la prueba T de Student requieren que los datos sigan una distribución normal para ser válidas."
+       },
+       {
+        "texto": "B. Para determinar si los datos son suficientemente grandes para aplicar pruebas no paramétricas.",
+        "justificacion": "Incorrecta. La tamaño de la muestra no es el factor principal para decidir entre pruebas paramétricas o no paramétricas."
+       },
+       {
+        "texto": "C. Para identificar si los datos son independientes entre sí.",
+        "justificacion": "Incorrecta. La independencia es un supuesto importante, pero no está directamente relacionado con la normalidad."
+       },
+       {
+        "texto": "D. Para calcular los intervalos de confianza de manera más precisa.",
+        "justificacion": "Incorrecta. Aunque la normalidad influye en la precisión de los intervalos, no es el principal motivo para verificarla."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "La normalidad es un supuesto fundamental para las pruebas paramétricas, ya que estas asumen que los datos siguen una distribución específica.",
+       "Si los datos no son normales, los resultados de las pruebas pueden ser sesgados, lo que afecta la toma de decisiones en el monitoreo de seguridad."
+      ]
+     },
+     {
+      "nivel": "critico",
+      "ra": "RA3",
+      "contenido": "¿Cuál es el impacto de no verificar los supuestos de la prueba de hipótesis en el análisis del tráfico de red?",
+      "contexto": "En el contexto del monitoreo de seguridad digital, la precisión de los resultados es crucial para evitar falsos positivos o falsos negativos.",
+      "enunciado": "¿Cuál es el impacto de no verificar los supuestos de la prueba de hipótesis en el análisis del tráfico de red?",
+      "opciones": [
+       {
+        "texto": "A. Se obtendrán resultados estadísticamente significativos, pero no necesariamente válidos.",
+        "justificacion": "Correcta. No verificar los supuestos puede llevar a resultados sesgados, lo que implica que los resultados no son confiables."
+       },
+       {
+        "texto": "B. Se garantizará la validez de los resultados, ya que las pruebas son robustas.",
+        "justificacion": "Incorrecta. Las pruebas no son robustas si no se cumplen los supuestos, lo que afecta su validez."
+       },
+       {
+        "texto": "C. Se aumentará la precisión de los intervalos de confianza calculados.",
+        "justificacion": "Incorrecta. No verificar los supuestos no mejora la precisión, sino que puede alterarla."
+       },
+       {
+        "texto": "D. Se reducirá el riesgo de falsos positivos en la detección de ataques.",
+        "justificacion": "Incorrecta. No verificar los supuestos puede aumentar el riesgo de falsos positivos o negativos."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "No verificar los supuestos estadísticos puede llevar a conclusiones erróneas, lo que afecta la eficacia del sistema de monitoreo.",
+       "Los resultados pueden ser sesgados, lo que implica que los umbrales de seguridad establecidos no son confiables para detectar ataques reales."
+      ]
+     }
+    ],
+    "uso": {
+     "prompt_tokens": 1465,
+     "total_tokens": 3354,
+     "completion_tokens": 1889,
+     "prompt_tokens_details": null
+    },
+    "segundos": 61.2,
+    "verificacion": [
+     [],
+     [],
+     [],
+     []
+    ],
+    "revision": [
+     {
+      "respuesta": 1,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 1 es la correcta porque el objetivo principal de las pruebas de hipótesis es determinar si los resultados obtenidos son estadísticamente significativos, lo que permite distinguir entre variaciones normales del tráfico y posibles anomalías como ataques. Esta opción responde directamente al entregable de 'Definición Inferencial de Umbrales de Seguridad', ya que establece la base para justificar numéricamente los valores de corte del algoritmo.",
+      "coincide_con_clave": true,
+      "segundos": 5.3
+     },
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "receptivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La prueba ANOVA es la adecuada para comparar medias de tres o más grupos independientes, como los tres segmentos de red mencionados. Las otras opciones no son aplicables: la prueba de Kolmogorov-Smirnov se usa para comparar distribuciones, la prueba de Chi-cuadrado para variables categóricas, y la prueba T de Student para dos grupos. El ítem resuelve el entregable 'Diferenciación estadística de tráfico normal vs. posibles ataques' al validar la comparación de medias entre segmentos.",
+      "coincide_con_clave": true,
+      "segundos": 5.9
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 3 es correcta porque la normalidad es un supuesto fundamental para las pruebas paramétricas, que son las más comunes en análisis de datos estructurados. Verificar la normalidad asegura que los resultados sean válidos y confiables. La opción 1 es incorrecta porque los intervalos de confianza no dependen directamente de la normalidad, aunque esta puede influir en su cálculo. La opción 2 es incorrecta porque la independencia es un supuesto distinto, aunque importante. La opción 0 es incorrecta porque la elección entre pruebas paramétricas y no paramétricas depende de otros factores, no solo del tamaño de la muestra. El ítem resuelve el entregable 'Evidencia del momento: umbrales de seguridad del proyecto' al validar los supuestos necesarios para el análisis estadístico.",
+      "coincide_con_clave": true,
+      "segundos": 7.6
+     },
+     {
+      "respuesta": 1,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 1 es correcta porque no verificar los supuestos de la prueba de hipótesis puede llevar a resultados estadísticamente significativos pero no válidos. Los supuestos son fundamentales para la validez de los resultados, y su incumplimiento puede afectar la precisión de las conclusiones. El ítem resuelve el entregable 'Redacción del reporte argumentando la elección de las pruebas estadísticas' al exigir una comprensión crítica de los supuestos estadísticos.",
+      "coincide_con_clave": true,
+      "segundos": 5.3
+     }
+    ]
+   }
+  ],
+  "ficha": {
+   "contenido": {
+    "titulo": "FICHA DE ESTUDIO: Clase M3-S4 – Pruebas de Hipótesis y ANOVA en el Monitoreo de Redes",
+    "objetivo": "Aplicar pruebas de hipótesis y ANOVA para diferenciar estadísticamente entre tráfico normal y posibles ataques en redes de seguridad digital, usando datos ficticios relacionados con el PIS y el crecimiento de la dependencia digital en Ecuador.",
+    "ideas_clave": [
+     "Pruebas de hipótesis: comparación de medias entre grupos para detectar anomalías.",
+     "ANOVA: análisis de varianza para comparar más de dos grupos en una variable continua.",
+     "Intervalos de confianza: estimación de parámetros poblacionales con nivel de confianza.",
+     "Umbrales de seguridad: valores críticos que permiten clasificar eventos como normales o anómalos.",
+     "Interpretación de valor p y estadísticos críticos (Z, F) para tomar decisiones estadísticas."
+    ],
+    "ejemplo_resuelto": {
+     "situacion": "En una red de monitoreo de seguridad digital en Ecuador, se recopilan datos de tráfico de red en 5 zonas geográficas durante 1 mes. Se quiere determinar si existe una diferencia significativa en el volumen de tráfico entre las zonas, lo que podría indicar un ataque DDoS.",
+     "pasos": [
+      "1. Seleccionar muestras aleatorias de 100 eventos de tráfico por zona (n=5, total=500 eventos).",
+      "2. Calcular la media y desviación estándar del volumen de tráfico por zona.",
+      "3. Plantear hipótesis: H0 = No hay diferencia en la media del volumen de tráfico entre zonas; H1 = Hay diferencia.",
+      "4. Usar ANOVA para comparar las medias de las 5 zonas.",
+      "5. Calcular el estadístico F y compararlo con el valor crítico de F (α=0.05).",
+      "6. Si F > Fcrítico, rechazar H0 y concluir que hay diferencias significativas entre zonas.",
+      "7. Calcular intervalos de confianza del 95% para cada zona para estimar la media poblacional."
+     ],
+     "conclusion": "Si el ANOVA rechaza H0 y los intervalos de confianza muestran diferencias significativas, se puede considerar que ciertas zonas están experimentando picos anómalos, posiblemente debido a ataques."
+    },
+    "errores_frecuentes": [
+     "1. Usar una prueba T en lugar de ANOVA al comparar más de dos grupos: error de metodología al no aplicar la prueba adecuada.",
+     "2. No verificar los supuestos de normalidad y homocedasticidad (Shapiro-Wilk y Levene): puede llevar a conclusiones erróneas.",
+     "3. Interpretar el valor p sin considerar el tamaño del efecto: puede generar falsos positivos o negativos."
+    ],
+    "relacion_con_el_ra": "Esta clase está directamente relacionada con el **RA3** (Contrastar hipótesis operativas y estimar parámetros poblacionales). Al aplicar pruebas de hipótesis y ANOVA, el estudiante demuestra habilidad para validar el comportamiento de los datos y fundamentar decisiones algorítmicas, lo cual es clave para el desarrollo del motor predictivo del sistema de monitoreo de seguridad digital.",
+    "preguntas_autocomprobacion": [
+     "¿Cuál es la hipótesis nula que se contrasta al usar ANOVA en el análisis de tráfico de red?",
+     "¿Qué estadístico se compara con el valor crítico de F para decidir si se rechaza la hipótesis nula?",
+     "¿Por qué es importante verificar los supuestos de normalidad y homocedasticidad antes de aplicar ANOVA?"
+    ]
+   },
+   "uso": {
+    "prompt_tokens": 1317,
+    "total_tokens": 2237,
+    "completion_tokens": 920,
+    "prompt_tokens_details": null
+   },
+   "segundos": 30.4
+  }
+ },
+ {
+  "clase": "tic_M3S1",
+  "contexto": "ASIGNATURA: Tecnologías de la Información en Ingeniería · carrera Software · 2.º nivel\nCOMPETENCIA: (vacía en el sílabo) Competencia del perfil de egreso: diseña la estructura y la arquitectura de sistemas de software, definiendo la disposición de los componentes de hardware y software y la comunicación entre ellos, para garantizar el correcto funcionamiento.\nPROBLEMA DEL TERRITORIO: En Ecuador crece la dependencia de servicios digitales; EcuCERT identificó 36 sistemas vulnerables en Ambato. El PIS aborda soluciones de monitoreo y gestión de la seguridad digital con casos asignados.\nRETO: Avanzar desde el diseño lógico de soluciones hacia su implementación funcional: procesar datos, aplicar reglas de decisión, identificar condiciones anómalas y registrar eventos de seguridad.\nMomento 3: Resolución / implementación del problema del contexto\nRESULTADOS DE APRENDIZAJE:\n- RA2: Mejora los procesos de ingeniería a través de las tecnologías de la información.\n- RA3: Evalúa soluciones de tecnología de la información para la ingeniería.\nEVIDENCIA DEL MOMENTO: Informe de evaluación de seguridad y viabilidad de la configuración tecnológica seleccionada para el PIS, con identificación de riesgos, matriz de controles y recomendaciones de mejora técnica, ética y legal.\nCLASE M3-S1 (jueves 22/10/2026):\n- Contenidos: Ciberseguridad en ingeniería; Casos de estudio de uso de tecnologías de la información en ingeniería\n- Con el docente: Recuperación de las configuraciones tecnológicas seleccionadas; explicación de amenazas, vulnerabilidades y riesgos; análisis de confidencialidad, integridad y disponibilidad; estudio guiado de un incidente de seguridad digital; identificación de controles preventivos y correctivos; reflexión sobre su aplicación al caso del PIS. Asincrónico: recursos sobre amenazas digitales, gestión de accesos, respaldos, actualizaciones y protección de datos; preguntas para relacionar vulnerabilidades con controles.\n- Práctico-experimental: (sin horas práctico-experimentales en esta clase)\n- Trabajo autónomo: TAREA 3 – Análisis de un incidente de seguridad digital: descripción de un incidente real documentado o simulado; identificación de activos, amenazas, vulnerabilidades y consecuencias; relación con confidencialidad, integridad y disponibilidad; propuesta de controles aplicables al contexto del PIS.\n- Clases anteriores del momento: Ecosistema TI (hardware, software, sistemas operativos, almacenamiento, conectividad); criterios para evaluar y seleccionar soluciones TI; matriz de decisión.\nRÚBRICA DEL MOMENTO (indicadores):\n- Identificación y valoración de riesgos (amenazas, vulnerabilidades e impactos): Resolutivo: identifica activos, amenazas y vulnerabilidades; organiza los riesgos por probabilidad e impacto. Reflexivo: relaciona amenazas, vulnerabilidades y consecuencias con confidencialidad, integridad y disponibilidad e interpreta niveles de riesgo. Crítico: evalúa riesgos con criterios de probabilidad e impacto, prioriza situaciones críticas y argumenta consecuencias para la continuidad.\n- Selección de controles de seguridad: Resolutivo: propone controles básicos (autenticación, respaldo, actualización, protección de datos). Reflexivo: relaciona cada control con amenazas y vulnerabilidades específicas. Crítico: justifica controles por eficacia, costo, viabilidad y protección de datos, y prioriza acciones.\nPOLÍTICA DE IA DEL MOMENTO: Se permite la IA como apoyo para identificar riesgos, comparar controles y consultar conceptos; los hallazgos se verifican con fuentes técnicas y normativas; no se introducen credenciales ni datos personales en herramientas externas.\nENTREGABLES QUE NO SE DEBEN RESOLVER: TAREA 3: análisis de un incidente de seguridad digital del contexto del PIS; Evidencia del momento: informe de evaluación de seguridad de la configuración del PIS",
+  "lotes": [
+   {
+    "niveles": [
+     "receptivo",
+     "resolutivo",
+     "resolutivo",
+     "reflexivo"
+    ],
+    "items": [
+     {
+      "nivel": "receptivo",
+      "ra": "RA2",
+      "contenido": "¿Cuál de los siguientes es un criterio para evaluar y seleccionar soluciones de tecnología de la información en el contexto del PIS?",
+      "contexto": "En el PIS, se identificaron 36 sistemas vulnerables en Ambato, Ecuador. Se requiere evaluar soluciones de tecnología de la información para garantizar la seguridad digital.",
+      "enunciado": "A) Velocidad de procesamiento de datos",
+      "opciones": [
+       {
+        "texto": "A) Velocidad de procesamiento de datos",
+        "justificacion": "Es un criterio técnico, pero no se relaciona directamente con la seguridad digital en el contexto del PIS."
+       },
+       {
+        "texto": "B) Capacidad de monitoreo en tiempo real",
+        "justificacion": "Es un criterio relevante para el PIS, ya que permite detectar amenazas y vulnerabilidades en sistemas digitales."
+       },
+       {
+        "texto": "C) Número de usuarios conectados",
+        "justificacion": "No es un criterio directo para evaluar soluciones de seguridad en el PIS."
+       },
+       {
+        "texto": "D) Costo de implementación",
+        "justificacion": "Es un criterio importante, pero no aborda directamente la seguridad o la viabilidad técnica del sistema."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "El nivel receptivo implica reconocer criterios relevantes para la evaluación de soluciones TI.",
+       "En el contexto del PIS, el monitoreo en tiempo real es fundamental para detectar y responder a amenazas de seguridad."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "contenido": "¿Cuál de los siguientes controles de seguridad se debe aplicar en el PIS para mitigar la vulnerabilidad de acceso no autorizado a sistemas críticos?",
+      "contexto": "En el PIS, se identificó una vulnerabilidad en la autenticación de usuarios en los sistemas de gestión de datos en Ambato.",
+      "enunciado": "A) Actualización periódica de software",
+      "opciones": [
+       {
+        "texto": "A) Actualización periódica de software",
+        "justificacion": "Es importante, pero no aborda directamente la vulnerabilidad de acceso no autorizado."
+       },
+       {
+        "texto": "B) Implementación de autenticación multifactor",
+        "justificacion": "Es el control correcto para mitigar la vulnerabilidad de acceso no autorizado."
+       },
+       {
+        "texto": "C) Respaldo automático de datos",
+        "justificacion": "Es relevante para la integridad de datos, pero no previene accesos no autorizados."
+       },
+       {
+        "texto": "D) Uso de firewalls en la red",
+        "justificacion": "Ayuda a bloquear accesos no autorizados, pero no es específico para la autenticación de usuarios."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "El nivel resolutivo implica aplicar un procedimiento para resolver un problema específico en el contexto del PIS.",
+       "La autenticación multifactor es un control de seguridad que previene el acceso no autorizado a sistemas críticos."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "contenido": "¿Cuál de los siguientes controles se debe aplicar para garantizar la confidencialidad de los datos en el PIS?",
+      "contexto": "En el PIS, se identificaron riesgos de exposición de datos sensibles en sistemas de gestión de información en Ambato.",
+      "enunciado": "A) Uso de encriptación de datos en tránsito",
+      "opciones": [
+       {
+        "texto": "A) Uso de encriptación de datos en tránsito",
+        "justificacion": "Es el control correcto para garantizar la confidencialidad de los datos en tránsito."
+       },
+       {
+        "texto": "B) Implementación de auditorías periódicas",
+        "justificacion": "Ayuda a detectar vulnerabilidades, pero no garantiza la confidencialidad directamente."
+       },
+       {
+        "texto": "C) Registro de eventos de seguridad",
+        "justificacion": "Es útil para auditoría, pero no previene la exposición de datos."
+       },
+       {
+        "texto": "D) Uso de autenticación de usuarios",
+        "justificacion": "Previene accesos no autorizados, pero no garantiza la confidencialidad de los datos en tránsito."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel resolutivo implica aplicar un procedimiento para resolver un problema específico en el contexto del PIS.",
+       "La encriptación de datos en tránsito es el control adecuado para garantizar la confidencialidad de los datos transmitidos."
+      ]
+     },
+     {
+      "nivel": "reflexivo",
+      "ra": "RA3",
+      "contenido": "¿Cuál de los siguientes factores debe considerarse al priorizar controles de seguridad en el PIS?",
+      "contexto": "En el PIS, se identificaron múltiples amenazas y vulnerabilidades en sistemas críticos de gestión de información en Ambato.",
+      "enunciado": "A) Costo de implementación",
+      "opciones": [
+       {
+        "texto": "A) Costo de implementación",
+        "justificacion": "Es un factor importante, pero no es el único para priorizar controles de seguridad."
+       },
+       {
+        "texto": "B) Probabilidad de ocurrencia de la amenaza",
+        "justificacion": "Es un factor clave para priorizar controles, ya que indica la frecuencia con que una amenaza puede ocurrir."
+       },
+       {
+        "texto": "C) Nivel de confidencialidad de los datos",
+        "justificacion": "Es relevante, pero no es el único criterio para priorizar controles."
+       },
+       {
+        "texto": "D) Número de usuarios afectados",
+        "justificacion": "Es un factor indirecto que puede influir en la priorización, pero no es el principal."
+       }
+      ],
+      "correcta": 1,
+      "razonamiento": [
+       "El nivel reflexivo implica analizar y relacionar factores para tomar decisiones informadas.",
+       "La probabilidad de ocurrencia de una amenaza es un criterio fundamental para priorizar controles, ya que indica cuán probable es que se produzca un incidente."
+      ]
+     }
+    ],
+    "uso": {
+     "prompt_tokens": 1375,
+     "total_tokens": 2936,
+     "completion_tokens": 1561,
+     "prompt_tokens_details": null
+    },
+    "segundos": 51.4,
+    "verificacion": [
+     [],
+     [],
+     [],
+     []
+    ],
+    "revision": [
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 0 (B) Capacidad de monitoreo en tiempo real es la correcta, ya que se alinea con la necesidad de garantizar la seguridad digital en el PIS, que requiere la identificación y respuesta inmediata a amenazas. Esta opción responde directamente al entregable de informe de evaluación de seguridad de la configuración del PIS, ya que el monitoreo en tiempo real es fundamental para detectar y mitigar riesgos en sistemas vulnerables.",
+      "coincide_con_clave": true,
+      "segundos": 6.3
+     },
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 0 (Implementación de autenticación multifactor) es la correcta porque directamente aborda la vulnerabilidad mencionada en el contexto del PIS, que es la autenticación de usuarios. La autenticación multifactor (MFA) es un control de seguridad que mejora la seguridad al requerir múltiples formas de verificación, lo que reduce el riesgo de accesos no autorizados. Las otras opciones, aunque relevantes, no abordan directamente la vulnerabilidad específica mencionada. Esta opción resuelve el entregable de la TAREA 3, donde se pide la propuesta de controles aplicables al contexto del PIS.",
+      "coincide_con_clave": true,
+      "segundos": 6.2
+     },
+     {
+      "respuesta": 1,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 1 (A) 'Uso de encriptación de datos en tránsito' directamente aborda el riesgo de exposición de datos sensibles, ya que la encriptación protege la información durante su transmisión, lo cual es fundamental para garantizar la confidencialidad. Este control se alinea con los objetivos del PIS de mejorar la seguridad digital y se relaciona directamente con el entregable de informe de evaluación de seguridad, donde se deben identificar y justificar controles aplicables.",
+      "coincide_con_clave": true,
+      "segundos": 5.3
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "El ítem resuelve el entregable 'Informe de evaluación de seguridad y viabilidad de la configuración tecnológica seleccionada para el PIS', ya que el costo de implementación es un factor clave en la evaluación de la viabilidad de una solución de seguridad. El nivel cognitivo es reflexivo, ya que implica evaluar y priorizar riesgos basándose en criterios como costo, probabilidad e impacto.",
+      "coincide_con_clave": false,
+      "segundos": 4.6
+     }
+    ]
+   },
+   {
+    "niveles": [
+     "receptivo",
+     "resolutivo",
+     "reflexivo",
+     "critico"
+    ],
+    "items": [
+     {
+      "nivel": "receptivo",
+      "ra": "RA2",
+      "contenido": "¿Cuál de los siguientes elementos se considera un factor crítico en la evaluación de la viabilidad tecnológica de un sistema de monitoreo de seguridad digital en el PIS?",
+      "contexto": "En el contexto del PIS en Ambato, se identificaron 36 sistemas vulnerables, lo que exige una evaluación rigurosa de la configuración tecnológica para garantizar la continuidad operativa.",
+      "enunciado": "A) Velocidad de procesamiento de datos",
+      "opciones": [
+       {
+        "texto": "A) Velocidad de procesamiento de datos",
+        "justificacion": "Es correcto. La velocidad de procesamiento es un factor clave en la viabilidad tecnológica, ya que influye en la capacidad del sistema para detectar y responder a amenazas en tiempo real. Es un criterio de evaluación en RA2."
+       },
+       {
+        "texto": "B) Número de usuarios conectados",
+        "justificacion": "Es un distractor. Aunque relevante, no se considera directamente un factor de viabilidad tecnológica en la evaluación de la configuración del PIS, a diferencia de la velocidad de procesamiento."
+       },
+       {
+        "texto": "C) Costo de implementación",
+        "justificacion": "Es un distractor. El costo es un aspecto importante, pero no se considera un factor crítico en la evaluación de la viabilidad tecnológica en este contexto, a diferencia de la velocidad de procesamiento."
+       },
+       {
+        "texto": "D) Uso de encriptación de datos en tránsito",
+        "justificacion": "Es un distractor. La encriptación es un control de seguridad, no un factor de viabilidad tecnológica directo, aunque es relevante en la evaluación de la configuración del PIS."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel receptivo requiere reconocer un criterio de evaluación técnico en el contexto del PIS.",
+       "La velocidad de procesamiento se menciona como un factor relevante en la viabilidad tecnológica del sistema de monitoreo."
+      ]
+     },
+     {
+      "nivel": "resolutivo",
+      "ra": "RA3",
+      "contenido": "¿Cuál de las siguientes acciones se considera una medida resolutiva para mejorar la seguridad digital en el PIS según el caso de Ambato?",
+      "contexto": "En el PIS, se identificaron sistemas vulnerables, lo que exige la implementación de controles efectivos para mitigar riesgos.",
+      "enunciado": "A) Actualización periódica de software",
+      "opciones": [
+       {
+        "texto": "A) Actualización periódica de software",
+        "justificacion": "Es correcto. La actualización de software es una medida resolutiva que previene vulnerabilidades conocidas, lo que mejora la seguridad del sistema según RA3."
+       },
+       {
+        "texto": "B) Uso de encriptación de datos en tránsito",
+        "justificacion": "Es un distractor. Aunque importante, la encriptación es un control de seguridad, no una acción resolutiva directa para mejorar la seguridad en el PIS."
+       },
+       {
+        "texto": "C) Implementación de sistemas de detección de intrusiones",
+        "justificacion": "Es un distractor. Es una medida preventiva, pero no se menciona como una acción resolutiva en el contexto del PIS."
+       },
+       {
+        "texto": "D) Registro de accesos en sistemas críticos",
+        "justificacion": "Es un distractor. El registro de accesos es un control de seguridad, pero no se considera una acción resolutiva para mejorar la seguridad en el PIS."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel resolutivo implica aplicar un procedimiento para mejorar la seguridad digital en el PIS.",
+       "La actualización de software es una medida directa para mitigar vulnerabilidades y mejorar la seguridad del sistema."
+      ]
+     },
+     {
+      "nivel": "reflexivo",
+      "ra": "RA3",
+      "contenido": "¿Cuál de las siguientes afirmaciones refleja una relación correcta entre un control de seguridad y una amenaza identificada en el PIS?",
+      "contexto": "En el PIS, se identificaron amenazas como accesos no autorizados y vulnerabilidades como falta de actualizaciones.",
+      "enunciado": "A) Uso de encriptación de datos en tránsito",
+      "opciones": [
+       {
+        "texto": "A) Uso de encriptación de datos en tránsito",
+        "justificacion": "Es correcto. La encriptación protege la confidencialidad de los datos, lo que es relevante para mitigar amenazas como accesos no autorizados en el PIS."
+       },
+       {
+        "texto": "B) Implementación de sistemas de detección de intrusiones",
+        "justificacion": "Es un distractor. Aunque útil, no se relaciona directamente con la amenaza de accesos no autorizados en el contexto del PIS."
+       },
+       {
+        "texto": "C) Registro de accesos en sistemas críticos",
+        "justificacion": "Es un distractor. El registro de accesos es un control de seguridad, pero no se relaciona directamente con la amenaza de accesos no autorizados en el PIS."
+       },
+       {
+        "texto": "D) Actualización periódica de software",
+        "justificacion": "Es un distractor. La actualización de software previene vulnerabilidades, pero no se relaciona directamente con la amenaza de accesos no autorizados en el PIS."
+       }
+      ],
+      "correcta": 0,
+      "razonamiento": [
+       "El nivel reflexivo implica analizar la relación entre amenazas y controles en el contexto del PIS.",
+       "La encriptación de datos en tránsito es un control que se relaciona directamente con la confidencialidad, lo que es clave para mitigar accesos no autorizados."
+      ]
+     },
+     {
+      "nivel": "critico",
+      "ra": "RA3",
+      "contenido": "¿Cuál de las siguientes opciones representa una justificación crítica para la selección de un control de seguridad en el PIS?",
+      "contexto": "La selección de controles debe considerar su eficacia, costo, viabilidad y protección de datos en el contexto del PIS.",
+      "enunciado": "A) Costo de implementación",
+      "opciones": [
+       {
+        "texto": "A) Costo de implementación",
+        "justificacion": "Es un distractor. Aunque relevante, el costo no es la única justificación crítica para la selección de un control en el PIS, ya que debe priorizar eficacia y viabilidad."
+       },
+       {
+        "texto": "B) Eficacia en la prevención de amenazas",
+        "justificacion": "Es un distractor. La eficacia es un factor importante, pero no se considera la justificación crítica completa en este contexto."
+       },
+       {
+        "texto": "C) Viabilidad técnica y legal",
+        "justificacion": "Es un distractor. La viabilidad técnica y legal es importante, pero no se considera la justificación crítica completa para la selección de un control en el PIS."
+       },
+       {
+        "texto": "D) Priorización de controles según impacto y probabilidad",
+        "justificacion": "Es correcto. La priorización según impacto y probabilidad es una justificación crítica para la selección de controles en el PIS, según los criterios de RA3."
+       }
+      ],
+      "correcta": 3,
+      "razonamiento": [
+       "El nivel crítico implica evaluar con criterios la selección de controles en el PIS.",
+       "La priorización según impacto y probabilidad permite una asignación eficiente de recursos y mejora la seguridad del sistema."
+      ]
+     }
+    ],
+    "uso": {
+     "prompt_tokens": 1433,
+     "total_tokens": 3400,
+     "completion_tokens": 1967,
+     "prompt_tokens_details": null
+    },
+    "segundos": 63.8,
+    "verificacion": [
+     [],
+     [],
+     [],
+     []
+    ],
+    "revision": [
+     {
+      "respuesta": 0,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 0 (D) 'Uso de encriptación de datos en tránsito' es la correcta, ya que se relaciona directamente con la seguridad de la configuración tecnológica del PIS, que es un componente clave del informe de evaluación de seguridad y viabilidad del entregable. La encriptación de datos en tránsito es un control de seguridad fundamental para proteger la confidencialidad, integridad y disponibilidad de los datos, lo cual es esencial para garantizar la continuidad operativa en un entorno con sistemas vulnerables. Las otras opciones, aunque relevantes en contextos diferentes, no abordan directamente el aspecto de seguridad de la configuración tecnológica requerido en el entregable.",
+      "coincide_con_clave": false,
+      "segundos": 6.9
+     },
+     {
+      "respuesta": 2,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 2 (A) 'Actualización periódica de software' resuelve directamente el entregable 'TAREA 3 – Análisis de un incidente de seguridad digital' y la evidencia del momento, ya que es un control básico de seguridad que se debe evaluar y priorizar en el contexto del PIS. Aunque otras opciones son relevantes, la actualización de software es un control fundamental para mitigar vulnerabilidades identificadas en el PIS.",
+      "coincide_con_clave": true,
+      "segundos": 5.0
+     },
+     {
+      "respuesta": 1,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "La opción 1 (D) 'Actualización periódica de software' es la correcta porque aborda directamente la vulnerabilidad mencionada (falta de actualizaciones). La actualización de software es un control fundamental para corregir vulnerabilidades conocidas y mejorar la seguridad del sistema. Aunque otras opciones como encriptación (A) o detección de intrusiones (B) son relevantes, la opción 1 resuelve directamente la vulnerabilidad específica identificada. El ítem resuelve el entregable 'TAREA 3: análisis de un incidente de seguridad digital del contexto del PIS' al relacionar una vulnerabilidad con un control adecuado.",
+      "coincide_con_clave": false,
+      "segundos": 6.4
+     },
+     {
+      "respuesta": 3,
+      "otra_opcion_defendible": false,
+      "nivel_real": "reflexivo",
+      "resuelve_un_entregable": true,
+      "motivo": "El ítem resuelve el entregable 'Evidencia del momento: informe de evaluación de seguridad de la configuración del PIS' al requerir que los estudiantes prioricen controles según impacto y probabilidad, lo cual es parte del análisis de riesgos y selección de controles en el informe.",
+      "coincide_con_clave": true,
+      "segundos": 3.9
+     }
+    ]
+   }
+  ],
+  "ficha": {
+   "contenido": {
+    "titulo": "FICHA DE ESTUDIO: Clase M3-S1 – Ciberseguridad en Ingeniería y Evaluación de Controles de Seguridad",
+    "objetivo": "Reflexionar sobre la identificación y valoración de riesgos en sistemas de información, y la selección de controles de seguridad aplicables al contexto del PIS, con enfoque en la seguridad digital en el territorio ecuatoriano.",
+    "ideas_clave": [
+     "Identificación de activos, amenazas y vulnerabilidades en sistemas de información.",
+     "Relación entre confidencialidad, integridad y disponibilidad (C-I-D) con riesgos de seguridad.",
+     "Matriz de riesgos: probabilidad vs impacto.",
+     "Selección de controles de seguridad: autenticación, respaldo, actualización, protección de datos.",
+     "Aplicación de controles al contexto del PIS con datos ficticios del territorio ecuatoriano."
+    ],
+    "ejemplo_resuelto": {
+     "situacion": "En el municipio de Ambato, se identificaron 36 sistemas vulnerables en la red municipal de gestión de agua y residuos. El PIS requiere la implementación de controles de seguridad para evitar accesos no autorizados y garantizar la integridad de los datos de monitoreo.",
+     "pasos": [
+      "Identificar activos: sistemas de monitoreo, bases de datos, servidores, usuarios autorizados.",
+      "Identificar amenazas: accesos no autorizados, malware, fallos de seguridad, phishing.",
+      "Identificar vulnerabilidades: falta de autenticación de usuarios, no actualización de sistemas, no protección de datos sensibles.",
+      "Evaluar riesgos: para cada amenaza y vulnerabilidad, definir probabilidad y impacto (ejemplo: acceso no autorizado con probabilidad alta y impacto alto).",
+      "Seleccionar controles: autenticación de usuarios, actualización de sistemas, encriptación de datos, auditoría de accesos."
+     ],
+     "conclusion": "La implementación de controles de seguridad basados en la evaluación de riesgos mejora la confidencialidad, integridad y disponibilidad de los sistemas del PIS en Ambato."
+    },
+    "errores_frecuentes": [
+     "No relacionar las amenazas con los controles específicos (ejemplo: usar autenticación para proteger contra fallos de hardware).",
+     "No evaluar riesgos por probabilidad e impacto, lo que genera priorización incorrecta de controles.",
+     "Ignorar la protección de datos sensibles, lo que compromete la confidencialidad y la legalidad de la información."
+    ],
+    "relacion_con_el_ra": "La actividad refuerza los resultados de aprendizaje RA2 y RA3, ya que implica la evaluación de riesgos y la selección de controles de seguridad aplicables al contexto del PIS, con enfoque en la mejora de procesos de ingeniería mediante tecnologías de la información.",
+    "preguntas_autocomprobacion": [
+     "¿Qué controles de seguridad se deben priorizar en un sistema de monitoreo de agua en Ambato, considerando la probabilidad y el impacto de amenazas como accesos no autorizados? (Correcta: autenticación de usuarios, encriptación de datos, auditoría de accesos).",
+     "¿Cómo se relaciona la integridad de los datos con la protección de sistemas en el PIS? (Correcta: la integridad se garantiza mediante controles como actualización de sistemas y encriptación de datos).",
+     "¿Qué error conceptual se comete al no evaluar riesgos por probabilidad e impacto? (Correcta: se priorizan controles irrelevantes o se ignoran amenazas críticas)."
+    ]
+   },
+   "uso": {
+    "prompt_tokens": 1386,
+    "total_tokens": 2269,
+    "completion_tokens": 883,
+    "prompt_tokens_details": null
+   },
+   "segundos": 33.7
+  }
+ }
+]

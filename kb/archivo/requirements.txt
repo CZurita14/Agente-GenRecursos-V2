@@ -1,0 +1,8 @@
+fastembed>=0.5
+psycopg[binary]>=3.2
+pgvector>=0.3
+PyMuPDF>=1.24
+openpyxl>=3.1
+python-dotenv>=1.0
+PyYAML>=6.0
+defusedxml>=0.7

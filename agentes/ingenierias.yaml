@@ -1,0 +1,42 @@
+# agentes/ingenierias.yaml
+id: ingenierias
+facultad: FING                                     # sigla en kb/catalogo.yaml
+estilo:
+  tipos_de_caso: [datasets, código, arquitectura de sistemas, incidentes de seguridad]
+  software_habitual: [JASP, Numiqo, Git, Visual Studio Code, Canvas]
+  vocabulario: agentes/glosarios/ingenierias.md
+  # Casos concretos que el planificador reparte por ítem; descarta los que se parecen
+  # al entregable del momento (§9.4: mismos contenidos, otros casos y datos).
+  escenarios:
+    - control de calidad de piezas en una línea de producción
+    - consumo energético de los edificios de un campus
+    - tiempos de respuesta de un sistema web
+    - fallas de sensores en una planta de tratamiento de agua
+    - demoras en la entrega de pedidos de una distribuidora
+    - mediciones de resistencia de materiales en un laboratorio
+herramientas_recomendadas:
+  clase: [practica_guiada, cuestionario, ficha_clase, tarjetas]
+  momento: [simulacro, estudio_caso, autoevaluacion_rubrica, repaso_momento, guia_evidencia]
+# Solo lo que cambia frente a la facultad. Las carreras sin entrada usan el
+# estilo de la facultad. Las claves se normalizan al cargar.
+carreras:
+  software:
+    software_habitual: [JASP, Numiqo, Git, Visual Studio Code]
+    escenarios:
+      - tiempos de respuesta de una API REST
+      - fallos de compilación en un repositorio Git
+      - consultas lentas en una base de datos relacional
+      - consumo de memoria de microservicios en contenedores
+      - defectos reportados por versión de una aplicación móvil
+      - tiempos de carga de una tienda en línea
+      - intentos de inicio de sesión fallidos en un portal institucional
+      - cobertura de pruebas automatizadas por módulo
+  tecnologias de la informacion:
+    tipos_de_caso: [incidentes de ciberseguridad, selección de soluciones TI]
+    escenarios:
+      - disponibilidad de servidores en un centro de datos
+      - tickets de soporte técnico por área
+      - uso de licencias de software en una institución
+      - respaldo y restauración de bases de datos
+      - cobertura de la red inalámbrica de un campus
+      - costos de servicios en la nube por mes
