@@ -187,3 +187,25 @@ def test_lista_vacia_quita_todo_y_sga_caido_no_toca_nada(conn, servicio, base):
     assert len(filas(conn)) == 3 and len(servicio.listar(CORREO)) == 2
     sync(conn, servicio, Envoltorio(base, quita={"90001", "90002", "90003"}))
     assert filas(conn) == [] and servicio.listar(CORREO) == []
+
+
+def test_codigo_distinto_al_de_la_materia_es_invalido(conn, servicio, base):
+    def otro(materia, crudo):
+        crudo = json.loads(json.dumps(crudo))
+        crudo["proyecto_formativo"]["codigo"] = "S91-SIMU-3-99999-9999"
+        return crudo
+
+    r = sync(conn, servicio, Envoltorio(base, cambia=otro))
+    assert {m.estado for m in r.materias} == {"invalida"}
+    assert all(m.fallos == ["proyecto_formativo.codigo: no coincide con la materia del SGA"] for m in r.materias)
+    assert conn.execute("select count(*) n from asignatura").fetchone()["n"] == 0
+
+
+def test_exige_autocommit(conn, servicio, base):
+    conn.autocommit = False
+    try:
+        with pytest.raises(ValueError):
+            sync(conn, servicio, base)
+    finally:
+        conn.rollback()
+        conn.autocommit = True

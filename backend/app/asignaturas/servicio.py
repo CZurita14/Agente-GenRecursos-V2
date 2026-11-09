@@ -8,13 +8,12 @@ from app.silabo.menu import clases_cambiadas, construir_menu
 from app.silabo.modelo import SilaboUTI
 
 
-def exigir_acceso(conn, aid, correo, *, editar=False, solo_dueno=False):
+def exigir_acceso(conn, aid, correo, *, editar=False):
     """Requiere transacción externa; retiene a la asignatura hasta terminar la operación.
 
     Una asignatura cuya materia el SGA ya no lista (`activa_sga` falso) se trata como inexistente.
     """
-    bloqueo = "update" if solo_dueno else "share"
-    fila = conn.execute("select * from asignatura where id=%s for " + bloqueo, (aid,)).fetchone()
+    fila = conn.execute("select * from asignatura where id=%s for share", (aid,)).fetchone()
     if fila is None or not fila["activa_sga"]:
         raise HTTPException(404, "Proyecto Formativo inexistente")
     # Nueva sentencia, nueva instantánea READ COMMITTED DESPUÉS de obtener el lock.
@@ -22,7 +21,7 @@ def exigir_acceso(conn, aid, correo, *, editar=False, solo_dueno=False):
     permiso = conn.execute("select rol from asignatura_acceso where asignatura_id=%s and correo=%s",
                            (aid, correo)).fetchone()
     rol = "dueno" if fila["dueno"] == correo else (permiso["rol"] if permiso else None)
-    if rol is None or (solo_dueno and rol != "dueno") or (editar and rol == "lector"):
+    if rol is None or (editar and rol == "lector"):
         raise HTTPException(403, "Sin permiso sobre el Proyecto Formativo")
     return fila, rol
 

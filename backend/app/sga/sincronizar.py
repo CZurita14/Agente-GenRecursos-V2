@@ -45,6 +45,9 @@ def _procesar(conn, proveedor, permiso, materia, correo, servicio) -> MateriaEst
         silabo = cargar_silabo(a_contrato(crudo))
     except SilaboInvalido as e:
         return MateriaEstado(**base, estado="invalida", fallos=list(e.fallos), asignatura_id=previa_id)
+    if silabo.proyecto_formativo.codigo != materia.codigo_pf:
+        return MateriaEstado(**base, estado="invalida", asignatura_id=previa_id,
+                             fallos=["proyecto_formativo.codigo: no coincide con la materia del SGA"])
     if previa and previa["version_silabo"] == silabo.proyecto_formativo.version:
         return MateriaEstado(**base, estado="sin_cambios", asignatura_id=previa_id)
     guardado = servicio.guardar(correo, silabo)
@@ -54,6 +57,8 @@ def _procesar(conn, proveedor, permiso, materia, correo, servicio) -> MateriaEst
 
 def sincronizar(conn, proveedor, identidad, permiso, servicio) -> ResultadoSync:
     """Si el SGA no entrega la lista de materias, el error se propaga y no cambia nada."""
+    if not conn.autocommit:
+        raise ValueError("sincronizar requiere una conexión en autocommit (una transacción por materia)")
     correo = identidad.correo
     lista = proveedor.listar_materias(permiso)
     resultado = []
@@ -73,6 +78,7 @@ def sincronizar(conn, proveedor, identidad, permiso, servicio) -> ResultadoSync:
     with conn.transaction():
         conn.execute("delete from materia_sga where correo=%s and not (id_sga = any(%s))",
                      (correo, [m.id_sga for m in lista]))
+        conn.execute("set local lock_timeout to '2s'")
         codigos = [m.codigo_pf for m in lista]
         conn.execute("update asignatura set activa_sga = (codigo_pf = any(%s)) "
                      "where dueno=%s and activa_sga is distinct from (codigo_pf = any(%s))",
