@@ -9,6 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 from fastapi import HTTPException
 
+from tests.acceso import dar_acceso, quitar_acceso
 from app.api.aplicacion import crear_app
 from app.auth.servicio import ServicioAuth
 from app.config import Ajustes
@@ -66,10 +67,6 @@ def guardar(c, aid, recurso, contenido=None, **kw):
     return c.put(f"/asignaturas/{aid}/recursos/{recurso['id']}", json=datos, headers=HEADERS)
 
 
-def compartir(d, aid, correo, rol):
-    return d.post(f"/asignaturas/{aid}/compartir", json={"correo": correo, "rol": rol}, headers=HEADERS)
-
-
 def test_catalogo_solo_workers_disponibles_y_orden_de_facultad(entorno):
     _, _, d, aid, _ = entorno
     r = d.get(f"/asignaturas/{aid}/herramientas?ambito=clase")
@@ -109,11 +106,11 @@ def test_perfil_elegido_llega_al_worker_y_a_evidencia(entorno):
     assert r["revision"] == 0 and r["evidencia_vigente"] is True
 
 
-def test_lector_consulta_pero_no_genera_ni_edita(entorno):
+def test_lector_consulta_pero_no_genera_ni_edita(entorno, conn):
     _, cliente, d, aid, producir = entorno
     recurso = producir()
     l = cliente("lector@uti.edu.ec")
-    compartir(d, aid, "lector@uti.edu.ec", "lector")
+    dar_acceso(conn, aid, "lector@uti.edu.ec", "lector")
     for ruta in ("herramientas", "trabajos", "recursos", f"recursos/{recurso['id']}"):
         assert l.get(f"/asignaturas/{aid}/{ruta}").status_code == 200
     assert generar(l, aid).status_code == 403
@@ -124,7 +121,7 @@ def test_editor_genera_y_edita_con_historial_y_evidencia_original(entorno, conn)
     _, cliente, d, aid, producir = entorno
     recurso = producir()
     editor = cliente("editor@uti.edu.ec")
-    compartir(d, aid, "editor@uti.edu.ec", "editor")
+    dar_acceso(conn, aid, "editor@uti.edu.ec", "editor")
     assert generar(editor, aid).status_code == 202
     contenido = deepcopy(recurso["contenido"])
     contenido[0]["contexto"] += " La empresa utiliza mediciones ficticias adicionales."
@@ -224,12 +221,12 @@ def test_editar_usa_snapshot_aunque_silabo_actual_cambie(entorno, silabo):
     assert guardar(d, aid, recurso).status_code == 200
 
 
-def test_retirada_de_editor_impide_generar_y_editar(entorno):
+def test_retirada_de_editor_impide_generar_y_editar(entorno, conn):
     _, cliente, d, aid, producir = entorno
     recurso = producir()
     editor = cliente("editor@uti.edu.ec")
-    compartir(d, aid, "editor@uti.edu.ec", "editor")
-    assert d.delete(f"/asignaturas/{aid}/compartir/editor@uti.edu.ec", headers=HEADERS).status_code == 204
+    dar_acceso(conn, aid, "editor@uti.edu.ec", "editor")
+    quitar_acceso(conn, aid, "editor@uti.edu.ec")
     assert generar(editor, aid).status_code == 403
     assert guardar(editor, aid, recurso).status_code == 403
 

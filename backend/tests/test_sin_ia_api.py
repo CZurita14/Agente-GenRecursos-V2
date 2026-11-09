@@ -1,6 +1,7 @@
 """P3a por HTTP: herramientas sin IA generadas al instante, sin cola ni modelo."""
 from app.silabo.modelo import SilaboUTI
-from tests.test_generacion_api import HEADERS, compartir, entorno, generar, guardar  # noqa: F401
+from tests.acceso import dar_acceso
+from tests.test_generacion_api import HEADERS, entorno, generar, guardar  # noqa: F401
 
 
 def _sin_ia(c, aid, herramientas, tipo, ambito_id):
@@ -72,9 +73,9 @@ def test_silabo_actualizado_en_recurso_sin_ia(entorno, silabo):
     assert d.get(f"/asignaturas/{aid}/recursos/{m3['id']}").json()["silabo_actualizado"] is False
 
 
-def test_lector_no_genera_sin_ia(entorno):
+def test_lector_no_genera_sin_ia(entorno, conn):
     _, cliente, d, aid, _ = entorno
-    assert compartir(d, aid, "lector@uti.edu.ec", "lector").status_code in (200, 201)
+    dar_acceso(conn, aid, "lector@uti.edu.ec", "lector")
     lector = cliente("lector@uti.edu.ec")
     assert _sin_ia(lector, aid, ["hoja_ruta"], "asignatura", "asignatura").status_code == 403
     r = _sin_ia(d, aid, ["hoja_ruta"], "asignatura", "asignatura")

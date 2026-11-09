@@ -102,7 +102,7 @@ def test_auditoria_no_guarda_cuerpo_url_query_cookie_ip_ni_correo(entorno, conn)
     c = cliente(correo="docente@uti.edu.ec")
     token = c.cookies.get("sesion")
     c.get("/auth/yo?secreto=CANARIO-QUERY")
-    c.post("/asignaturas/no-uuid/compartir", json={"correo": "secreto@uti.edu.ec", "canario": "CANARIO-CUERPO"},
+    c.post("/asignaturas/no-uuid/generar", json={"correo": "secreto@uti.edu.ec", "canario": "CANARIO-CUERPO"},
            headers={"Origin": ORIGEN})
     filas = conn.execute("select * from acceso_api").fetchall()
     assert filas and all(f["estado"] in (200, 422) for f in filas)

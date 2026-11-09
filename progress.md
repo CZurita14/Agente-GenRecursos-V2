@@ -2,7 +2,7 @@
 
 > **Para qué sirve:** es la memoria del proyecto V2. Al retomar, **se lee primero este archivo** y solo después, si hace falta, el documento puntual que enlaza.
 >
-> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 3.
+> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 4.
 
 ## Cómo se actualiza
 
@@ -34,7 +34,7 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
 | 0 | Copia limpia y `progress.md` | ✅ hecha |
 | 1 | Contrato en el código e integridad | ✅ hecha |
 | 2 | Proveedor SGA, traductor, SGA simulado y esquemas de materias y autenticación | ✅ hecha |
-| 3 | Sincronización de materias y sílabos | ⬜ pendiente |
+| 3 | Sincronización de materias y sílabos | ✅ hecha |
 | 4 | Ingreso con el SGA | ⬜ pendiente |
 | 5 | API de materias y eliminación del PDF | ⬜ pendiente |
 | 6 | Frontend | ⬜ pendiente |
@@ -57,6 +57,10 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
   - La clave del SGA no se guarda: se sincroniza todo al ingresar.
   - El acceso lo define solo el SGA, así que se quita «compartir».
   - Un sílabo por código PF, compartido entre paralelos.
+- **2026-11-09:**
+  - Se elimina «compartir» (servicio, endpoints, ruta de auditoría y modelo); la tabla `asignatura_acceso` y los roles se conservan.
+  - `asignatura.activa_sga` (migración `009_sga.sql`): al sincronizar, una asignatura cuya materia el SGA ya no lista queda inactiva (404 y fuera del listado); nunca se borra y vuelve si la materia regresa.
+  - Una asignatura por `(docente, codigo_pf)`: dos paralelos son dos filas de `materia_sga` apuntando a la misma.
 - **2026-11-09:** El contrato también define los JSON de la lista de materias y de la autenticación (Tarea 2).
 
 ## Bitácora (lo ya hecho)
@@ -69,6 +73,7 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
   - Con `.venv-ciencia`, `-m modelo` en `test_razonador.py` + `test_cd_*.py`: 10 pasan. Frontend: 25 pasan.
 - **Tarea 1:** `SilaboUTI` acepta el contrato JSON (9 campos pasan a opcionales) y `app/silabo/integridad.py` añade `cargar_silabo` y `SilaboInvalido` con fallos `ruta: regla` sin valores. Pruebas: `test_contrato.py` 11 nuevas; suite estándar 1227 pasan, 23 se saltan (1216 + 11 nuevas).
 - **Tarea 2:** `app/sga/` (interfaz `ProveedorSGA`, traductor de lista blanca, SGA simulado con fixtures `S91-SIMU-…`, real pendiente de TI), esquemas `materias-api` y `auth-sga` con ejemplos, y 3 campos en la configuración. Sin `jsonschema`: las pruebas leen las claves de los esquemas. Pruebas: `test_sga_proveedor.py` 22 nuevas; suite estándar 1249 pasan, 23 se saltan (1227 + 22 nuevas).
+- **Tarea 3:** `app/sga/sincronizar.py` y migración `009_sga.sql` (`materia_sga`, `asignatura.activa_sga`); una transacción por materia, estados `importada/sin_cambios/no_disponible/invalida`. Se quita «compartir». Pruebas: `test_sga_sincronizar.py` 10 nuevas, 3 nuevas y 4 borradas de «compartir» en `test_asignaturas_api.py`; suite estándar 1259 pasan, 23 se saltan (1249 + 10).
 
 ---
 

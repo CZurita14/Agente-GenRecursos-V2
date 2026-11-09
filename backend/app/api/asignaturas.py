@@ -1,21 +1,14 @@
 """Subida binaria acotada y rutas de asignaturas; no se conserva el PDF."""
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Literal
 from uuid import UUID
 
 import anyio
-from fastapi import APIRouter, HTTPException, Request, Response
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, HTTPException, Request
 from starlette.concurrency import run_in_threadpool
 from starlette.requests import ClientDisconnect
 
 router = APIRouter()
-
-
-class Compartir(BaseModel):
-    correo: str = Field(max_length=254)
-    rol: Literal["editor", "lector"]
 
 
 @router.post("/silabos", status_code=201)
@@ -76,13 +69,3 @@ def listar(request: Request):
 def menu(asig: UUID, request: Request):
     return request.app.state.asignaturas.menu(asig, request.state.usuario)
 
-
-@router.post("/asignaturas/{asig}/compartir")
-def compartir(asig: UUID, datos: Compartir, request: Request):
-    return request.app.state.asignaturas.compartir(asig, request.state.usuario, datos.correo, datos.rol)
-
-
-@router.delete("/asignaturas/{asig}/compartir/{correo:path}", status_code=204)
-def retirar(asig: UUID, correo: str, request: Request):
-    request.app.state.asignaturas.retirar(asig, request.state.usuario, correo)
-    return Response(status_code=204)

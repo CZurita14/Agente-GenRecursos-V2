@@ -4,7 +4,7 @@ def test_crea_tablas(conn):
     ).fetchall()
     nombres = {f["table_name"] for f in filas}
     assert {"facultad", "carrera", "asignatura", "trabajo", "mensaje",
-            "llamada_llm", "recurso", "migracion"} <= nombres
+            "llamada_llm", "recurso", "migracion", "materia_sga"} <= nombres
 
 
 def test_idempotente(conn):

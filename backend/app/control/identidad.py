@@ -65,7 +65,6 @@ _RUTAS = [
     (r"/asignaturas/[^/]+/recursos/[^/]+", "recurso"),
     (r"/asignaturas/[^/]+/recursos/[^/]+/validar", "recurso.validar"),
     (r"/asignaturas/[^/]+/recursos/[^/]+/exportar", "recurso.exportar"),
-    (r"/asignaturas/[^/]+/compartir(?:/.*)?", "compartir"),
 ]
 
 

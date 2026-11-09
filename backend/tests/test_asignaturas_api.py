@@ -11,6 +11,7 @@ from app.auth.servicio import ServicioAuth
 from app.config import Ajustes
 from app.silabo.lector import SilaboIlegible
 from app.asignaturas.servicio import exigir_acceso
+from tests.acceso import dar_acceso, quitar_acceso
 
 ORIGEN = "https://materiales.example"
 
@@ -44,11 +45,6 @@ def subir(c):
                   headers={"Content-Type": "application/pdf", "Origin": ORIGEN})
 
 
-def compartir(c, aid, correo, rol="lector"):
-    return c.post(f"/asignaturas/{aid}/compartir", json={"correo": correo, "rol": rol},
-                  headers={"Origin": ORIGEN})
-
-
 def test_subir_devuelve_agente_y_menu_y_elimina_pdf(entorno, conn):
     app, cliente, rutas = entorno
     with cliente("dueno@uti.edu.ec") as c:
@@ -74,34 +70,38 @@ def test_no_hay_acceso_cruzado_entre_duenos(entorno):
         assert dos.get(f"/asignaturas/{a}/menu").status_code == 403
 
 
-def test_compartir_lector_editor_y_retirar(entorno):
+def test_lector_y_editor_ven_el_menu_con_su_rol(entorno, conn):
     _, cliente, _ = entorno
     with cliente("dueno@uti.edu.ec") as d, cliente("lector@uti.edu.ec") as l, cliente("editor@uti.edu.ec") as e:
         aid = subir(d).json()["id"]
-        assert compartir(d, aid, "lector@uti.edu.ec").status_code == 200
-        assert compartir(d, aid, "editor@uti.edu.ec", "editor").status_code == 200
+        dar_acceso(conn, aid, "lector@uti.edu.ec", "lector")
+        dar_acceso(conn, aid, "editor@uti.edu.ec", "editor")
         assert l.get(f"/asignaturas/{aid}/menu").status_code == 200
         assert e.get(f"/asignaturas/{aid}/menu").status_code == 200
         assert l.get("/asignaturas").json()[0]["rol"] == "lector"
         assert e.get("/asignaturas").json()[0]["rol"] == "editor"
-        assert compartir(l, aid, "tercero@uti.edu.ec").status_code == 403
-        assert compartir(e, aid, "tercero@uti.edu.ec").status_code == 403
-        r = l.delete(f"/asignaturas/{aid}/compartir/editor@uti.edu.ec", headers={"Origin": ORIGEN})
-        assert r.status_code == 403
-        assert d.delete(f"/asignaturas/{aid}/compartir/lector@uti.edu.ec", headers={"Origin": ORIGEN}).status_code == 204
+        quitar_acceso(conn, aid, "lector@uti.edu.ec")
         assert l.get(f"/asignaturas/{aid}/menu").status_code == 403
         assert l.get("/asignaturas").json() == []
         assert e.get(f"/asignaturas/{aid}/menu").status_code == 200
 
 
-@pytest.mark.parametrize("correo,rol,codigo", [("a@gmail.com", "lector", 403),
-    ("a@uti.edu.ec", "dueno", 422), ("dueno@uti.edu.ec", "lector", 422)])
-def test_compartir_valida_correo_rol_y_no_degrada_dueno(entorno, correo, rol, codigo):
+def test_ya_no_se_puede_compartir_por_la_api(entorno):
     _, cliente, _ = entorno
     with cliente("dueno@uti.edu.ec") as d:
         aid = subir(d).json()["id"]
-        assert compartir(d, aid, correo, rol).status_code == codigo
-        assert d.get("/asignaturas").json()[0]["rol"] == "dueno"
+        r = d.post(f"/asignaturas/{aid}/compartir", json={"correo": "lector@uti.edu.ec", "rol": "lector"},
+                   headers={"Origin": ORIGEN})
+        assert r.status_code in (404, 405)
+
+
+def test_asignatura_inactiva_en_el_sga_es_inexistente(entorno, conn):
+    _, cliente, _ = entorno
+    with cliente("dueno@uti.edu.ec") as d:
+        aid = subir(d).json()["id"]
+        conn.execute("update asignatura set activa_sga=false where id=%s", (aid,))
+        assert d.get(f"/asignaturas/{aid}/menu").status_code == 404
+        assert d.get("/asignaturas").json() == []
 
 
 def test_asignatura_inexistente_o_uuid_invalido(entorno):
@@ -111,11 +111,11 @@ def test_asignatura_inexistente_o_uuid_invalido(entorno):
         assert d.get("/asignaturas/no-uuid/menu").status_code == 422
 
 
-def test_reemplazo_silabo_mismo_dueno_conserva_id_y_compartidos(entorno, silabo):
+def test_reemplazo_silabo_mismo_dueno_conserva_id_y_compartidos(entorno, silabo, conn):
     app, cliente, rutas = entorno
     with cliente("dueno@uti.edu.ec") as d:
         aid = subir(d).json()["id"]
-        compartir(d, aid, "lector@uti.edu.ec")
+        dar_acceso(conn, aid, "lector@uti.edu.ec", "lector")
         r = subir(d)
         assert r.json()["id"] == aid and r.json()["clases_cambiadas"] == []
         nuevo = silabo.model_copy(update={"proyecto_formativo": silabo.proyecto_formativo.model_copy(update={"version": "nueva"})})
@@ -194,8 +194,8 @@ def test_guardia_de_escritura_deniega_lector_y_permiso_retirado(entorno, conn):
     _, cliente, _ = entorno
     with cliente("dueno@uti.edu.ec") as d:
         aid = subir(d).json()["id"]
-        compartir(d, aid, "editor@uti.edu.ec", "editor")
-        compartir(d, aid, "lector@uti.edu.ec", "lector")
+        dar_acceso(conn, aid, "editor@uti.edu.ec", "editor")
+        dar_acceso(conn, aid, "lector@uti.edu.ec", "lector")
         with conn.transaction():
             assert exigir_acceso(conn, aid, "dueno@uti.edu.ec", editar=True)[1] == "dueno"
             assert exigir_acceso(conn, aid, "editor@uti.edu.ec", editar=True)[1] == "editor"
@@ -203,7 +203,7 @@ def test_guardia_de_escritura_deniega_lector_y_permiso_retirado(entorno, conn):
             with pytest.raises(HTTPException) as exc, conn.transaction():
                 exigir_acceso(conn, aid, correo, editar=True)
             assert exc.value.status_code == 403
-        compartir(d, aid, "editor@uti.edu.ec", "lector")
+        dar_acceso(conn, aid, "editor@uti.edu.ec", "lector")
         with pytest.raises(HTTPException) as exc, conn.transaction():
             exigir_acceso(conn, aid, "editor@uti.edu.ec", editar=True)
         assert exc.value.status_code == 403

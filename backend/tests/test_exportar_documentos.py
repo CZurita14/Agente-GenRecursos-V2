@@ -8,7 +8,8 @@ from app.exportar.documento import exportar_documento, FormulaInvalida
 from app.silabo.contexto import contexto_clase
 from tests.test_exportar_html import _item, _recurso
 from tests.test_exportar_html import entorno  # noqa: F401
-from tests.test_generacion_api import HEADERS, compartir
+from tests.acceso import dar_acceso
+from tests.test_generacion_api import HEADERS
 
 
 @pytest.mark.parametrize('formato', ['pdf', 'docx'])
@@ -99,11 +100,11 @@ def test_tablas_y_texto_literal(silabo, formato):
 
 
 @pytest.mark.parametrize('formato', ['html', 'pdf', 'docx'])
-def test_lector_descarga_solo_validado_y_pertenencia(entorno, silabo, formato):
+def test_lector_descarga_solo_validado_y_pertenencia(entorno, silabo, formato, conn):
     app, clientes, d, aid, producir = entorno
     recurso = producir()
     lector = clientes('lector@uti.edu.ec')
-    assert compartir(d, aid, 'lector@uti.edu.ec', 'lector').status_code == 200
+    dar_acceso(conn, aid, 'lector@uti.edu.ec', 'lector')
     url = f"/asignaturas/{aid}/recursos/{recurso['id']}/exportar?formato={formato}"
     assert lector.get(url).status_code == 409
     assert d.post(f"/asignaturas/{aid}/recursos/{recurso['id']}/validar", json={'revision': recurso['revision']}, headers=HEADERS).status_code == 200
@@ -143,7 +144,7 @@ def test_caso_del_estudiante_sin_respuesta_orientativa(silabo, formato):
     assert 'ORIENTATIVA-OCULTA' in docente
 
 
-def test_respuestas_solo_para_quien_edita(entorno):
+def test_respuestas_solo_para_quien_edita(entorno, conn):
     _, clientes, d, aid, producir = entorno
     recurso = producir()
     base = f"/asignaturas/{aid}/recursos/{recurso['id']}/exportar?formato=pdf"
@@ -153,18 +154,18 @@ def test_respuestas_solo_para_quien_edita(entorno):
     assert r.status_code == 200 and 'Respuestas%20-%20' in r.headers['content-disposition']
     assert d.get(f"/asignaturas/{aid}/recursos/{recurso['id']}/exportar?formato=html&version=docente").status_code == 422
     lector = clientes('lector@uti.edu.ec')
-    assert compartir(d, aid, 'lector@uti.edu.ec', 'lector').status_code == 200
+    dar_acceso(conn, aid, 'lector@uti.edu.ec', 'lector')
     assert lector.get(base).status_code == 200 and lector.get(base + '&version=docente').status_code == 403
     assert d.get(base + '&version=otra').status_code == 422
 
 
-def test_lector_no_recibe_respuestas_al_abrir_el_recurso(entorno):
+def test_lector_no_recibe_respuestas_al_abrir_el_recurso(entorno, conn):
     """La misma regla que la descarga: la API no entrega por otra ruta lo que la descarga protege."""
     _, clientes, d, aid, producir = entorno
     recurso = producir()
     url = f"/asignaturas/{aid}/recursos/{recurso['id']}"
     lector = clientes('lector@uti.edu.ec')
-    assert compartir(d, aid, 'lector@uti.edu.ec', 'lector').status_code == 200
+    dar_acceso(conn, aid, 'lector@uti.edu.ec', 'lector')
     visto = lector.get(url)
     assert visto.status_code == 200
     item = visto.json()['contenido'][0]

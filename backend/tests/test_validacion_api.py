@@ -1,5 +1,6 @@
 """P6b T1: el docente valida el recurso; una edición posterior anula la validación."""
-from tests.test_generacion_api import HEADERS, compartir, entorno, guardar  # noqa: F401
+from tests.acceso import dar_acceso
+from tests.test_generacion_api import HEADERS, entorno, guardar  # noqa: F401
 
 
 def _validar(c, aid, recurso, revision=None):
@@ -17,10 +18,10 @@ def test_validar_y_detalle(entorno):
     assert r.json()["validado_en"] is not None
 
 
-def test_lector_no_valida(entorno):
+def test_lector_no_valida(entorno, conn):
     _, cliente, d, aid, producir = entorno
     recurso = producir()
-    compartir(d, aid, "lector@uti.edu.ec", "lector")
+    dar_acceso(conn, aid, "lector@uti.edu.ec", "lector")
     assert _validar(cliente("lector@uti.edu.ec"), aid, recurso).status_code == 403
 
 

@@ -4,7 +4,8 @@ from uuid import uuid4
 import pytest
 
 from app.agentes.orquestador import procesar_uno
-from tests.test_generacion_api import HEADERS, entorno, compartir
+from tests.acceso import dar_acceso, quitar_acceso
+from tests.test_generacion_api import HEADERS, entorno
 from tests.test_coordinador import cliente_revisor
 
 
@@ -15,7 +16,7 @@ def enviar(d, aid, recurso=None, **extra):
     return d.post(f'/asignaturas/{aid}/chat', json=cuerpo, headers=HEADERS)
 
 
-def test_encolado_privado_deduplicado_y_cuota(entorno):
+def test_encolado_privado_deduplicado_y_cuota(entorno, conn):
     _, clientes, d, aid, producir = entorno
     r = producir()
     clave = str(uuid4())
@@ -25,7 +26,7 @@ def test_encolado_privado_deduplicado_y_cuota(entorno):
     assert enviar(d,aid,r,peticion_id=clave).json()['id'] == p.json()['id']
     assert enviar(d,aid,r,peticion_id=clave,mensaje='Otro pedido').status_code == 409
     e = clientes('editor@uti.edu.ec')
-    assert compartir(d,aid,'editor@uti.edu.ec','editor').status_code == 200
+    dar_acceso(conn,aid,'editor@uti.edu.ec','editor')
     assert e.get(f'/asignaturas/{aid}/chat').json()['pedidos'] == []
     assert e.get(f"/asignaturas/{aid}/chat/{p.json()['id']}").status_code == 404
     assert all(x['herramienta'] != 'chat' for x in d.get(f'/asignaturas/{aid}/trabajos').json())
@@ -34,11 +35,11 @@ def test_encolado_privado_deduplicado_y_cuota(entorno):
     assert enviar(d,aid,r).status_code == 429
 
 
-def test_validacion_revision_y_lector(entorno):
+def test_validacion_revision_y_lector(entorno, conn):
     _, clientes, d, aid, producir = entorno
     r = producir()
     l = clientes('lector@uti.edu.ec')
-    compartir(d,aid,'lector@uti.edu.ec','lector')
+    dar_acceso(conn,aid,'lector@uti.edu.ec','lector')
     assert enviar(l,aid,r).status_code == 403
     assert l.get(f'/asignaturas/{aid}/chat').status_code == 403
     assert enviar(d,aid,r,revision=100).status_code == 409
@@ -153,14 +154,14 @@ def test_concurrencia_durante_modelo_no_publica(entorno,conn,monkeypatch,revocar
     app, clientes, d, aid, producir = entorno
     r = producir()
     editor = clientes('editor@uti.edu.ec')
-    compartir(d,aid,'editor@uti.edu.ec','editor')
+    dar_acceso(conn,aid,'editor@uti.edu.ec','editor')
     _interpretar(monkeypatch, {'accion':'ajustar_recurso','mensaje_al_docente':'Ajustaré la primera pregunta.',
                   'recurso_id':r['id'],'items':[r['contenido'][0]['item_id']],'rutas':[],'instrucciones':'Precisar'})
     nuevo = deepcopy(r['contenido'])
     nuevo[0]['pregunta'] = '¿Qué método debe emplearse para analizar este conjunto de observaciones?'
     def durante(*args,**kw):
         if revocar:
-            assert d.delete(f'/asignaturas/{aid}/compartir/editor@uti.edu.ec', headers=HEADERS).status_code==204
+            quitar_acceso(conn,aid,'editor@uti.edu.ec')
         else:
             assert d.put(f"/asignaturas/{aid}/recursos/{r['id']}",json={'revision':0,'contenido':nuevo},headers=HEADERS).status_code==200
         return nuevo,{}, {'veredictos':[]}

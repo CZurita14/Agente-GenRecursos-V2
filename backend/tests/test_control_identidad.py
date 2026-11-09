@@ -44,7 +44,8 @@ def test_no_se_puede_confiar_en_todo_internet(red):
 
 
 def test_etiquetas_no_devuelven_parametros_dinamicos():
-    assert operacion_segura("/asignaturas/UUID-PRIVADO/compartir/correo@uti.edu.ec") == "compartir"
+    assert operacion_segura("/asignaturas/UUID-PRIVADO/menu") == "asignaturas.menu"
+    assert operacion_segura("/asignaturas/UUID-PRIVADO/compartir/correo@uti.edu.ec") == "desconocida"
     assert operacion_segura("/asignaturas/UUID-PRIVADO/recursos/RID-PRIVADO") == "recurso"
     assert operacion_segura("/ruta/CANARIO-PRIVADO") == "desconocida"
 
