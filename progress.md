@@ -2,7 +2,7 @@
 
 > **Para qué sirve:** es la memoria del proyecto V2. Al retomar, **se lee primero este archivo** y solo después, si hace falta, el documento puntual que enlaza.
 >
-> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 1.
+> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 2.
 
 ## Cómo se actualiza
 
@@ -32,7 +32,7 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
 | # | Tarea | Estado |
 |---|---|---|
 | 0 | Copia limpia y `progress.md` | ✅ hecha |
-| 1 | Contrato en el código e integridad | ⬜ pendiente |
+| 1 | Contrato en el código e integridad | ✅ hecha |
 | 2 | Proveedor SGA, traductor, SGA simulado y esquemas de materias y autenticación | ⬜ pendiente |
 | 3 | Sincronización de materias y sílabos | ⬜ pendiente |
 | 4 | Ingreso con el SGA | ⬜ pendiente |
@@ -67,10 +67,11 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
   - Los planes P1–P10 quedan en V1. `progress.md` es nuevo.
   - Pruebas (`-m "not servidor and not modelo"`): 1216 pasan y 23 se saltan solo porque piden un PDF de `Silabos/`, que no se versiona (1216 + 23 = 1239, igual que V1). 14 deseleccionadas.
   - Con `.venv-ciencia`, `-m modelo` en `test_razonador.py` + `test_cd_*.py`: 10 pasan. Frontend: 25 pasan.
+- **Tarea 1:** `SilaboUTI` acepta el contrato JSON (9 campos pasan a opcionales) y `app/silabo/integridad.py` añade `cargar_silabo` y `SilaboInvalido` con fallos `ruta: regla` sin valores. Pruebas: `test_contrato.py` 11 nuevas; suite estándar 1227 pasan, 23 se saltan (1216 + 11 nuevas).
 
 ---
 
 ## Siguiente paso
 
-1. Tarea 1: contrato en el código y validación de integridad.
+1. Tarea 2: proveedor SGA, traductor, SGA simulado y esquemas de materias y autenticación.
 2. Pedir a TI lo del bloqueo B-SGA1.

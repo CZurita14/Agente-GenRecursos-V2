@@ -42,11 +42,11 @@ class ProyectoFormativo(_Base):
     codigo: str
     version: str
     aprobado: date
-    uoc: str
+    uoc: str = ""
     nivel: int
-    modalidad: str
-    creditos: float
-    horas: HorasPF
+    modalidad: str = ""
+    creditos: float | None = None
+    horas: HorasPF | None = None
     horario: list[FranjaHorario] = Field(default_factory=list)
 
 
@@ -74,12 +74,12 @@ class FilaRubrica(_Base):
 
 class Actividad(_Base):
     texto: str
-    horas: float
+    horas: float | None = None
 
 
 class ActividadDocente(_Base):
     texto: str
-    horas: float
+    horas: float | None = None
     asincronica: Actividad | None = None
 
 
@@ -102,7 +102,7 @@ class Momento(_Base):
     fecha_fin: date
     ra: list[str]
     evidencia: str
-    recursos: str
+    recursos: str = ""
     politica_ia: str
     rubrica: list[FilaRubrica]
     sesiones: list[Sesion]
@@ -120,11 +120,11 @@ class SilaboUTI(_Base):
     proyecto_formativo: ProyectoFormativo
     competencia_perfil: str = ""
     competencia_pf: str = ""
-    metacompetencia: str
+    metacompetencia: str = ""
     resultados_aprendizaje: list[ResultadoAprendizaje]
     problema: Problema
-    pis: Pis
-    metodologias: list[str]
+    pis: Pis | None = None
+    metodologias: list[str] = Field(default_factory=list)
     momentos: list[Momento] = Field(min_length=1)
     rubrica_producto_final: list[FilaRubrica] = Field(default_factory=list)
     bibliografia: Bibliografia = Field(default_factory=Bibliografia)
