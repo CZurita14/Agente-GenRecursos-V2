@@ -153,3 +153,12 @@ def test_worker_carga_una_vez_y_entrega_la_instancia_a_los_consumidores(monkeypa
     assert len(cargas) == 1
     assert recibidos and all(r is falso for r in recibidos)
     assert "v-prueba" in caplog.text and str(tmp_path) not in caplog.text
+
+
+def test_produccion_rechaza_el_sga_simulado():
+    produccion = dict(BASE, api_origen="https://materiales.example", entorno="produccion",
+                      auth_secreto="abcdefgh" * 5, administradores=["admin@uti.edu.ec"])
+    with pytest.raises(ValueError, match="simulado"):
+        validar_configuracion(Ajustes(**produccion, sga_proveedor="simulado"))
+    validar_configuracion(Ajustes(**produccion, sga_proveedor="real"))
+    validar_configuracion(Ajustes(**DESARROLLO, sga_proveedor="simulado"))

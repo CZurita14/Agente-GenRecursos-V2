@@ -32,6 +32,8 @@ def validar_configuracion(config):
             or not config.api_origen.startswith('https://')
             or not config.administradores):
         raise ValueError('Configuración de producción incompleta')
+    if config.sga_proveedor == 'simulado':
+        raise ValueError('SGA_PROVEEDOR=simulado no se permite en producción')
 
 
 def _ruta_razonador(config) -> Path:

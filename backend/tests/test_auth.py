@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 import logging
 from pathlib import Path
+import time
 
 import pytest
 from fastapi.testclient import TestClient
@@ -12,7 +13,7 @@ from app.api.aplicacion import crear_app
 from app.asignaturas.servicio import ServicioAsignaturas
 from app.auth.servicio import AuthError, ServicioAuth, normalizar_correo
 from app.config import RAIZ, Ajustes
-from app.sga import SGANoDisponible
+from app.sga import SGAError, SGANoDisponible
 from app.sga.simulado import ProveedorSimulado
 
 CORREO = "docente@uti.edu.ec"
@@ -26,6 +27,13 @@ CANARIO = "CANARIO-CLAVE-ERRADA-7731"
 class SGACaido(ProveedorSimulado):
     def autenticar(self, usuario, clave):
         raise SGANoDisponible("SGA caído")
+
+
+class SGAFalla(ProveedorSimulado):
+    """Otra subclase de SGAError distinta de SGANoDisponible."""
+
+    def autenticar(self, usuario, clave):
+        raise SGAError("falla del SGA")
 
 
 class SyncRota(ProveedorSimulado):
@@ -137,6 +145,56 @@ def test_fallos_concurrentes_se_acumulan(auth, conn):
     assert conn.execute("select intentos from auth_bloqueo").fetchone()["intentos"] == 5
 
 
+def test_diez_fallos_con_contencion_real_dejan_el_usuario_bloqueado(auth, conn, reloj):
+    """Retiene la fila hasta ver a todos los competidores esperando el candado; el 6.º no puede limpiar el bloqueo."""
+    cantidad = 10
+    clave_u = auth._clave_bloqueo(USUARIO)
+    conn.execute("insert into auth_bloqueo (usuario) values (%s)", (clave_u,))
+
+    def fallar(_):
+        try:
+            auth.ingresar(USUARIO, "mala")
+        except AuthError as exc:
+            return exc.codigo
+
+    with ThreadPoolExecutor(max_workers=cantidad) as pool:
+        with conn.transaction():
+            conn.execute("select * from auth_bloqueo where usuario=%s for update", (clave_u,))
+            futuros = [pool.submit(fallar, i) for i in range(cantidad)]
+            limite, esperando = time.monotonic() + 4, 0
+            while time.monotonic() < limite and esperando < cantidad:
+                conn.execute("select pg_stat_clear_snapshot()")
+                esperando = conn.execute("select count(*) n from pg_stat_activity where wait_event_type='Lock' "
+                                         "and pid<>pg_backend_pid()").fetchone()["n"]
+                time.sleep(0.01)
+            assert esperando == cantidad
+        codigos = [f.result(timeout=10) for f in futuros]
+    assert sorted(codigos) == [401] * 4 + [429] * 6
+    fila = conn.execute("select * from auth_bloqueo").fetchone()
+    assert fila["bloqueado_hasta"] is not None and fila["bloqueado_hasta"] > reloj[0] and fila["intentos"] == 5
+    with pytest.raises(AuthError) as exc:
+        auth.ingresar(USUARIO, CLAVE)
+    assert exc.value.codigo == 429
+
+
+def test_un_exito_en_vuelo_no_abre_sesion_si_otro_intento_bloqueo(nueva_conexion, asignaturas, conn):
+    """Un intento correcto que empezó antes del bloqueo no abre sesión si el usuario quedó bloqueado."""
+    class Lento(ProveedorSimulado):
+        def autenticar(self, usuario, clave):
+            resultado = super().autenticar(usuario, clave)
+            for _ in range(5):  # Mientras este intento sigue en vuelo, otros cinco bloquean al usuario.
+                with pytest.raises(AuthError):
+                    otro.ingresar(usuario, "mala")
+            return resultado
+
+    servicio = ServicioAuth(nueva_conexion, "s" * 48, Lento(SGA), asignaturas)
+    otro = ServicioAuth(nueva_conexion, "s" * 48, ProveedorSimulado(SGA), asignaturas)
+    with pytest.raises(AuthError) as exc:
+        servicio.ingresar(USUARIO, CLAVE)
+    assert exc.value.codigo == 429
+    assert conn.execute("select count(*) n from auth_sesion").fetchone()["n"] == 0
+
+
 def test_sga_caido_da_503_sin_sesion_ni_fallo_contado(nueva_conexion, asignaturas, conn):
     servicio = ServicioAuth(nueva_conexion, "s" * 48, SGACaido(SGA), asignaturas)
     for _ in range(6):
@@ -144,7 +202,28 @@ def test_sga_caido_da_503_sin_sesion_ni_fallo_contado(nueva_conexion, asignatura
             servicio.ingresar(USUARIO, CLAVE)
         assert exc.value.codigo == 503
     assert conn.execute("select count(*) n from auth_sesion").fetchone()["n"] == 0
-    assert conn.execute("select count(*) n from auth_bloqueo").fetchone()["n"] == 0
+    assert conn.execute("select coalesce(sum(intentos),0) n from auth_bloqueo").fetchone()["n"] == 0
+
+
+def test_otro_error_del_sga_da_503_y_no_cuenta(nueva_conexion, asignaturas, conn):
+    servicio = ServicioAuth(nueva_conexion, "s" * 48, SGAFalla(SGA), asignaturas)
+    for _ in range(7):
+        with pytest.raises(AuthError) as exc:
+            servicio.ingresar(USUARIO, CLAVE)
+        assert exc.value.codigo == 503
+    assert conn.execute("select coalesce(sum(intentos),0) n from auth_bloqueo").fetchone()["n"] == 0
+    assert conn.execute("select count(*) n from auth_sesion").fetchone()["n"] == 0
+
+
+def test_error_del_sga_no_levanta_un_bloqueo_vigente(auth, nueva_conexion, asignaturas, conn, reloj):
+    for _ in range(5):
+        with pytest.raises(AuthError):
+            auth.ingresar(USUARIO, "mala")
+    caido = ServicioAuth(nueva_conexion, "s" * 48, SGAFalla(SGA), asignaturas, ahora=lambda: reloj[0])
+    with pytest.raises(AuthError) as exc:
+        caido.ingresar(USUARIO, CLAVE)
+    assert exc.value.codigo == 429
+    assert conn.execute("select bloqueado_hasta from auth_bloqueo").fetchone()["bloqueado_hasta"] > reloj[0]
 
 
 def test_sincronizacion_que_falla_no_impide_el_ingreso_ni_filtra_valores(nueva_conexion, asignaturas, caplog):
@@ -177,6 +256,17 @@ def test_la_clave_no_queda_en_registros_ni_en_la_base(auth, conn, caplog):
     assert CLAVE not in caplog.text and CANARIO not in caplog.text
     assert not [v for v in _textos_de_la_base(conn) if CLAVE in v or CANARIO in v]
     assert not [v for v in vars(auth).values() if v in (CLAVE, CANARIO)]
+
+
+def test_la_clave_tecleada_como_usuario_no_queda_en_la_base_ni_en_registros(auth, conn, caplog):
+    tecleado = "CANARIO-USUARIO-CLAVE-5522"
+    with caplog.at_level(logging.DEBUG):
+        for _ in range(2):
+            with pytest.raises(AuthError):
+                auth.ingresar(tecleado, "otra")
+    assert conn.execute("select count(*) n from auth_bloqueo").fetchone()["n"] == 1
+    assert tecleado not in caplog.text and tecleado.lower() not in caplog.text
+    assert not [v for v in _textos_de_la_base(conn) if tecleado.lower() in v.lower()]
 
 
 # --- Sesiones ---
