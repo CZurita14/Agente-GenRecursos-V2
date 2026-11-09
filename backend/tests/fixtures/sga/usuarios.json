@@ -1,0 +1,16 @@
+{
+  "usuarios": [
+    {
+      "usuario": "docente.uno",
+      "sha256": "6b7e2840fa1db789cecf46cbb4b80af5288ca76bf8600480d9642d1f99fd715a",
+      "correo": "docente.uno@uti.edu.ec",
+      "nombre": "Docente Uno Simulado"
+    },
+    {
+      "usuario": "docente.dos",
+      "sha256": "64f0544d903c109aa93a429308d956664ab636a7b0b9a6f25d255b45cda737bb",
+      "correo": "docente.dos@uti.edu.ec",
+      "nombre": "Docente Dos Simulado"
+    }
+  ]
+}

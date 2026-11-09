@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://genrecursos.uti.edu.ec/api-silabo/auth-sga.schema.json",
+  "title": "Respuesta de autenticación del SGA",
+  "description": "Identidad del docente tras autenticarse. Nunca incluye la clave ni tokens del SGA.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["usuario", "correo", "nombre"],
+  "properties": {
+    "usuario": {"type": "string", "minLength": 1, "description": "Usuario del SGA."},
+    "correo": {"type": "string", "pattern": "^[^@\\s]+@(uti|indoamerica)\\.edu\\.ec$", "description": "Correo institucional."},
+    "nombre": {"type": "string", "minLength": 1}
+  }
+}

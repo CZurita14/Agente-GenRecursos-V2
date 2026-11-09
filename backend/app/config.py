@@ -42,6 +42,10 @@ class Ajustes(BaseSettings):
     pdf_recepcion_timeout_s: float = Field(default=30, gt=0, le=120)
     api_json_max_bytes: int = Field(default=1024 * 1024, ge=1, le=4 * 1024 * 1024)
     api_json_timeout_s: float = Field(default=30, gt=0, le=120)
+    # Proveedor del SGA: "simulado" lee los fixtures de `sga_simulado_dir`; "real" espera el adaptador de TI.
+    sga_proveedor: Literal["simulado", "real"] = "simulado"
+    sga_simulado_dir: Path | None = None
+    sga_timeout_s: float = Field(default=15, gt=0, le=120)
     administradores: list[str] = Field(default_factory=list)
     proxies_confiables: list[str] = Field(default_factory=list)
     limite_ip_minuto: int = Field(default=600, ge=1, le=100000)
@@ -54,6 +58,11 @@ class Ajustes(BaseSettings):
     limite_pdf_correo_hora: int = Field(default=10, ge=1, le=100000)
     limite_editar_correo_minuto: int = Field(default=30, ge=1, le=100000)
     auditoria_retencion_dias: int = Field(default=30, ge=1, le=365)
+
+    @field_validator("sga_simulado_dir", mode="before")
+    @classmethod
+    def sga_dir_vacio_es_apagado(cls, valor):
+        return None if isinstance(valor, str) and not valor.strip() else valor
 
     @field_validator("razonador_ruta", mode="before")
     @classmethod

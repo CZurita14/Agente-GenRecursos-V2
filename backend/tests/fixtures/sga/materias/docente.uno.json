@@ -1,0 +1,26 @@
+[
+  {
+    "id_sga": "90001",
+    "codigo_pf": "S91-SIMU-3-90001-9001",
+    "paralelo": "1",
+    "nombre": "SIMULADO ANALISIS DE DATOS A",
+    "carrera": "SOFTWARE",
+    "estado": "ACTIVA"
+  },
+  {
+    "id_sga": "90002",
+    "codigo_pf": "S91-SIMU-3-90001-9001",
+    "paralelo": "2",
+    "nombre": "SIMULADO ANALISIS DE DATOS A",
+    "carrera": "SOFTWARE",
+    "estado": "ACTIVA"
+  },
+  {
+    "id_sga": "90003",
+    "codigo_pf": "S91-SIMU-3-90002-9002",
+    "paralelo": "1",
+    "nombre": "SIMULADO ANALISIS DE DATOS B",
+    "carrera": "SOFTWARE",
+    "estado": "ACTIVA"
+  }
+]
