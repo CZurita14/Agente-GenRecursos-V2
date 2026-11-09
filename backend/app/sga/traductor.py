@@ -2,8 +2,7 @@
 
 Lista blanca recursiva: solo pasan las claves que el esquema declara; todo lo demás
 (docente, correo, firmas, cédula, ...) se descarta sin mirarlo. Los objetos y listas
-que el esquema deja libres (`pis`, `bibliografia`, `horas`, `horario`, `niveles`,
-`ra`, `contenidos`, ...) pasan completos.
+que el esquema deja libres (`niveles`, `ra`, `contenidos`, `metodologias`, ...) pasan completos.
 
 El árbol es un espejo del esquema: dict = objeto con propiedades declaradas,
 [nodo] = lista de objetos, None = valor que pasa tal cual. Una prueba exige que
@@ -20,7 +19,9 @@ _ARBOL = {
     "periodo": {"codigo": None, "inicio": None, "fin": None},
     "proyecto_formativo": {
         "codigo": None, "nombre": None, "version": None, "aprobado": None, "nivel": None,
-        "uoc": None, "modalidad": None, "creditos": None, "horas": None, "horario": None,
+        "uoc": None, "modalidad": None, "creditos": None,
+        "horas": {"total": None, "contacto": None, "autonomo": None, "practico": None},
+        "horario": [{"dia": None, "inicio": None, "fin": None}],
     },
     "competencia_perfil": None,
     "competencia_pf": None,
@@ -41,9 +42,9 @@ _ARBOL = {
         }],
     }],
     "rubrica_producto_final": [_FILA_RUBRICA],
-    "pis": None,
+    "pis": {"nombre": None, "aporte": None},
     "metodologias": None,
-    "bibliografia": None,
+    "bibliografia": {"basica": None, "complementaria": None},
 }
 
 

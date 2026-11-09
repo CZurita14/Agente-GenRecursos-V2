@@ -3,7 +3,7 @@
 Estructura de `base`:
   usuarios.json             {"usuarios": [{usuario, sha256, correo, nombre}]}  (sha256 de la clave de prueba)
   materias/<usuario>.json   lista de materias (materias-api.schema.json)
-  silabos/<codigo_pf>.json  sílabo crudo (puede traer claves privadas falsas)
+  sga_silabos/<codigo_pf>.json  sílabo crudo (puede traer claves privadas falsas)
 """
 import hashlib
 import hmac
@@ -60,7 +60,7 @@ class ProveedorSimulado:
         codigo = materia.codigo_pf
         if not codigo or "/" in codigo or "\\" in codigo or ".." in codigo:
             raise SilaboNoDisponible("Sílabo no disponible")
-        ruta = self._base / "silabos" / f"{codigo}.json"
+        ruta = self._base / "sga_silabos" / f"{codigo}.json"
         if not ruta.is_file():
             raise SilaboNoDisponible("Sílabo no disponible")
         return self._leer(ruta)

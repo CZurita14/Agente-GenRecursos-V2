@@ -74,7 +74,7 @@ def test_silabo_inexistente(sga):
 
 
 def test_traductor_descarta_privados():
-    crudo = _json(SGA / "silabos" / "S91-SIMU-3-90001-9001.json")
+    crudo = _json(SGA / "sga_silabos" / "S91-SIMU-3-90001-9001.json")
     assert {"docente", "correo", "firmas", "cedula"} <= crudo.keys()
     # También dentro de objetos anidados y de elementos de listas.
     crudo["proyecto_formativo"]["cedula"] = "0000000000"
@@ -187,7 +187,7 @@ def test_esquema_autenticacion():
 
 
 def test_silabos_del_simulado_cumplen_contrato():
-    for f in (SGA / "silabos").glob("*.json"):
+    for f in (SGA / "sga_silabos").glob("*.json"):
         crudo = _json(f)
         s = cargar_silabo(a_contrato(crudo))
         assert s.proyecto_formativo.codigo == f.stem
@@ -199,3 +199,20 @@ def test_usuarios_guardan_hash_no_clave():
         assert set(u) == {"usuario", "sha256", "correo", "nombre"}
         assert len(u["sha256"]) == 64
         assert CLAVES[u["usuario"]] not in json.dumps(u)
+
+
+def test_traductor_filtra_claves_extra_en_nodos_antes_libres():
+    """pis, bibliografia, horas y horario[] traen una clave privada: se descarta y el sílabo carga."""
+    crudo = _json(SGA / "sga_silabos" / "S91-SIMU-3-90001-9001.json")
+    pf = crudo["proyecto_formativo"]
+    crudo["pis"] = {"nombre": "PIS simulado", "aporte": "aporte simulado", "contacto": "MARCA-PRIVADA"}
+    crudo["bibliografia"] = {"basica": ["libro"], "complementaria": [], "cedula": "MARCA-PRIVADA"}
+    pf["horas"]["docente"] = "MARCA-PRIVADA"
+    pf["horario"] = [{"dia": "lunes", "inicio": "08:00", "fin": "09:00", "correo": "MARCA-PRIVADA"}]
+    limpio = a_contrato(crudo)
+    assert "MARCA-PRIVADA" not in json.dumps(limpio)
+    assert limpio["pis"] == {"nombre": "PIS simulado", "aporte": "aporte simulado"}
+    assert limpio["bibliografia"] == {"basica": ["libro"], "complementaria": []}
+    assert "docente" not in limpio["proyecto_formativo"]["horas"]
+    assert limpio["proyecto_formativo"]["horario"] == [{"dia": "lunes", "inicio": "08:00", "fin": "09:00"}]
+    cargar_silabo(limpio)
