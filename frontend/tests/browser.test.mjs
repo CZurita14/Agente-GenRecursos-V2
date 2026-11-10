@@ -25,11 +25,10 @@ before(async () => {
 after(async () => { await browser?.close(); server?.kill(); });
 
 const USUARIO = { correo: 'docente@uti.edu.ec', rol: 'docente' };
-const SUBIDO = {
-  id: 'a1', agente: 'ingenierias', clases_cambiadas: [],
-  menu: [{ numero: 2, inicio: '2026-10-12', fin: '2026-10-18', cierra_momentos: [2],
-    clases: [{ clase_id: 'M2-S1' }, { clase_id: 'M2-S2' }] }],
-};
+const MATERIA = (id, estado, extra = {}) => ({ id_sga: id, codigo_pf: 'B26-SOFT-3', paralelo: '1', nombre: 'ANALISIS DE DATOS',
+  carrera: 'SOFTWARE', estado_sga: 'ACTIVA', estado, asignatura_id: estado === 'importada' || estado === 'sin_cambios' ? 'a1' : null, ...extra });
+const MATERIAS = [MATERIA('m1', 'importada'), MATERIA('m2', 'no_disponible', { paralelo: '2', nombre: 'ESTADISTICA' }),
+  MATERIA('m3', 'invalida', { codigo_pf: 'B26-SOFT-4', nombre: 'PROBABILIDAD' })];
 
 const MENU_ASIG = [{ numero: 2, inicio: '2026-10-12', fin: '2026-10-18', cierra_momentos: [2], clases: [
   { clase_id: 'M2-S1', numero_clase: 1, dia: 'mie', fecha: '2026-10-14', momento: 2, momento_titulo: 'Planeación',
@@ -68,16 +67,15 @@ async function abrir({ sesion = true, viewport, rutas = {} } = {}) {
   await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const url = new URL(route.request().url());
     const ruta = url.pathname.replace(/^\/api/, '');
-    estado.llamadas.push({ ruta, metodo: route.request().method(), tipo: route.request().headers()['content-type'] });
+    estado.llamadas.push({ ruta, metodo: route.request().method(), tipo: route.request().headers()['content-type'], cuerpo: route.request().postData() });
     if (rutas[ruta]) return rutas[ruta](route, estado);
     const json = (status, body) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
     if (ruta === '/asignaturas/a1/chat') return json(200, { pedidos: [], siguiente: null });
     if (ruta === '/auth/yo') return estado.sesion ? json(200, USUARIO) : json(401, { detail: 'Sesión requerida' });
-    if (ruta === '/auth/codigo') return json(200, { mensaje: 'ok' });
-    if (ruta === '/auth/verificar') { estado.sesion = true; return json(200, { mensaje: 'Sesión iniciada' }); }
+    if (ruta === '/auth/ingresar') { estado.sesion = true; return json(200, { correo: USUARIO.correo, materias: MATERIAS }); }
+    if (ruta === '/materias') return json(200, MATERIAS);
     if (ruta === '/auth/salir') { estado.sesion = false; return json(200, { mensaje: 'Sesión cerrada' }); }
     if (ruta === '/asignaturas') return json(200, [{ id: 'a1', nombre: 'ANALISIS DE DATOS', codigo_pf: 'B26-SOFT-3', version_silabo: '1.0', agente: 'ingenierias', rol: 'dueno', dueno: USUARIO.correo }]);
-    if (ruta === '/silabos') return json(201, SUBIDO);
     // --- P6b: menú, catálogo, generación, avance, recurso, validación ---
     if (ruta === '/asignaturas/a1/menu') return json(200, { id: 'a1', rol: 'dueno', version_silabo: '1.0', menu: MENU_ASIG });
     if (ruta === '/asignaturas/a1/herramientas') {
@@ -116,17 +114,46 @@ async function abrir({ sesion = true, viewport, rutas = {} } = {}) {
   await page.goto(origin);
   // Esperar a que termine la consulta inicial de sesión (sin esto se ve «Cargando…»).
   await (sesion ? page.getByRole('heading', { name: '¿Qué quieres hacer hoy?' })
-    : page.getByLabel('Correo institucional')).waitFor();
+    : page.getByLabel('Usuario del SGA').or(page.getByLabel('Correo institucional'))).waitFor();
   return { context, page, estado };
 }
 
-test('ingreso en dos pasos lleva al menú', async () => {
-  const { context, page } = await abrir({ sesion: false });
-  await page.getByLabel('Correo institucional').fill('docente@uti.edu.ec');
-  await page.getByRole('button', { name: 'Enviar código' }).click();
-  await page.getByLabel('Código de acceso').fill('123456');
+test('ingreso con usuario y clave del SGA lleva al menú y no guarda la clave', async () => {
+  const { context, page, estado } = await abrir({ sesion: false });
+  const clave = page.getByLabel('Clave del SGA');
+  assert.equal(await clave.getAttribute('type'), 'password');
+  assert.equal(await clave.getAttribute('autocomplete'), 'current-password');
+  assert.equal(await page.getByLabel('Usuario del SGA').getAttribute('autocomplete'), 'username');
+  await page.getByLabel('Usuario del SGA').fill('docente');
+  await clave.fill('secreta-123');
   await page.getByRole('button', { name: 'Ingresar' }).click();
   await page.getByRole('heading', { name: '¿Qué quieres hacer hoy?' }).waitFor();
+  const envio = estado.llamadas.find(l => l.ruta === '/auth/ingresar');
+  assert.deepEqual(JSON.parse(envio.cuerpo), { usuario: 'docente', clave: 'secreta-123' });
+  const guardado = await page.evaluate(() => JSON.stringify([{ ...localStorage }, { ...sessionStorage }]));
+  assert.ok(!guardado.includes('secreta-123'));
+  await context.close();
+});
+
+test('clave incorrecta (401): mensaje genérico y la clave se borra', async () => {
+  const { context, page } = await abrir({ sesion: false, rutas: {
+    '/auth/ingresar': route => route.fulfill({ status: 401, contentType: 'application/json', body: '{"detail":"Usuario o clave incorrectos"}' }) } });
+  await page.getByLabel('Usuario del SGA').fill('docente');
+  await page.getByLabel('Clave del SGA').fill('mala');
+  await page.getByRole('button', { name: 'Ingresar' }).click();
+  await page.getByRole('alert').getByText('Usuario o clave incorrectos.').waitFor();
+  assert.equal(await page.getByLabel('Clave del SGA').inputValue(), '');
+  assert.equal(await page.getByLabel('Usuario del SGA').inputValue(), 'docente');
+  await context.close();
+});
+
+test('demasiados intentos (429) muestra la espera de Retry-After', async () => {
+  const { context, page } = await abrir({ sesion: false, rutas: {
+    '/auth/ingresar': route => route.fulfill({ status: 429, headers: { 'Retry-After': '45' }, contentType: 'application/json', body: '{"detail":"Demasiados intentos"}' }) } });
+  await page.getByLabel('Usuario del SGA').fill('docente');
+  await page.getByLabel('Clave del SGA').fill('x');
+  await page.getByRole('button', { name: 'Ingresar' }).click();
+  await page.getByRole('alert').getByText('espera 45 s').waitFor();
   await context.close();
 });
 
@@ -143,18 +170,29 @@ test('menú con tres pestañas y perfil docente en espera', async () => {
   await context.close();
 });
 
-test('Empezar lleva a subir el sílabo y muestra el resumen', async () => {
-  const { context, page, estado } = await abrir();
+test('Empezar lista las materias del SGA y abrir una lleva a su menú', async () => {
+  const { context, page } = await abrir();
   await page.getByRole('button', { name: 'Empezar' }).click();
   await page.getByRole('heading', { name: 'Generar herramientas' }).waitFor();
-  await page.locator('input[type="file"]').setInputFiles({ name: 'silabo.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4') });
-  await page.getByRole('button', { name: 'Subir sílabo' }).click();
-  await page.getByText('Agente asignado').waitFor();
-  assert.match(await page.getByText('Agente asignado').innerText(), /1 semanas y 2 clases/);
-  const subida = estado.llamadas.find(l => l.ruta === '/silabos');
-  assert.equal(subida.tipo, 'application/pdf');
-  await page.getByRole('button', { name: 'Ver mis Proyectos Formativos' }).click();
-  await page.getByRole('table', { name: 'Proyecto Formativo' }).getByText('ANALISIS DE DATOS').waitFor();
+  const lista = page.getByRole('list', { name: 'Materias del SGA' });
+  await lista.getByText('B26-SOFT-3 PARALELO 1').waitFor();
+  assert.equal(await lista.getByRole('listitem').count(), 3);
+  assert.equal(await page.locator('input[type="file"]').count(), 0);
+  await lista.getByRole('button', { name: /ANALISIS DE DATOS/ }).click();
+  await page.getByText('DISTRIBUCIONES').first().waitFor();
+  await context.close();
+});
+
+test('materias no disponibles o inválidas salen desactivadas con su motivo', async () => {
+  const { context, page } = await abrir();
+  await page.getByRole('button', { name: 'Empezar' }).click();
+  const lista = page.getByRole('list', { name: 'Materias del SGA' });
+  await lista.getByText('B26-SOFT-3 PARALELO 2').waitFor();
+  assert.equal(await lista.getByRole('button').count(), 1);
+  const nd = lista.getByRole('listitem').filter({ hasText: 'ESTADISTICA' });
+  assert.equal(await nd.locator('[aria-disabled="true"]').count(), 1);
+  await nd.getByText('no está disponible').waitFor();
+  await lista.getByRole('listitem').filter({ hasText: 'PROBABILIDAD' }).getByText('No se pudo importar').waitFor();
   await context.close();
 });
 
@@ -163,23 +201,21 @@ test('un 401 a mitad del uso devuelve al ingreso', async () => {
   estado.sesion = false;
   await page.route(url => url.pathname === '/api/asignaturas', route => route.fulfill({ status: 401, contentType: 'application/json', body: '{"detail":"Sesión requerida"}' }));
   await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('button', { name: 'Proyecto Formativo', exact: true }).click();
-  await page.getByLabel('Correo institucional').waitFor();
+  await page.getByLabel('Usuario del SGA').waitFor();
   await context.close();
 });
 
-test('error de la API con mensaje claro (422 sílabo ilegible)', async () => {
-  const { context, page } = await abrir({ rutas: { '/silabos': route => route.fulfill({ status: 422, contentType: 'application/json', body: JSON.stringify({ detail: 'No se reconoce la plantilla institucional del sílabo.' }) }) } });
+test('error al cargar las materias (503) se muestra con mensaje claro', async () => {
+  const { context, page } = await abrir({ rutas: { '/materias': route => route.fulfill({ status: 503, contentType: 'application/json', body: '{"detail":"x"}' }) } });
   await page.getByRole('button', { name: 'Empezar' }).click();
-  await page.locator('input[type="file"]').setInputFiles({ name: 'otro.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4') });
-  await page.getByRole('button', { name: 'Subir sílabo' }).click();
-  await page.getByRole('alert').getByText('No se reconoce la plantilla institucional').waitFor();
+  await page.getByRole('alert').getByText('Servicio no disponible').waitFor();
   await context.close();
 });
 
 test('salir cierra la sesión', async () => {
   const { context, page } = await abrir();
   await page.getByRole('button', { name: 'Salir' }).click();
-  await page.getByLabel('Correo institucional').waitFor();
+  await page.getByLabel('Usuario del SGA').waitFor();
   await context.close();
 });
 
@@ -426,10 +462,10 @@ const CON_MODO_PRUEBA = {
   },
 };
 
-test('modo de prueba: entrar solo con el correo, sin código', async () => {
+test('modo de prueba: entrar solo con el correo, sin clave del SGA', async () => {
   const { context, page, estado } = await abrir({ sesion: false, rutas: CON_MODO_PRUEBA });
   await page.getByText('Modo de prueba: cualquiera puede entrar').waitFor();
-  assert.equal(await page.getByRole('button', { name: 'Enviar código' }).count(), 0);
+  assert.equal(await page.getByLabel('Clave del SGA').count(), 0);
   await page.getByLabel('Correo institucional').fill('docente@uti.edu.ec');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await page.getByRole('heading', { name: '¿Qué quieres hacer hoy?' }).waitFor();
@@ -445,9 +481,9 @@ test('modo de prueba: entrar como invitado sin escribir correo', async () => {
   await context.close();
 });
 
-test('sin modo de prueba el ingreso sigue pidiendo código', async () => {
+test('sin modo de prueba el ingreso pide usuario y clave del SGA', async () => {
   const { context, page } = await abrir({ sesion: false });
-  await page.getByRole('button', { name: 'Enviar código' }).waitFor();
+  await page.getByLabel('Clave del SGA').waitFor();
   assert.equal(await page.getByRole('button', { name: 'Entrar como invitado' }).count(), 0);
   await context.close();
 });

@@ -8,8 +8,6 @@ export { Card } from './Card';
 export type { CardProps } from './Card';
 export { DataTable } from './DataTable';
 export type { Column, DataTableProps } from './DataTable';
-export { DropZone } from './DropZone';
-export type { DropZoneProps } from './DropZone';
 export type { FileRejection } from '../utils/files';
 export { Footer } from './Footer';
 export type { FooterProps } from './Footer';

@@ -5,7 +5,7 @@ interface InicioProps {
   onGenerar: () => void;
 }
 
-const PASOS = ['Sube tu sílabo', 'Elige la clase', 'Genera y revisa'];
+const PASOS = ['Elige tu materia', 'Elige la clase', 'Genera y revisa'];
 
 /** Opción B aprobada: dos caminos lado a lado; el perfil docente se ve, pero está en espera. */
 export function Inicio({ onGenerar }: InicioProps) {
@@ -22,7 +22,7 @@ export function Inicio({ onGenerar }: InicioProps) {
           <h2 id="camino-generar" className="text-lg font-bold">Generar herramientas</h2>
         </div>
         <p className="text-muted text-sm">
-          Sube tu sílabo en PDF. La colmena lo lee y prepara fichas, cuestionarios, guías, rúbricas y
+          Elige una materia de tu SGA. La colmena lee su sílabo y prepara fichas, cuestionarios, guías, rúbricas y
           autoevaluaciones por clase y para todo el Proyecto Formativo.
         </p>
         <ol className="flex flex-wrap gap-2 text-xs" aria-label="Pasos">

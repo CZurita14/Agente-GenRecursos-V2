@@ -2,7 +2,7 @@
 
 > **Para qué sirve:** es la memoria del proyecto V2. Al retomar, **se lee primero este archivo** y solo después, si hace falta, el documento puntual que enlaza.
 >
-> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 6.
+> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 8.
 
 ## Cómo se actualiza
 
@@ -37,7 +37,7 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
 | 3 | Sincronización de materias y sílabos | ✅ hecha |
 | 4 | Ingreso con el SGA | ✅ hecha |
 | 5 | API de materias y eliminación del PDF | ✅ (incluye la 7) |
-| 6 | Frontend | ⬜ pendiente |
+| 6 | Frontend | ✅ hecha |
 | 7 | Ciencia de datos con JSON | ✅ (fusionada en la 5) |
 | 8 | Equivalencia con V1 y herramienta de comparación | ⬜ pendiente |
 | 9 | Documentación, verificación final y entrega | ⬜ pendiente |
@@ -80,10 +80,11 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
 - **Tarea 3:** `app/sga/sincronizar.py` y migración `009_sga.sql` (`materia_sga`, `asignatura.activa_sga`); una transacción por materia, estados `importada/sin_cambios/no_disponible/invalida`. Se quita «compartir». Pruebas: `test_sga_sincronizar.py` 10 nuevas, 3 nuevas y 4 borradas de «compartir» en `test_asignaturas_api.py`; suite estándar 1259 pasan, 23 se saltan (1249 + 10).
 - **Tarea 4:** `POST /auth/ingresar` (bloqueo → SGA → sincronización → sesión con la misma cookie de V1); la clave solo es un parámetro local (pruebas con `caplog` y búsqueda en todas las columnas de texto). Si la sincronización falla se entra igual y solo se registra el nombre de la excepción. SGA caído → 503 sin contar fallo. Se borra `test_correo_auth.py` y se reescribe `test_auth.py` (32 casos); `test_control_api.py` cambia las cuotas de código por las de ingreso. Suite estándar 1247 pasan, 23 se saltan (1259 + las nuevas − las del código por correo; la base citada era 1261).
 - **Tareas 5 y 7 (fusionadas):** `GET /materias` (solo las del docente, por `codigo_pf` y `paralelo`); se borra la entrada por PDF (`POST /silabos`, `app/silabo/lector/`, `aislado.py`, `pdf_*`, `limite_pdf_correo_hora`, `lector_pdf`, `SilaboIlegible`) y `pdfplumber` sale de las dependencias de la API (queda solo en `dev` y en la etapa de pruebas de la imagen, porque las pruebas de exportación leen el PDF generado). La 7 se fusiona porque borrar el lector rompía `ciencia_datos/corpus.py`: ahora solo lee `.json` (`a_contrato` + `cargar_silabo`), ignora los `.pdf` con un aviso y su conteo. `compose.yaml` pasa `SGA_*`; nginx `client_max_body_size 1m`. Pruebas borradas: `tests/lector/` y 2 archivos de PDF más casos sueltos; nuevas: `test_materias_api.py` (4), 3 en `test_cd_corpus.py` y 1 en `test_infra_config.py`. Suite estándar: 1173 pasan, 0 se saltan, 13 deseleccionadas (eran 14: se borró `test_prompt_de_momento_cabe`, marcada `servidor`, que leía PDFs reales). Ronda de corrección 1: se rehace esa prueba con los JSON del SGA (+ variante sin servidor), se convierte `test_criterio_2_reales` y `test_materias_api.py` pasa por `sincronizar`; suite estándar 1177 pasan, 14 deseleccionadas; `modelo`: 10 pasan; `test_materias_api.py`: 4.
+- **Tarea 6:** frontend con el SGA: `Ingreso` pide usuario y clave (`type=password`, la clave se borra del estado tras cada respuesta, 401/429/503 con mensajes propios en `utils/materias.ts`); `Generar` lista `GET /materias` («CODIGO PARALELO n»), abre `importada`/`sin_cambios` en su menú y muestra desactivadas `no_disponible`/`invalida` con su motivo. Se quitan `subirSilabo`, `/auth/codigo`, `/auth/verificar` y `DropZone`. Pruebas: 28 unitarias (25 − 3 retiradas + 6 nuevas), 42 de navegador (Playwright, API simulada), typecheck y build sin errores.
 
 ---
 
 ## Siguiente paso
 
-1. Tarea 6.
+1. Tarea 8.
 2. Pedir a TI lo del bloqueo B-SGA1.

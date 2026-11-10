@@ -1,60 +1,64 @@
-import { useState } from 'react';
-import { FileUp } from 'lucide-react';
-import { Alert, Button, Card, DropZone } from '../components';
-import { ErrorApi, subirSilabo } from '../api/cliente';
-import type { SilaboSubido } from '../api/tipos';
+import { useEffect, useState } from 'react';
+import { BookOpen } from 'lucide-react';
+import { Alert, Badge, Card } from '../components';
+import { ErrorApi, materias as listarMaterias } from '../api/cliente';
+import type { Materia } from '../api/tipos';
+import { estadoMateria, etiquetaMateria } from '../utils/materias';
 
 interface GenerarProps {
   onSesionVencida: () => void;
-  onVerAsignaturas: () => void;
+  onAbrir: (materia: Materia & { asignatura_id: string }) => void;
 }
 
-const MAX_PDF = 10 * 1024 * 1024; // Límite de la API (spec v1.3, C11).
-
-/** Paso 1 de «Generar herramientas»: subir el sílabo; la colmena lo lee y arma el menú de clases. */
-export function Generar({ onSesionVencida, onVerAsignaturas }: GenerarProps) {
-  const [archivo, setArchivo] = useState<File | null>(null);
-  const [subiendo, setSubiendo] = useState(false);
+/** Paso 1 de «Generar herramientas»: elegir una materia del SGA; ya viene con su sílabo importado. */
+export function Generar({ onSesionVencida, onAbrir }: GenerarProps) {
+  const [filas, setFilas] = useState<Materia[] | null>(null);
   const [error, setError] = useState('');
-  const [resultado, setResultado] = useState<SilaboSubido | null>(null);
 
-  async function subir() {
-    if (!archivo) return;
-    setError('');
-    setSubiendo(true);
-    try {
-      setResultado(await subirSilabo(archivo));
-      setArchivo(null);
-    } catch (e) {
+  useEffect(() => {
+    let vigente = true;
+    listarMaterias().then(m => { if (vigente) setFilas(m); }).catch(e => {
+      if (!vigente) return;
       if (e instanceof ErrorApi && e.estado === 401) return onSesionVencida();
       setError(e instanceof ErrorApi ? e.message : 'No hay conexión con el servidor. Inténtalo de nuevo.');
-    } finally {
-      setSubiendo(false);
-    }
-  }
-
-  const clases = resultado?.menu.reduce((total, semana) => total + semana.clases.length, 0) ?? 0;
+      setFilas([]);
+    });
+    return () => { vigente = false; };
+  }, [onSesionVencida]);
 
   return <>
     <div>
       <h1 className="text-2xl font-bold">Generar herramientas</h1>
-      <p className="text-muted mt-1">Paso 1 · Sube el sílabo de tu Proyecto Formativo en PDF (el que genera el sistema institucional).</p>
+      <p className="text-muted mt-1">Paso 1 · Elige la materia de tu Proyecto Formativo (las que tienes asignadas en el SGA).</p>
     </div>
-    <Card title="Sube tu sílabo" icon={<FileUp aria-hidden="true" />}>
+    <Card title="Tus materias" icon={<BookOpen aria-hidden="true" />}>
       <div className="space-y-4">
-        <DropZone accept=".pdf,application/pdf" maxSize={MAX_PDF} disabled={subiendo}
-          title="Arrastra aquí el sílabo en PDF" hint="o selecciónalo desde tu equipo (máx. 10 MB)"
-          onFiles={archivos => { setArchivo(archivos[0] ?? null); setResultado(null); setError(''); }} />
-        {archivo && <p className="text-sm">Archivo seleccionado: <strong>{archivo.name}</strong></p>}
         {error && <Alert tone="danger" role="alert">{error}</Alert>}
-        {resultado && <Alert tone="success">
-          Sílabo leído. Agente asignado: <strong>{resultado.agente}</strong>. Menú de {resultado.menu.length} semanas
-          y {clases} clases.{resultado.clases_cambiadas.length > 0 && ` Clases actualizadas por la nueva versión: ${resultado.clases_cambiadas.join(', ')}.`}
-        </Alert>}
-        <div className="flex flex-wrap gap-3">
-          <Button onClick={subir} loading={subiendo} disabled={!archivo}>Subir sílabo</Button>
-          {resultado && <Button variant="secondary" onClick={onVerAsignaturas}>Ver mis Proyectos Formativos</Button>}
-        </div>
+        {filas === null && <p className="text-muted" role="status">Cargando tus materias…</p>}
+        {filas?.length === 0 && !error && <p className="text-muted">El SGA no te muestra materias asignadas por ahora.</p>}
+        {filas && filas.length > 0 && <ul className="space-y-2" aria-label="Materias del SGA">
+          {filas.map(m => {
+            const { seleccionable, motivo } = estadoMateria(m);
+            const detalle = <>
+              <span className="block text-xs font-semibold text-muted">{etiquetaMateria(m)}</span>
+              <span className="block font-medium">{m.nombre}</span>
+              <span className="block text-xs text-muted">{m.carrera}</span>
+              {motivo && <span className="block text-sm text-warning mt-1">{motivo}</span>}
+            </>;
+            return <li key={m.id_sga}>
+              {seleccionable && m.asignatura_id
+                ? <button type="button" onClick={() => onAbrir({ ...m, asignatura_id: m.asignatura_id as string })}
+                  className="w-full text-left rounded-lg border border-line bg-surface p-3 hover:border-highlight flex items-start justify-between gap-3">
+                  <span>{detalle}</span>
+                  <Badge tone="success">{m.estado === 'importada' ? 'Recién importada' : 'Lista'}</Badge>
+                </button>
+                : <div aria-disabled="true" className="w-full rounded-lg border border-dashed border-line bg-app-soft p-3 opacity-70 flex items-start justify-between gap-3">
+                  <span>{detalle}</span>
+                  <Badge tone="warning">No disponible</Badge>
+                </div>}
+            </li>;
+          })}
+        </ul>}
       </div>
     </Card>
   </>;

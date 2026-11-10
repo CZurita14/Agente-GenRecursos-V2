@@ -37,11 +37,11 @@ export function Asignaturas({ onSesionVencida, onSubir, onAbrir }: AsignaturasPr
   return <>
     <div className="flex flex-wrap items-center justify-between gap-3">
       <h1 className="text-2xl font-bold">Proyecto Formativo</h1>
-      <Button onClick={onSubir}>Subir sílabo</Button>
+      <Button onClick={onSubir}>Elegir materia del SGA</Button>
     </div>
     {error && <Alert tone="danger" role="alert">{error}</Alert>}
     <DataTable caption="Proyecto Formativo" columns={COLUMNAS} rows={filas ?? []} rowKey={a => a.id}
-      loading={filas === null} emptyMessage="Todavía no tienes Proyectos Formativos. Sube tu sílabo para empezar."
+      loading={filas === null} emptyMessage="Todavía no tienes Proyectos Formativos. Elige una materia del SGA para empezar."
       onRowClick={onAbrir} rowActionLabel={a => `Abrir ${a.nombre}`} />
   </>;
 }

@@ -37,11 +37,18 @@ export interface SemanaMenu {
   cierra_momentos: number[];
 }
 
-export interface SilaboSubido {
-  id: string;
-  agente: string;
-  menu: SemanaMenu[];
-  clases_cambiadas: string[];
+export type EstadoMateria = 'importada' | 'sin_cambios' | 'no_disponible' | 'invalida';
+
+/** Materia del docente en el SGA (GET /materias). */
+export interface Materia {
+  id_sga: string;
+  codigo_pf: string;
+  paralelo: string;
+  nombre: string;
+  carrera: string;
+  estado_sga: string;
+  estado: EstadoMateria;
+  asignatura_id: string | null;
 }
 
 export type TipoAmbito = 'clase' | 'momento' | 'asignatura';

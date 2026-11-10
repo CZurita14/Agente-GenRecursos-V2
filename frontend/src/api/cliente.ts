@@ -3,7 +3,7 @@
  * web en producción) con la cookie de sesión HttpOnly: el frontend nunca ve ni guarda el token.
  */
 import type {
-  Ambito, AsignaturaResumen, Catalogo, MenuAsignatura, Recurso, RecursoResumen, SilaboSubido, Trabajo, TrabajoCreado,
+  Ambito, AsignaturaResumen, Catalogo, Materia, MenuAsignatura, Recurso, RecursoResumen, Trabajo, TrabajoCreado,
   TipoAmbito, Usuario,
 } from './tipos';
 
@@ -26,8 +26,6 @@ const MENSAJES: Record<number, string> = {
   403: 'No tienes permiso para esta acción.',
   404: 'No se encontró lo que buscabas.',
   409: 'Los datos cambiaron mientras trabajabas. Recarga e inténtalo de nuevo.',
-  413: 'El archivo supera 10 MB.',
-  415: 'Solo se aceptan archivos PDF.',
   503: 'Servicio no disponible por el momento. Inténtalo en unos minutos.',
 };
 
@@ -57,8 +55,12 @@ export async function pedir<T>(ruta: string, init: RequestInit = {}): Promise<T>
 
 const json = (datos: unknown) => JSON.stringify(datos);
 
-export const pedirCodigo = (correo: string) =>
-  pedir<{ mensaje: string }>('/auth/codigo', { method: 'POST', body: json({ correo }) });
+/** Ingreso con el usuario y la clave del SGA. La clave solo viaja en este cuerpo: nunca se guarda ni se registra. */
+export const ingresar = (usuario: string, clave: string) =>
+  pedir<{ correo: string; materias: Materia[] }>('/auth/ingresar', { method: 'POST', body: json({ usuario, clave }) });
+
+/** Materias del docente en el SGA y si ya se pueden abrir. */
+export const materias = () => pedir<Materia[]>('/materias');
 
 /** Si la API ofrece entrar sin validar el correo (solo en desarrollo, mientras no hay SMTP institucional). */
 export const modoAcceso = () => pedir<{ acceso_prueba: boolean }>('/auth/modo');
@@ -67,16 +69,9 @@ export const modoAcceso = () => pedir<{ acceso_prueba: boolean }>('/auth/modo');
 export const accesoPrueba = (correo?: string) =>
   pedir<{ mensaje: string }>('/auth/prueba', { method: 'POST', body: json(correo ? { correo } : {}) });
 
-export const verificarCodigo = (correo: string, codigo: string) =>
-  pedir<{ mensaje: string }>('/auth/verificar', { method: 'POST', body: json({ correo, codigo }) });
-
 export const yo = () => pedir<Usuario>('/auth/yo');
 
 export const salir = () => pedir<{ mensaje: string }>('/auth/salir', { method: 'POST' });
-
-/** La API recibe el PDF como cuerpo binario (no multipart) para contar y limitar los bytes. */
-export const subirSilabo = (archivo: File) =>
-  pedir<SilaboSubido>('/silabos', { method: 'POST', body: archivo, headers: { 'Content-Type': 'application/pdf' } });
 
 export const asignaturas = () => pedir<AsignaturaResumen[]>('/asignaturas');
 

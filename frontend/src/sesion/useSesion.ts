@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { accesoPrueba, salir as cerrarSesion, verificarCodigo, yo } from '../api/cliente';
+import { accesoPrueba, ingresar as ingresarSga, salir as cerrarSesion, yo } from '../api/cliente';
 import type { Usuario } from '../api/tipos';
 
 /** Sesión del docente. La fuente de verdad es la cookie HttpOnly: aquí solo se refleja `yo()`. */
@@ -15,8 +15,8 @@ export function useSesion() {
     return () => { vigente = false; };
   }, []);
 
-  const ingresar = useCallback(async (correo: string, codigo: string) => {
-    await verificarCodigo(correo, codigo);
+  const ingresar = useCallback(async (usuario: string, clave: string) => {
+    await ingresarSga(usuario, clave);
     setUsuario(await yo());
   }, []);
 

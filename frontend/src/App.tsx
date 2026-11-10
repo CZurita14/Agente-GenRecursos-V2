@@ -42,7 +42,7 @@ export default function App() {
     return <AppLayout><p className="text-muted" role="status">Cargando…</p></AppLayout>;
   }
   if (!usuario) {
-    return <AppLayout><Ingreso onIngresar={async (correo, codigo) => { await ingresar(correo, codigo); setRuta({ vista: 'inicio' }); }}
+    return <AppLayout><Ingreso onIngresar={async (usuario, clave) => { await ingresar(usuario, clave); setRuta({ vista: 'inicio' }); }}
       onIngresarPrueba={async correo => { await ingresarPrueba(correo); setRuta({ vista: 'inicio' }); }} /></AppLayout>;
   }
 
@@ -58,7 +58,8 @@ export default function App() {
 
   return <AppLayout items={MENU} activeId={pestana(ruta)} onChange={id => setRuta({ vista: id } as Ruta)} actions={acciones}>
     {ruta.vista === 'inicio' && <Inicio onGenerar={() => setRuta({ vista: 'generar' })} />}
-    {ruta.vista === 'generar' && <Generar onSesionVencida={expirar} onVerAsignaturas={() => setRuta({ vista: 'asignaturas' })} />}
+    {ruta.vista === 'generar' && <Generar onSesionVencida={expirar}
+      onAbrir={m => aMenu({ aid: m.asignatura_id, nombre: m.nombre, rol: 'dueno' })} />}
     {ruta.vista === 'asignaturas' && <Asignaturas onSesionVencida={expirar} onSubir={() => setRuta({ vista: 'generar' })}
       onAbrir={a => aMenu({ aid: a.id, nombre: a.nombre, rol: a.rol })} />}
     {ruta.vista === 'asignatura' && <Asignatura aid={ruta.curso.aid} nombre={ruta.curso.nombre} onSesionVencida={expirar}
