@@ -18,6 +18,10 @@ class Ajustes(BaseSettings):
     llm_base_url: str
     llm_model: str
     llm_api_key: str = "no-se-necesita"
+    # "vllm": servidor local. "deepseek": API de DeepSeek (el contenido académico sale del servidor).
+    llm_proveedor: Literal["vllm", "deepseek"] = "vllm"
+    # False solo en desarrollo, si un antivirus inspecciona HTTPS con una raíz que Python 3.13 rechaza.
+    llm_tls_estricto: bool = True
     llm_max_concurrencia: int = 4
     llm_timeout_s: float = 120
     llm_timeout_revisor_s: float = 240
@@ -88,6 +92,8 @@ class Ajustes(BaseSettings):
     def https_en_produccion(self):
         if self.entorno == "produccion" and not self.api_origen.startswith("https://"):
             raise ValueError("API_ORIGEN requiere HTTPS en producción")
+        if self.entorno == "produccion" and not self.llm_tls_estricto:
+            raise ValueError("LLM_TLS_ESTRICTO=false solo se permite en desarrollo")
         if self.entorno == "produccion" and self.acceso_prueba:
             raise ValueError("ACCESO_PRUEBA no se permite en producción")
         if self.entorno == "produccion" and self.sga_proveedor == "simulado":

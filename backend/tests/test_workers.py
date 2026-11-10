@@ -114,6 +114,8 @@ def test_sin_estado(silabo):
         "problema": ctx1.problema.model_copy(update={"descripcion": "Incidentes en pymes",
                                                      "reto": "¿Cómo proteger?", "producto_final": "Plan"}),
         "rubrica": [], "politica_ia": "Sin IA", "entregables_momento": ["TAREA 3"],
+        "pis": None, "actividad_docente": None, "actividad_practica": None,
+        "actividad_autonoma": None,
     })
     worker = WorkerCuestionario()
     c1 = ClienteSimulado({"worker": [_lote_json(ctx1)]})
@@ -121,7 +123,9 @@ def test_sin_estado(silabo):
     c2 = ClienteSimulado({"worker": [_lote_json(ctx2)]})
     worker.generar(_tarea(ctx2), c2)
     prompt2 = "\n".join(m["content"] for m in c2.llamadas[-1]["mensajes"])
-    for marca in [ctx1.codigo_pf, ctx1.contenidos[0], "MARCA-PRIMERA-ASIGNATURA", *ctx1.actividades]:
+    marcas_v2 = [a.texto for a in (ctx1.actividad_docente, ctx1.actividad_practica, ctx1.actividad_autonoma)
+                 if a is not None and a.texto.strip()]
+    for marca in [ctx1.codigo_pf, ctx1.contenidos[0], "MARCA-PRIMERA-ASIGNATURA", *ctx1.actividades, *marcas_v2]:
         assert marca not in prompt2
     assert vars(worker) == {}
 

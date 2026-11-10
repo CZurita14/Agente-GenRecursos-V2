@@ -26,6 +26,7 @@ from app.db.pool import PoolConexiones
 from app.asignaturas.servicio import ServicioAsignaturas
 from app.recursos.servicio import ServicioRecursos
 from app.control.identidad import ProxyInvalido, ip_cliente, operacion_segura
+from app.llm.cliente import contexto_tls
 from app.control.limites import LimiteExcedido
 from app.control.servicio import ControlAcceso
 from app.operacion import preparado
@@ -50,7 +51,8 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         app.state.recursos = ServicioRecursos(conexion, app.state.perfiles)
         if isinstance(app.state.auth, ServicioAuth) and app.state.auth.asignaturas is None:
             app.state.auth.asignaturas = app.state.asignaturas
-        async with httpx.AsyncClient(timeout=5, transport=transporte,
+        verificar = contexto_tls(config.llm_tls_estricto) if transporte is None else True
+        async with httpx.AsyncClient(timeout=5, transport=transporte, verify=verificar,
                                      headers={"Authorization": f"Bearer {config.llm_api_key}"}) as cliente:
             app.state.ia = cliente
             try:
@@ -152,7 +154,8 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
             modelos = datos.get("data", []) if isinstance(datos, dict) else []
             disponible = isinstance(modelos, list) and any(
                 isinstance(m, dict) and m.get("id") == config.llm_model
-                and m.get("max_model_len") == 8192 for m in modelos)
+                # vLLM debe servir el contexto de 8192 de los prompts; DeepSeek tiene más.
+                and (config.llm_proveedor == "deepseek" or m.get("max_model_len") == 8192) for m in modelos)
         except (httpx.HTTPError, ValueError):
             pass
         return JSONResponse({"estado": "ok" if disponible else "degradado",

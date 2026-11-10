@@ -71,12 +71,32 @@ def _lista(titulo: str, items: list[str]) -> str:
     return titulo + "\n" + "\n".join(f"- {_limpio(i)}" for i in items)
 
 
+def _actividad(titulo: str, a) -> str:
+    if a is None or not a.texto.strip():
+        return ""
+    horas = f" ({a.horas:g} h)" if a.horas else ""
+    return f"{titulo}{horas}: {_limpio(a.texto)}"
+
+
+def _actividades(c: ContextoClase) -> str:
+    """Una clase separa las actividades por tipo; el momento y la asignatura las listan."""
+    separadas = [_actividad("Actividades con el docente", c.actividad_docente),
+                 _actividad("Actividades prácticas", c.actividad_practica),
+                 _actividad("Actividades de trabajo autónomo", c.actividad_autonoma)]
+    if any(separadas):
+        return "\n".join(p for p in separadas if p)
+    return _lista("Actividades:", c.actividades)
+
+
 def _seccion_clase(c: ContextoClase) -> str:
     ra = [f"{r.id}: {r.texto} (evidencia: {r.evidencia})" for r in c.ra]
+    sesion = (f"Sesión {c.sesion_numero} · semana {c.semana} · {c.fecha:%d/%m/%Y}"
+              if c.sesion_numero is not None else "")
     partes = [
         f"## {_ambito(_limpio(c.clase_id))} · {_limpio(c.momento_titulo)}",
+        sesion,
         _lista("Contenidos:", c.contenidos),
-        _lista("Actividades:", c.actividades),
+        _actividades(c),
         _lista("Resultados de aprendizaje:", ra),
         f"Política de uso de IA del momento: {_limpio(c.politica_ia)}" if c.politica_ia.strip() else "",
         _lista("Entregables del momento:", c.entregables_momento),
@@ -103,6 +123,8 @@ def _seccion_perfil(c: ContextoClase, e: EstiloFacultad) -> str:
         f"Problema del territorio: {_limpio(c.problema.descripcion)}",
         f"Reto: {_limpio(c.problema.reto)}",
         f"Producto final: {_limpio(c.problema.producto_final)}",
+        (f"Proyecto integrador de saberes (PIS): {_limpio(c.pis.nombre)}. Aporte de la asignatura: "
+         f"{_limpio(c.pis.aporte)}") if c.pis is not None and c.pis.nombre.strip() else "",
         _lista("Tipos de caso de la facultad:", e.tipos_de_caso),
         _lista("Software habitual:", e.software_habitual),
         f"Vocabulario: {_limpio(e.vocabulario)}" if e.vocabulario else "",
