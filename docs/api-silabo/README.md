@@ -1,12 +1,34 @@
-# Contrato JSON del sílabo para la API institucional
+# Contratos JSON con el SGA
 
-Qué apartados del sílabo debe entregar la API para que el Generador de Recursos entrene su modelo y genere recursos. El esquema formal está en [silabo-api.schema.json](silabo-api.schema.json) (JSON Schema 2020-12).
+La V2 recibe del SGA tres documentos JSON. Cada uno tiene un esquema (JSON Schema 2020-12) y un ejemplo en esta carpeta. Qué debe entregar TI para conectarlos: [../sga/para-TI.md](../sga/para-TI.md).
+
+| Contrato | Esquema | Ejemplo | Para qué |
+|---|---|---|---|
+| Autenticación | [auth-sga.schema.json](auth-sga.schema.json) | [ejemplo-auth.json](ejemplo-auth.json) | Identidad del docente tras validar su usuario y clave: `usuario`, `correo` institucional y `nombre`. Nunca incluye la clave ni tokens |
+| Materias | [materias-api.schema.json](materias-api.schema.json) | [ejemplo-materias.json](ejemplo-materias.json) | Lista de las materias del docente: `id_sga`, `codigo_pf`, `paralelo`, `nombre`, `carrera`, `estado` |
+| Sílabo | [silabo-api.schema.json](silabo-api.schema.json) | [ejemplo-minimo.json](ejemplo-minimo.json) | El sílabo de una materia, con lo que el Generador de Recursos entrena y genera |
+
+El código del proyecto formativo (`A99-AAAA-9-99999-9999`) identifica el sílabo: la materia lo trae en `codigo_pf` y el sílabo en `proyecto_formativo.codigo`; deben coincidir.
 
 ## Regla de privacidad
 
-La API **no** debe enviar la sección I (perfil, correo, teléfono, ORCID del docente) ni la VII (firmas). El esquema las rechaza: `additionalProperties: false` en todos los niveles.
+La API **no** debe enviar la sección I (perfil, correo, teléfono, ORCID del docente) ni la VII (firmas). Aunque lleguen, el sistema no las conserva: el **traductor de lista blanca** (`backend/app/sga/traductor.py`) copia solo las claves que declara `silabo-api.schema.json` y descarta todo lo demás sin mirarlo, y `SilaboUTI` rechaza cualquier campo desconocido. Una prueba exige que la lista blanca sea idéntica a la derivada del esquema. Los objetos que el esquema deja libres (`niveles`, `ra`, `contenidos`, `metodologias`, ...) pasan completos.
 
-## Apartados y para qué se usan
+## Validación en dos pasos
+
+1. **Esquema** (Pydantic, `SilaboUTI`): tipos, formatos y obligatoriedad según la tabla de abajo.
+2. **Siete reglas de integridad** (`backend/app/silabo/integridad.py`), que acumulan todos los fallos:
+   1. `momentos[i].numero`: no se repite.
+   2. `momentos[i].ra[j]`: el resultado de aprendizaje existe en `resultados_aprendizaje`.
+   3. `momentos[i].sesiones`: no está vacío.
+   4. `sesiones[j].id`: tiene la forma `M<momento>-S<n>` y el momento coincide con el de su momento.
+   5. `sesiones[j].id`: no se repite en el sílabo.
+   6. `sesiones[j].fecha`: está dentro del periodo (`periodo.inicio` a `periodo.fin`).
+   7. `sesiones[j].contenidos[k]`: no es una cadena vacía.
+
+Los fallos se informan como `ruta: regla` (por ejemplo `momentos[0].sesiones[1].id: repetido`), nunca con el valor del sílabo. Un sílabo inválido no se importa: su materia queda como `invalida` y el docente ve el motivo; las demás materias siguen.
+
+## Apartados del sílabo y para qué se usan
 
 | Apartado | Entrena el modelo | Genera recursos | Obligatorio |
 |---|---|---|---|
@@ -28,8 +50,9 @@ La API **no** debe enviar la sección I (perfil, correo, teléfono, ORCID del do
 | `pis`, `metodologias`, `bibliografia` | No | No: fuera del contexto hasta tener sílabos reales | No |
 | `uoc`, `modalidad`, `creditos`, `horas`, `horario`, `recursos` | No | No | No |
 
-## Lo que encontró la corrida de prueba (2026-11-09)
+Los apartados que hoy no se usan son **opcionales**: un JSON con solo los apartados obligatorios entra sin rellenar nada. Las `horas` de cada actividad de sesión y las `horas`, `uoc`, `modalidad`, `creditos` del proyecto formativo también son opcionales.
+
+## Lo que encontró la corrida de prueba (2026-11-09, sobre V1)
 
 - El esquema es válido y lo cumplen los 20 sílabos simulados y el fixture.
 - En los 2 sílabos reales leídos del PDF, faltan datos en campos que sí se usan: actividad práctica (23,5 % de las sesiones vacías), autónoma (11,8 %) y entregables (64,7 %). La API debería entregarlos completos cuando existan.
-- **Cambio pendiente en el sistema:** `SilaboUTI` exige hoy 9 campos que no usa: `metacompetencia`, `metodologias`, `pis`, `uoc`, `modalidad`, `creditos`, `horas` del proyecto formativo, `recursos` del momento y `horas` de cada actividad de sesión. Un JSON con solo los apartados obligatorios no entra hasta darles valores por omisión o rellenarlos al importar.

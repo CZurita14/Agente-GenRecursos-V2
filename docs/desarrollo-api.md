@@ -7,60 +7,47 @@ Desde `backend`, con el PostgreSQL configurado en `.env`:
 ../.venv/Scripts/python.exe -m app.servidor
 ```
 
-La API no aplica migraciones al iniciar. `004_auth.sql` crea retos y sesiones; el aplicador es idempotente. Las pruebas usan un esquema temporal por prueba, sin modificar las tablas de la aplicación.
+La API no aplica migraciones al iniciar. `004_auth.sql` crea las sesiones; el aplicador es idempotente. Las pruebas usan un esquema temporal por prueba, sin modificar las tablas de la aplicación.
 
 ## Configuración del ingreso
 
 Definir `AUTH_SECRETO` con al menos 32 caracteres aleatorios en `.env` o en el almacén de secretos del despliegue. Sin ese secreto, `/salud` funciona y las solicitudes de ingreso responden 503. No copiar el valor de prueba ni guardarlo en Git.
 
-El modo predeterminado es `ENTORNO=produccion`, `SMTP_MODO=deshabilitado` y `API_ORIGEN=https://localhost:5173`. Para consola de desarrollo definir explícitamente `ENTORNO=desarrollo` y `SMTP_MODO=consola`. Este modo imprime el correo y código en la terminal local: solo usarlo en desarrollo. En producción exige SMTP y un origen HTTPS exacto, sin ruta ni barra final. El SMTP de esta implementación usa STARTTLS (normalmente puerto 587), validación del certificado y timeout de 10 segundos. No admite conexión SMTP sin TLS ni TLS implícito de puerto 465.
+El ingreso es con el SGA. Variables: `SGA_PROVEEDOR` (`simulado` o `real`), `SGA_SIMULADO_DIR` (carpeta de fixtures, solo con el simulado) y `SGA_TIMEOUT_S` (15 s por llamada). Para desarrollo: `ENTORNO=desarrollo`, `SGA_PROVEEDOR=simulado` y `SGA_SIMULADO_DIR=backend/tests/fixtures/sga`. Con `ENTORNO=produccion` solo vale `real` y se exige un origen HTTPS exacto, sin ruta ni barra final. El adaptador real depende de TI (B-SGA1): [sga/para-TI.md](sga/para-TI.md). No hay SMTP ni código por correo.
 
-Para SMTP definir `SMTP_HOST`, `SMTP_PORT`, `SMTP_REMITENTE`, `SMTP_USUARIO` y `SMTP_CLAVE`. La cuenta institucional sigue pendiente de TI (B4); las pruebas capturan los mensajes o simulan SMTP y no envían correos reales.
+`ACCESO_PRUEBA=true` (solo desarrollo; la configuración lo prohíbe en producción) habilita `POST /auth/prueba`, que abre sesión sin autenticar contra el SGA.
 
 ## Contrato de autenticación
 
-- `POST /auth/codigo`, JSON `{"correo":"docente@uti.edu.ec"}`: respuesta uniforme para buzones aceptados o rechazados por SMTP. Solo admite exactamente `uti.edu.ec` e `indoamerica.edu.ec`. Intervalo mínimo de reenvío: 60 segundos.
-- `POST /auth/verificar`, JSON con `correo` y `codigo`: código de seis dígitos, 10 minutos, un solo uso. Quinto fallo: 429 y bloqueo de 15 minutos; pedir otro código no borra los intentos ni el bloqueo. Un código expirado no abre sesión.
+- `POST /auth/ingresar`, JSON `{"usuario":"...","clave":"..."}`: reserva el intento, autentica contra el SGA, sincroniza las materias y los sílabos del docente y abre la sesión. Devuelve `{"correo": ..., "materias": [...]}` y la cookie de sesión. La clave solo vive como parámetro local: no se guarda, no se registra y el modelo del cuerpo no la muestra en su `repr`. Credenciales rechazadas: 401. Quinto fallo seguido por usuario: 429 con `Retry-After: 900` (bloqueo de 15 minutos). SGA caído: 503, sin contar el intento. Si la sincronización falla a medias, el docente entra igual con lo ya sincronizado.
+- `GET /materias`: las materias del docente (`id_sga`, `codigo_pf`, `paralelo`, `nombre`, `carrera`, `estado_sga`, `estado` de importación `importada | sin_cambios | no_disponible | invalida`, `asignatura_id`).
 - `GET /auth/yo`: correo del usuario autenticado y rol `docente` o `administrador`, según la lista explícita de configuración; no es un rol que pueda elegir el cliente.
 - `POST /auth/salir`: elimina la sesión en PostgreSQL y la cookie en el cliente.
 
 Las escrituras exigen `Origin` exactamente igual a `API_ORIGEN`, incluso antes de abrir sesión. Las cookies siempre son `Secure`, `HttpOnly`, `SameSite=Lax`, sin atributo Domain. Para probar el flujo en navegador se necesita servir API y frontend por HTTPS; habilitar HTTP para el origen en desarrollo no desactiva Secure. TestClient usa una URL HTTPS y no necesita certificados.
 
-El servidor invalida sesiones tras 8 horas sin actividad y siempre a los 7 días de creación. No basta una cookie inventada. La BD solo almacena HMAC de códigos y SHA-256 de tokens de sesión; el secreto de HMAC permanece en configuración.
-
-El reto se confirma antes de enviar correo: no hay locks SQL ni conexiones retenidas mientras SMTP responde. Si SMTP acepta un mensaje pero se pierde la confirmación, el código sigue siendo utilizable y se conserva el intervalo de reenvío. Un rechazo del buzón no cambia la respuesta pública. Otros fallos de infraestructura dan 503 sin información interna. Las esperas de lock de emisión y verificación se limitan a 2 segundos.
+El servidor invalida sesiones tras 8 horas sin actividad y siempre a los 7 días de creación. No basta una cookie inventada. El bloqueo se guarda con un seudónimo del usuario (HMAC con `AUTH_SECRETO`): quien teclea su clave en el campo de usuario no la deja en la base. La BD solo almacena SHA-256 de los tokens de sesión. Las esperas de lock del bloqueo se limitan a 2 segundos.
 
 ## Verificación
 
 ```powershell
-../.venv/Scripts/python.exe -m pytest tests/test_auth.py tests/test_correo_auth.py tests/test_api.py -q
-../.venv/Scripts/python.exe -m pytest -q
+../.venv/Scripts/python.exe -m pytest tests/test_auth.py tests/test_sga_proveedor.py tests/test_sga_sincronizar.py tests/test_materias_api.py tests/test_api.py -q
+../.venv/Scripts/python.exe -m pytest -m "not servidor and not modelo" -q
 ```
 
-Incluye vencimiento, bloqueo, consumo único, revocación, TLS y no enumeración de buzones. Las pruebas concurrentes retienen una fila y comprueban en `pg_stat_activity` que los competidores esperan un lock antes de liberarla. No activan el humo GPU salvo que se configure `LLM_REAL=1`.
+Incluye bloqueo, vencimiento de sesión, revocación, TLS y que la clave no aparezca en trazas ni en columnas de texto. Las pruebas concurrentes retienen una fila y comprueban en `pg_stat_activity` que los competidores esperan un lock antes de liberarla. No activan el humo GPU salvo que se configure `LLM_REAL=1`.
 
-## Asignaturas y sílabos (A3)
+## Asignaturas y sílabos
 
-Aplicar también la migración `005_asignatura_acceso.sql` con el mismo comando del inicio. El UUID identifica la asignatura, no su código PF: dos docentes pueden subir un mismo PF y conservan asignaturas independientes.
+Aplicar también las migraciones `005_asignatura_acceso.sql`, `009_sga.sql` (`materia_sga`, `asignatura.activa_sga`) y `010_auth_sga.sql` (`auth_bloqueo`) con el mismo comando del inicio. El UUID identifica la asignatura, no su código PF. **No hay carga de sílabos por la API**: llegan del SGA al ingresar. Hay una asignatura por docente y código PF; dos paralelos son dos filas de `materia_sga` que apuntan a la misma. El acceso lo define solo el SGA: una asignatura cuya materia ya no aparece en la lista queda inactiva (404 y fuera del listado), nunca se borra y vuelve si la materia regresa. No hay «compartir».
 
-- `POST /silabos`: cuerpo **binario PDF** con `Content-Type: application/pdf`, cookie de sesión y `Origin`. No usa multipart ni acepta un dueño elegido por el cliente. Devuelve 201 con `id`, `agente`, `menu` por semanas y `clases_cambiadas`.
-- `GET /asignaturas`: lista las propias y compartidas; incluye el rol efectivo, sin el cuerpo del sílabo.
-- `GET /asignaturas/{UUID}/menu`: menú y versión, solo para dueño/editor/lector. Una asignatura ajena devuelve 403; una inexistente, 404.
-- `POST /asignaturas/{UUID}/compartir`: JSON `{"correo":"colega@uti.edu.ec","rol":"lector"}` o `editor`. Solo el dueño puede crear o cambiar este acceso. El destinatario no necesita haber ingresado todavía; al verificar su correo verá la asignatura.
-- `DELETE /asignaturas/{UUID}/compartir/{correo}`: retira acceso, solo el dueño. Codificar el correo al construir la URL.
+- `GET /asignaturas`: lista las activas del docente, sin el cuerpo del sílabo.
+- `GET /asignaturas/{UUID}/menu`: menú y versión. Una asignatura ajena devuelve 403; una inexistente o inactiva, 404.
 
-El frontend puede enviar un `File` directamente como `body` de `fetch`, con `credentials: 'include'` y Content-Type PDF. El navegador añade Origin. Los clientes de pruebas deben enviarlo explícitamente.
-
-El tamaño máximo predeterminado es 10 MB, contando bytes recibidos aunque no haya Content-Length o sea incorrecto. Se permiten dos cargas/lecturas simultáneas por proceso API; si están ocupadas, 503. Recepción limitada a 30 s (408 al vencer), lectura a 20 s en un subproceso con 512 MB de memoria. El subproceso usa JobObject en Windows y RLIMIT_AS en POSIX; son límites de recursos, no una cuenta de sistema separada. La comprobación de Windows se ejecuta en las pruebas locales; POSIX necesita validación en el despliegue Linux.
-
-El PDF y la salida JSON son temporales y se eliminan en éxito, error, timeout o desconexión. No se guarda el original en PostgreSQL ni se envía a IA. El texto de errores del lector y las salidas del hijo no se imprimen ni se devuelven al cliente. Un archivo no PDF da 415, un PDF vacío/ilegible da 422 y el exceso de tamaño da 413.
-
-Repetir la subida para el mismo dueño y PF reemplaza la versión conservando UUID y accesos compartidos. La respuesta identifica las clases cuyo contexto cambió; cambiar solo el número de versión no marca clases. Las primeras subidas concurrentes se serializan por dueño y código para comparar con la versión realmente anterior. Los trabajos existentes conservan su instantánea del sílabo y los recursos previos mantienen su versión; A4 conectará su consulta HTTP.
-
-Las operaciones retienen un bloqueo sobre la asignatura y **después** consultan el permiso en una nueva sentencia, para no usar un acceso que se retiró durante la espera. La comprobación `editar=True` permite dueño/editor y rechaza lector; A4 la utilizará al generar y editar recursos. Las pruebas fuerzan tanto retirada como degradación mientras otra conexión espera.
+Cada sílabo pasa por el traductor de lista blanca y por la validación de esquema y de las 7 reglas de integridad ([api-silabo/README.md](api-silabo/README.md)). Si su `version` no cambió respecto de la guardada, la materia queda `sin_cambios`; si cambió, se reemplaza la versión conservando el UUID y se informan las clases cuyo contexto cambió (cambiar solo el número de versión no marca clases). Los trabajos existentes conservan su instantánea del sílabo y los recursos previos mantienen su versión. Cada materia se procesa en su propia transacción: una falla no deshace las demás. Los mensajes de fallo nombran rutas de campo, nunca valores del sílabo.
 
 ```powershell
-../.venv/Scripts/python.exe -m pytest tests/test_asignaturas_api.py tests/test_asignaturas_concurrencia.py tests/test_pdf_recepcion.py tests/test_lector_aislado.py -q
+../.venv/Scripts/python.exe -m pytest tests/test_asignaturas_api.py tests/test_asignaturas_concurrencia.py tests/test_sga_sincronizar.py tests/test_equivalencia_v1.py -q
 ```
 
 ## Generación y recursos (A4)
@@ -86,7 +73,7 @@ Las modificaciones reales se guardan junto al historial y a sus verificaciones d
 
 El trabajo conserva su estado de cierre original; los campos `recurso_estado` y `recurso_revision` del polling reflejan posteriores ediciones del recurso. Las preguntas admiten texto y cambios de nivel, reordenación y eliminación de ítems existentes (sin quedar vacío), pero no nuevos IDs. Se rechazan RA/contenidos de otra clase, campos extra y opciones/clave mal formadas. El editor admite la misma alternativa de título de momento que P1 cuando no hay contenidos explícitos y conserva las advertencias del verificador. Para fichas exige las secciones conceptual/aplicacion. La pertenencia se comprueba contra la instantánea original; si falta, no se permite editar sustituyéndola por el sílabo vigente.
 
-El cuerpo JSON tiene máximo 1 MiB y recepción de 30 s, antes de su decodificación. Las preguntas editadas tienen 25–1000 caracteres para acotar la comparación de duplicados; la validación no compara textos gigantes. La subida binaria PDF conserva su límite de 10 MB. El historial operativo tiene `uso_mejora=false`: no alimenta automáticamente reglas ni entrenamiento.
+El cuerpo JSON tiene máximo 1 MiB y recepción de 30 s, antes de su decodificación. Las preguntas editadas tienen 25–1000 caracteres para acotar la comparación de duplicados; la validación no compara textos gigantes. El historial operativo tiene `uso_mejora=false`: no alimenta automáticamente reglas ni entrenamiento.
 
 ```powershell
 ../.venv/Scripts/python.exe -m pytest tests/test_generacion_api.py tests/test_edicion_validacion.py tests/test_cuerpo_json.py -q
@@ -102,12 +89,9 @@ Las cuotas persisten en PostgreSQL y se suman entre instancias y sesiones. Usan 
 |---|---:|---|
 | `LIMITE_IP_MINUTO` | 600 | solicitudes por IP/minuto |
 | `LIMITE_USUARIO_MINUTO` | 120 | solicitudes por correo autenticado/minuto |
-| `LIMITE_CODIGO_IP_HORA` | 120 | solicitudes de código por IP/hora |
-| `LIMITE_CODIGO_CORREO_HORA` | 6 | solicitudes de código por correo/hora |
-| `LIMITE_VERIFICAR_IP_MINUTO` | 60 | verificaciones por IP/minuto |
-| `LIMITE_VERIFICAR_CORREO_MINUTO` | 20 | verificaciones por correo/minuto |
+| `LIMITE_INGRESAR_IP_MINUTO` | 60 | intentos de ingreso por IP/minuto |
+| `LIMITE_INGRESAR_USUARIO_MINUTO` | 20 | intentos de ingreso por usuario (seudónimo)/minuto |
 | `LIMITE_GENERAR_CORREO_HORA` | 30 | peticiones de generación por correo/hora, antes de encolar |
-| `LIMITE_PDF_CORREO_HORA` | 10 | subidas por correo/hora, antes de leer el PDF |
 | `LIMITE_EDITAR_CORREO_MINUTO` | 30 | guardados de recurso por correo/minuto |
 
 Son valores técnicos iniciales para ajustar al piloto, la IP compartida institucional y la capacidad que confirme TI. No sustituyen los cinco intentos/15 minutos de A2 ni los límites de recepción de A3/A4.
@@ -130,7 +114,7 @@ La retención técnica de accesos es de 30 días (`AUDITORIA_RETENCION_DIAS`), p
 ../.venv/Scripts/python.exe -m app.control.mantenimiento
 ```
 
-No se ejecuta automáticamente al iniciar. TI debe programarlo y supervisarlo en P7; sin ejecutarlo no se garantiza el borrado físico al vencer la retención. La caducidad de códigos y sesiones sigue aplicándose al acceso aunque todavía no se hayan purgado sus filas.
+No se ejecuta automáticamente al iniciar. TI debe programarlo y supervisarlo en P7; sin ejecutarlo no se garantiza el borrado físico al vencer la retención. La caducidad de sesiones sigue aplicándose al acceso aunque todavía no se hayan purgado sus filas.
 
 `GET /privacidad`, con sesión, devuelve únicamente una vista del [borrador técnico](privacidad-borrador.md), con `estado=borrador`. La institución debe completar responsable, base aplicable, canales y conservación del material académico antes de aprobarlo. P6 deberá presentar el texto institucional aprobado antes del ingreso; esta ruta no representa aceptación ni amplía las rutas API públicas.
 
@@ -138,4 +122,4 @@ No se ejecuta automáticamente al iniciar. TI debe programarlo y supervisarlo en
 ../.venv/Scripts/python.exe -m pytest tests/test_control_api.py tests/test_control_identidad.py tests/test_limites.py tests/test_mantenimiento_control.py -q
 ```
 
-P4 queda implementado; siguen pendientes SMTP real, administradores institucionales, aprobación del aviso, y despliegue P7 con HTTPS, proxy y mantenimiento. Las migraciones de desarrollo se prueban en esquemas temporales: aplicar explícitamente a la BD de aplicación al preparar el entorno.
+P4 queda implementado; siguen pendientes el SGA real (B-SGA1), administradores institucionales, aprobación del aviso, y despliegue P7 con HTTPS, proxy y mantenimiento. Las migraciones de desarrollo se prueban en esquemas temporales: aplicar explícitamente a la BD de aplicación al preparar el entorno.

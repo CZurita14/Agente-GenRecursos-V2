@@ -2,7 +2,7 @@
 
 > **Para qué sirve:** es la memoria del proyecto V2. Al retomar, **se lee primero este archivo** y solo después, si hace falta, el documento puntual que enlaza.
 >
-> **Última actualización:** 2026-11-09 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Siguiente: Tarea 9.
+> **Última actualización:** 2026-11-10 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Documentación hecha; faltan la revisión final y el push.
 
 ## Cómo se actualiza
 
@@ -20,7 +20,7 @@ Estados: `⬜ pendiente` · `🔄 en curso` · `🔁 devuelta (ronda n)` · `✅
 
 ## Estado en una línea
 
-V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílabo (razonador MiniLM/SimCSE, planificador, verificador, revisor) y de generación. Se reemplaza la entrada por PDF por el SGA en JSON.
+V2 funcionalmente completa en la rama `v2/sga`: el docente ingresa con su usuario y clave del SGA, el sistema sincroniza sus materias y sus sílabos en JSON, los valida (esquema + 7 reglas) y genera las mismas 13 herramientas que V1 (equivalencia: 59/59 huellas iguales). Documentación hecha. **Falta:** el adaptador real del SGA (B-SGA1, TI), la revisión final y el push.
 
 ## Origen
 
@@ -40,7 +40,7 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
 | 6 | Frontend | ✅ hecha |
 | 7 | Ciencia de datos con JSON | ✅ (fusionada en la 5) |
 | 8 | Equivalencia con V1 y herramienta de comparación | ✅ hecha |
-| 9 | Documentación, verificación final y entrega | ⬜ pendiente |
+| 9 | Documentación, verificación final y entrega | ✅ documentación (la verificación E2E final y el push los hace el coordinador) |
 
 ## Bloqueos
 
@@ -82,10 +82,11 @@ V2 creada desde V1 `main` (`011bd68`): misma lógica de entendimiento del sílab
 - **Tareas 5 y 7 (fusionadas):** `GET /materias` (solo las del docente, por `codigo_pf` y `paralelo`); se borra la entrada por PDF (`POST /silabos`, `app/silabo/lector/`, `aislado.py`, `pdf_*`, `limite_pdf_correo_hora`, `lector_pdf`, `SilaboIlegible`) y `pdfplumber` sale de las dependencias de la API (queda solo en `dev` y en la etapa de pruebas de la imagen, porque las pruebas de exportación leen el PDF generado). La 7 se fusiona porque borrar el lector rompía `ciencia_datos/corpus.py`: ahora solo lee `.json` (`a_contrato` + `cargar_silabo`), ignora los `.pdf` con un aviso y su conteo. `compose.yaml` pasa `SGA_*`; nginx `client_max_body_size 1m`. Pruebas borradas: `tests/lector/` y 2 archivos de PDF más casos sueltos; nuevas: `test_materias_api.py` (4), 3 en `test_cd_corpus.py` y 1 en `test_infra_config.py`. Suite estándar: 1173 pasan, 0 se saltan, 13 deseleccionadas (eran 14: se borró `test_prompt_de_momento_cabe`, marcada `servidor`, que leía PDFs reales). Ronda de corrección 1: se rehace esa prueba con los JSON del SGA (+ variante sin servidor), se convierte `test_criterio_2_reales` y `test_materias_api.py` pasa por `sincronizar`; suite estándar 1177 pasan, 14 deseleccionadas; `modelo`: 10 pasan; `test_materias_api.py`: 4.
 - **Tarea 6:** frontend con el SGA: `Ingreso` pide usuario y clave (`type=password`, la clave se borra del estado tras cada respuesta, 401/429/503 con mensajes propios en `utils/materias.ts`); `Generar` lista `GET /materias` («CODIGO PARALELO n»), abre `importada`/`sin_cambios` en su menú y muestra desactivadas `no_disponible`/`invalida` con su motivo. Se quitan `subirSilabo`, `/auth/codigo`, `/auth/verificar` y `DropZone`. Pruebas: 28 unitarias (25 − 3 retiradas + 6 nuevas), 42 de navegador (Playwright, API simulada), typecheck y build sin errores.
 - **Tarea 8:** oráculo de huellas generado con el código de V1 `011bd68` (`tests/fixtures/v1/generar_oraculo.py` + `huellas_silabo_datos.json`); `test_equivalencia_v1.py`: las 59 entradas (contexto, prompt, plan, requisitos, sin IA, menú, entrenamiento, agente) del fixture pasado por `a_contrato` + `cargar_silabo` son idénticas a V1, y los 3 sílabos del SGA simulado no cambian al quitar campos privados. `app/sga/comparar.py` (`python -m app.sga.comparar <sga> <ref>`: rutas y % de coincidencia, nunca valores) con `test_sga_comparar.py` (4).
+- **Tarea 9 (documentación):** `README.md` reescrito para la V2 (flujo con el SGA, modelo matemático, SGA simulado, pruebas, equivalencia y lista de documentos de V1 como historia); `docs/sga/para-TI.md` (nuevo: qué debe entregar TI y dónde se conecta el adaptador); `docs/api-silabo/README.md` con los 3 contratos, las 7 reglas y el traductor; `ciencia-datos.md`, `operacion.md`, `entrega-ti.md` y `desarrollo-api.md` sin PDF, SMTP ni código por correo; `tests/fixtures/v1/README.md` con las dos aclaraciones de la Tarea 8. Solo documentación. Suite estándar: 1185 pasan, 14 deseleccionadas. Pendientes del coordinador: verificación E2E final y push.
 
 ---
 
 ## Siguiente paso
 
-1. Tarea 9.
-2. Pedir a TI lo del bloqueo B-SGA1.
+1. Pedir a TI lo del bloqueo B-SGA1 con [docs/sga/para-TI.md](docs/sga/para-TI.md) y escribir `app/sga/real.py` cuando respondan.
+2. Verificación E2E final (Qwen real, docker compose con el SGA simulado), revisión de toda la rama y push a `Agente-GenRecursos-V2` solo con aprobación del usuario.

@@ -1,6 +1,6 @@
 # Razonador entrenado · Guía para el área académica y para TI
 
-**Estado:** implementado y probado solo con la prueba de humo (2 sílabos). **Está apagado** y no cambia nada de lo que hoy hace la aplicación hasta que alguien lo encienda a propósito. Los criterios de aprobación de la sección 5 son una **propuesta, pendiente de que el usuario los confirme** antes de la corrida real.
+**Estado (V2: el corpus se lee solo de JSON del SGA):** implementado y probado solo con la prueba de humo (2 sílabos). **Está apagado** y no cambia nada de lo que hoy hace la aplicación hasta que alguien lo encienda a propósito. Los criterios de aprobación de la sección 5 son una **propuesta, pendiente de que el usuario los confirme** antes de la corrida real.
 
 ---
 
@@ -34,9 +34,9 @@ El modelo se entrena con el 70 % de los sílabos y se evalúa con el 30 % restan
 | Recomendado | 4 por facultad en las 8 facultades (32) | Cubre todo el catálogo. |
 | Separación 70/30 exacta | 10 por facultad en las 8 (80) | Solo si la universidad los entrega. |
 
-Con menos sílabos el programa se niega a entrenar (salvo con la opción de humo). Hoy hay 2 PDF, ambos de Ingenierías.
+Con menos sílabos el programa se niega a entrenar (salvo con la opción de humo). Hoy hay 2 sílabos reales, ambos de Ingenierías (de la V1, en PDF); en la V2 el corpus solo se lee en JSON.
 
-Los sílabos reales contienen datos personales de los docentes: se guardan en `Silabos/` en el equipo de trabajo, **no se versionan**, y ningún informe ni mensaje de consola reproduce su texto, solo cifras.
+El corpus de entrenamiento son archivos `.json` con el sílabo crudo del SGA, en una carpeta fuera del repositorio (p. ej. `datos_cd/silabos_sga/`, exportados con una cuenta de prueba o de lectura). Cada JSON pasa por `a_contrato` (lista blanca que descarta docente, contacto y firmas) y `cargar_silabo` (esquema y 7 reglas de integridad), así que no hay lector de PDF: los `.pdf` de la carpeta se ignoran y se avisa cuántos eran, y los JSON inválidos se cuentan como rechazados. Los sílabos reales contienen datos personales: **no se versionan**, y ningún informe ni mensaje de consola reproduce su texto, solo cifras.
 
 ---
 
@@ -104,17 +104,17 @@ Las versiones no están fijadas. Cada modelo guarda en `metadatos.json`, bajo `v
 
 ```text
 cd backend
-# 1. Candidato ajustado y candidato base (sin ajuste), con los sílabos reales
-HF_HUB_OFFLINE=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.entrenar --silabos ../Silabos --salida ../modelos/v1
-HF_HUB_OFFLINE=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.entrenar --silabos ../Silabos --salida ../modelos/base --sin-ajuste
+# 1. Candidato ajustado y candidato base (sin ajuste), con los sílabos en JSON del SGA
+HF_HUB_OFFLINE=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.entrenar --silabos ../datos_cd/silabos_sga --salida ../modelos/v1
+HF_HUB_OFFLINE=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.entrenar --silabos ../datos_cd/silabos_sga --salida ../modelos/base --sin-ajuste
 # 2. Listas de temas para los docentes: una por candidato, con el mismo --k (8 por omisión)
-... -m ciencia_datos.evaluar temas-para-revisar --modelo ../modelos/v1 --silabos ../Silabos --salida ../datos_cd/temas-revision-v1.csv
-... -m ciencia_datos.evaluar temas-para-revisar --modelo ../modelos/base --silabos ../Silabos --salida ../datos_cd/temas-revision-base.csv
+... -m ciencia_datos.evaluar temas-para-revisar --modelo ../modelos/v1 --silabos ../datos_cd/silabos_sga --salida ../datos_cd/temas-revision-v1.csv
+... -m ciencia_datos.evaluar temas-para-revisar --modelo ../modelos/base --silabos ../datos_cd/silabos_sga --salida ../datos_cd/temas-revision-base.csv
 # 3. Con pares.csv y temas.csv completos, una sola evaluación
-... -m ciencia_datos.evaluar --modelo ../modelos/v1 --base-modelo ../modelos/base --silabos ../Silabos
+... -m ciencia_datos.evaluar --modelo ../modelos/v1 --base-modelo ../modelos/base --silabos ../datos_cd/silabos_sga
 ```
 
-El valor de `--k` debe ser **el mismo** en `temas-para-revisar` y en `evaluar` (si se cambia en uno, se indica igual en el otro): la huella de los temas depende de él, y las filas de `temas.csv` solo valen para la agrupación con la que se juzgaron. Los sílabos pueden estar en subcarpetas de `Silabos/`; se conserva una versión por código de proyecto formativo. `entrenar` imprime cuántos sílabos usó de cada carpeta de primer nivel (`por_carpeta: …`), sin nombres de archivo: revise esa línea, porque un PDF ajeno en una subcarpeta entraría al corpus.
+El valor de `--k` debe ser **el mismo** en `temas-para-revisar` y en `evaluar` (si se cambia en uno, se indica igual en el otro): la huella de los temas depende de él, y las filas de `temas.csv` solo valen para la agrupación con la que se juzgaron. Los sílabos pueden estar en subcarpetas de `Silabos/`; se conserva una versión por código de proyecto formativo. `entrenar` imprime cuántos sílabos usó de cada carpeta de primer nivel (`por_carpeta: …`), sin nombres de archivo: revise esa línea, porque un JSON ajeno en una subcarpeta entraría al corpus.
 
 `entrenar` no sobrescribe: rechaza una `--salida` que ya tenga `metadatos.json` o `evaluacion.candado`.
 
@@ -164,7 +164,7 @@ Los datos que impiden decidir no llegan al informe: un sílabo de prueba ausente
 
 ### Resultado de la prueba de humo (2 sílabos)
 
-Con los 2 PDF de Ingenierías (1 para entrenamiento, 1 para evaluación, 27 fragmentos) el entrenamiento y la evaluación corrieron de principio a fin: se generó el modelo, se exportó y el informe se escribió con `humo: true` y `aprobado: false`. **Este resultado no es una evaluación de calidad**: demuestra que el programa funciona, no que el modelo sea bueno. Con un solo sílabo de evaluación no hay etiquetas docentes ni conclusiones posibles.
+Con los 2 sílabos de Ingenierías (convertidos a JSON) (1 para entrenamiento, 1 para evaluación, 27 fragmentos) el entrenamiento y la evaluación corrieron de principio a fin: se generó el modelo, se exportó y el informe se escribió con `humo: true` y `aprobado: false`. **Este resultado no es una evaluación de calidad**: demuestra que el programa funciona, no que el modelo sea bueno. Con un solo sílabo de evaluación no hay etiquetas docentes ni conclusiones posibles.
 
 ---
 
@@ -202,10 +202,10 @@ Una persona revisa `simulacion/muestra-revision.csv` y marca `parece_real`; solo
 
 ```text
 # 3. Candidato ajustado y candidato base, con la misma separación
-HF_HUB_OFFLINE=1 PYTHONUTF8=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.entrenar --silabos ../Silabos ../datos_cd/silabos_simulados --salida ../modelos/preliminar-1
-HF_HUB_OFFLINE=1 PYTHONUTF8=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.entrenar --silabos ../Silabos ../datos_cd/silabos_simulados --sin-ajuste --salida ../modelos/preliminar-1-base
+HF_HUB_OFFLINE=1 PYTHONUTF8=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.entrenar --silabos ../datos_cd/silabos_sga ../datos_cd/silabos_simulados --salida ../modelos/preliminar-1
+HF_HUB_OFFLINE=1 PYTHONUTF8=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.entrenar --silabos ../datos_cd/silabos_sga ../datos_cd/silabos_simulados --sin-ajuste --salida ../modelos/preliminar-1-base
 # 4. Informe que compara ambos, sobre los mismos sílabos
-HF_HUB_OFFLINE=1 PYTHONUTF8=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.preliminar --modelo ../modelos/preliminar-1 --base-modelo ../modelos/preliminar-1-base --silabos ../Silabos ../datos_cd/silabos_simulados --salida ../pruebas/ciencia_datos
+HF_HUB_OFFLINE=1 PYTHONUTF8=1 ../.venv-ciencia/Scripts/python.exe -m ciencia_datos.preliminar --modelo ../modelos/preliminar-1 --base-modelo ../modelos/preliminar-1-base --silabos ../datos_cd/silabos_sga ../datos_cd/silabos_simulados --salida ../pruebas/ciencia_datos
 ```
 
 `preliminar` escribe `<version>-preliminar.json` (no se versiona) y se puede repetir: no toma candado, no ajusta, no fija umbral y nunca escribe `aprobado`. Antes de medir comprueba que ambos modelos sean preliminares, que el base sea `--sin-ajuste`, que compartan la huella de separación y que los códigos de prueba y control estén entre los sílabos; si no, sale con código 2 sin escribir nada. Las cifras globales, por facultad y la silueta se miden solo sobre los fragmentos de los sílabos de prueba simulados; los reales solo se usan en `control_real`. Nunca se miden los de entrenamiento:

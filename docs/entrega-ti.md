@@ -2,7 +2,7 @@
 
 **Estado:** borrador para revisión. No se ha enviado a TI ni desplegado en ningún servidor institucional. Los comandos son para que TI los revise y ejecute; nada se ejecuta solo.
 
-**Qué es:** aplicación web interna para que los docentes suban su sílabo y generen herramientas de estudio con un modelo de IA local (Qwen3-8B-AWQ servido por vLLM). Los datos no salen de la red de la universidad.
+**Qué es:** aplicación web interna para que los docentes ingresen con su usuario del SGA, reciban sus sílabos desde el SGA y generen herramientas de estudio con un modelo de IA local (Qwen3-8B-AWQ servido por vLLM). Los datos no salen de la red de la universidad.
 
 **Documentos de apoyo:** [manual de operación](operacion.md) (detalle de cada comando, respaldo y restauración) · [plan y resultados de P7](superpowers/plans/2026-10-28-p7-despliegue.md) (prueba de instalación aislada 24/24).
 
@@ -19,7 +19,7 @@ Cada punto bloquea la puesta en marcha. Entre paréntesis, la puerta abierta en 
 | 3 | Certificado TLS | Cadena completa (`fullchain.pem`) y clave privada (`privkey.pem`) para ese nombre, y quién los renueva. | B5 |
 | 4 | Puertos | Abrir 443 (y 80 para redirigir) desde la red de docentes al servidor. Nada más se publica. | B5 |
 | 5 | Servidor de IA | URL interna del vLLM con Qwen y cuántas peticiones simultáneas admite (§5). | B6 |
-| 6 | Correo saliente | Servidor SMTP, puerto, remitente y, si aplica, usuario y clave. Los docentes entran con un código que llega a su correo institucional. | B4 |
+| 6 | SGA | Mecanismo de autenticación, consulta de materias del docente y del sílabo en JSON, cuenta de prueba, tiempos y límites. Los docentes entran con su usuario y clave del SGA. Detalle en [sga/para-TI.md](sga/para-TI.md). | B-SGA1 |
 | 7 | Administradores | Correos `@uti.edu.ec` o `@indoamerica.edu.ec` de quienes ven el consumo. | B10 |
 | 8 | Respaldo | Dónde se guardan los respaldos cifrados, con qué frecuencia y por cuánto tiempo. | B5 |
 | 9 | Aviso de privacidad | Aprobado por la institución antes de abrir el acceso a docentes. | B9 |
@@ -40,14 +40,14 @@ Seis servicios en un Compose propio (`infra/compose.yaml`), con nombre de proyec
 
 | Servicio | Función | Red | Puertos al host |
 |---|---|---|---|
-| `proxy` | HTTPS, redirección desde HTTP, cabeceras de seguridad, límite de subida 10 MiB | `borde` (interna) + `publica` | **Solo este**: 80 y 443 |
+| `proxy` | HTTPS, redirección desde HTTP, cabeceras de seguridad, límite de cuerpo 1 MiB | `borde` (interna) + `publica` | **Solo este**: 80 y 443 |
 | `web` | Sirve la interfaz | `borde` | Ninguno |
 | `api` | API de la aplicación | `datos`, `borde`, `salida` | Ninguno |
 | `worker` | Genera los recursos con la IA (cola en la base) | `datos`, `salida` | Ninguno |
 | `db` | PostgreSQL 18 con volumen persistente | `datos` (interna) | Ninguno |
 | `migrar` | Aplica el esquema una vez y termina | `datos` | Ninguno |
 
-- `api` y `worker` necesitan salida (`salida`) solo para llegar al servidor de IA y al SMTP. La base no tiene salida.
+- `api` y `worker` necesitan salida (`salida`) solo para llegar al servidor de IA y al SGA. La base no tiene salida.
 - Todos corren sin privilegios, con raíz de solo lectura y sin capacidades del kernel. Las imágenes base están fijadas por digest.
 - La API solo confía en la IP fija del proxy (`IP_PROXY`) para conocer la IP del cliente. Si TI pone otro balanceador delante, hay que revisarlo antes.
 
@@ -87,15 +87,15 @@ Se parte de [`infra/.env.example`](../infra/.env.example). El archivo real se gu
 | `LLM_MODEL` | `Qwen/Qwen3-8B-AWQ` | TI confirma |
 | `LLM_API_KEY` | Si el vLLM la exige; si no, `no-se-necesita` | TI |
 | `LLM_MAX_CONCURRENCIA` | Peticiones simultáneas del worker a la IA (empezar en `1`) | TI (§5) |
-| `SMTP_MODO` | `smtp` | Fijo |
-| `SMTP_HOST` / `SMTP_PORT` / `SMTP_REMITENTE` / `SMTP_USUARIO` / `SMTP_CLAVE` | Datos del punto 6 | TI |
+| `SGA_PROVEEDOR` | `real` (el simulado no se admite en producción) | Fijo |
+| `SGA_TIMEOUT_S` | Segundos máximos por llamada al SGA (15 por omisión); ajustar con los tiempos que informe TI en el punto 6 | TI |
 | `ADMINISTRADORES` | Lista JSON, p. ej. `["persona@uti.edu.ec"]`; no vacía en producción | Institución |
 | `LIMITE_IP_MINUTO` | Peticiones por minuto por IP (600). **Subir si los docentes salen por una sola IP (NAT)**: todos comparten esta cuota. | TI |
-| Otros `LIMITE_*` | Cuotas por usuario y por correo (pedir código, verificar, generar, subir PDF, editar). Valores por defecto en `infra/.env.example`; normalmente no se tocan. | Opcional |
+| Otros `LIMITE_*` | Cuotas por usuario y por correo (ingresar, generar, editar). Valores por defecto en `infra/.env.example`; normalmente no se tocan. | Opcional |
 | `AUDITORIA_RETENCION_DIAS` | Días que se guardan los registros de acceso (30, máximo 365) | Institución |
 | `RAZONADOR_RUTA` | **Vacía** (apagado). Solo si el usuario decide encender el razonador entrenado: `/modelos/<versión>` de un modelo aprobado ([guía](ciencia-datos.md)). Solo la recibe el `worker`. | Institución, con TI |
 
-Fijadas en el Compose (no se cambian por variable): subida de PDF hasta 10 MiB y 20 s de análisis; JSON hasta 1 MiB; timeouts de IA 120 s (generación) y 240 s (revisión).
+Fijadas en el Compose (no se cambian por variable): JSON hasta 1 MiB y 30 s de recepción; timeouts de IA 120 s (generación) y 240 s (revisión).
 
 ---
 
@@ -138,8 +138,8 @@ No ejecutar `docker compose config` sin filtrar: imprime los secretos.
 | `http://DOMINIO/` | Redirige (308) a `https://DOMINIO/` |
 | `https://DOMINIO/` con verificación de certificado | Abre la pantalla de ingreso, con el logo UTI |
 | `https://DOMINIO/api/salud` | 404 (la salud interna no se publica) |
-| Pedir código con un correo institucional | El código llega al buzón (prueba real de SMTP, B4) |
-| Subir un sílabo y generar una hoja de ruta | Se genera, se valida y se descarga en HTML, PDF y Word |
+| Ingresar con una cuenta del SGA | Entra y aparecen sus materias (prueba real del SGA, B-SGA1) |
+| Abrir una materia con sílabo importado y generar una hoja de ruta | Se genera, se valida y se descarga en HTML, PDF y Word |
 | Generar una ficha de clase | Pasa a «Lista» en uno o dos minutos (prueba real de la IA, B6) |
 | `docker port <proyecto>-proxy-1` | Solo 80 y 443; ningún otro servicio publica puertos |
 
@@ -151,7 +151,7 @@ No ejecutar `docker compose config` sin filtrar: imprime los secretos.
 |---|---|---|
 | Respaldo de la base | Diario (TI decide) | `python3 infra/operar.py --entorno … --proyecto genrecursos-app respaldo --salida /respaldos/AAAAMMDD.dump` |
 | Prueba de restauración | Mensual, siempre en base nueva | `… restaurar --archivo /respaldos/AAAAMMDD.dump --base verificacion_AAAAMMDD` |
-| Purga de datos de seguridad vencidos (sesiones, códigos, cuotas y registros de acceso de más de 30 días) | Diaria | `docker compose --env-file … --project-name genrecursos-app -f infra/compose.yaml run --rm --no-deps api python -m app.control.mantenimiento` |
+| Purga de datos de seguridad vencidos (sesiones, bloqueos de ingreso, cuotas y registros de acceso de más de 30 días) | Diaria | `docker compose --env-file … --project-name genrecursos-app -f infra/compose.yaml run --rm --no-deps api python -m app.control.mantenimiento` |
 | Renovar certificado | Antes de su vencimiento | Reemplazar los dos archivos de `TLS_DIR` y recrear `proxy` |
 | Vigilar | Continuo | Salud de servicios, disco, vencimiento TLS, trabajos en espera |
 
@@ -171,4 +171,4 @@ No ejecutar `docker compose config` sin filtrar: imprime los secretos.
 
 ## 9. Lo que no se ha probado
 
-La instalación se probó completa en un equipo de desarrollo con un proyecto aislado, datos sintéticos, certificado autofirmado y la IA caída a propósito. **No** se ha probado: certificado institucional, SMTP real, Qwen real dentro de este Compose ni el servidor de TI. La imagen con las dependencias del razonador se construyó una vez durante esta rama con `pip check` limpio, pero no se ha corrido con un modelo aprobado en un `worker` real: solo existe una prueba de humo con 2 sílabos, que no mide calidad. Esa verificación es la del §6 en el servidor de TI.
+La instalación se probó completa en un equipo de desarrollo con un proyecto aislado, datos sintéticos, certificado autofirmado y la IA caída a propósito. **No** se ha probado: certificado institucional, SGA real, Qwen real dentro de este Compose ni el servidor de TI. La imagen con las dependencias del razonador se construyó una vez durante esta rama con `pip check` limpio, pero no se ha corrido con un modelo aprobado en un `worker` real: solo existe una prueba de humo con 2 sílabos, que no mide calidad. Esa verificación es la del §6 en el servidor de TI.

@@ -33,13 +33,13 @@ Partir de `infra/.env.example`, guardar la copia fuera del repositorio y restrin
 - `ENTORNO`: `produccion` o `desarrollo`. Producción requiere `API_ORIGEN` HTTPS exacto, sin ruta, credenciales, query ni fragmento; desarrollo admite HTTP para integración local.
 - `AUTH_SECRETO`: al menos 32 caracteres y sin marcadores de sustitución conocidos. Generarlo aleatoriamente y conservarlo en el gestor de secretos institucional.
 - `POSTGRES_PASSWORD`: al menos 32 caracteres, sin marcadores y solo `[A-Za-z0-9_-]`. Generar con `secrets.token_urlsafe(32)` en una sesión privada. `POSTGRES_USER` y `POSTGRES_DB`: entre 1 y 63 caracteres, primero alfanumérico o `_`, resto alfanumérico, `_` o `-`. Compose construye `DATABASE_URL` directamente con estas variables: no admite caracteres que necesiten escape URI. No pegar una contraseña arbitraria con `@`, `:`, `/`, `%`, espacios o comillas.
-- Producción exige `SMTP_MODO=smtp`, `SMTP_HOST` y `SMTP_REMITENTE` no vacíos. Desarrollo admite `SMTP_MODO=deshabilitado`; no enviar ni imprimir códigos como sustituto de la prueba institucional de SMTP.
+- `SGA_PROVEEDOR`: en producción debe ser `real` (el simulado solo sirve en desarrollo y la API lo rechaza con `ENTORNO=produccion`). El adaptador real depende de TI (B-SGA1, [para-TI](sga/para-TI.md)); `SGA_TIMEOUT_S` (15 s por omisión) acota cada llamada al SGA. `validar` no comprueba el SGA: se verifica con un ingreso real durante la entrega.
 - `ADMINISTRADORES`: lista JSON de direcciones de `uti.edu.ec` o `indoamerica.edu.ec`, no vacía en producción. En desarrollo puede estar vacía u omitirse. Se valida la sintaxis, no la autorización institucional de las personas.
 - `RED_PROXY`: subred IPv4 canónica distinta de `/0`; `IP_PROXY`: dirección IPv4 exacta dentro de ella, distinta de red y broadcast. `RANGO_DINAMICO`: parte de `RED_PROXY` de la que Docker asigna direcciones a `api` y `web`; debe excluir `IP_PROXY` (por defecto la mitad alta del /28). Sin él, el servicio que se conecta primero puede tomar la IP del proxy y este no arranca. No ampliar proxies confiables a toda la institución. Revisar conflictos de red antes de arrancar.
 - `LIMITE_*` y `AUDITORIA_RETENCION_DIAS` (opcionales): enteros entre 1 y 100000 (retención: 1 a 365), los mismos rangos que la API. Si faltan, se usan los valores por defecto de `app/config.py`. Con NAT institucional subir `LIMITE_IP_MINUTO`.
 - `DOMINIO`: hostname sin esquema, puerto ni ruta. `TLS_DIR`: directorio con `fullchain.pem` y `privkey.pem`.
 
-La validación local no certifica fortaleza criptográfica, vigencia de certificados, conectividad de IA/SMTP, DNS ni recepción de correos. Revisarlos durante la entrega a TI.
+La validación local no certifica fortaleza criptográfica, vigencia de certificados, conectividad con la IA ni con el SGA, DNS ni el ingreso de un docente real. Revisarlos durante la entrega a TI.
 
 ## HTTPS y publicación
 
@@ -99,8 +99,8 @@ Para la aceptación local, el proceso padre ejecuta Docker real exclusivamente e
 
 ## Vigilancia y rotación
 
-Supervisar disco/volumen y espacio para temporales y respaldos, salud de servicios, antigüedad de trabajos en espera, latido del worker y caducidad TLS. Mantener logs con acceso restringido, sin cuerpos, credenciales, cookies, códigos ni direcciones de correo. Revisar diagnósticos saneados antes de compartirlos.
+Supervisar disco/volumen y espacio para temporales y respaldos, salud de servicios, antigüedad de trabajos en espera, latido del worker y caducidad TLS. Mantener logs con acceso restringido, sin cuerpos, credenciales, cookies, claves del SGA ni direcciones de correo. Revisar diagnósticos saneados antes de compartirlos.
 
-Rotar secretos y credenciales con ventana coordinada. Cambiar `AUTH_SECRETO` exige recrear API y worker y prever invalidación de códigos pendientes; la caducidad/revocación de sesiones debe seguir el mecanismo de autenticación vigente, sin asumir que cambiar este secreto las revoca automáticamente. Cambiar `POSTGRES_PASSWORD` en el archivo no cambia el rol en un volumen ya inicializado: rotar primero de forma coordinada la credencial real y recrear consumidores. Revisar SMTP y recepción institucional tras su rotación. Aplicar retención/purga de auditoría según política; no borrar historial académico sin una política aprobada.
+Rotar secretos y credenciales con ventana coordinada. Cambiar `AUTH_SECRETO` exige recrear API y worker y prever que no haya ingresos en curso; la caducidad/revocación de sesiones debe seguir el mecanismo de autenticación vigente, sin asumir que cambiar este secreto las revoca automáticamente. Cambiar `POSTGRES_PASSWORD` en el archivo no cambia el rol en un volumen ya inicializado: rotar primero de forma coordinada la credencial real y recrear consumidores. Si TI rota la cuenta de servicio del SGA (si el adaptador real la usa), coordinar el cambio con la ventana. Aplicar retención/purga de auditoría según política; no borrar historial académico sin una política aprobada.
 
 Las pruebas unitarias `backend/tests/test_operar_infra.py` sustituyen subprocess y no requieren Docker ni BD. La integración real y la puesta en marcha institucional se verifican por separado.
