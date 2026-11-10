@@ -28,7 +28,8 @@ const USUARIO = { correo: 'docente@uti.edu.ec', rol: 'docente' };
 const MATERIA = (id, estado, extra = {}) => ({ id_sga: id, codigo_pf: 'B26-SOFT-3', paralelo: '1', nombre: 'ANALISIS DE DATOS',
   carrera: 'SOFTWARE', estado_sga: 'ACTIVA', estado, asignatura_id: estado === 'importada' || estado === 'sin_cambios' ? 'a1' : null, ...extra });
 const MATERIAS = [MATERIA('m1', 'importada'), MATERIA('m2', 'no_disponible', { paralelo: '2', nombre: 'ESTADISTICA' }),
-  MATERIA('m3', 'invalida', { codigo_pf: 'B26-SOFT-4', nombre: 'PROBABILIDAD' })];
+  MATERIA('m3', 'invalida', { codigo_pf: 'B26-SOFT-4', nombre: 'PROBABILIDAD' }),
+  MATERIA('m4', 'no_disponible', { paralelo: '3', nombre: 'CALCULO', asignatura_id: 'a1' })];
 
 const MENU_ASIG = [{ numero: 2, inicio: '2026-10-12', fin: '2026-10-18', cierra_momentos: [2], clases: [
   { clase_id: 'M2-S1', numero_clase: 1, dia: 'mie', fecha: '2026-10-14', momento: 2, momento_titulo: 'Planeación',
@@ -176,23 +177,27 @@ test('Empezar lista las materias del SGA y abrir una lleva a su menú', async ()
   await page.getByRole('heading', { name: 'Generar herramientas' }).waitFor();
   const lista = page.getByRole('list', { name: 'Materias del SGA' });
   await lista.getByText('B26-SOFT-3 PARALELO 1').waitFor();
-  assert.equal(await lista.getByRole('listitem').count(), 3);
+  assert.equal(await lista.getByRole('listitem').count(), 4);
   assert.equal(await page.locator('input[type="file"]').count(), 0);
   await lista.getByRole('button', { name: /ANALISIS DE DATOS/ }).click();
   await page.getByText('DISTRIBUCIONES').first().waitFor();
   await context.close();
 });
 
-test('materias no disponibles o inválidas salen desactivadas con su motivo', async () => {
+test('materias no disponibles o inválidas: sin asignatura desactivadas, con asignatura abren la versión anterior', async () => {
   const { context, page } = await abrir();
   await page.getByRole('button', { name: 'Empezar' }).click();
   const lista = page.getByRole('list', { name: 'Materias del SGA' });
   await lista.getByText('B26-SOFT-3 PARALELO 2').waitFor();
-  assert.equal(await lista.getByRole('button').count(), 1);
+  assert.equal(await lista.getByRole('button').count(), 2);
   const nd = lista.getByRole('listitem').filter({ hasText: 'ESTADISTICA' });
   assert.equal(await nd.locator('[aria-disabled="true"]').count(), 1);
   await nd.getByText('no está disponible').waitFor();
   await lista.getByRole('listitem').filter({ hasText: 'PROBABILIDAD' }).getByText('No se pudo importar').waitFor();
+  const anterior = lista.getByRole('button', { name: /CALCULO/ });
+  await anterior.getByText('Se usa la última versión importada').waitFor();
+  await anterior.click();
+  await page.getByText('DISTRIBUCIONES').first().waitFor();
   await context.close();
 });
 

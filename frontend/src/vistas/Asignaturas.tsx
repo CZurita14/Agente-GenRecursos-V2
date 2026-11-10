@@ -5,7 +5,7 @@ import type { AsignaturaResumen } from '../api/tipos';
 
 interface AsignaturasProps {
   onSesionVencida: () => void;
-  onSubir: () => void;
+  onGenerar: () => void;
   onAbrir: (asignatura: AsignaturaResumen) => void;
 }
 
@@ -19,7 +19,7 @@ const COLUMNAS: Column<AsignaturaResumen>[] = [
 ];
 
 /** Asignaturas propias y compartidas (GET /asignaturas). */
-export function Asignaturas({ onSesionVencida, onSubir, onAbrir }: AsignaturasProps) {
+export function Asignaturas({ onSesionVencida, onGenerar, onAbrir }: AsignaturasProps) {
   const [filas, setFilas] = useState<AsignaturaResumen[] | null>(null);
   const [error, setError] = useState('');
 
@@ -37,7 +37,7 @@ export function Asignaturas({ onSesionVencida, onSubir, onAbrir }: AsignaturasPr
   return <>
     <div className="flex flex-wrap items-center justify-between gap-3">
       <h1 className="text-2xl font-bold">Proyecto Formativo</h1>
-      <Button onClick={onSubir}>Elegir materia del SGA</Button>
+      <Button onClick={onGenerar}>Elegir materia del SGA</Button>
     </div>
     {error && <Alert tone="danger" role="alert">{error}</Alert>}
     <DataTable caption="Proyecto Formativo" columns={COLUMNAS} rows={filas ?? []} rowKey={a => a.id}

@@ -66,3 +66,23 @@ def test_cli_imprime_resumen(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "momentos[0].titulo" in out and "TITULO-SECRETO-XYZ" not in out and "%" in out
     assert main([str(b), str(b)]) == 0
+
+
+def test_paralelos_identicos_cuentan_una_vez(tmp_path):
+    a, b = _dirs(tmp_path)
+    f = sorted(a.glob("*.json"))[0]
+    shutil.copy(f, a / "zz-otro-paralelo.json")
+    inf = comparar(a, b)
+    assert len(inf["codigos"]) == 3 and all(r["diferentes"] == [] for r in inf["codigos"].values())
+
+
+def test_paralelos_distintos_nombran_el_codigo(tmp_path):
+    import pytest
+    a, b = _dirs(tmp_path)
+    f = sorted(a.glob("*.json"))[0]
+    d = json.loads(f.read_text(encoding="utf-8"))
+    d["momentos"][0]["titulo"] = "TITULO-SECRETO-XYZ"
+    (a / "zz-otro-paralelo.json").write_text(json.dumps(d), encoding="utf-8")
+    with pytest.raises(ValueError) as exc:
+        comparar(a, b)
+    assert _codigo(f) in str(exc.value) and "TITULO-SECRETO-XYZ" not in str(exc.value)

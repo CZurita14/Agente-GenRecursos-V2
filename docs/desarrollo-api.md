@@ -13,7 +13,19 @@ La API no aplica migraciones al iniciar. `004_auth.sql` crea las sesiones; el ap
 
 Definir `AUTH_SECRETO` con al menos 32 caracteres aleatorios en `.env` o en el almacén de secretos del despliegue. Sin ese secreto, `/salud` funciona y las solicitudes de ingreso responden 503. No copiar el valor de prueba ni guardarlo en Git.
 
-El ingreso es con el SGA. Variables: `SGA_PROVEEDOR` (`simulado` o `real`), `SGA_SIMULADO_DIR` (carpeta de fixtures, solo con el simulado) y `SGA_TIMEOUT_S` (15 s por llamada). Para desarrollo: `ENTORNO=desarrollo`, `SGA_PROVEEDOR=simulado` y `SGA_SIMULADO_DIR=backend/tests/fixtures/sga`. Con `ENTORNO=produccion` solo vale `real` y se exige un origen HTTPS exacto, sin ruta ni barra final. El adaptador real depende de TI (B-SGA1): [sga/para-TI.md](sga/para-TI.md). No hay SMTP ni código por correo.
+El ingreso es con el SGA. Variables: `SGA_PROVEEDOR` (`real` por omisión, o `simulado`), `SGA_SIMULADO_DIR` (carpeta de fixtures, solo con el simulado), `SGA_TIMEOUT_S` (15 s por llamada) y `SGA_SINCRONIZACION_MAX_S` (45 s por omisión, menor que los 65 s del proxy: al agotarse, las materias restantes quedan `no_disponible` con su versión anterior). Con `ENTORNO=produccion` solo vale `real` (la configuración rechaza `simulado` al arrancar) y se exige un origen HTTPS exacto, sin ruta ni barra final. El adaptador real depende de TI (B-SGA1): [sga/para-TI.md](sga/para-TI.md). No hay SMTP ni código por correo.
+
+Desarrollo con el SGA simulado: en el `.env` de la raíz, además de la base de datos y el servidor de IA, van estas cinco variables:
+
+```text
+ENTORNO=desarrollo
+API_ORIGEN=http://localhost:5173
+SGA_PROVEEDOR=simulado
+SGA_SIMULADO_DIR=backend/tests/fixtures/sga
+AUTH_SECRETO=<al menos 32 caracteres aleatorios propios>
+```
+
+`SGA_SIMULADO_DIR` es relativa a la raíz del proyecto, no a la carpeta desde la que se arranca la API; si la carpeta no tiene `usuarios.json`, la API no arranca y lo dice. `AUTH_SECRETO` se genera una vez, por ejemplo con `python -c "import secrets; print(secrets.token_urlsafe(48))"`, y no se versiona ni se comparte. `API_ORIGEN` es el origen del servidor de Vite, que reenvía `/api/*` a la API.
 
 `ACCESO_PRUEBA=true` (solo desarrollo; la configuración lo prohíbe en producción) habilita `POST /auth/prueba`, que abre sesión sin autenticar contra el SGA.
 
@@ -24,7 +36,7 @@ El ingreso es con el SGA. Variables: `SGA_PROVEEDOR` (`simulado` o `real`), `SGA
 - `GET /auth/yo`: correo del usuario autenticado y rol `docente` o `administrador`, según la lista explícita de configuración; no es un rol que pueda elegir el cliente.
 - `POST /auth/salir`: elimina la sesión en PostgreSQL y la cookie en el cliente.
 
-Las escrituras exigen `Origin` exactamente igual a `API_ORIGEN`, incluso antes de abrir sesión. Las cookies siempre son `Secure`, `HttpOnly`, `SameSite=Lax`, sin atributo Domain. Para probar el flujo en navegador se necesita servir API y frontend por HTTPS; habilitar HTTP para el origen en desarrollo no desactiva Secure. TestClient usa una URL HTTPS y no necesita certificados.
+Las escrituras exigen `Origin` exactamente igual a `API_ORIGEN`, incluso antes de abrir sesión. Las cookies siempre son `Secure`, `HttpOnly`, `SameSite=Lax`, sin atributo Domain. En desarrollo basta `npm --prefix frontend run dev`: el navegador ve un solo origen, `http://localhost:5173`, y el proxy de Vite reenvía `/api/*` a la API en `http://127.0.0.1:8001`. Chrome, Edge y Firefox aceptan cookies `Secure` en `localhost` aunque sea HTTP, así que no hace falta HTTPS local. Fuera de `localhost` sí se necesita HTTPS. TestClient usa una URL HTTPS y no necesita certificados.
 
 El servidor invalida sesiones tras 8 horas sin actividad y siempre a los 7 días de creación. No basta una cookie inventada. El bloqueo se guarda con un seudónimo del usuario (HMAC con `AUTH_SECRETO`): quien teclea su clave en el campo de usuario no la deja en la base. La BD solo almacena SHA-256 de los tokens de sesión. Las esperas de lock del bloqueo se limitan a 2 segundos.
 
@@ -39,7 +51,7 @@ Incluye bloqueo, vencimiento de sesión, revocación, TLS y que la clave no apar
 
 ## Asignaturas y sílabos
 
-Aplicar también las migraciones `005_asignatura_acceso.sql`, `009_sga.sql` (`materia_sga`, `asignatura.activa_sga`) y `010_auth_sga.sql` (`auth_bloqueo`) con el mismo comando del inicio. El UUID identifica la asignatura, no su código PF. **No hay carga de sílabos por la API**: llegan del SGA al ingresar. Hay una asignatura por docente y código PF; dos paralelos son dos filas de `materia_sga` que apuntan a la misma. El acceso lo define solo el SGA: una asignatura cuya materia ya no aparece en la lista queda inactiva (404 y fuera del listado), nunca se borra y vuelve si la materia regresa. No hay «compartir».
+Aplicar también las migraciones `005_asignatura_acceso.sql`, `009_sga.sql` (`materia_sga`, `asignatura.activa_sga`), `010_auth_sga.sql` (`auth_bloqueo`) y `011_acceso_solo_sga.sql` con el mismo comando del inicio. `011` cierra las sesiones abiertas con V1 (el siguiente ingreso pasa por el SGA) y borra los accesos compartidos de V1 de `asignatura_acceso`. La tabla y sus roles (`editor`, `lector`) se conservan, pero ninguna ruta de la API la escribe: solo un administrador, directamente en la base de datos. El UUID identifica la asignatura, no su código PF. **No hay carga de sílabos por la API**: llegan del SGA al ingresar. Hay una asignatura por docente y código PF; dos paralelos son dos filas de `materia_sga` que apuntan a la misma. El acceso lo define solo el SGA: una asignatura cuya materia ya no aparece en la lista queda inactiva (404 y fuera del listado), nunca se borra y vuelve si la materia regresa. No hay «compartir».
 
 - `GET /asignaturas`: lista las activas del docente, sin el cuerpo del sílabo.
 - `GET /asignaturas/{UUID}/menu`: menú y versión. Una asignatura ajena devuelve 403; una inexistente o inactiva, 404.

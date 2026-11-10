@@ -95,7 +95,7 @@
         },
         "horas": {
           "type": "object",
-          "description": "Opcional: no se usa hoy.",
+          "description": "Opcional: no se usa hoy. Si viene, trae las cuatro horas.",
           "additionalProperties": false,
           "properties": {
             "total": {
@@ -110,7 +110,13 @@
             "practico": {
               "type": "number"
             }
-          }
+          },
+          "required": [
+            "total",
+            "contacto",
+            "autonomo",
+            "practico"
+          ]
         },
         "horario": {
           "type": "array",

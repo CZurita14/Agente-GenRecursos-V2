@@ -50,7 +50,9 @@ export function Generar({ onSesionVencida, onAbrir }: GenerarProps) {
                 ? <button type="button" onClick={() => onAbrir({ ...m, asignatura_id: m.asignatura_id as string })}
                   className="w-full text-left rounded-lg border border-line bg-surface p-3 hover:border-highlight flex items-start justify-between gap-3">
                   <span>{detalle}</span>
-                  <Badge tone="success">{m.estado === 'importada' ? 'Recién importada' : 'Lista'}</Badge>
+                  {motivo
+                    ? <Badge tone="warning">Versión anterior</Badge>
+                    : <Badge tone="success">{m.estado === 'importada' ? 'Recién importada' : 'Lista'}</Badge>}
                 </button>
                 : <div aria-disabled="true" className="w-full rounded-lg border border-dashed border-line bg-app-soft p-3 opacity-70 flex items-start justify-between gap-3">
                   <span>{detalle}</span>

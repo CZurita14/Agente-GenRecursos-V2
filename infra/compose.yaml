@@ -30,7 +30,8 @@ x-backend: &backend
     AUTH_SECRETO: ${AUTH_SECRETO:?Configura AUTH_SECRETO}
     ADMINISTRADORES: ${ADMINISTRADORES:-[]}
     PROXIES_CONFIABLES: '["${IP_PROXY:-172.31.250.2}/32"]'
-    # Los sílabos llegan del SGA al ingresar; en producción solo vale "real" (app/config.py rechaza "simulado").
+    # Los sílabos llegan del SGA al ingresar. En producción solo vale "real": el validador de Ajustes
+    # (app/config.py) rechaza "simulado" al cargar la configuración y la API no arranca.
     SGA_PROVEEDOR: ${SGA_PROVEEDOR:-real}
     SGA_SIMULADO_DIR: ${SGA_SIMULADO_DIR:-}
     SGA_TIMEOUT_S: ${SGA_TIMEOUT_S:-15}

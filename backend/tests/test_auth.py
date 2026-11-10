@@ -1,5 +1,6 @@
 """Ingreso con el SGA y sesiones contra PostgreSQL real, con el SGA simulado."""
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 import logging
 from pathlib import Path
@@ -77,7 +78,7 @@ def test_correo_normalizado():
 # --- Ingreso con el SGA ---
 
 def test_ingresar_abre_sesion_y_sincroniza(auth, conn):
-    token = auth.ingresar(" Docente.UNO ", CLAVE)
+    token = auth.ingresar(" docente.uno ", CLAVE)
     assert auth.identificar(token) == CORREO_SGA
     filas = conn.execute("select estado from materia_sga where correo=%s", (CORREO_SGA,)).fetchall()
     estados = {f["estado"] for f in filas}
@@ -413,3 +414,84 @@ def test_acceso_prueba_mantiene_dominio_y_origen(nueva_conexion, auth):
         assert c.post("/auth/prueba", json={"correo": "alguien@gmail.com"}, headers=ORIGEN_PRUEBA).status_code == 403
         assert c.post("/auth/prueba", json={"correo": "docente@uti.edu.ec"},
                       headers={"Origin": "https://malicioso.example"}).status_code == 403
+
+
+# --- Correo y usuario del SGA (revisión final) ---
+
+class CorreoDelSGA(ProveedorSimulado):
+    """El SGA devuelve el correo con mayúsculas o espacios, o de otro dominio."""
+
+    def __init__(self, base, correo):
+        super().__init__(base)
+        self.correo = correo
+
+    def autenticar(self, usuario, clave):
+        ident, permiso = super().autenticar(usuario, clave)
+        return replace(ident, correo=self.correo), permiso
+
+
+class Registra(ProveedorSimulado):
+    """Anota el usuario tal como llega al SGA."""
+
+    def __init__(self, base):
+        super().__init__(base)
+        self.usuarios = []
+
+    def autenticar(self, usuario, clave):
+        self.usuarios.append(usuario)
+        return super().autenticar(usuario, clave)
+
+
+def test_correo_del_sga_con_mayusculas_se_normaliza_antes_de_sincronizar(nueva_conexion, asignaturas, conn):
+    servicio = ServicioAuth(nueva_conexion, "s" * 48, CorreoDelSGA(SGA, "  Docente.Uno@UTI.Edu.EC "), asignaturas)
+    correo = servicio.identificar(servicio.ingresar(USUARIO, CLAVE))
+    assert correo == CORREO_SGA
+    assert {f["correo"] for f in conn.execute("select correo from materia_sga").fetchall()} == {CORREO_SGA}
+    assert {f["dueno"] for f in conn.execute("select dueno from asignatura").fetchall()} == {CORREO_SGA}
+    assert asignaturas.materias(correo) and asignaturas.listar(correo)
+
+
+def test_correo_del_sga_de_otro_dominio_da_403_sin_escribir(nueva_conexion, asignaturas, conn):
+    servicio = ServicioAuth(nueva_conexion, "s" * 48, CorreoDelSGA(SGA, "docente.uno@gmail.com"), asignaturas)
+    with pytest.raises(AuthError) as exc:
+        servicio.ingresar(USUARIO, CLAVE)
+    assert exc.value.codigo == 403
+    for tabla in ("materia_sga", "asignatura", "auth_sesion"):
+        assert conn.execute(f"select count(*) n from {tabla}").fetchone()["n"] == 0
+
+
+def test_el_usuario_llega_al_sga_sin_cambiar_mayusculas_y_el_bloqueo_no_las_distingue(
+        nueva_conexion, asignaturas, conn):
+    sga = Registra(SGA)
+    servicio = ServicioAuth(nueva_conexion, "s" * 48, sga, asignaturas)
+    for usuario in (" Docente.UNO ", "docente.uno", "DOCENTE.uno"):
+        with pytest.raises(AuthError):
+            servicio.ingresar(usuario, "mala")
+    assert sga.usuarios == ["Docente.UNO", "docente.uno", "DOCENTE.uno"]
+    fila = conn.execute("select count(*) n, max(intentos) i from auth_bloqueo").fetchone()
+    assert (fila["n"], fila["i"]) == (1, 3)
+
+
+def test_http_el_usuario_llega_al_sga_sin_cambiar_mayusculas(nueva_conexion, asignaturas):
+    sga = Registra(SGA)
+    servicio = ServicioAuth(nueva_conexion, "s" * 48, sga, asignaturas)
+    config = Ajustes(_env_file=None, database_url="no-usar", llm_base_url="http://no-usar/v1",
+                     llm_model="m", api_origen="https://materiales.example", auth_secreto="s" * 48)
+    with TestClient(crear_app(config, auth=servicio, conexion=nueva_conexion),
+                    base_url="https://materiales.example") as c:
+        r = c.post("/auth/ingresar", json={"usuario": " Docente.UNO ", "clave": "mala"}, headers=ORIGEN)
+    assert r.status_code == 401 and sga.usuarios == ["Docente.UNO"]
+
+
+def test_ingreso_y_get_materias_dan_el_mismo_orden(web, auth):
+    r = web.post("/auth/ingresar", json={"usuario": USUARIO, "clave": CLAVE}, headers=ORIGEN)
+    assert r.status_code == 200
+    assert r.json()["materias"] == web.get("/materias").json()
+    assert not hasattr(auth, "materias")
+
+
+def test_el_presupuesto_de_sincronizacion_sale_de_la_configuracion(nueva_conexion):
+    config = Ajustes(_env_file=None, database_url="no-usar", llm_base_url="http://no-usar/v1", llm_model="m",
+                     api_origen="https://materiales.example", auth_secreto="s" * 48, sga_sincronizacion_max_s=30)
+    app = crear_app(config, conexion=nueva_conexion)
+    assert app.state.auth.sincronizacion_max_s == 30

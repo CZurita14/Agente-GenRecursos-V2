@@ -1,7 +1,9 @@
 """Compara los sílabos del SGA con sus JSON de referencia (exportados de V1 una sola vez).
 
 Empareja por `proyecto_formativo.codigo`. Ambos lados pasan por `a_contrato`, así que solo
-cuentan los campos del contrato. El informe da rutas de campos, nunca valores.
+cuentan los campos del contrato. El informe da rutas de campos, nunca valores. Varios
+archivos con el mismo código (paralelos) se aceptan si su contrato es idéntico; si difieren,
+el error nombra el código.
 
     python -m app.sga.comparar <dir_sga> <dir_referencia>
 """
@@ -34,9 +36,11 @@ def _cargar(carpeta: Path) -> dict[str, dict]:
             codigo = crudo["proyecto_formativo"]["codigo"]
         except (KeyError, TypeError):
             raise ValueError(f"{f.name}: proyecto_formativo.codigo: falta") from None
-        if codigo in por_codigo:
-            raise ValueError(f"{f.name}: código repetido en la carpeta")
-        por_codigo[codigo] = a_contrato(crudo)
+        contrato = a_contrato(crudo)
+        # Varios paralelos comparten código: si su contrato es idéntico cuenta una vez.
+        if codigo in por_codigo and por_codigo[codigo] != contrato:
+            raise ValueError(f"{codigo}: varios archivos con este código y contenido distinto")
+        por_codigo[codigo] = contrato
     return por_codigo
 
 

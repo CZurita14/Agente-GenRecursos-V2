@@ -62,7 +62,7 @@ export const ingresar = (usuario: string, clave: string) =>
 /** Materias del docente en el SGA y si ya se pueden abrir. */
 export const materias = () => pedir<Materia[]>('/materias');
 
-/** Si la API ofrece entrar sin validar el correo (solo en desarrollo, mientras no hay SMTP institucional). */
+/** Si la API ofrece el acceso de prueba sin el SGA (solo en desarrollo). */
 export const modoAcceso = () => pedir<{ acceso_prueba: boolean }>('/auth/modo');
 
 /** Sesión sin código; sin correo entra como invitado. */

@@ -19,13 +19,31 @@ test('importada y sin_cambios se pueden abrir y llevan su asignatura', () => {
   }
 });
 
-test('no_disponible e invalida quedan desactivadas con su motivo', () => {
+test('no_disponible e invalida sin asignatura quedan desactivadas con su motivo', () => {
   const nd = estadoMateria({ ...base, estado: 'no_disponible', asignatura_id: null });
   assert.equal(nd.seleccionable, false);
   assert.match(nd.motivo ?? '', /no está disponible/i);
   const inv = estadoMateria({ ...base, estado: 'invalida', asignatura_id: null });
   assert.equal(inv.seleccionable, false);
   assert.match(inv.motivo ?? '', /no se pudo importar/i);
+});
+
+test('no_disponible e invalida con asignatura se abren con la última versión importada', () => {
+  for (const estado of ['no_disponible', 'invalida'] as const) {
+    const e = estadoMateria({ ...base, estado, asignatura_id: 'a1' });
+    assert.equal(e.seleccionable, true);
+    assert.match(e.motivo ?? '', /se usa la última versión importada/i);
+  }
+  assert.match(estadoMateria({ ...base, estado: 'no_disponible' }).motivo ?? '', /no está disponible/i);
+  assert.match(estadoMateria({ ...base, estado: 'invalida' }).motivo ?? '', /no se pudo importar/i);
+});
+
+test('un estado desconocido sin asignatura queda desactivado', () => {
+  const raro = { ...base, estado: 'otro' as unknown as Materia['estado'] };
+  assert.equal(estadoMateria({ ...raro, asignatura_id: null }).seleccionable, false);
+  assert.equal(estadoMateria({ ...raro, asignatura_id: null, estado: 'toString' as unknown as Materia['estado'] }).seleccionable, false);
+  assert.equal(estadoMateria(raro).seleccionable, true);
+  assert.match(estadoMateria(raro).motivo ?? '', /se usa la última versión importada/i);
 });
 
 test('una materia abrible sin asignatura_id no se ofrece', () => {

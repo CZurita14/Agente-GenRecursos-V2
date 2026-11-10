@@ -209,3 +209,44 @@ def test_exige_autocommit(conn, servicio, base):
     finally:
         conn.rollback()
         conn.autocommit = True
+
+
+def test_presupuesto_agotado_deja_las_restantes_no_disponibles_sin_perder_nada(conn, servicio, base):
+    """Con el presupuesto agotado no se piden más sílabos: el proxy corta a los 65 s."""
+    sync(conn, servicio, base)
+    antes = {f["codigo_pf"]: f for f in conn.execute(
+        "select id,codigo_pf,version_silabo,silabo,activa_sga from asignatura").fetchall()}
+    t = [100.0]
+
+    class Lento(Envoltorio):
+        def obtener_silabo(self, permiso, materia):
+            t[0] += 30
+            return super().obtener_silabo(permiso, materia)
+
+    lento = Lento(base)
+    ident, permiso = lento.autenticar("docente.uno", CLAVE)
+    r = sincronizar(conn, lento, ident, permiso, servicio, presupuesto_s=45, reloj=lambda: t[0])
+    assert lento.llamadas == 2
+    assert {m.id_sga: m.estado for m in r.materias} == {
+        "90001": "sin_cambios", "90002": "sin_cambios", "90003": "no_disponible"}
+    f = next(f for f in filas(conn) if f["id_sga"] == "90003")
+    assert f["estado"] == "no_disponible" and f["asignatura_id"] == antes[PF_B]["id"]
+    despues = {f["codigo_pf"]: f for f in conn.execute(
+        "select id,codigo_pf,version_silabo,silabo,activa_sga from asignatura").fetchall()}
+    assert despues == antes and all(f["activa_sga"] for f in despues.values())
+
+
+def test_presupuesto_agotado_la_primera_vez_no_crea_asignatura(conn, servicio, base):
+    t = [0.0]
+
+    class Lento(Envoltorio):
+        def obtener_silabo(self, permiso, materia):
+            t[0] += 50
+            return super().obtener_silabo(permiso, materia)
+
+    lento = Lento(base)
+    ident, permiso = lento.autenticar("docente.uno", CLAVE)
+    r = sincronizar(conn, lento, ident, permiso, servicio, presupuesto_s=45, reloj=lambda: t[0])
+    assert lento.llamadas == 1
+    assert [m.estado for m in r.materias] == ["importada", "no_disponible", "no_disponible"]
+    assert [m.asignatura_id is None for m in r.materias] == [False, False, True]

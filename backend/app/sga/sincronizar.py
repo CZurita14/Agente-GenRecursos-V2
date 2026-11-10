@@ -5,6 +5,7 @@ aparece en la lista (`asignatura.activa_sga`), pero nunca se borra. Cada materia
 procesa en su propia transacción para que una falla no deshaga las demás. Los mensajes
 y `fallos` nombran rutas de campos, nunca valores del sílabo.
 """
+import time
 from dataclasses import dataclass, field
 
 from psycopg.types.json import Jsonb
@@ -31,12 +32,18 @@ class ResultadoSync:
     materias: list[MateriaEstado]
 
 
-def _procesar(conn, proveedor, permiso, materia, correo, servicio) -> MateriaEstado:
-    """Importa el sílabo de una materia; devuelve su estado sin tocar `materia_sga`."""
+def _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir=True) -> MateriaEstado:
+    """Importa el sílabo de una materia; devuelve su estado sin tocar `materia_sga`.
+
+    Con `pedir` falso (presupuesto agotado) no se consulta al SGA: queda `no_disponible`
+    y conserva la versión anterior, como si el SGA no hubiera respondido.
+    """
     previa = conn.execute("select id,version_silabo from asignatura where dueno=%s and codigo_pf=%s",
                           (correo, materia.codigo_pf)).fetchone()
     previa_id = str(previa["id"]) if previa else None
     base = dict(id_sga=materia.id_sga, codigo_pf=materia.codigo_pf, paralelo=materia.paralelo, nombre=materia.nombre)
+    if not pedir:
+        return MateriaEstado(**base, estado="no_disponible", asignatura_id=previa_id)
     try:
         crudo = proveedor.obtener_silabo(permiso, materia)
     except (SGANoDisponible, SilaboNoDisponible):
@@ -55,15 +62,23 @@ def _procesar(conn, proveedor, permiso, materia, correo, servicio) -> MateriaEst
                          clases_cambiadas=guardado["clases_cambiadas"])
 
 
-def sincronizar(conn, proveedor, identidad, permiso, servicio) -> ResultadoSync:
-    """Si el SGA no entrega la lista de materias, el error se propaga y no cambia nada."""
+def sincronizar(conn, proveedor, identidad, permiso, servicio, *, presupuesto_s: float | None = None,
+                reloj=time.monotonic) -> ResultadoSync:
+    """Si el SGA no entrega la lista de materias, el error se propaga y no cambia nada.
+
+    `identidad.correo` debe llegar ya normalizado. Con `presupuesto_s`, al agotarse el tiempo
+    (medido con `reloj` desde el inicio) no se piden más sílabos: las materias restantes quedan
+    `no_disponible` con su versión anterior y sus asignaturas siguen activas.
+    """
     if not conn.autocommit:
         raise ValueError("sincronizar requiere una conexión en autocommit (una transacción por materia)")
+    inicio = reloj()
     correo = identidad.correo
     lista = proveedor.listar_materias(permiso)
     resultado = []
     for materia in lista:
-        estado = _procesar(conn, proveedor, permiso, materia, correo, servicio)
+        pedir = presupuesto_s is None or reloj() - inicio < presupuesto_s
+        estado = _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir)
         with conn.transaction():
             conn.execute(
                 "insert into materia_sga (correo,id_sga,codigo_pf,paralelo,nombre,carrera,estado_sga,"

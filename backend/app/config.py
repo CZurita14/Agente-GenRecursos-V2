@@ -32,10 +32,13 @@ class Ajustes(BaseSettings):
     acceso_prueba: bool = False
     api_json_max_bytes: int = Field(default=1024 * 1024, ge=1, le=4 * 1024 * 1024)
     api_json_timeout_s: float = Field(default=30, gt=0, le=120)
-    # Proveedor del SGA: "simulado" lee los fixtures de `sga_simulado_dir`; "real" espera el adaptador de TI.
-    sga_proveedor: Literal["simulado", "real"] = "simulado"
+    # Proveedor del SGA: "real" espera el adaptador de TI; "simulado" (solo desarrollo) lee los fixtures
+    # de `sga_simulado_dir`, relativa a la raíz del proyecto.
+    sga_proveedor: Literal["simulado", "real"] = "real"
     sga_simulado_dir: Path | None = None
     sga_timeout_s: float = Field(default=15, gt=0, le=120)
+    # Presupuesto de la sincronización dentro del ingreso: el proxy corta la petición a los 65 s.
+    sga_sincronizacion_max_s: float = Field(default=45, gt=0, lt=65)
     administradores: list[str] = Field(default_factory=list)
     proxies_confiables: list[str] = Field(default_factory=list)
     limite_ip_minuto: int = Field(default=600, ge=1, le=100000)
@@ -50,6 +53,12 @@ class Ajustes(BaseSettings):
     @classmethod
     def sga_dir_vacio_es_apagado(cls, valor):
         return None if isinstance(valor, str) and not valor.strip() else valor
+
+    @field_validator("sga_simulado_dir")
+    @classmethod
+    def sga_dir_desde_la_raiz(cls, valor):
+        # Relativa a la raíz y no a la carpeta desde la que se arranca uvicorn (backend/).
+        return valor if valor is None or valor.is_absolute() else RAIZ / valor
 
     @field_validator("razonador_ruta", mode="before")
     @classmethod
@@ -81,6 +90,12 @@ class Ajustes(BaseSettings):
             raise ValueError("API_ORIGEN requiere HTTPS en producción")
         if self.entorno == "produccion" and self.acceso_prueba:
             raise ValueError("ACCESO_PRUEBA no se permite en producción")
+        if self.entorno == "produccion" and self.sga_proveedor == "simulado":
+            raise ValueError("SGA_PROVEEDOR=simulado no se permite en producción")
+        if self.sga_proveedor == "simulado" and (
+                self.sga_simulado_dir is None or not (self.sga_simulado_dir / "usuarios.json").is_file()):
+            raise ValueError("SGA_SIMULADO_DIR debe ser una carpeta con usuarios.json "
+                             "(relativa a la raíz, p. ej. backend/tests/fixtures/sga)")
         return self
 
     @field_validator("api_origen")

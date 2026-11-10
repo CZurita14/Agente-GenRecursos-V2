@@ -144,7 +144,7 @@ def test_config_tiene_los_campos_del_sga():
     from app.config import Ajustes
     c = Ajustes(database_url="x", llm_base_url="x", llm_model="x", entorno="desarrollo",
                 _env_file=None)
-    assert c.sga_proveedor == "simulado" and c.sga_simulado_dir is None and c.sga_timeout_s == 15
+    assert c.sga_proveedor == "real" and c.sga_simulado_dir is None and c.sga_timeout_s == 15
 
 
 # --- Esquemas de materias y autenticación (sin `jsonschema`: se leen las propias claves) ---

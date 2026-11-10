@@ -20,7 +20,7 @@ Estados: `⬜ pendiente` · `🔄 en curso` · `🔁 devuelta (ronda n)` · `✅
 
 ## Estado en una línea
 
-V2 funcionalmente completa en la rama `v2/sga`: el docente ingresa con su usuario y clave del SGA, el sistema sincroniza sus materias y sus sílabos en JSON, los valida (esquema + 7 reglas) y genera las mismas 13 herramientas que V1 (equivalencia: 59/59 huellas iguales). Documentación hecha. **Falta:** el adaptador real del SGA (B-SGA1, TI), la revisión final y el push.
+V2 funcionalmente completa en la rama `v2/sga`: el docente ingresa con su usuario y clave del SGA, el sistema sincroniza sus materias y sus sílabos en JSON, los valida (esquema + 7 reglas) y genera las mismas 13 herramientas que V1 (equivalencia: 59/59 huellas iguales). Documentación hecha y hallazgos de la revisión final corregidos. **Falta:** el adaptador real del SGA (B-SGA1, TI), la verificación E2E final y el push.
 
 ## Origen
 
@@ -66,6 +66,11 @@ V2 funcionalmente completa en la rama `v2/sga`: el docente ingresa con su usuari
   - El bloqueo sigue la convención de V1: 5 claves erróneas seguidas por usuario → **429** «Demasiados intentos» con `Retry-After: 900` (no 423). Tabla `auth_bloqueo` (`010_auth_sga.sql`, con una columna `actualizado` para limpiar contadores viejos); `auth_reto` se elimina.
   - Cuotas: `limite_ingresar_usuario_minuto` (20) y `limite_ingresar_ip_minuto` (60) reemplazan las cuatro de código/verificar.
 - **2026-11-09:** El contrato también define los JSON de la lista de materias y de la autenticación (Tarea 2).
+- **2026-11-10 (revisión final):**
+  - La migración `011_acceso_solo_sga.sql` borra las sesiones de V1 (`auth_sesion`) para forzar un ingreso por el SGA, y los accesos compartidos de V1 (`asignatura_acceso`): el acceso lo define solo el SGA. La tabla y los roles se conservan; solo la escribe un administrador en la base.
+  - Presupuesto de sincronización `SGA_SINCRONIZACION_MAX_S` (45 s por omisión, menor que los 65 s del proxy): al agotarse no se piden más sílabos y las materias restantes quedan `no_disponible`, con su versión anterior y sus asignaturas activas.
+  - `SGA_PROVEEDOR` pasa a `real` por omisión: el validador de `Ajustes` rechaza `simulado` en producción y, con el simulado, exige una carpeta con `usuarios.json` (relativa a la raíz).
+  - El usuario llega al SGA sin pasar a minúsculas; solo el bloqueo y la cuota lo normalizan. El correo del SGA se normaliza antes de escribir nada (otro dominio → 403).
 
 ## Bitácora (lo ya hecho)
 
@@ -83,6 +88,10 @@ V2 funcionalmente completa en la rama `v2/sga`: el docente ingresa con su usuari
 - **Tarea 6:** frontend con el SGA: `Ingreso` pide usuario y clave (`type=password`, la clave se borra del estado tras cada respuesta, 401/429/503 con mensajes propios en `utils/materias.ts`); `Generar` lista `GET /materias` («CODIGO PARALELO n»), abre `importada`/`sin_cambios` en su menú y muestra desactivadas `no_disponible`/`invalida` con su motivo. Se quitan `subirSilabo`, `/auth/codigo`, `/auth/verificar` y `DropZone`. Pruebas: 28 unitarias (25 − 3 retiradas + 6 nuevas), 42 de navegador (Playwright, API simulada), typecheck y build sin errores.
 - **Tarea 8:** oráculo de huellas generado con el código de V1 `011bd68` (`tests/fixtures/v1/generar_oraculo.py` + `huellas_silabo_datos.json`); `test_equivalencia_v1.py`: las 59 entradas (contexto, prompt, plan, requisitos, sin IA, menú, entrenamiento, agente) del fixture pasado por `a_contrato` + `cargar_silabo` son idénticas a V1, y los 3 sílabos del SGA simulado no cambian al quitar campos privados. `app/sga/comparar.py` (`python -m app.sga.comparar <sga> <ref>`: rutas y % de coincidencia, nunca valores) con `test_sga_comparar.py` (4).
 - **Tarea 9 (documentación):** `README.md` reescrito para la V2 (flujo con el SGA, modelo matemático, SGA simulado, pruebas, equivalencia y lista de documentos de V1 como historia); `docs/sga/para-TI.md` (nuevo: qué debe entregar TI y dónde se conecta el adaptador); `docs/api-silabo/README.md` con los 3 contratos, las 7 reglas y el traductor; `ciencia-datos.md`, `operacion.md`, `entrega-ti.md` y `desarrollo-api.md` sin PDF, SMTP ni código por correo; `tests/fixtures/v1/README.md` con las dos aclaraciones de la Tarea 8. Solo documentación. Suite estándar: 1185 pasan, 14 deseleccionadas. Pendientes del coordinador: verificación E2E final y push.
+
+### 2026-11-10
+
+- **Revisión final, ronda única de correcciones** (hallazgos en `.superpowers/sdd/2026-11-09-v2-sga-json/revision-final-hallazgos.md`): correo del SGA normalizado antes de escribir (otro dominio → 403); migración `011_acceso_solo_sga.sql` (borra `auth_sesion` y `asignatura_acceso`); materias `no_disponible`/`invalida` con asignatura se abren con la última versión importada y `estadoMateria` usa lista blanca; `SGA_SIMULADO_DIR` relativa a la raíz y arranque que falla sin `usuarios.json`; `SGA_PROVEEDOR` `real` por omisión y `simulado` rechazado en producción por `Ajustes`; presupuesto `SGA_SINCRONIZACION_MAX_S` (45 s) con reloj inyectable; usuario sin minúsculas hacia el SGA; una sola consulta de materias (`ServicioAuth.materias` eliminado); `comparar` acepta paralelos idénticos y nombra el código si difieren; `horas` del esquema con sus 4 campos obligatorios; aviso de privacidad, README, `desarrollo-api.md`, `operacion.md`, `para-TI.md`, `.env.example` y comentario de `compose` al día; `onSubir` → `onGenerar`. Pruebas: suite estándar 1202 pasan, 14 deseleccionadas (1185 + 17 nuevas); frontend 30 unitarias (28 + 2), 42 de navegador, typecheck y build sin errores. Desviación: el default de `SGA_PROVEEDOR` cambia a `real` (con `simulado` por omisión, el validador de producción rechazaría toda configuración sin la variable). Informe: `.superpowers/sdd/2026-11-09-v2-sga-json/revision-final-correcciones.md`.
 
 ---
 

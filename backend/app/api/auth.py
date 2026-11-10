@@ -31,15 +31,17 @@ COOKIE = dict(max_age=7 * 24 * 3600, httponly=True, secure=True, samesite="lax",
 
 @router.post("/ingresar")
 def ingresar(datos: Ingreso, request: Request, response: Response):
-    usuario = datos.usuario.strip().lower()
+    usuario = datos.usuario.strip()
     if request.app.state.control is not None:
-        request.app.state.control.usuario_publico(usuario)
+        # Solo la cuota (y el bloqueo, en el servicio) ignoran mayúsculas; el SGA recibe lo tecleado.
+        request.app.state.control.usuario_publico(usuario.lower())
     auth = servicio(request)
     token = auth.ingresar(usuario, datos.clave)
     correo = auth.identificar(token)
     request.state.usuario = correo
     response.set_cookie("sesion", token, **COOKIE)
-    return {"correo": correo, "materias": auth.materias(correo)}
+    # Misma consulta y mismo orden que GET /materias.
+    return {"correo": correo, "materias": request.app.state.asignaturas.materias(correo)}
 
 
 @router.get("/modo")

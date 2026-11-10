@@ -95,13 +95,19 @@ Docentes ──HTTPS──▶ proxy (nginx) ──▶ web (React)
 
 ### Desarrollo con el SGA simulado
 
-En el `.env` de la raíz (no versionado), además de la base de datos y el servidor de IA:
+En el `.env` de la raíz (no versionado), además de la base de datos y el servidor de IA, van estas cinco variables:
 
 ```text
 ENTORNO=desarrollo
+API_ORIGEN=http://localhost:5173
 SGA_PROVEEDOR=simulado
 SGA_SIMULADO_DIR=backend/tests/fixtures/sga
+AUTH_SECRETO=<al menos 32 caracteres aleatorios propios>
 ```
+
+- `SGA_SIMULADO_DIR` es relativa a la raíz del proyecto. Si la carpeta no tiene `usuarios.json`, la API no arranca y lo dice.
+- `AUTH_SECRETO` se genera una vez, por ejemplo con `python -c "import secrets; print(secrets.token_urlsafe(48))"`. No se versiona ni se comparte; sin él el ingreso responde 503.
+- `API_ORIGEN` es el origen del servidor de Vite (`npm --prefix frontend run dev`), que reenvía `/api/*` a la API en el puerto 8001. No hace falta HTTPS local.
 
 El SGA simulado lee `usuarios.json`, `materias/<usuario>.json` y `sga_silabos/<codigo_pf>.json` de esa carpeta: dos docentes de prueba (`docente.uno`, `docente.dos`) y tres sílabos simulados `S91-SIMU-…` que traen claves privadas falsas para comprobar que el traductor las descarta. `usuarios.json` guarda solo el hash SHA-256 de cada clave; **las claves de prueba están en las constantes de las pruebas** (`backend/tests/test_auth.py`), no en la documentación. El proveedor simulado no se admite con `ENTORNO=produccion`.
 
@@ -112,7 +118,7 @@ Exige `SGA_PROVEEDOR=real`, que depende de TI (B-SGA1): [docs/sga/para-TI.md](do
 ### Pruebas
 
 ```bash
-# Backend (base: 1185 pasan, 14 deseleccionadas)
+# Backend (base: 1202 pasan, 14 deseleccionadas)
 cd backend && ../.venv/Scripts/python.exe -m pytest -m "not servidor and not modelo" -q
 # Modelo de ciencia de datos (entorno con PyTorch)
 cd backend && HF_HUB_OFFLINE=1 ../.venv-ciencia/Scripts/python.exe -m pytest -m modelo -q tests/test_razonador.py tests/test_cd_*.py

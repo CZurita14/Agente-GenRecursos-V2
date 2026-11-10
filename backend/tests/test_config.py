@@ -161,4 +161,35 @@ def test_produccion_rechaza_el_sga_simulado():
     with pytest.raises(ValueError, match="simulado"):
         validar_configuracion(Ajustes(**produccion, sga_proveedor="simulado"))
     validar_configuracion(Ajustes(**produccion, sga_proveedor="real"))
-    validar_configuracion(Ajustes(**DESARROLLO, sga_proveedor="simulado"))
+    validar_configuracion(Ajustes(**DESARROLLO, sga_proveedor="simulado", sga_simulado_dir=SGA_FIXTURES))
+
+
+# --- SGA en la configuración (revisión final) ---
+
+SGA_FIXTURES = "backend/tests/fixtures/sga"
+
+
+def test_sga_simulado_dir_relativo_se_resuelve_contra_la_raiz():
+    a = Ajustes(**DESARROLLO, sga_proveedor="simulado", sga_simulado_dir=SGA_FIXTURES)
+    assert a.sga_simulado_dir == RAIZ / SGA_FIXTURES and (a.sga_simulado_dir / "usuarios.json").is_file()
+
+
+@pytest.mark.parametrize("carpeta", [None, "backend/no-existe", "backend/tests/fixtures"])
+def test_desarrollo_con_simulado_exige_usuarios_json(carpeta):
+    with pytest.raises(ValidationError, match="usuarios.json"):
+        Ajustes(**DESARROLLO, sga_proveedor="simulado", sga_simulado_dir=carpeta)
+
+
+def test_el_modelo_rechaza_el_simulado_en_produccion():
+    with pytest.raises(ValidationError, match="SGA_PROVEEDOR=simulado"):
+        Ajustes(**BASE, api_origen="https://materiales.example", sga_proveedor="simulado",
+                sga_simulado_dir=SGA_FIXTURES)
+    assert Ajustes(**BASE, api_origen="https://materiales.example").sga_proveedor == "real"
+
+
+def test_presupuesto_de_sincronizacion():
+    assert Ajustes(**DESARROLLO).sga_sincronizacion_max_s == 45
+    assert Ajustes(**DESARROLLO, sga_sincronizacion_max_s=64).sga_sincronizacion_max_s == 64
+    for malo in (0, 65, 90):
+        with pytest.raises(ValidationError):
+            Ajustes(**DESARROLLO, sga_sincronizacion_max_s=malo)

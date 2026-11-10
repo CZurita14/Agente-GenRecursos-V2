@@ -5,6 +5,7 @@ import math
 import re
 import secrets
 from contextlib import closing
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 
 from app.control.limites import seudonimo
@@ -37,21 +38,21 @@ def _hash_token(token: str) -> str:
 
 
 class ServicioAuth:
-    def __init__(self, conexion, secreto: str, proveedor=None, asignaturas=None, *, ahora=None):
+    def __init__(self, conexion, secreto: str, proveedor=None, asignaturas=None, *, ahora=None,
+                 sincronizacion_max_s: float = 45):
         if len(secreto) < 32:
             raise ValueError("El secreto de autenticación necesita al menos 32 caracteres")
         self.conexion, self.secreto = conexion, secreto.encode()
         # `proveedor` es el SGA; `asignaturas` guarda los sílabos que trae la sincronización.
         self.proveedor, self.asignaturas = proveedor, asignaturas
         self.ahora = ahora or (lambda: datetime.now(timezone.utc))
-
-    @staticmethod
-    def _normalizar_usuario(usuario: str) -> str:
-        return usuario.strip().lower()
+        # Presupuesto de la sincronización dentro del ingreso (menor que los 65 s del proxy).
+        self.sincronizacion_max_s = sincronizacion_max_s
 
     def _clave_bloqueo(self, usuario: str) -> str:
-        """Seudónimo del usuario: quien teclea su clave en el campo de usuario no la deja en la base."""
-        return seudonimo(self.secreto, "auth-bloqueo", usuario)
+        """Seudónimo del usuario sin distinguir mayúsculas: quien teclea su clave en el campo de
+        usuario no la deja en la base. Solo esta clave pasa a minúsculas; el SGA recibe lo tecleado."""
+        return seudonimo(self.secreto, "auth-bloqueo", usuario.strip().lower())
 
     def _reservar(self, clave_u):
         """Cuenta el intento ANTES de consultar al SGA, bajo el candado de la fila.
@@ -107,7 +108,7 @@ class ServicioAuth:
         """Reserva intento -> SGA -> sincronización -> sesión. La clave solo vive como parámetro local."""
         if self.proveedor is None:
             raise AuthError(503, "El SGA no está configurado")
-        usuario = self._normalizar_usuario(usuario)
+        usuario = usuario.strip()  # Sin cambiar mayúsculas: lo que distinga el SGA lo decide el SGA.
         clave_u = self._clave_bloqueo(usuario)
         intentos, propio, hasta = self._reservar(clave_u)
         try:
@@ -122,24 +123,20 @@ class ServicioAuth:
         except BaseException:
             self._deshacer(clave_u, propio, hasta)
             raise
+        # Antes de escribir nada: el correo de `materia_sga`, de `asignatura.dueno` y de la sesión
+        # debe ser el mismo. Un dominio no institucional da 403 y no abre sesión.
+        identidad = replace(identidad, correo=normalizar_correo(identidad.correo))
         self._cerrar_con_exito(clave_u, propio)
         with closing(self.conexion()) as conn:
             conn.autocommit = True
             try:
-                sincronizar(conn, self.proveedor, identidad, permiso, self.asignaturas)
+                sincronizar(conn, self.proveedor, identidad, permiso, self.asignaturas,
+                            presupuesto_s=self.sincronizacion_max_s)
             except Exception as exc:
                 # Con el SGA en falla parcial el docente igual entra con lo ya sincronizado.
                 # Solo se registra la clase: el mensaje podría incluir valores del sílabo.
                 log.warning("Sincronización con el SGA incompleta (%s)", type(exc).__name__)
         return self.sesion_directa(identidad.correo)
-
-    def materias(self, correo: str) -> list[dict]:
-        with closing(self.conexion()) as conn:
-            conn.autocommit = True
-            filas = conn.execute(
-                "select id_sga,codigo_pf,paralelo,nombre,carrera,estado_sga,estado,asignatura_id "
-                "from materia_sga where correo=%s order by nombre,paralelo,id_sga", (correo,)).fetchall()
-        return [{**f, "asignatura_id": str(f["asignatura_id"]) if f["asignatura_id"] else None} for f in filas]
 
     def sesion_directa(self, correo: str) -> str:
         """Abre la sesión de un correo ya autenticado (SGA o acceso de prueba)."""

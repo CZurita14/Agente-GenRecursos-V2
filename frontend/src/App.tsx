@@ -60,7 +60,7 @@ export default function App() {
     {ruta.vista === 'inicio' && <Inicio onGenerar={() => setRuta({ vista: 'generar' })} />}
     {ruta.vista === 'generar' && <Generar onSesionVencida={expirar}
       onAbrir={m => aMenu({ aid: m.asignatura_id, nombre: m.nombre, rol: 'dueno' })} />}
-    {ruta.vista === 'asignaturas' && <Asignaturas onSesionVencida={expirar} onSubir={() => setRuta({ vista: 'generar' })}
+    {ruta.vista === 'asignaturas' && <Asignaturas onSesionVencida={expirar} onGenerar={() => setRuta({ vista: 'generar' })}
       onAbrir={a => aMenu({ aid: a.id, nombre: a.nombre, rol: a.rol })} />}
     {ruta.vista === 'asignatura' && <Asignatura aid={ruta.curso.aid} nombre={ruta.curso.nombre} onSesionVencida={expirar}
       onElegir={(ambito, titulo) => setRuta({ vista: 'actividad', curso: ruta.curso, ambito, titulo })}

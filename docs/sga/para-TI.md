@@ -40,6 +40,8 @@ La respuesta no debe incluir la clave ni tokens del SGA. Si el mecanismo entrega
 
 Para distinguir errores necesitamos que el SGA diferencie **credenciales rechazadas** (usuario o clave incorrectos) de **servicio no disponible**: las primeras cuentan para el bloqueo (5 fallos seguidos, 15 minutos); las segundas no.
 
+**¿El usuario distingue mayúsculas?** El sistema entrega al SGA el usuario tal como se tecleó, solo sin espacios al inicio y al final; no lo pasa a minúsculas. El bloqueo por intentos y la cuota de ingresos, en cambio, no distinguen mayúsculas. Necesitamos saber si para el SGA `Docente.Uno` y `docente.uno` son el mismo usuario.
+
 ## 3. Materias del docente
 
 Una consulta que devuelva las materias del docente autenticado según [materias-api.schema.json](../api-silabo/materias-api.schema.json) ([ejemplo](../api-silabo/ejemplo-materias.json)). Cada elemento:
@@ -54,6 +56,8 @@ Una consulta que devuelva las materias del docente autenticado según [materias-
 | `estado` | Estado en el SGA (p. ej. `ACTIVA`) |
 
 **Importante:** el acceso lo define solo el SGA. Si una materia deja de aparecer en esta lista, el docente pierde acceso a su asignatura en nuestro sistema (queda inactiva, no se borra). Por eso la lista debe contener todas las materias vigentes del docente, en el periodo que TI y la universidad decidan. Los códigos no llevan datos personales.
+
+**Un fallo del SGA debe ser un error, nunca una lista vacía.** Una lista vacía significa «el docente no tiene materias» y le retira el acceso a todas sus asignaturas. Si el SGA no puede consultar las materias (caída, tiempo agotado, error interno), debe responder con un error, y el sistema conserva entonces todo como estaba.
 
 ## 4. Sílabo en JSON
 
@@ -73,6 +77,7 @@ Necesitamos saber:
 |---|---|
 | Tiempo de respuesta | Tiempo típico y máximo de cada consulta. Hoy esperamos hasta `SGA_TIMEOUT_S` = 15 s por llamada (configurable) |
 | Cuántas llamadas | Al ingresar se hace 1 autenticación, 1 consulta de materias y **1 consulta de sílabo por materia** (las materias de un docente, en serie). ¿Hay límite de llamadas por minuto o por IP? |
+| Presupuesto del ingreso | El proxy corta la petición de ingreso a los 65 s. Por eso la sincronización tiene un presupuesto, `SGA_SINCRONIZACION_MAX_S` = 45 s por omisión (siempre menor que 65): al agotarse, no se piden más sílabos; las materias restantes quedan `no_disponible`, conservan su versión anterior y siguen accesibles. Se completan en el siguiente ingreso |
 | Origen de las llamadas | IP del servidor del Generador, para que TI la autorice |
 | Códigos de error | Cómo distingue el SGA: credenciales inválidas, usuario bloqueado o inactivo, sin materias, sílabo no existente o no publicado, servicio caído |
 | Cuenta bloqueada por el SGA | Si el SGA bloquea tras N fallos, cuántos; nuestro sistema bloquea por su cuenta tras 5 |
@@ -113,7 +118,7 @@ El adaptador real se implementa en **`backend/app/sga/real.py`** (hoy `crear_pro
 cd backend && python -m app.sga.comparar <carpeta_sga> <carpeta_referencia>
 ```
 
-Empareja por `proyecto_formativo.codigo`, aplica la lista blanca a ambos lados y escribe, por sílabo, el porcentaje de coincidencia y las **rutas** de los campos distintos (nunca valores). Termina con código 0 solo si todo coincide y no hay sílabos sueltos de un lado.
+Empareja por `proyecto_formativo.codigo`, aplica la lista blanca a ambos lados y escribe, por sílabo, el porcentaje de coincidencia y las **rutas** de los campos distintos (nunca valores). Termina con código 0 solo si todo coincide y no hay sílabos sueltos de un lado. Si una carpeta trae varios archivos con el mismo código (p. ej. uno por paralelo), se toma uno cuando son idénticos en los campos del contrato; si difieren, la herramienta se detiene con un error que nombra el código.
 
 4. Ingresar con la cuenta de prueba, comprobar que aparecen sus materias y que cada sílabo se importa (`importada`) o muestra el motivo (`invalida`, con rutas de campo).
 5. Generar un cuestionario de una clase.

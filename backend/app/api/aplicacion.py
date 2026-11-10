@@ -70,7 +70,8 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
             proveedor = crear_proveedor(config)
         except SGAError:
             proveedor = None  # Sin SGA configurado el ingreso responde 503; /auth/prueba sigue disponible.
-        app.state.auth = ServicioAuth(conexion, config.auth_secreto.get_secret_value(), proveedor)
+        app.state.auth = ServicioAuth(conexion, config.auth_secreto.get_secret_value(), proveedor,
+                                      sincronizacion_max_s=config.sga_sincronizacion_max_s)
     registrar_errores(app)
     app.include_router(auth_router)
     app.include_router(asignaturas_router)
