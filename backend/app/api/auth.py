@@ -36,7 +36,7 @@ def ingresar(datos: Ingreso, request: Request, response: Response):
         # Solo la cuota (y el bloqueo, en el servicio) ignoran mayúsculas; el SGA recibe lo tecleado.
         request.app.state.control.usuario_publico(usuario.lower())
     auth = servicio(request)
-    token = auth.ingresar(usuario, datos.clave)
+    token = auth.ingresar(usuario, datos.clave, getattr(request.state, "ip", "sin-ip"))
     correo = auth.identificar(token)
     request.state.usuario = correo
     response.set_cookie("sesion", token, **COOKIE)
@@ -72,6 +72,6 @@ def yo(request: Request):
 
 @router.post("/salir")
 def salir(request: Request, response: Response):
-    servicio(request).salir(request.cookies.get("sesion"))
+    servicio(request).salir(request.cookies.get("sesion"), getattr(request.state, "ip", "sin-ip"))
     response.delete_cookie("sesion", path="/", secure=True, httponly=True, samesite="lax")
     return {"mensaje": "Sesión cerrada"}

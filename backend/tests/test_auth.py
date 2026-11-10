@@ -495,3 +495,69 @@ def test_el_presupuesto_de_sincronizacion_sale_de_la_configuracion(nueva_conexio
                      api_origen="https://materiales.example", auth_secreto="s" * 48, sga_sincronizacion_max_s=30)
     app = crear_app(config, conexion=nueva_conexion)
     assert app.state.auth.sincronizacion_max_s == 30
+
+
+# --- Registro de ingresos ---
+
+def _registro(conn):
+    return [dict(f) for f in conn.execute(
+        "select evento,correo,usuario_hash,ip from auth_registro order by id").fetchall()]
+
+
+def test_registro_guarda_ingreso_fallos_bloqueo_y_salida(auth, conn):
+    for _ in range(5):
+        with pytest.raises(AuthError):
+            auth.ingresar(USUARIO, CANARIO, "10.1.2.3")
+    filas = _registro(conn)
+    assert [f["evento"] for f in filas] == ["fallido"] * 4 + ["bloqueado"]
+    # Un intento fallido no deja el usuario tecleado en claro: solo su seudónimo, y nunca la clave.
+    assert all(f["correo"] is None and f["usuario_hash"] and f["ip"] == "10.1.2.3" for f in filas)
+    assert len({f["usuario_hash"] for f in filas}) == 1
+    assert not [v for v in _textos_de_la_base(conn) if CANARIO in v]
+    conn.execute("delete from auth_bloqueo")
+    conn.execute("delete from auth_registro")
+    token = auth.ingresar(USUARIO, CLAVE, "10.1.2.3")
+    auth.salir(token, "10.1.2.4")
+    assert _registro(conn) == [
+        {"evento": "ingreso", "correo": CORREO_SGA, "usuario_hash": None, "ip": "10.1.2.3"},
+        {"evento": "salida", "correo": CORREO_SGA, "usuario_hash": None, "ip": "10.1.2.4"}]
+
+
+def test_registro_guarda_sga_no_disponible(nueva_conexion, asignaturas, conn):
+    servicio = ServicioAuth(nueva_conexion, "s" * 48, SGACaido(SGA), asignaturas)
+    with pytest.raises(AuthError):
+        servicio.ingresar(USUARIO, CLAVE)
+    assert [f["evento"] for f in _registro(conn)] == ["sga_no_disponible"]
+
+
+def test_un_fallo_del_registro_no_impide_el_ingreso(auth, monkeypatch, caplog):
+    def sin_tabla(*a, **k):
+        raise RuntimeError("tabla no disponible")
+    conexion = auth.conexion
+
+    class Rota:
+        def __init__(self):
+            object.__setattr__(self, "c", conexion())
+
+        def __setattr__(self, n, v):  # autocommit y demás atributos van a la conexión real.
+            setattr(self.c, n, v)
+
+        def __getattr__(self, n):
+            return getattr(self.c, n)
+
+        def execute(self, sql, *a, **k):
+            if "auth_registro" in sql:
+                sin_tabla()
+            return self.c.execute(sql, *a, **k)
+
+    monkeypatch.setattr(auth, "conexion", Rota)
+    with caplog.at_level(logging.WARNING):
+        token = auth.ingresar(USUARIO, CLAVE)
+    assert auth.identificar(token) == CORREO_SGA
+    assert "No se pudo registrar el evento de acceso (RuntimeError)" in caplog.text
+
+
+def test_http_registra_ingreso_y_salida(web, conn):
+    assert web.post("/auth/ingresar", json={"usuario": USUARIO, "clave": CLAVE}, headers=ORIGEN).status_code == 200
+    assert web.post("/auth/salir", headers=ORIGEN).status_code == 200
+    assert [(f["evento"], f["correo"]) for f in _registro(conn)] == [("ingreso", CORREO_SGA), ("salida", CORREO_SGA)]

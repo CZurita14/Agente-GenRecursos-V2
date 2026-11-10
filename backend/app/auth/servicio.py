@@ -33,6 +33,10 @@ def normalizar_correo(valor: str) -> str:
     return correo
 
 
+# Código HTTP del rechazo -> evento del registro de ingresos.
+_EVENTOS = {401: "fallido", 403: "dominio_no_permitido", 429: "bloqueado", 503: "sga_no_disponible"}
+
+
 def _hash_token(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
 
@@ -104,12 +108,35 @@ class ServicioAuth:
                     raise AuthError(429, "Demasiados intentos", max(1, math.ceil((hasta - ahora).total_seconds())))
                 conn.execute("delete from auth_bloqueo where usuario=%s", (clave_u,))
 
-    def ingresar(self, usuario: str, clave: str) -> str:
-        """Reserva intento -> SGA -> sincronización -> sesión. La clave solo vive como parámetro local."""
-        if self.proveedor is None:
-            raise AuthError(503, "El SGA no está configurado")
+    def _registrar(self, evento: str, ip: str, *, correo: str | None = None,
+                   usuario_hash: str | None = None) -> None:
+        """Deja el evento en auth_registro. Un fallo al registrar no cambia el resultado del ingreso."""
+        try:
+            with closing(self.conexion()) as conn:
+                conn.autocommit = True
+                conn.execute("insert into auth_registro (creado,evento,correo,usuario_hash,ip) "
+                             "values (%s,%s,%s,%s,%s)",
+                             (self.ahora(), evento, correo, usuario_hash, (ip or "sin-ip")[:64]))
+        except Exception as exc:
+            log.warning("No se pudo registrar el evento de acceso (%s)", type(exc).__name__)
+
+    def ingresar(self, usuario: str, clave: str, ip: str = "sin-ip") -> str:
+        """Ingresa con el correo y la clave del SGA y deja el resultado en el registro de ingresos."""
         usuario = usuario.strip()  # Sin cambiar mayúsculas: lo que distinga el SGA lo decide el SGA.
         clave_u = self._clave_bloqueo(usuario)
+        try:
+            correo = self._autenticar_y_sincronizar(usuario, clave, clave_u)
+        except AuthError as exc:
+            self._registrar(_EVENTOS.get(exc.codigo, "fallido"), ip, usuario_hash=clave_u)
+            raise
+        token = self.sesion_directa(correo)
+        self._registrar("ingreso", ip, correo=correo)
+        return token
+
+    def _autenticar_y_sincronizar(self, usuario: str, clave: str, clave_u: str) -> str:
+        """Reserva intento -> SGA -> sincronización. La clave solo vive como parámetro local."""
+        if self.proveedor is None:
+            raise AuthError(503, "El SGA no está configurado")
         intentos, propio, hasta = self._reservar(clave_u)
         try:
             identidad, permiso = self.proveedor.autenticar(usuario, clave)
@@ -136,7 +163,7 @@ class ServicioAuth:
                 # Con el SGA en falla parcial el docente igual entra con lo ya sincronizado.
                 # Solo se registra la clase: el mensaje podría incluir valores del sílabo.
                 log.warning("Sincronización con el SGA incompleta (%s)", type(exc).__name__)
-        return self.sesion_directa(identidad.correo)
+        return identidad.correo
 
     def sesion_directa(self, correo: str) -> str:
         """Abre la sesión de un correo ya autenticado (SGA o acceso de prueba)."""
@@ -160,8 +187,11 @@ class ServicioAuth:
                                 (ahora, _hash_token(token), ahora, ahora - timedelta(hours=8))).fetchone()
             return fila["correo"] if fila else None
 
-    def salir(self, token: str | None) -> None:
-        if token:
+    def salir(self, token: str | None, ip: str = "sin-ip") -> None:
+        if token and len(token) <= 128:
             with closing(self.conexion()) as conn:
                 conn.autocommit = True
-                conn.execute("delete from auth_sesion where token_hash=%s", (_hash_token(token),))
+                fila = conn.execute("delete from auth_sesion where token_hash=%s returning correo",
+                                    (_hash_token(token),)).fetchone()
+            if fila:
+                self._registrar("salida", ip, correo=fila["correo"])

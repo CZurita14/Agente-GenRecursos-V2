@@ -40,7 +40,7 @@ def test_011_cierra_sesiones_y_accesos_compartidos_de_v1(monkeypatch, tmp_path):
         c.execute("insert into asignatura_acceso (asignatura_id,correo,rol) values (%s,'b@uti.edu.ec','editor')",
                   (aid,))
         monkeypatch.setattr(migrar, "DIR", migrar.Path(migrar.__file__).parent / "migraciones")
-        assert migrar.aplicar_migraciones(c) == ["011_acceso_solo_sga.sql"]
+        assert migrar.aplicar_migraciones(c)[0] == "011_acceso_solo_sga.sql"
         assert c.execute("select count(*) n from auth_sesion").fetchone()["n"] == 0
         assert c.execute("select count(*) n from asignatura_acceso").fetchone()["n"] == 0
         # La tabla y los roles se conservan para accesos que escriba un administrador en la base.

@@ -216,3 +216,10 @@ def test_traductor_filtra_claves_extra_en_nodos_antes_libres():
     assert "docente" not in limpio["proyecto_formativo"]["horas"]
     assert limpio["proyecto_formativo"]["horario"] == [{"dia": "lunes", "inicio": "08:00", "fin": "09:00"}]
     cargar_silabo(limpio)
+
+
+def test_simulado_acepta_el_correo_como_usuario(sga):
+    usuario, clave = next(iter(CLAVES.items()))
+    ident, _ = sga.autenticar(usuario, clave)
+    otra, _ = sga.autenticar(ident.correo.upper(), clave)
+    assert otra == ident
