@@ -12,7 +12,17 @@ FICHA = {"conceptual": {"ideas_clave": ["Idea A", "Idea B", "Idea C"], "relacion
                         "errores_frecuentes": ["E1"]},
          "aplicacion": {"ejemplo": {"enunciado": "Enun", "pasos": ["P1", "P2"], "resultado": "R"},
                         "autocomprobacion": ["Q1", "Q2", "Q3"]}}
+_LARGO = "Texto de prueba con la longitud suficiente para la herramienta."
 CON_IA = {
+    "practica_guiada": {"practica": {"objetivo": _LARGO, "ejercicios": [
+        {"enunciado": _LARGO, "pasos": ["p1", "p2"], "resultado_esperado": "r"}], "errores_a_evitar": ["e"]}},
+    "tarjetas": {"mazo": {"tarjetas": [{"frente": "f", "reverso": "r", "contenido": "c"}]}},
+    "guia_autonoma": {"guia_autonoma": {"objetivo": _LARGO, "actividad": _LARGO, "pasos": ["a", "b", "c"],
+                                        "tiempo_estimado": "2 h", "para_la_siguiente_clase": "x",
+                                        "autochequeo": ["q1", "q2", "q3"], "conexion_pis": "Aporte"}},
+    "guion_clase": {"guion": {"objetivo": _LARGO, "fases": [
+        {"fase": "inicio", "minutos": 10, "docente": "d", "estudiantes": "e"}],
+        "preguntas_detonantes": ["q1", "q2"], "conexion_pis": ""}},
     "ficha_clase": FICHA,
     "repaso_momento": {"repaso": {"sesiones": [{"clase_id": "M2-S1", "ideas_clave": ["a", "b", "c"]}],
                                   "conexion_ra": "Conecta", "preguntas_repaso": ["p1", "p2", "p3"]}},

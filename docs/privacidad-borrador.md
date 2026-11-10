@@ -24,7 +24,10 @@ Los hashes HMAC son seudónimos, no una promesa de anonimato. Otros componentes 
 
 ## Procesamiento y acceso
 
-El material académico necesario se envía al servidor Qwen local configurado por la institución. La aplicación utiliza el servidor configurado, no un servicio externo de IA por defecto.
+El material académico necesario se envía al modelo configurado (`LLM_PROVEEDOR`):
+
+- `vllm`: servidor Qwen local de la institución; nada sale de la red institucional.
+- `deepseek`: API externa de DeepSeek. Salen de la institución los datos académicos del sílabo que usa cada herramienta: proyecto formativo, PIS, sesión y fecha, actividades, contenidos, resultados de aprendizaje, rúbrica, problema y política de IA, además de las indicaciones que escriba el docente. **No salen** los datos personales del sílabo (secciones I y VII se descartan al recibirlo), ni el correo, nombre o clave del docente. Usar DeepSeek con docentes reales requiere la aprobación institucional y revisar las condiciones de tratamiento de datos del proveedor.
 
 El acceso lo define el SGA: cada docente accede a las asignaturas de las materias que el SGA le lista; las demás quedan inactivas, sin borrarse, y vuelven si la materia regresa. Los administradores configurados consultan consumo agregado, sin obtener por ese rol el contenido de asignaturas ajenas.
 

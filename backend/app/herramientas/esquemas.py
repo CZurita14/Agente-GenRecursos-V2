@@ -207,3 +207,90 @@ def esquema_guia_producto_final(momentos: list[str], indicadores: list[str]) -> 
             "required": ["indicador", "como_prepararse"]}},
         "recomendaciones": {**_LISTA, "minItems": 3, "maxItems": 5}},
         "required": ["ruta", "criterios", "recomendaciones"]}
+
+
+# --- Herramientas de clase de la V2 (JSON de trabajo) ---
+
+class EjercicioGuiado(_Cerrado):
+    enunciado: str = Field(min_length=40)
+    pasos: list[str] = Field(min_length=2, max_length=8)
+    resultado_esperado: str = Field(min_length=10)
+
+
+class PracticaGuiada(_Cerrado):
+    objetivo: str = Field(min_length=20)
+    ejercicios: list[EjercicioGuiado] = Field(min_length=2, max_length=4)
+    errores_a_evitar: list[str] = Field(min_length=1, max_length=5)
+
+
+class Tarjeta(_Cerrado):
+    frente: str = Field(min_length=5, max_length=300)
+    reverso: str = Field(min_length=5, max_length=300)
+    contenido: str
+
+
+class Tarjetas(_Cerrado):
+    tarjetas: list[Tarjeta] = Field(min_length=8, max_length=15)
+
+
+class GuiaAutonoma(_Cerrado):
+    objetivo: str = Field(min_length=20)
+    actividad: str = Field(min_length=20, max_length=500)
+    pasos: list[str] = Field(min_length=3, max_length=8)
+    tiempo_estimado: str = Field(min_length=3)
+    para_la_siguiente_clase: str = Field(min_length=10)
+    autochequeo: list[str] = Field(min_length=3, max_length=5)
+    conexion_pis: str = ""
+
+
+class FaseClase(_Cerrado):
+    fase: str
+    minutos: int = Field(ge=5, le=240)
+    docente: str = Field(min_length=10)
+    estudiantes: str = Field(min_length=10)
+
+
+class GuionClase(_Cerrado):
+    objetivo: str = Field(min_length=20)
+    fases: list[FaseClase] = Field(min_length=3, max_length=6)
+    preguntas_detonantes: list[str] = Field(min_length=2, max_length=5)
+    conexion_pis: str = ""
+
+
+def _cerrado(propiedades: dict, opcionales: tuple[str, ...] = ()) -> dict:
+    return {"type": "object", "additionalProperties": False, "properties": propiedades,
+            "required": [k for k in propiedades if k not in opcionales]}
+
+
+def _textos(minimo: int, maximo: int) -> dict:
+    return {"type": "array", "items": {"type": "string"}, "minItems": minimo, "maxItems": maximo}
+
+
+def esquema_practica_guiada() -> dict:
+    ejercicio = _cerrado({"enunciado": {"type": "string"}, "pasos": _textos(2, 8),
+                          "resultado_esperado": {"type": "string"}})
+    return _cerrado({"objetivo": {"type": "string"},
+                     "ejercicios": {"type": "array", "items": ejercicio, "minItems": 2, "maxItems": 4},
+                     "errores_a_evitar": _textos(1, 5)})
+
+
+def esquema_tarjetas(contenidos: list[str]) -> dict:
+    contenido = {"type": "string", "enum": list(contenidos)} if contenidos else {"type": "string"}
+    tarjeta = _cerrado({"frente": {"type": "string"}, "reverso": {"type": "string"}, "contenido": contenido})
+    return _cerrado({"tarjetas": {"type": "array", "items": tarjeta, "minItems": 8, "maxItems": 15}})
+
+
+def esquema_guia_autonoma() -> dict:
+    return _cerrado({"objetivo": {"type": "string"}, "actividad": {"type": "string"}, "pasos": _textos(3, 8),
+                     "tiempo_estimado": {"type": "string"}, "para_la_siguiente_clase": {"type": "string"},
+                     "autochequeo": _textos(3, 5), "conexion_pis": {"type": "string"}}, ("conexion_pis",))
+
+
+def esquema_guion_clase() -> dict:
+    fase = _cerrado({"fase": {"type": "string", "enum": ["inicio", "desarrollo", "cierre"]},
+                     "minutos": {"type": "integer"}, "docente": {"type": "string"},
+                     "estudiantes": {"type": "string"}})
+    return _cerrado({"objetivo": {"type": "string"},
+                     "fases": {"type": "array", "items": fase, "minItems": 3, "maxItems": 6},
+                     "preguntas_detonantes": _textos(2, 5), "conexion_pis": {"type": "string"}},
+                    ("conexion_pis",))

@@ -24,6 +24,8 @@ NOMBRES = {
     "hoja_ruta": "Hoja de ruta del Proyecto Formativo", "autoevaluacion_rubrica": "Autoevaluación con la rúbrica",
     "autoevaluacion_final": "Autoevaluación final", "lista_evidencia": "Lista de verificación de la evidencia",
     "rubrica_momento": "Rúbrica del momento", "rubrica_final": "Rúbrica del producto final",
+    "practica_guiada": "Práctica guiada", "tarjetas": "Tarjetas de estudio",
+    "guia_autonoma": "Guía de trabajo autónomo", "guion_clase": "Guion de clase (docente)",
 }
 # Listas de la presentación que el estudiante va marcando, y textos que descubre cuando quiere.
 # Las que tienen una versión con respuestas, solo para el docente.

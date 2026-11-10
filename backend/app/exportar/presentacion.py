@@ -226,7 +226,53 @@ def _rubrica_final(c: dict) -> list[dict]:
     return [_texto("Producto final que se evalúa", c["evidencia"]), _rubrica(c["indicadores"], c["niveles"])]
 
 
+def _practica(c: dict) -> list[dict]:
+    p = c["practica"]
+    ejercicios = [_grupo(f"Ejercicio {n}", [
+        _texto("Enunciado", e["enunciado"], ["practica", "ejercicios", n - 1, "enunciado"]),
+        _lista("Pasos", e["pasos"], numerada=True, ruta=["practica", "ejercicios", n - 1, "pasos"]),
+        _texto("Resultado esperado", e["resultado_esperado"], ["practica", "ejercicios", n - 1, "resultado_esperado"]),
+    ]) for n, e in enumerate(p["ejercicios"], 1)]
+    return [_texto("Objetivo", p["objetivo"], ["practica", "objetivo"]), *ejercicios,
+            _lista("Errores a evitar", p["errores_a_evitar"], ruta=["practica", "errores_a_evitar"])]
+
+
+def _tarjetas(c: dict) -> list[dict]:
+    return [_tabla("Tarjetas de estudio", ["Frente", "Reverso", "Contenido"],
+                   [[t["frente"], t["reverso"], t["contenido"]] for t in c["mazo"]["tarjetas"]],
+                   [[["mazo", "tarjetas", k, "frente"], ["mazo", "tarjetas", k, "reverso"], None]
+                    for k in range(len(c["mazo"]["tarjetas"]))])]
+
+
+def _guia_autonoma(c: dict) -> list[dict]:
+    g = c["guia_autonoma"]
+    bloques = [_texto("Objetivo", g["objetivo"], ["guia_autonoma", "objetivo"]),
+               _texto("Actividad", g["actividad"], ["guia_autonoma", "actividad"]),
+               _lista("Pasos", g["pasos"], numerada=True, ruta=["guia_autonoma", "pasos"]),
+               _texto("Tiempo estimado", g["tiempo_estimado"], ["guia_autonoma", "tiempo_estimado"]),
+               _texto("Para la siguiente clase", g["para_la_siguiente_clase"],
+                      ["guia_autonoma", "para_la_siguiente_clase"]),
+               _lista("Autochequeo", g["autochequeo"], ruta=["guia_autonoma", "autochequeo"])]
+    if g.get("conexion_pis", "").strip():
+        bloques.append(_texto("Aporte al PIS", g["conexion_pis"], ["guia_autonoma", "conexion_pis"]))
+    return bloques
+
+
+def _guion(c: dict) -> list[dict]:
+    g = c["guion"]
+    bloques = [_texto("Objetivo de la sesión", g["objetivo"], ["guion", "objetivo"]),
+               _tabla("Desarrollo de la clase", ["Fase", "Minutos", "Docente", "Estudiantes"],
+                      [[f["fase"].capitalize(), f["minutos"], f["docente"], f["estudiantes"]] for f in g["fases"]],
+                      [[None, None, ["guion", "fases", k, "docente"], ["guion", "fases", k, "estudiantes"]]
+                       for k in range(len(g["fases"]))]),
+               _lista("Preguntas detonantes", g["preguntas_detonantes"], ruta=["guion", "preguntas_detonantes"])]
+    if g.get("conexion_pis", "").strip():
+        bloques.append(_texto("Conexión con el PIS", g["conexion_pis"], ["guion", "conexion_pis"]))
+    return bloques
+
+
 VISTAS: dict[str, Callable[[dict], list[dict]]] = {
+    "practica_guiada": _practica, "tarjetas": _tarjetas, "guia_autonoma": _guia_autonoma, "guion_clase": _guion,
     "rubrica_momento": _rubrica_momento, "rubrica_final": _rubrica_final,
     "ficha_clase": _ficha, "repaso_momento": _repaso, "guia_evidencia": _guia, "estudio_caso": _caso,
     "guia_producto_final": _guia_final, "hoja_ruta": _hoja_ruta, "autoevaluacion_rubrica": _autoevaluacion,

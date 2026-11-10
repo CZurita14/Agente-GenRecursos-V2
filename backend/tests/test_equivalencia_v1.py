@@ -37,6 +37,8 @@ def ambitos(s: SilaboUTI):
 
 # Campos que la V2 agrega al contexto (JSON de trabajo: PIS, sesión y actividades por tipo). La V1 no los
 # tiene: la huella los quita y así compara la lógica común. Las pruebas de la V2 cubren los campos nuevos.
+# Herramientas que solo existen en la V2: la V1 no tiene requisitos que comparar.
+HERRAMIENTAS_V2 = {"practica_guiada", "tarjetas", "guia_autonoma", "guion_clase"}
 CAMPOS_V2 = ("pis", "sesion_numero", "semana", "actividad_docente", "actividad_practica", "actividad_autonoma")
 
 
@@ -53,7 +55,7 @@ def huellas(s: SilaboUTI) -> dict:
         out["prompt"][a] = [m["content"] for m in msgs]
         tipo = "asignatura" if a == "asignatura" else "momento" if a.startswith("M") and "-" not in a else "clase"
         for h, dfn in DEFINICIONES.items():
-            if dfn.ambito == tipo:
+            if dfn.ambito == tipo and h not in HERRAMIENTAS_V2:
                 out["requisitos"][f"{h}@{a}"] = dfn.requisitos(c)
         if tipo in ("clase", "momento"):
             out["plan"][a] = [[p.model_dump() for p in lote]
