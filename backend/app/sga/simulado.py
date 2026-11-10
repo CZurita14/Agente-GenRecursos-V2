@@ -39,7 +39,9 @@ class ProveedorSimulado:
 
     def autenticar(self, usuario: str, clave: str) -> tuple[IdentidadSGA, object]:
         datos = self._leer(self._base / "usuarios.json")
-        encontrado = next((u for u in datos["usuarios"] if u["usuario"] == usuario), None)
+        # El docente entra con su correo del SGA; el nombre de usuario corto también se acepta.
+        encontrado = next((u for u in datos["usuarios"]
+                           if u["usuario"] == usuario or u["correo"].lower() == usuario.strip().lower()), None)
         # Siempre se compara un hash, exista o no el usuario.
         esperado = encontrado["sha256"] if encontrado else "0" * 64
         hash_clave = hashlib.sha256(clave.encode()).hexdigest()

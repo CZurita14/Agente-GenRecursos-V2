@@ -30,7 +30,8 @@ export function estadoMateria(m: Materia): { seleccionable: boolean; motivo: str
 /** Mensaje del formulario de ingreso según el estado HTTP (undefined = sin respuesta del servidor). */
 export function mensajeIngreso(estado: number | undefined, reintentar?: number): string {
   if (estado === undefined) return 'No hay conexión con el servidor. Inténtalo de nuevo.';
-  if (estado === 401) return 'Usuario o clave incorrectos.';
+  if (estado === 401) return 'Correo o clave incorrectos.';
+  if (estado === 403) return 'Ese correo no está habilitado para Recursos de estudio.';
   if (estado === 429) {
     return `Demasiados intentos; espera ${reintentar ? `${reintentar} s` : 'unos instantes'} y vuelve a intentarlo.`;
   }

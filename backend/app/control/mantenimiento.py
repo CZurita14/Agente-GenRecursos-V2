@@ -15,7 +15,11 @@ def limpiar(conn, dias=30):
                                 "or actividad<=clock_timestamp()-interval '8 hours'").rowcount
         bloqueos = conn.execute("delete from auth_bloqueo where actualizado<clock_timestamp()-interval '1 day' "
                                 "and coalesce(bloqueado_hasta,'-infinity')<clock_timestamp()").rowcount
-    return {"cuotas": cuotas, "accesos": accesos, "sesiones": sesiones, "bloqueos": bloqueos}
+        # El registro de ingresos se conserva 90 días, más que la auditoría con hashes.
+        ingresos = conn.execute("delete from auth_registro "
+                                "where creado<clock_timestamp()-interval '90 days'").rowcount
+    return {"cuotas": cuotas, "accesos": accesos, "sesiones": sesiones, "bloqueos": bloqueos,
+            "ingresos": ingresos}
 
 
 def main():

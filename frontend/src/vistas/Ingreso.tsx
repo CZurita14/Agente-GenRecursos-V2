@@ -13,7 +13,7 @@ const DOMINIOS = 'Usa tu correo @uti.edu.ec o @indoamerica.edu.ec.';
 
 const mensaje = (e: unknown) => e instanceof ErrorApi ? mensajeIngreso(e.estado, e.reintentar) : mensajeIngreso(undefined);
 
-/** Ingreso con el usuario y la clave del SGA. La clave vive solo en este estado y se borra al responder el servidor. */
+/** Ingreso con el correo y la clave del SGA. La clave vive solo en este estado y se borra al responder el servidor. */
 export function Ingreso({ onIngresar, onIngresarPrueba }: IngresoProps) {
   const [usuario, setUsuario] = useState('');
   const [clave, setClave] = useState('');
@@ -72,11 +72,11 @@ export function Ingreso({ onIngresar, onIngresarPrueba }: IngresoProps) {
   </div>;
 
   return <div className="max-w-md mx-auto">
-    <Card title="Ingresa a Recursos de estudio" description="Usa el mismo usuario y clave que en el SGA."
+    <Card title="Ingresa a Recursos de estudio" description="Usa el mismo correo y clave que en el SGA."
       icon={<KeyRound aria-hidden="true" />}>
       <form onSubmit={entrar} className="space-y-4" noValidate>
-        <Input label="Usuario del SGA" name="usuario" type="text" autoComplete="username" required
-          autoCapitalize="none" spellCheck={false} value={usuario} onChange={e => setUsuario(e.target.value)} />
+        <Input label="Correo del SGA" name="usuario" type="email" inputMode="email" autoComplete="username" required
+          autoCapitalize="none" spellCheck={false} placeholder="nombre@uti.edu.ec" value={usuario} onChange={e => setUsuario(e.target.value)} />
         <Input label="Clave del SGA" name="clave" type="password" autoComplete="current-password" required
           value={clave} onChange={e => setClave(e.target.value)}
           hint="Tu clave solo se usa para entrar; no se guarda." />

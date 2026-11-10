@@ -119,6 +119,7 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         except ProxyInvalido:
             # Cuota separada para rechazos; nunca consume la identidad del proxy.
             ip, proxy_invalido = "proxy-invalido", True
+        request.state.ip = ip  # El registro de ingresos guarda la misma IP que usan las cuotas.
         operacion = operacion_segura(request.url.path)
         try:
             respuesta = await proteger(request, siguiente, ip, operacion, proxy_invalido)

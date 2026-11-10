@@ -51,7 +51,8 @@ test('una materia abrible sin asignatura_id no se ofrece', () => {
 });
 
 test('mensajes de ingreso por estado', () => {
-  assert.equal(mensajeIngreso(401), 'Usuario o clave incorrectos.');
+  assert.equal(mensajeIngreso(401), 'Correo o clave incorrectos.');
+  assert.equal(mensajeIngreso(403), 'Ese correo no está habilitado para Recursos de estudio.');
   assert.match(mensajeIngreso(429, 30), /30 s/);
   assert.match(mensajeIngreso(429), /unos instantes/);
   assert.match(mensajeIngreso(503), /SGA no está disponible/);

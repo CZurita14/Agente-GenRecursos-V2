@@ -115,7 +115,7 @@ async function abrir({ sesion = true, viewport, rutas = {} } = {}) {
   await page.goto(origin);
   // Esperar a que termine la consulta inicial de sesión (sin esto se ve «Cargando…»).
   await (sesion ? page.getByRole('heading', { name: '¿Qué quieres hacer hoy?' })
-    : page.getByLabel('Usuario del SGA').or(page.getByLabel('Correo institucional'))).waitFor();
+    : page.getByLabel('Correo del SGA').or(page.getByLabel('Correo institucional'))).waitFor();
   return { context, page, estado };
 }
 
@@ -124,13 +124,13 @@ test('ingreso con usuario y clave del SGA lleva al menú y no guarda la clave', 
   const clave = page.getByLabel('Clave del SGA');
   assert.equal(await clave.getAttribute('type'), 'password');
   assert.equal(await clave.getAttribute('autocomplete'), 'current-password');
-  assert.equal(await page.getByLabel('Usuario del SGA').getAttribute('autocomplete'), 'username');
-  await page.getByLabel('Usuario del SGA').fill('docente');
+  assert.equal(await page.getByLabel('Correo del SGA').getAttribute('autocomplete'), 'username');
+  await page.getByLabel('Correo del SGA').fill('docente@uti.edu.ec');
   await clave.fill('secreta-123');
   await page.getByRole('button', { name: 'Ingresar' }).click();
   await page.getByRole('heading', { name: '¿Qué quieres hacer hoy?' }).waitFor();
   const envio = estado.llamadas.find(l => l.ruta === '/auth/ingresar');
-  assert.deepEqual(JSON.parse(envio.cuerpo), { usuario: 'docente', clave: 'secreta-123' });
+  assert.deepEqual(JSON.parse(envio.cuerpo), { usuario: 'docente@uti.edu.ec', clave: 'secreta-123' });
   const guardado = await page.evaluate(() => JSON.stringify([{ ...localStorage }, { ...sessionStorage }]));
   assert.ok(!guardado.includes('secreta-123'));
   await context.close();
@@ -139,19 +139,19 @@ test('ingreso con usuario y clave del SGA lleva al menú y no guarda la clave', 
 test('clave incorrecta (401): mensaje genérico y la clave se borra', async () => {
   const { context, page } = await abrir({ sesion: false, rutas: {
     '/auth/ingresar': route => route.fulfill({ status: 401, contentType: 'application/json', body: '{"detail":"Usuario o clave incorrectos"}' }) } });
-  await page.getByLabel('Usuario del SGA').fill('docente');
+  await page.getByLabel('Correo del SGA').fill('docente@uti.edu.ec');
   await page.getByLabel('Clave del SGA').fill('mala');
   await page.getByRole('button', { name: 'Ingresar' }).click();
-  await page.getByRole('alert').getByText('Usuario o clave incorrectos.').waitFor();
+  await page.getByRole('alert').getByText('Correo o clave incorrectos.').waitFor();
   assert.equal(await page.getByLabel('Clave del SGA').inputValue(), '');
-  assert.equal(await page.getByLabel('Usuario del SGA').inputValue(), 'docente');
+  assert.equal(await page.getByLabel('Correo del SGA').inputValue(), 'docente@uti.edu.ec');
   await context.close();
 });
 
 test('demasiados intentos (429) muestra la espera de Retry-After', async () => {
   const { context, page } = await abrir({ sesion: false, rutas: {
     '/auth/ingresar': route => route.fulfill({ status: 429, headers: { 'Retry-After': '45' }, contentType: 'application/json', body: '{"detail":"Demasiados intentos"}' }) } });
-  await page.getByLabel('Usuario del SGA').fill('docente');
+  await page.getByLabel('Correo del SGA').fill('docente@uti.edu.ec');
   await page.getByLabel('Clave del SGA').fill('x');
   await page.getByRole('button', { name: 'Ingresar' }).click();
   await page.getByRole('alert').getByText('espera 45 s').waitFor();
@@ -206,7 +206,7 @@ test('un 401 a mitad del uso devuelve al ingreso', async () => {
   estado.sesion = false;
   await page.route(url => url.pathname === '/api/asignaturas', route => route.fulfill({ status: 401, contentType: 'application/json', body: '{"detail":"Sesión requerida"}' }));
   await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('button', { name: 'Proyecto Formativo', exact: true }).click();
-  await page.getByLabel('Usuario del SGA').waitFor();
+  await page.getByLabel('Correo del SGA').waitFor();
   await context.close();
 });
 
@@ -220,7 +220,7 @@ test('error al cargar las materias (503) se muestra con mensaje claro', async ()
 test('salir cierra la sesión', async () => {
   const { context, page } = await abrir();
   await page.getByRole('button', { name: 'Salir' }).click();
-  await page.getByLabel('Usuario del SGA').waitFor();
+  await page.getByLabel('Correo del SGA').waitFor();
   await context.close();
 });
 
