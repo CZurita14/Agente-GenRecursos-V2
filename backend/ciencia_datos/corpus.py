@@ -1,6 +1,9 @@
 """Corpus de entrenamiento: fragmentos académicos de los sílabos, sin datos personales.
 
-Solo se lee `SilaboUTI`, que por construcción no tiene perfil docente ni contacto.
+Solo se leen archivos `.json` con el sílabo crudo del SGA: cada uno pasa por `a_contrato` (lista blanca
+que descarta docente, contacto y firmas) y por `cargar_silabo`, y de ahí sale un `SilaboUTI`, que por
+construcción no tiene perfil docente ni contacto. Los `.pdf` se ignoran (se avisa cuántos) y los JSON
+que no cumplen el contrato se descartan.
 Como segunda barrera, se descarta todo fragmento con correos, ORCID o números largos.
 Nada de este módulo imprime ni registra texto de los sílabos.
 """

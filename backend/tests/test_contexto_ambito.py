@@ -1,10 +1,15 @@
 """P3b T1: contexto de momento y de asignatura sobre el mismo contrato ContextoClase."""
+import json
+import os
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
 from app.llm.prompts import Sello, construir_prompt
 from app.agentes.mensajes import EstiloFacultad
+from app.sga.traductor import a_contrato
+from app.silabo.integridad import cargar_silabo
 from app.silabo.contexto import contexto_ambito, contexto_asignatura, contexto_clase, contexto_momento
 from app.silabo.modelo import SilaboUTI
 
@@ -67,6 +72,47 @@ def test_prompt_dice_momento_y_asignatura(silabo):
     assert "Momento M2" in momento[1]["content"] and "Clase M2" not in momento[1]["content"]
     asignatura = _prompt(contexto_asignatura(silabo))
     assert "Asignatura" in asignatura[1]["content"]
+
+
+FIXTURES = Path(__file__).parent / "fixtures"
+LIMITE_PROMPT = 8192 - 3500 - 300
+
+
+def _silabos_de_fixtures():
+    """Los sílabos simulados del SGA y el de Análisis de Datos, como los carga la V2."""
+    rutas = sorted((FIXTURES / "sga" / "sga_silabos").glob("*.json")) + [FIXTURES / "silabo_datos.json"]
+    assert len(rutas) >= 4
+    return [cargar_silabo(a_contrato(json.loads(r.read_text(encoding="utf-8")))) for r in rutas]
+
+
+def _contextos(s):
+    return [contexto_momento(s, f"M{m.numero}") for m in s.momentos] + [contexto_asignatura(s)]
+
+
+def test_prompt_de_momento_cabe_con_el_estimador():
+    """Sin servidor: con el estimador de caracteres de `_prompt`, el prompt más grande deja ≥ 3 500 tokens."""
+    contar = lambda m: sum(len(x["content"]) for x in m) // 3
+    maximo = max(contar(_prompt(c, contar)) for s in _silabos_de_fixtures() for c in _contextos(s))
+    assert maximo <= LIMITE_PROMPT
+
+
+@pytest.mark.servidor
+@pytest.mark.skipif(os.getenv("LLM_REAL") != "1", reason="requiere LLM_REAL=1 y red UTI")
+def test_prompt_de_momento_cabe():
+    """Con /tokenize real: el prompt más grande deja ≥ 3 500 tokens para la salida."""
+    from app.config import ajustes
+    from app.llm.cliente import ClienteVLLM
+    config = ajustes()
+    cliente = ClienteVLLM(config.llm_base_url, config.llm_model, 30, 1, lambda d: None, config.llm_api_key)
+    try:
+        maximo = 0
+        for s in _silabos_de_fixtures():
+            for c in _contextos(s):
+                maximo = max(maximo, cliente.contar_tokens(_prompt(c, cliente.contar_tokens)))
+    finally:
+        cliente.close()
+    print("PROMPT_MAXIMO_TOKENS", maximo)
+    assert maximo <= LIMITE_PROMPT
 
 
 def test_contexto_asignatura_no_crece_con_las_sesiones(silabo):

@@ -1,13 +1,20 @@
 """V2: las materias del docente salen del SGA; ya no se sube ningún PDF."""
+import json
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
 
 from app.api.aplicacion import crear_app
 from app.auth.servicio import ServicioAuth
 from app.config import Ajustes
-from tests.silabos import subir
+from app.sga.simulado import ProveedorSimulado
+from app.sga.sincronizar import sincronizar
+from tests.test_sga_sincronizar import CLAVE, Envoltorio
 
 ORIGEN = "https://materiales.example"
+SGA = Path(__file__).parent / "fixtures" / "sga"
+CORREO = "docente.uno@uti.edu.ec"
 CLAVES = {"id_sga", "codigo_pf", "paralelo", "nombre", "carrera", "estado_sga", "estado", "asignatura_id"}
 
 
@@ -33,20 +40,25 @@ def _materia(conn, correo, id_sga, codigo, paralelo, nombre, estado="importada",
         (correo, id_sga, codigo, paralelo, nombre, estado, asignatura_id))
 
 
-def test_materias_devuelve_solo_las_del_docente_ordenadas(entorno, conn, datos):
+def _sincronizar(conn, app, proveedor):
+    identidad, permiso = proveedor.autenticar("docente.uno", CLAVE)
+    return sincronizar(conn, proveedor, identidad, permiso, app.state.asignaturas)
+
+
+def test_materias_devuelve_las_del_sga_del_docente_ordenadas(entorno, conn):
     app, cliente = entorno
-    with cliente("uno@uti.edu.ec") as c:
-        aid = subir(app, "uno@uti.edu.ec", datos)["id"]
-        _materia(conn, "uno@uti.edu.ec", "s2", "PF-B", "A", "Bases", asignatura_id=aid)
-        _materia(conn, "uno@uti.edu.ec", "s3", "PF-A", "B", "Algebra", estado="no_disponible")
-        _materia(conn, "uno@uti.edu.ec", "s1", "PF-A", "A", "Algebra", estado="invalida")
-        _materia(conn, "dos@uti.edu.ec", "x9", "PF-Z", "A", "Ajena")
+    esperado = json.loads((SGA / "materias" / "docente.uno.json").read_text(encoding="utf-8"))
+    with cliente(CORREO) as c:
+        _sincronizar(conn, app, ProveedorSimulado(SGA))
+        _materia(conn, "otro@uti.edu.ec", "x9", "PF-Z", "A", "Ajena")  # prueba el filtro por docente
         r = c.get("/materias")
     assert r.status_code == 200
     filas = r.json()
-    assert [(f["codigo_pf"], f["paralelo"]) for f in filas] == [("PF-A", "A"), ("PF-A", "B"), ("PF-B", "A")]
     assert all(set(f) == CLAVES for f in filas)
-    assert [f["asignatura_id"] for f in filas] == [None, None, aid]
+    assert [(f["id_sga"], f["codigo_pf"], f["paralelo"], f["nombre"], f["carrera"]) for f in filas] == [
+        (m["id_sga"], m["codigo_pf"], m["paralelo"], m["nombre"], m["carrera"])
+        for m in sorted(esperado, key=lambda m: (m["codigo_pf"], m["paralelo"]))]
+    assert all(f["estado"] in ("importada", "sin_cambios") and f["asignatura_id"] for f in filas)
     assert "Ajena" not in r.text
 
 
@@ -63,9 +75,13 @@ def test_ya_no_se_puede_subir_un_pdf(entorno):
     assert r.status_code == 404
 
 
-def test_asignatura_que_el_sga_ya_no_lista_es_inexistente(entorno, conn, datos):
+def test_asignatura_de_una_materia_que_el_sga_ya_no_lista_es_inexistente(entorno, conn):
     app, cliente = entorno
-    with cliente("uno@uti.edu.ec") as c:
-        aid = subir(app, "uno@uti.edu.ec", datos)["id"]
-        conn.execute("update asignatura set activa_sga=false where id=%s", (aid,))
+    with cliente(CORREO) as c:
+        _sincronizar(conn, app, ProveedorSimulado(SGA))
+        aid = next(f["asignatura_id"] for f in c.get("/materias").json() if f["id_sga"] == "90003")
+        assert c.get(f"/asignaturas/{aid}/menu").status_code == 200
+        _sincronizar(conn, app, Envoltorio(ProveedorSimulado(SGA), quita={"90003"}))
         assert c.get(f"/asignaturas/{aid}/menu").status_code == 404
+        assert aid not in [a["id"] for a in c.get("/asignaturas").json()]
+        assert "90003" not in [f["id_sga"] for f in c.get("/materias").json()]

@@ -1,8 +1,12 @@
 """Menú por semana y día (§8.1, criterio 2) y versiones del sílabo (§2.2)."""
+import json
 from datetime import date
+from pathlib import Path
 
 import pytest
 
+from app.sga.traductor import a_contrato
+from app.silabo.integridad import cargar_silabo
 from app.silabo.menu import clases_cambiadas, construir_menu
 from app.silabo.modelo import SilaboUTI
 
@@ -24,6 +28,23 @@ def test_menu_con_la_fixture(silabo):
 def test_numero_de_clase_cronologico(silabo):
     numeros = [c.numero_clase for s in construir_menu(silabo) for c in s.clases]
     assert numeros == list(range(1, 7))
+
+
+FIXTURES = Path(__file__).parent / "fixtures"
+
+
+# Semanas esperadas de cada sílabo simulado del SGA (criterio 2): se contaron una vez a partir de los
+# `semana_periodo` de sus sesiones. Los tres traen las sesiones en las semanas 2, 3 y 4 del período
+# (6 clases en total), igual que `silabo_datos.json`; por eso el menú debe tener 3 semanas.
+@pytest.mark.parametrize("ruta, semanas, clases", [
+    ("sga/sga_silabos/S91-SIMU-3-90001-9001.json", 3, 6),
+    ("sga/sga_silabos/S91-SIMU-3-90002-9002.json", 3, 6),
+    ("sga/sga_silabos/S91-SIMU-2-90003-9003.json", 3, 6),
+])
+def test_criterio_2_silabos_simulados_del_sga(ruta, semanas, clases):
+    silabo = cargar_silabo(a_contrato(json.loads((FIXTURES / ruta).read_text(encoding="utf-8"))))
+    menu = construir_menu(silabo)
+    assert len(menu) == semanas and sum(len(s.clases) for s in menu) == clases
 
 
 def _con_cambios(silabo, version="1.0", contenido_m3_s2=None):
