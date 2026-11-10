@@ -1,6 +1,5 @@
 """Fábrica ASGI: salud pública y aplicación cerrada hasta autenticar (A2)."""
 from contextlib import asynccontextmanager
-from threading import BoundedSemaphore
 import logging
 import time
 
@@ -33,7 +32,7 @@ from app.operacion import preparado
 from app.sga import SGAError, crear_proveedor
 
 
-def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, conexion=None, lector_pdf=None) -> FastAPI:
+def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, conexion=None) -> FastAPI:
     config = config or ajustes()
     # Toda conexión de la API pasa por el pool: sin él, cada petición abría al menos cinco.
     conexion = PoolConexiones(conexion or (lambda: conectar(config.database_url)))
@@ -65,11 +64,6 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
     if auth is not None and config.auth_secreto is None:
         raise ValueError("La autenticación inyectada requiere AUTH_SECRETO para proteger cuotas y registros")
     app.state.control = ControlAcceso(conexion, config) if config.auth_secreto else None
-    app.state.pdf_cupos = BoundedSemaphore(2)
-    if lector_pdf is None:
-        from app.silabo.aislado import leer_pdf_aislado
-        lector_pdf = leer_pdf_aislado
-    app.state.lector_pdf = lector_pdf
     app.state.auth = auth
     if auth is None and config.auth_secreto is not None:
         try:

@@ -1,4 +1,4 @@
-"""Errores HTTP sin el contenido de peticiones, PDF ni excepciones internas."""
+"""Errores HTTP sin el contenido de peticiones ni excepciones internas."""
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -7,7 +7,6 @@ import psycopg
 from app.auth.servicio import AuthError
 from app.control.limites import LimiteExcedido
 from app.llm.cliente import ServidorNoDisponible
-from app.silabo.lector.errores import SilaboIlegible
 
 
 def registrar_errores(app: FastAPI) -> None:
@@ -28,10 +27,6 @@ def registrar_errores(app: FastAPI) -> None:
     async def validacion(request: Request, exc: RequestValidationError):
         # El manejador predeterminado incluye los valores recibidos.
         return JSONResponse({"detail": "Solicitud no válida"}, status_code=422)
-
-    @app.exception_handler(SilaboIlegible)
-    async def silabo(request: Request, exc: SilaboIlegible):
-        return JSONResponse({"detail": "Sílabo no interpretable"}, status_code=422)
 
     @app.exception_handler(ServidorNoDisponible)
     async def servidor(request: Request, exc: ServidorNoDisponible):

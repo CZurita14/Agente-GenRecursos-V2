@@ -28,7 +28,7 @@ def entorno(nueva_conexion, silabo, conn, monkeypatch):
     auth = ServicioAuth(nueva_conexion, "s" * 48)
     config = Ajustes(_env_file=None, database_url="no-usar", llm_base_url="http://no-usar/v1",
                      llm_model="m", api_origen=ORIGEN, auth_secreto="s" * 48)
-    app = crear_app(config, auth=auth, conexion=nueva_conexion, lector_pdf=lambda *_, **__: silabo)
+    app = crear_app(config, auth=auth, conexion=nueva_conexion)
     monkeypatch.setitem(WORKERS, "cuestionario", WorkerPrueba())
     monkeypatch.setitem(WORKERS, "ficha_clase", WorkerPrueba("ficha_clase"))
     with ExitStack() as pila:

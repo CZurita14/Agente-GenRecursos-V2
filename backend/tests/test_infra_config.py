@@ -80,7 +80,7 @@ def test_proxy_no_confia_cabeceras_de_cliente_y_no_registra_uri():
     assert '$proxy_add_x_forwarded_for' not in nginx
     assert 'access_log off;' in nginx
     assert 'location ^~ /api/salud/ { return 404; }' in nginx
-    assert 'client_max_body_size 10m;' in nginx
+    assert 'client_max_body_size 1m;' in nginx
     assert 'proxy_hide_header Cache-Control;' in nginx
 
 
@@ -90,7 +90,7 @@ def test_limites_configurables_en_compose_con_los_valores_de_la_api():
     from app.config import Ajustes
     entorno = yaml.safe_load((RAIZ/'infra/compose.yaml').read_text(encoding='utf-8'))['x-backend']['environment']
     campos = [c for c in Ajustes.model_fields if c.startswith('limite_')] + ['auditoria_retencion_dias']
-    assert len(campos) == 8
+    assert len(campos) == 7
     for campo in campos:
         valor = entorno[campo.upper()]
         defecto = re.fullmatch(r'\$\{' + campo.upper() + r':-(\d+)\}', valor)
@@ -155,3 +155,11 @@ def test_la_imagen_de_produccion_no_lleva_torch_y_el_lock_es_completo():
             r = Requirement(texto)
             if r.marker is None or r.marker.evaluate(entorno):
                 assert re.sub(r'[-_.]+', '-', r.name).lower() in fijados, (nombre, r.name)
+
+
+def test_compose_pasa_la_configuracion_del_sga_y_ya_no_la_del_pdf():
+    """En producción el proveedor simulado se rechaza: sin estas variables la API no podría ingresar con el SGA."""
+    compose = yaml.safe_load((RAIZ/'infra/compose.yaml').read_text(encoding='utf-8'))
+    entorno = compose['x-backend']['environment']
+    assert {'SGA_PROVEEDOR', 'SGA_SIMULADO_DIR', 'SGA_TIMEOUT_S'} <= set(entorno)
+    assert not [k for k in entorno if k.startswith('PDF_') or 'PDF' in k]

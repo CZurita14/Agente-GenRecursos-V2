@@ -30,10 +30,6 @@ class Ajustes(BaseSettings):
     entorno: Literal["desarrollo", "produccion"] = "produccion"
     # Entrar sin autenticar contra el SGA (solo desarrollo); el ingreso normal usa el SGA.
     acceso_prueba: bool = False
-    pdf_max_bytes: int = Field(default=10 * 1024 * 1024, ge=1, le=50 * 1024 * 1024)
-    pdf_timeout_s: float = Field(default=20, gt=0, le=120)
-    pdf_memoria_mb: int = Field(default=512, ge=128, le=2048)
-    pdf_recepcion_timeout_s: float = Field(default=30, gt=0, le=120)
     api_json_max_bytes: int = Field(default=1024 * 1024, ge=1, le=4 * 1024 * 1024)
     api_json_timeout_s: float = Field(default=30, gt=0, le=120)
     # Proveedor del SGA: "simulado" lee los fixtures de `sga_simulado_dir`; "real" espera el adaptador de TI.
@@ -47,7 +43,6 @@ class Ajustes(BaseSettings):
     limite_ingresar_ip_minuto: int = Field(default=60, ge=1, le=100000)
     limite_ingresar_usuario_minuto: int = Field(default=20, ge=1, le=100000)
     limite_generar_correo_hora: int = Field(default=30, ge=1, le=100000)
-    limite_pdf_correo_hora: int = Field(default=10, ge=1, le=100000)
     limite_editar_correo_minuto: int = Field(default=30, ge=1, le=100000)
     auditoria_retencion_dias: int = Field(default=30, ge=1, le=365)
 

@@ -6,7 +6,6 @@ from fastapi.testclient import TestClient
 from app.api.aplicacion import crear_app
 from app.config import Ajustes
 from app.llm.cliente import ServidorNoDisponible
-from app.silabo.lector.errores import SilaboIlegible
 
 
 def ruta_publica(c, funcion):
@@ -92,7 +91,7 @@ def test_origen_configurado_no_tiene_comodines():
                 llm_model="m", api_origen="*")
 
 
-@pytest.mark.parametrize("error,codigo", [(SilaboIlegible, 422), (ServidorNoDisponible, 503)])
+@pytest.mark.parametrize("error,codigo", [(ServidorNoDisponible, 503)])
 def test_error_no_incluye_contenido_interno(error, codigo):
     c = cliente()
 

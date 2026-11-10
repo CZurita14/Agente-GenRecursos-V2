@@ -1,6 +1,6 @@
 """Contrato de datos del sílabo UTI (docs/mapeo-silabo.md §3).
 
-Es el acuerdo entre el lector de PDF (P2) y el núcleo multiagente. Los modelos
+Es el acuerdo entre el contrato JSON del sílabo (docs/api-silabo) y el núcleo multiagente. Los modelos
 son inmutables y rechazan campos desconocidos: por construcción no existe lugar
 para el perfil del docente, sus datos de contacto ni las firmas (secciones I y
 VII del sílabo), de modo que ningún dato personal puede llegar a la IA.

@@ -16,7 +16,8 @@ CMD ["uvicorn", "app.api.aplicacion:crear_app", "--factory", "--host", "0.0.0.0"
 
 FROM runtime AS pruebas
 USER root
-RUN pip install --no-cache-dir pytest==9.1.1
+# pdfplumber solo lo usan las pruebas de exportación para leer el PDF generado; la API ya no lee PDF.
+RUN pip install --no-cache-dir pytest==9.1.1 pdfplumber==0.11.10
 # ciencia_datos y PyTorch no entran en la imagen: tampoco sus pruebas ni la marca modelo.
 COPY backend/tests /app/backend/tests
 RUN rm -f /app/backend/tests/test_cd_*.py

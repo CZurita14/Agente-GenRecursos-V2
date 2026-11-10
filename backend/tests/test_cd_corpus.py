@@ -81,11 +81,39 @@ def _escribir(carpeta, nombre, datos, codigo=None, aprobado=None, titulo=None):
 def test_leer_carpeta_lee_json_y_rechaza_ilegibles(tmp_path, datos):
     _escribir(tmp_path, "a.json", datos)
     (tmp_path / "roto.json").write_text("{no es json", encoding="utf-8")
-    (tmp_path / "falso.pdf").write_bytes(b"no es un pdf")
     (tmp_path / "otro.txt").write_text("ignorado", encoding="utf-8")
     silabos, rechazados = leer_carpeta(tmp_path)
     assert len(silabos) == 1
-    assert rechazados == ["falso.pdf", "roto.json"]
+    assert rechazados == ["roto.json"]
+
+
+def test_los_pdf_se_ignoran_y_se_avisa_con_un_conteo(tmp_path, datos):
+    _escribir(tmp_path, "a.json", datos)
+    (tmp_path / "uno.pdf").write_bytes(b"%PDF-1.4")
+    (tmp_path / "sub").mkdir()
+    (tmp_path / "sub" / "dos.PDF").write_bytes(b"%PDF-1.4")
+    with pytest.warns(UserWarning, match="2 PDF"):
+        silabos, rechazados = leer_carpeta(tmp_path)
+    assert len(silabos) == 1 and rechazados == []
+
+
+def test_un_json_del_sga_entra_sin_los_campos_privados(tmp_path, datos):
+    crudo = dict(datos)
+    crudo["docente"] = {"nombre": "SECRETO-NOMBRE", "correo": "secreto@uti.edu.ec"}
+    crudo["firmas"] = ["SECRETO-FIRMA"]
+    _escribir(tmp_path, "sga.json", crudo)
+    silabos, rechazados = leer_carpeta(tmp_path)
+    assert rechazados == [] and len(silabos) == 1
+    assert "SECRETO" not in silabos[0].model_dump_json()
+
+
+def test_un_json_que_no_cumple_el_contrato_se_rechaza_por_su_nombre(tmp_path, datos):
+    malo = dict(datos)
+    malo["momentos"] = []
+    _escribir(tmp_path, "bueno.json", datos)
+    _escribir(tmp_path, "malo.json", malo)
+    silabos, rechazados = leer_carpeta(tmp_path)
+    assert len(silabos) == 1 and rechazados == ["malo.json"]
 
 
 def test_leer_carpeta_conserva_la_version_mas_reciente_por_codigo(tmp_path, datos):
@@ -141,14 +169,6 @@ def test_varias_carpetas_se_leen_juntas(dos_carpetas):
 def test_por_carpeta_con_una_sola_raiz_no_cambia(dos_carpetas):
     rutas = [r for _, r in corpus.leer_con_origen(dos_carpetas[0])[0]]
     assert por_carpeta(rutas, dos_carpetas[0]) == {".": 2}
-
-
-def test_un_pdf_no_puede_usar_el_prefijo_simulado(tmp_path, monkeypatch, silabo):
-    d = silabo.model_dump(mode="json")
-    d["proyecto_formativo"]["codigo"] = "SIM-FING-X-001"
-    monkeypatch.setattr(corpus, "leer_silabo", lambda datos: SilaboUTI.model_validate(d))
-    (tmp_path / "a.pdf").write_bytes(b"%PDF")
-    assert leer_carpeta(tmp_path) == ([], ["a.pdf"])
 
 
 def test_un_json_con_prefijo_simulado_si_se_lee(tmp_path, datos):

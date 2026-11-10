@@ -26,15 +26,6 @@ def test_numero_de_clase_cronologico(silabo):
     assert numeros == list(range(1, 7))
 
 
-@pytest.mark.parametrize("nombre, semanas", [("datos", 6), ("tic", 4)])
-def test_criterio_2_reales(nombre, semanas):
-    from tests.lector.conftest import PDFS
-    if not PDFS[nombre].exists():
-        pytest.skip("PDF real no disponible en Silabos/ (no se versiona)")
-    from app.silabo.lector import leer_silabo
-    assert len(construir_menu(leer_silabo(PDFS[nombre].read_bytes()))) == semanas
-
-
 def _con_cambios(silabo, version="1.0", contenido_m3_s2=None):
     datos = silabo.model_dump()
     datos["proyecto_formativo"]["version"] = version

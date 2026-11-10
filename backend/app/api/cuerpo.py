@@ -8,8 +8,7 @@ class LimiteJSON:
         self.app, self.max_bytes, self.timeout_s = app, max_bytes, timeout_s
 
     async def __call__(self, scope, receive, send):
-        if (scope["type"] != "http" or scope["method"] not in {"POST", "PUT", "PATCH"}
-                or scope["path"] == "/silabos"):
+        if scope["type"] != "http" or scope["method"] not in {"POST", "PUT", "PATCH"}:
             await self.app(scope, receive, send)
             return
         headers = dict(scope.get("headers", []))

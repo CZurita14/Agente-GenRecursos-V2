@@ -52,6 +52,15 @@ class ServicioAsignaturas:
                 return {"id": str(aid), "agente": fila["agente"], "menu": _menu(silabo),
                         "clases_cambiadas": sorted(cambios)}
 
+    def materias(self, correo):
+        """Las materias que el SGA lista al docente y el resultado de importar cada sílabo."""
+        with closing(self.conexion()) as conn:
+            conn.autocommit = True
+            filas = conn.execute(
+                "select id_sga,codigo_pf,paralelo,nombre,carrera,estado_sga,estado,asignatura_id "
+                "from materia_sga where correo=%s order by codigo_pf,paralelo,id_sga", (correo,)).fetchall()
+        return [{**f, "asignatura_id": str(f["asignatura_id"]) if f["asignatura_id"] else None} for f in filas]
+
     def listar(self, correo):
         with closing(self.conexion()) as conn:
             conn.autocommit = True

@@ -19,7 +19,7 @@ LIMITES = {  # Variable opcional → máximo admitido por app/config.py (mínimo
     **{clave: 100000 for clave in (
         "LIMITE_IP_MINUTO", "LIMITE_USUARIO_MINUTO", "LIMITE_INGRESAR_IP_MINUTO",
         "LIMITE_INGRESAR_USUARIO_MINUTO", "LIMITE_GENERAR_CORREO_HORA",
-        "LIMITE_PDF_CORREO_HORA", "LIMITE_EDITAR_CORREO_MINUTO")},
+        "LIMITE_EDITAR_CORREO_MINUTO")},
     "AUDITORIA_RETENCION_DIAS": 365,
 }
 IDENTIFICADOR = re.compile(r"[a-z_][a-z0-9_]{0,62}\Z")

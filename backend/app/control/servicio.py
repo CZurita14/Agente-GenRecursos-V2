@@ -17,7 +17,6 @@ class ControlAcceso:
             "ingresar_ip_minuto": (config.limite_ingresar_ip_minuto, 60),
             "ingresar_usuario_minuto": (config.limite_ingresar_usuario_minuto, 60),
             "generar_correo_hora": (config.limite_generar_correo_hora, 3600),
-            "pdf_correo_hora": (config.limite_pdf_correo_hora, 3600),
             "editar_correo_minuto": (config.limite_editar_correo_minuto, 60),
             "audit_429_minuto": (1, 60),
         })
@@ -35,8 +34,6 @@ class ControlAcceso:
         self.limites.consumir("usuario_minuto", correo)
         if metodo == "POST" and operacion in {"generar", "chat", "regenerar"}:
             self.limites.consumir("generar_correo_hora", correo)
-        if metodo == "POST" and operacion == "silabos":
-            self.limites.consumir("pdf_correo_hora", correo)
         if metodo == "PUT" and operacion == "recurso":
             self.limites.consumir("editar_correo_minuto", correo)
 

@@ -1,5 +1,4 @@
 """P3b T1: contexto de momento y de asignatura sobre el mismo contrato ContextoClase."""
-import os
 from types import SimpleNamespace
 
 import pytest
@@ -68,28 +67,6 @@ def test_prompt_dice_momento_y_asignatura(silabo):
     assert "Momento M2" in momento[1]["content"] and "Clase M2" not in momento[1]["content"]
     asignatura = _prompt(contexto_asignatura(silabo))
     assert "Asignatura" in asignatura[1]["content"]
-
-
-@pytest.mark.servidor
-@pytest.mark.skipif(os.getenv("LLM_REAL") != "1", reason="requiere LLM_REAL=1 y red UTI")
-def test_prompt_de_momento_cabe():
-    """Con /tokenize real: el prompt más grande deja ≥ 3 500 tokens para la salida."""
-    from app.config import ajustes
-    from app.llm.cliente import ClienteVLLM
-    from app.silabo.lector import leer_silabo
-    from tests.lector.conftest import PDFS
-    config = ajustes()
-    cliente = ClienteVLLM(config.llm_base_url, config.llm_model, 30, 1, lambda d: None, config.llm_api_key)
-    try:
-        maximo = 0
-        for ruta in PDFS.values():
-            s = leer_silabo(ruta.read_bytes())
-            for c in [contexto_momento(s, f"M{m.numero}") for m in s.momentos] + [contexto_asignatura(s)]:
-                maximo = max(maximo, cliente.contar_tokens(_prompt(c, cliente.contar_tokens)))
-    finally:
-        cliente.close()
-    print("PROMPT_MAXIMO_TOKENS", maximo)
-    assert maximo <= 8192 - 3500 - 300
 
 
 def test_contexto_asignatura_no_crece_con_las_sesiones(silabo):

@@ -53,7 +53,7 @@ _RUTAS = [
     (r"/salud/vivo", "salud.vivo"), (r"/salud/listo", "salud.listo"),
     (r"/auth/ingresar", "auth.ingresar"), (r"/auth/yo", "auth.yo"),
     (r"/auth/modo", "auth.modo"), (r"/auth/prueba", "auth.prueba"),
-    (r"/auth/salir", "auth.salir"), (r"/silabos", "silabos"),
+    (r"/auth/salir", "auth.salir"), (r"/materias", "materias"),
     (r"/privacidad", "privacidad"), (r"/admin/consumo", "admin.consumo"),
     (r"/asignaturas", "asignaturas"),
     (r"/asignaturas/[^/]+/menu", "asignaturas.menu"),

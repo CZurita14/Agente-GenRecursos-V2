@@ -197,23 +197,6 @@ def test_cuota_generacion_no_deja_un_segundo_trabajo(entorno, silabo, conn):
     assert conn.execute("select count(*) n from trabajo").fetchone()["n"] == 1
 
 
-def test_cuota_pdf_rechaza_antes_del_lector(entorno, silabo):
-    construir, cliente, _ = entorno
-    app = construir(limite_pdf_correo_hora=1)
-    c = cliente(app, correo="docente@uti.edu.ec")
-    lecturas = []
-
-    def lector(*_, **__):
-        lecturas.append(True)
-        return silabo
-
-    app.state.lector_pdf = lector
-    headers = {"Origin": ORIGEN, "Content-Type": "application/pdf"}
-    assert c.post("/silabos", content=b"%PDF-prueba", headers=headers).status_code == 201
-    assert c.post("/silabos", content=b"%PDF-prueba", headers=headers).status_code == 429
-    assert len(lecturas) == 1
-
-
 def test_agotar_cuota_usuario_no_impide_revocar_sesion(entorno):
     construir, cliente, _ = entorno
     app = construir(limite_usuario_minuto=1)

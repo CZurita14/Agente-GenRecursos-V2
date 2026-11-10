@@ -75,7 +75,7 @@ def test_validar_no_invoca_docker_ni_revela_secretos(operar, entorno, monkeypatc
     {"RANGO_DINAMICO": "172.29.8.0/25"}, {"RANGO_DINAMICO": "172.29.9.0/25"},
     {"RANGO_DINAMICO": "172.29.8.128/31"}, {"RANGO_DINAMICO": "172.29.8.129/25"},
     {"LIMITE_IP_MINUTO": "0"}, {"LIMITE_IP_MINUTO": "abc"}, {"LIMITE_IP_MINUTO": "100001"},
-    {"LIMITE_IP_MINUTO": "-5"}, {"AUDITORIA_RETENCION_DIAS": "366"}, {"LIMITE_PDF_CORREO_HORA": "1.5"},
+    {"LIMITE_IP_MINUTO": "-5"}, {"AUDITORIA_RETENCION_DIAS": "366"}, {"LIMITE_EDITAR_CORREO_MINUTO": "1.5"},
     {"TLS_DIR": "inexistente"}, {"DOMINIO": "https://host/ruta"},
     {"POSTGRES_PASSWORD": "a" * 31}, {"POSTGRES_PASSWORD": "valid-" * 8 + "@"},
     {"POSTGRES_USER": "user@db"}, {"POSTGRES_DB": "db/name"},

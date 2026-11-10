@@ -4,13 +4,15 @@ Solo se lee `SilaboUTI`, que por construcción no tiene perfil docente ni contac
 Como segunda barrera, se descarta todo fragmento con correos, ORCID o números largos.
 Nada de este módulo imprime ni registra texto de los sílabos.
 """
+import json
 import re
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 
-from app.silabo.lector.ensamblar import leer_silabo
+from app.sga.traductor import a_contrato
+from app.silabo.integridad import cargar_silabo
 from app.silabo.modelo import SilaboUTI
-from ciencia_datos.origen import es_simulado
 
 _PERSONAL = re.compile(
     r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+"      # correo
@@ -85,9 +87,11 @@ def por_carpeta(rutas: list[Path], raiz: Path) -> dict[str, int]:
 
 
 def leer_con_origen(carpeta: Path | list[Path]) -> tuple[list[tuple[SilaboUTI, Path]], list[str]]:
-    """Lee `*.pdf` y `*.json` (un `SilaboUTI` serializado) de una carpeta, o de varias, y sus subcarpetas.
+    """Lee los `*.json` de una carpeta, o de varias, y sus subcarpetas.
 
-    Un PDF con código `SIM-` se rechaza: el prefijo marca lo simulado y un PDF solo puede ser real.
+    Cada JSON se trata como el sílabo crudo del SGA: pasa por `a_contrato` (que descarta lo
+    que el contrato no declara, incluidos los datos personales) y por `cargar_silabo`.
+    Los `*.pdf` se ignoran y se avisa cuántos eran.
 
     Conserva una versión por código de proyecto formativo: la de `aprobado` más
     reciente y, a igualdad, la de mayor nombre de archivo. Devuelve también los
@@ -95,19 +99,18 @@ def leer_con_origen(carpeta: Path | list[Path]) -> tuple[list[tuple[SilaboUTI, P
     """
     elegidos: dict[str, tuple[tuple, SilaboUTI, Path]] = {}
     rechazados: list[str] = []
+    ignorados = 0
     carpetas = carpeta if isinstance(carpeta, (list, tuple)) else [carpeta]
     rutas = [r for c in carpetas for r in sorted(Path(c).rglob("*"))]
     for ruta in rutas:
-        if ruta.suffix.lower() not in (".pdf", ".json") or not ruta.is_file():
+        sufijo = ruta.suffix.lower()
+        if sufijo not in (".pdf", ".json") or not ruta.is_file():
+            continue
+        if sufijo == ".pdf":
+            ignorados += 1
             continue
         try:
-            datos = ruta.read_bytes()
-            if ruta.suffix.lower() == ".pdf":
-                silabo = leer_silabo(datos)
-                if es_simulado(silabo.proyecto_formativo.codigo):
-                    raise ValueError("un PDF no puede usar el prefijo simulado")
-            else:
-                silabo = SilaboUTI.model_validate_json(datos)
+            silabo = cargar_silabo(a_contrato(json.loads(ruta.read_bytes())))
         except Exception:
             rechazados.append(ruta.name)
             continue
@@ -115,4 +118,6 @@ def leer_con_origen(carpeta: Path | list[Path]) -> tuple[list[tuple[SilaboUTI, P
         codigo = silabo.proyecto_formativo.codigo
         if codigo not in elegidos or clave > elegidos[codigo][0]:
             elegidos[codigo] = (clave, silabo, ruta)
+    if ignorados:
+        warnings.warn(f"{ignorados} PDF ignorados: el corpus solo lee JSON del SGA", UserWarning, stacklevel=2)
     return [(s, r) for _, s, r in elegidos.values()], rechazados
