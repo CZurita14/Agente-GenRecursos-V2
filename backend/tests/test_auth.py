@@ -561,3 +561,31 @@ def test_http_registra_ingreso_y_salida(web, conn):
     assert web.post("/auth/ingresar", json={"usuario": USUARIO, "clave": CLAVE}, headers=ORIGEN).status_code == 200
     assert web.post("/auth/salir", headers=ORIGEN).status_code == 200
     assert [(f["evento"], f["correo"]) for f in _registro(conn)] == [("ingreso", CORREO_SGA), ("salida", CORREO_SGA)]
+
+
+# --- Cuenta del docente ---
+
+def test_el_primer_ingreso_crea_la_cuenta_y_los_siguientes_la_actualizan(auth, conn, reloj):
+    primero = reloj[0]
+    auth.ingresar(USUARIO, CLAVE)
+    reloj[0] = primero + timedelta(days=3)
+    auth.ingresar(CORREO_SGA.upper(), CLAVE)
+    filas = conn.execute("select * from docente").fetchall()
+    assert len(filas) == 1
+    f = filas[0]
+    assert (f["correo"], f["nombre"], f["ingresos"]) == (CORREO_SGA, "Docente Uno Simulado", 2)
+    assert (f["primer_ingreso"], f["ultimo_ingreso"]) == (primero, reloj[0])
+
+
+def test_un_ingreso_fallido_no_crea_cuenta(auth, conn):
+    with pytest.raises(AuthError):
+        auth.ingresar(USUARIO, CANARIO)
+    with pytest.raises(AuthError):
+        auth.ingresar("no.existe@uti.edu.ec", CANARIO)
+    assert conn.execute("select count(*) n from docente").fetchone()["n"] == 0
+
+
+def test_la_cuenta_se_crea_aunque_falle_la_sincronizacion(nueva_conexion, asignaturas, conn):
+    servicio = ServicioAuth(nueva_conexion, "s" * 48, SyncRota(SGA), asignaturas)
+    servicio.ingresar(USUARIO, CLAVE)
+    assert conn.execute("select correo from docente").fetchone()["correo"] == CORREO_SGA

@@ -133,6 +133,14 @@ class ServicioAuth:
         self._registrar("ingreso", ip, correo=correo)
         return token
 
+    def _crear_o_actualizar_docente(self, conn, identidad) -> None:
+        """Crea la cuenta en el primer ingreso; luego solo actualiza nombre, último ingreso y conteo."""
+        ahora = self.ahora()
+        conn.execute("insert into docente (correo,nombre,primer_ingreso,ultimo_ingreso) values (%s,%s,%s,%s) "
+                     "on conflict (correo) do update set nombre=excluded.nombre, "
+                     "ultimo_ingreso=excluded.ultimo_ingreso, ingresos=docente.ingresos+1",
+                     (identidad.correo, (identidad.nombre or "").strip()[:200], ahora, ahora))
+
     def _autenticar_y_sincronizar(self, usuario: str, clave: str, clave_u: str) -> str:
         """Reserva intento -> SGA -> sincronización. La clave solo vive como parámetro local."""
         if self.proveedor is None:
@@ -156,6 +164,7 @@ class ServicioAuth:
         self._cerrar_con_exito(clave_u, propio)
         with closing(self.conexion()) as conn:
             conn.autocommit = True
+            self._crear_o_actualizar_docente(conn, identidad)
             try:
                 sincronizar(conn, self.proveedor, identidad, permiso, self.asignaturas,
                             presupuesto_s=self.sincronizacion_max_s)
