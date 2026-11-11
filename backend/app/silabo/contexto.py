@@ -3,8 +3,10 @@ import re
 from datetime import date
 
 from app.silabo.modelo import (
+    Actividad,
     BaseInmutable,
     FilaRubrica,
+    Pis,
     Problema,
     ResultadoAprendizaje,
     SilaboUTI,
@@ -28,6 +30,32 @@ class ContextoClase(BaseInmutable):
     problema: Problema
     politica_ia: str
     entregables_momento: list[str]
+    # JSON de trabajo (V2): PIS, sesión con fecha y las actividades separadas por tipo.
+    # Solo la clase trae la sesión y las actividades; el PIS va en todos los ámbitos.
+    pis: Pis | None = None
+    sesion_numero: int | None = None
+    semana: int | None = None
+    actividad_docente: Actividad | None = None
+    actividad_practica: Actividad | None = None
+    actividad_autonoma: Actividad | None = None
+
+    def json_trabajo(self) -> dict:
+        """El JSON con el que trabaja el modelo: lo que importa del sílabo para generar."""
+        def actividad(a: Actividad | None):
+            return a.model_dump(mode="json") if a is not None and a.texto.strip() else None
+        return {
+            "proyecto_formativo": {"codigo": self.codigo_pf, "nombre": self.asignatura, "carrera": self.carrera,
+                                   "nivel": self.nivel, "problema": self.problema.model_dump(mode="json")},
+            "pis": self.pis.model_dump(mode="json") if self.pis is not None else None,
+            "sesion": {"id": self.clase_id, "numero": self.sesion_numero, "fecha": self.fecha.isoformat(),
+                       "semana": self.semana},
+            "actividades_docente": actividad(self.actividad_docente),
+            "actividades_practicas": actividad(self.actividad_practica),
+            "actividades_autonomas": actividad(self.actividad_autonoma),
+            "contenidos": list(self.contenidos),
+            "momento": {"titulo": self.momento_titulo, "ra": [r.model_dump(mode="json") for r in self.ra],
+                        "entregables": list(self.entregables_momento), "politica_ia": self.politica_ia},
+        }
 
 
 def contexto_clase(silabo: SilaboUTI, clase_id: str) -> ContextoClase:
@@ -71,15 +99,33 @@ def contexto_clase(silabo: SilaboUTI, clase_id: str) -> ContextoClase:
                 problema=silabo.problema.model_copy(deep=True),
                 politica_ia=momento.politica_ia,
                 entregables_momento=entregables,
+                pis=silabo.pis.model_copy(deep=True) if silabo.pis is not None else None,
+                sesion_numero=sesion.numero,
+                semana=sesion.semana_periodo,
+                actividad_docente=_docente(sesion),
+                actividad_practica=sesion.practico.model_copy(deep=True),
+                actividad_autonoma=sesion.autonomo.model_copy(deep=True),
             )
     raise KeyError(clase_id)
+
+
+def _docente(sesion) -> Actividad:
+    """Actividad con el docente; la parte asincrónica, si existe, se suma al texto y a las horas."""
+    d = sesion.docente
+    texto, horas = d.texto, d.horas
+    if d.asincronica is not None and d.asincronica.texto.strip():
+        texto = f"{texto} (asincrónica: {d.asincronica.texto})".strip()
+        if d.asincronica.horas is not None:
+            horas = (horas or 0) + d.asincronica.horas
+    return Actividad(texto=texto, horas=horas)
 
 
 def _base(silabo: SilaboUTI) -> dict:
     pf = silabo.proyecto_formativo
     return {"codigo_pf": pf.codigo, "version_silabo": pf.version, "asignatura": pf.nombre,
             "carrera": silabo.carrera, "nivel": pf.nivel, "competencia_perfil": silabo.competencia_perfil,
-            "problema": silabo.problema.model_copy(deep=True)}
+            "problema": silabo.problema.model_copy(deep=True),
+            "pis": silabo.pis.model_copy(deep=True) if silabo.pis is not None else None}
 
 
 def _sin_repetir(textos) -> list[str]:

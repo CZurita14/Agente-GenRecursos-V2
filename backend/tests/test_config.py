@@ -193,3 +193,9 @@ def test_presupuesto_de_sincronizacion():
     for malo in (0, 65, 90):
         with pytest.raises(ValidationError):
             Ajustes(**DESARROLLO, sga_sincronizacion_max_s=malo)
+
+
+def test_tls_no_estricto_solo_en_desarrollo():
+    with pytest.raises(ValidationError):
+        Ajustes(llm_tls_estricto=False, **{**BASE, "entorno": "produccion", "api_origen": "https://a.example"})
+    assert Ajustes(llm_tls_estricto=False, llm_proveedor="deepseek", **DESARROLLO).llm_proveedor == "deepseek"

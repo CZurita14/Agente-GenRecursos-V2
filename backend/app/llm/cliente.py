@@ -1,6 +1,9 @@
-"""Cliente único del servidor de IA local (vLLM, API compatible con OpenAI)."""
+"""Cliente único del modelo de IA: vLLM local o DeepSeek (las dos con API compatible con OpenAI)."""
+import json
 import logging
+import math
 import re
+import ssl
 import threading
 import time
 from dataclasses import dataclass
@@ -14,6 +17,25 @@ CONTEXTO_MAXIMO = 8192
 MARGEN_SEGURIDAD = 300
 MINIMO_SALIDA = 256
 PENALIZACION_REPETICION = 1.05
+# DeepSeek admite hasta 1M de tokens; el presupuesto de los prompts sigue en 8192 (prompts.py).
+CONTEXTO_DEEPSEEK = 1_000_000
+PROVEEDORES = ("vllm", "deepseek")
+
+
+def contexto_tls(estricto: bool = True) -> ssl.SSLContext:
+    """Certificados del sistema operativo. `estricto=False` acepta raíces sin Authority Key Identifier,
+    como la de un antivirus que inspecciona HTTPS en un equipo de desarrollo (Python 3.13 las rechaza)."""
+    ctx = ssl.create_default_context()
+    if not estricto:
+        ctx.verify_flags &= ~ssl.VERIFY_X509_STRICT
+    return ctx
+
+
+def instruccion_esquema(esquema: dict) -> dict:
+    """DeepSeek no acepta `json_schema`: el esquema va en el prompt y Pydantic valida la salida."""
+    return {"role": "system", "content": (
+        "Responde únicamente con un objeto JSON válido, sin texto antes ni después, "
+        "que cumpla exactamente este JSON Schema:\n" + json.dumps(esquema, ensure_ascii=False))}
 
 registro = logging.getLogger("app.llm")
 
@@ -75,17 +97,30 @@ class ClienteVLLM:
 
     def __init__(self, base_url: str, modelo: str, timeout_s: float, max_concurrencia: int,
                  registrar: Callable[[dict], None], api_key: str = "no-se-necesita",
-                 transporte: httpx.BaseTransport | None = None):
+                 transporte: httpx.BaseTransport | None = None, proveedor: str = "vllm",
+                 tls_estricto: bool = True):
+        if proveedor not in PROVEEDORES:
+            raise ValueError(f"Proveedor de IA desconocido: {proveedor}")
+        self._proveedor = proveedor
         self._raiz = base_url.rstrip("/").removesuffix("/v1")
         self._modelo = modelo
         self._timeout_s = timeout_s
         self._registrar = registrar
         self._semaforo = threading.BoundedSemaphore(max_concurrencia)
-        self._http = httpx.Client(transport=transporte, timeout=timeout_s)
+        verificar = contexto_tls(tls_estricto) if transporte is None else True
+        self._http = httpx.Client(transport=transporte, timeout=timeout_s, verify=verificar)
         self._sdk = openai.OpenAI(base_url=base_url, api_key=api_key, timeout=timeout_s,
                                   max_retries=0, http_client=self._http)
 
+    @property
+    def contexto_max(self) -> int:
+        """Ventana del modelo: 1M en DeepSeek, 8192 en el vLLM local."""
+        return CONTEXTO_DEEPSEEK if self._proveedor == "deepseek" else CONTEXTO_MAXIMO
+
     def contar_tokens(self, mensajes: list[dict]) -> int:
+        if self._proveedor == "deepseek":
+            # DeepSeek no expone /tokenize: estimación conservadora para español (≈3 caracteres por token).
+            return math.ceil(sum(len(str(m.get("content") or "")) for m in mensajes) / 3) + 4 * len(mensajes)
         ultimo: Exception | None = None
         for _ in range(2):  # un reintento ante error de red o 5xx
             try:
@@ -114,18 +149,27 @@ class ClienteVLLM:
         ok = False
         try:
             with self._semaforo:
+                deepseek = self._proveedor == "deepseek"
+                if deepseek and esquema is not None:
+                    mensajes = [*mensajes, instruccion_esquema(esquema)]
                 entrada = self.contar_tokens(mensajes)
-                permitido = min(max_tokens, CONTEXTO_MAXIMO - entrada - MARGEN_SEGURIDAD)
+                contexto = CONTEXTO_DEEPSEEK if deepseek else CONTEXTO_MAXIMO
+                permitido = min(max_tokens, contexto - entrada - MARGEN_SEGURIDAD)
                 if permitido < MINIMO_SALIDA:
                     raise ContextoExcedido(
                         f"entrada de {entrada} tokens; quedan {permitido} para la respuesta")
-                extra = {"chat_template_kwargs": {"enable_thinking": pensar}}
                 parametros: dict = {}
-                if esquema is not None:
-                    extra["repetition_penalty"] = PENALIZACION_REPETICION
-                    parametros["response_format"] = {
-                        "type": "json_schema",
-                        "json_schema": {"name": "salida", "schema": esquema}}
+                if deepseek:
+                    extra = {"thinking": {"type": "enabled" if pensar else "disabled"}}
+                    if esquema is not None:
+                        parametros["response_format"] = {"type": "json_object"}
+                else:
+                    extra = {"chat_template_kwargs": {"enable_thinking": pensar}}
+                    if esquema is not None:
+                        extra["repetition_penalty"] = PENALIZACION_REPETICION
+                        parametros["response_format"] = {
+                            "type": "json_schema",
+                            "json_schema": {"name": "salida", "schema": esquema}}
                 finalizacion = self._pedir(
                     dict(model=self._modelo, messages=mensajes, max_tokens=permitido,
                          temperature=temperatura, extra_body=extra,

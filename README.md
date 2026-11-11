@@ -1,6 +1,8 @@
 # Generador de Recursos de Estudio UTI · V2
 
-Aplicación web interna para que los docentes de la Universidad Tecnológica Indoamérica conviertan el sílabo de su proyecto formativo en herramientas de estudio: cuestionarios, simulacros, fichas de clase, guías, rúbricas y más. La IA es un modelo local, Qwen3-8B-AWQ servido por vLLM, así que los datos no salen de la red de la universidad.
+Aplicación web interna para que los docentes de la Universidad Tecnológica Indoamérica conviertan el sílabo de su proyecto formativo en herramientas de estudio: cuestionarios, simulacros, fichas de clase, guías, rúbricas y más. La IA puede ser un modelo local (Qwen3-8B-AWQ servido por vLLM, los datos no salen de la red de la universidad) o la API de DeepSeek (`LLM_PROVEEDOR=deepseek`, el contenido académico del sílabo sale hacia DeepSeek; ver `docs/privacidad-borrador.md`).
+
+Por clase, el modelo trabaja con el **JSON de trabajo** de la sesión: PIS, sesión con fecha, actividades con el docente, prácticas y de trabajo autónomo, y contenidos, más el momento (RA, entregables, política de IA) y el problema del proyecto formativo. Herramientas por clase: cuestionario, ficha de clase, práctica guiada, tarjetas de estudio, guía de trabajo autónomo y guion de clase para el docente.
 
 ## Qué es la V2
 
@@ -77,7 +79,7 @@ Docentes ──HTTPS──▶ proxy (nginx) ──▶ web (React)
                          └──/api/──▶ api (FastAPI) ──▶ db (PostgreSQL 18)
                                          │                 ▲
                                          ▼                 │
-                                      SGA (API)   worker ──┘──▶ vLLM con Qwen (fuera de Docker)
+                                      SGA (API)   worker ──┘──▶ vLLM con Qwen o API de DeepSeek
 ```
 
 | Parte | Tecnología | Carpeta |

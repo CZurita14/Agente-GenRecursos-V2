@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { CheckCircle2, Download, Pencil, ShieldCheck, Trash2 } from 'lucide-react';
 import { Alert, Badge, Button, Card, Modal } from '../components';
-import { ErrorApi, editar, recurso as cargarRecurso, urlExportar, validar } from '../api/cliente';
+import { ErrorApi, editar, recurso as cargarRecurso, urlExportar, urlImagen, validar } from '../api/cliente';
 import { leer, poner } from '../api/edicion';
 import type { Bloque, Recurso as TipoRecurso, Ruta } from '../api/tipos';
 import { CON_RESPUESTAS, SIN_IA, legible, nombreAmbito, nombreHerramienta } from '../api/herramientas';
@@ -46,10 +46,13 @@ function Campo({ etiqueta, valor, onCambio, filas = 2 }: { etiqueta: string; val
     className="mt-1 w-full rounded-md border border-line bg-surface px-3 py-2 text-sm text-fg" />;
 }
 
-/** Bloque de la presentación ordenada; con `ed`, los textos que tienen ruta se editan (React escapa el texto). */
-function VistaBloque({ b, nivel = 2, ed }: { b: Bloque; nivel?: number; ed?: Editor }): ReactNode {
+/** Bloque de la presentación ordenada (las fotos de Unsplash se muestran desde su CDN, como exige); con `ed`, los textos que tienen ruta se editan (React escapa el texto). */
+function VistaBloque({ b, nivel = 2, ed, img }: { b: Bloque; nivel?: number; ed?: Editor; img?: (hash: string) => string }): ReactNode {
   const Titulo = `h${Math.min(nivel + 1, 6)}` as 'h3';
   const titulo = <Titulo className={nivel === 2 ? 'font-bold' : 'text-sm font-bold'}>{b.titulo}</Titulo>;
+  if (b.tipo === 'imagen') return img ? <figure className="max-w-md">
+    <img src={b.vista?.startsWith('https://images.unsplash.com/') ? b.vista : img(b.hash)} alt="" loading="lazy" className="rounded-lg border border-line w-full" />
+    <figcaption className="text-xs text-muted mt-1">{b.credito}</figcaption></figure> : null;
   if (b.tipo === 'texto') {
     const ruta = b.ruta;
     return <section>{titulo}{ed && ruta
@@ -78,7 +81,7 @@ function VistaBloque({ b, nivel = 2, ed }: { b: Bloque; nivel?: number; ed?: Edi
       })}</tr>)}</tbody>
     </table></div></section>;
   return <section className="rounded-lg border border-line p-3 space-y-3">{titulo}
-    {b.bloques.map((x, i) => <VistaBloque key={i} b={x} nivel={nivel + 1} ed={ed} />)}</section>;
+    {b.bloques.map((x, i) => <VistaBloque key={i} b={x} nivel={nivel + 1} ed={ed} img={img} />)}</section>;
 }
 
 /** Pregunta en modo lectura, con la clave marcada. */
@@ -223,7 +226,7 @@ export function Recurso({ aid, rid, puedeValidar, onVolver, onSesionVencida, onT
         {avisos[item.item_id]?.map((a, i) => <Alert key={i} tone="warning" className="mt-2">{legible(a)}</Alert>)}
       </li>)}</ol> : <>
         {Object.entries(avisos).map(([id, lista]) => lista.map((a, i) => <Alert key={`${id}${i}`} tone="warning" className="mb-2">{legible(a)}</Alert>))}
-        <div className="space-y-4">{r.presentacion.map((b, i) => <VistaBloque key={i} b={b} ed={editando ? ed : undefined} />)}</div>
+        <div className="space-y-4">{r.presentacion.map((b, i) => <VistaBloque key={i} b={b} ed={editando ? ed : undefined} img={h => urlImagen(aid, r.id, h)} />)}</div>
       </>}
     </Card>
 
@@ -233,11 +236,15 @@ export function Recurso({ aid, rid, puedeValidar, onVolver, onSesionVencida, onT
     <Card title="Paso 5 · Valida y descarga para Canvas" icon={<ShieldCheck aria-hidden="true" />}>
       {editando ? <p className="text-sm text-muted">Guarda o cancela la edición antes de validar.</p> : r.validado ? <div className="space-y-3">
         <Alert tone="success">Validado por {r.validado_por}. Ya puedes descargarlo y subirlo a Canvas.</Alert>
-        <a href={urlExportar(aid, r.id)} download
+        {/* Las diapositivas se descargan primero en PowerPoint; el resto, en HTML institucional para Canvas. */}
+        <a href={urlExportar(aid, r.id, r.herramienta === 'presentacion' ? 'pptx' : 'html')} download
           className="inline-flex items-center gap-2 rounded-lg bg-action hover:bg-action-hover text-white px-4 py-2 font-medium">
-          <Download aria-hidden="true" className="w-4 h-4" />Descargar HTML para Canvas
+          <Download aria-hidden="true" className="w-4 h-4" />
+          {r.herramienta === 'presentacion' ? 'Descargar PowerPoint (.pptx)' : 'Descargar HTML para Canvas'}
         </a>
         <div className="flex flex-wrap gap-3">
+          {r.herramienta === 'presentacion' &&
+            <a href={urlExportar(aid, r.id)} download className="text-action underline">Descargar HTML para Canvas</a>}
           <a href={urlExportar(aid, r.id, 'pdf')} download className="text-action underline">Descargar PDF</a>
           <a href={urlExportar(aid, r.id, 'docx')} download className="text-action underline">Descargar Word</a>
         </div>
@@ -250,7 +257,9 @@ export function Recurso({ aid, rid, puedeValidar, onVolver, onSesionVencida, onT
         </div>}
       </div> : !puedeValidar ? <p className="text-sm text-muted">Un editor o el dueño del Proyecto Formativo debe validarlo antes de descargarlo.</p>
         : <div className="space-y-3">
-          <p className="text-sm text-muted">La descarga se habilita cuando validas el recurso: confirma que lo revisaste.</p>
+          <p className="text-sm text-muted">{r.herramienta === 'presentacion'
+            ? 'La descarga en PowerPoint (.pptx) se habilita cuando validas la presentación: confirma que la revisaste.'
+            : 'La descarga se habilita cuando validas el recurso: confirma que lo revisaste.'}</p>
           <Button onClick={() => cantidad > 0 ? setConfirmar(true) : validarRecurso()} loading={validando}>Validar recurso</Button>
         </div>}
     </Card>

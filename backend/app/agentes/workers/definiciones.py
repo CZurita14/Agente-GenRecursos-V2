@@ -9,10 +9,12 @@ from dataclasses import dataclass, field
 from pydantic import BaseModel
 
 from app.agentes.verificador import (
+    verificar_herramienta_clase,
     verificar_estudio_caso, verificar_ficha, verificar_guia_evidencia, verificar_guia_producto_final,
     verificar_repaso,
 )
 from app.herramientas.esquemas import (
+    GuiaAutonoma, GuionClase, PracticaGuiada, Presentacion, Tarjetas,
     EstudioCaso, FichaAplicacion, FichaConceptual, GuiaEvidencia, GuiaProductoFinal, RepasoMomento,
 )
 from app.silabo.contexto import ContextoClase
@@ -40,7 +42,26 @@ def _exige(*campos: str) -> Callable[[ContextoClase], str | None]:
     return comprobar
 
 
+def _con_actividad(campo: str, nombre: str) -> Callable[[ContextoClase], str | None]:
+    """La herramienta necesita esa actividad de la sesión (JSON de trabajo de la V2)."""
+    def comprobar(c: ContextoClase) -> str | None:
+        a = getattr(c, campo)
+        return None if a is not None and a.texto.strip() else f"El sílabo no trae {nombre} para esta sesión."
+    return comprobar
+
+
+def _clase(nombre: str, modelo, requisitos=None) -> Definicion:
+    return Definicion("clase", secciones=(nombre,), modelos=(modelo,), verificar=verificar_herramienta_clase(nombre),
+                      id_revision=nombre, requisitos=requisitos or _exige("contenidos"))
+
+
 DEFINICIONES: dict[str, Definicion] = {
+    "practica_guiada": _clase("practica", PracticaGuiada),
+    "tarjetas": _clase("mazo", Tarjetas),
+    "guia_autonoma": _clase("guia_autonoma", GuiaAutonoma,
+                            _con_actividad("actividad_autonoma", "actividades de trabajo autónomo")),
+    "presentacion": _clase("presentacion", Presentacion),
+    "guion_clase": _clase("guion", GuionClase, _con_actividad("actividad_docente", "actividades con el docente")),
     "cuestionario": Definicion("clase", es_quiz=True),
     "simulacro": Definicion("momento", es_quiz=True, requisitos=_exige("ra", "contenidos")),
     "ficha_clase": Definicion("clase", secciones=("conceptual", "aplicacion"),

@@ -13,6 +13,11 @@ export const NOMBRES: Record<string, string> = {
   lista_evidencia: 'Lista de verificación de la evidencia',
   rubrica_momento: 'Rúbrica del momento',
   rubrica_final: 'Rúbrica del producto final',
+  practica_guiada: 'Práctica guiada',
+  tarjetas: 'Tarjetas de estudio',
+  guia_autonoma: 'Guía de trabajo autónomo',
+  guion_clase: 'Guion de clase (docente)',
+  presentacion: 'Presentación (PowerPoint)',
 };
 
 export const SIN_IA = new Set(['hoja_ruta', 'autoevaluacion_rubrica', 'autoevaluacion_final', 'lista_evidencia', 'rubrica_momento', 'rubrica_final']);

@@ -115,6 +115,7 @@ def main():
 
     cliente = ClienteConLatido(config.llm_base_url, config.llm_model, config.llm_timeout_s,
                               config.llm_max_concurrencia, registrar, config.llm_api_key,
+                              proveedor=config.llm_proveedor, tls_estricto=config.llm_tls_estricto,
                               pulsar=pulsar)
 
     def consumir(numero):

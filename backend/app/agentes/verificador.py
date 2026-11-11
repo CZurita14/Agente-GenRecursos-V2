@@ -234,3 +234,29 @@ def verificar_guia_producto_final(datos: dict, contexto: ContextoClase) -> list[
     if _copia(contexto.entregables_momento, _textos(d)):
         fallos.append("copia el texto del producto final")
     return fallos
+
+
+# --- Herramientas de clase de la V2 ---
+
+def _sin_imagen(valor):
+    """Quita la búsqueda y el crédito de la imagen: no son contenido que deba verificarse."""
+    if isinstance(valor, dict):
+        return {k: _sin_imagen(v) for k, v in valor.items() if k not in ("imagen", "imagen_busqueda")}
+    if isinstance(valor, list):
+        return [_sin_imagen(v) for v in valor]
+    return valor
+
+
+def verificar_herramienta_clase(nombre: str):
+    """Campos vacíos, frases prohibidas y copia literal de un entregable del momento (§9.4)."""
+    def verificar(datos: dict, contexto: ContextoClase) -> list[str]:
+        d = _sin_imagen(_seccion(datos, nombre))
+        fallos = verificar_ficha({k: v for k, v in d.items() if k != "conexion_pis"}, contexto)
+        if contexto.entregables_momento and _copia(list(contexto.entregables_momento), _textos(d)):
+            fallos.append("copia un entregable del momento")
+        if nombre == "mazo" and contexto.contenidos:
+            validos = {normalizar(c) for c in contexto.contenidos}
+            if any(normalizar(t.get("contenido", "")) not in validos for t in d.get("tarjetas", [])):
+                fallos.append("tarjeta con un contenido ajeno a la sesión")
+        return fallos
+    return verificar

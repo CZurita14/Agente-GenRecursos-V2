@@ -35,20 +35,27 @@ def ambitos(s: SilaboUTI):
             + [x.id for m in s.momentos for x in m.sesiones])
 
 
+# Campos que la V2 agrega al contexto (JSON de trabajo: PIS, sesión y actividades por tipo). La V1 no los
+# tiene: la huella los quita y así compara la lógica común. Las pruebas de la V2 cubren los campos nuevos.
+# Herramientas que solo existen en la V2: la V1 no tiene requisitos que comparar.
+HERRAMIENTAS_V2 = {"practica_guiada", "tarjetas", "guia_autonoma", "guion_clase", "presentacion"}
+CAMPOS_V2 = ("pis", "sesion_numero", "semana", "actividad_docente", "actividad_practica", "actividad_autonoma")
+
+
 def huellas(s: SilaboUTI) -> dict:
     perfil = PERFILES[enrutar(s.facultad, CATALOGO, PERFILES)]
     estilo = estilo_para(perfil, s.carrera)
     out = {"contexto": {}, "prompt": {}, "plan": {}, "requisitos": {}, "sin_ia": {}}
     for a in ambitos(s):
-        c = contexto_por_id(s, a)
-        out["contexto"][a] = c.model_dump(mode="json")
+        c = contexto_por_id(s, a).model_copy(update=dict.fromkeys(CAMPOS_V2))
+        out["contexto"][a] = c.model_dump(mode="json", exclude=set(CAMPOS_V2))
         msgs = construir_prompt(sello=Sello(c.codigo_pf, c.clase_id, c.fecha), instrucciones=REGLAS_COMUNES,
                                 contexto=c, estilo=estilo, ya_generado=[], pedido="(pedido)",
                                 salida_max=3500, contar=lambda m: 0)
         out["prompt"][a] = [m["content"] for m in msgs]
         tipo = "asignatura" if a == "asignatura" else "momento" if a.startswith("M") and "-" not in a else "clase"
         for h, dfn in DEFINICIONES.items():
-            if dfn.ambito == tipo:
+            if dfn.ambito == tipo and h not in HERRAMIENTAS_V2:
                 out["requisitos"][f"{h}@{a}"] = dfn.requisitos(c)
         if tipo in ("clase", "momento"):
             out["plan"][a] = [[p.model_dump() for p in lote]

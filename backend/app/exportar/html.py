@@ -14,6 +14,7 @@ from urllib.parse import quote
 
 from app.exportar.presentacion import NIVELES, SIN_POLITICA, es_quiz, legible, nombre_ambito, presentar
 from app.silabo.contexto import ContextoClase
+from app.exportar.institucional import documento, en_linea, lista
 
 PIE = "Recurso generado con asistencia de IA y revisado por el docente"
 
@@ -24,6 +25,9 @@ NOMBRES = {
     "hoja_ruta": "Hoja de ruta del Proyecto Formativo", "autoevaluacion_rubrica": "Autoevaluación con la rúbrica",
     "autoevaluacion_final": "Autoevaluación final", "lista_evidencia": "Lista de verificación de la evidencia",
     "rubrica_momento": "Rúbrica del momento", "rubrica_final": "Rúbrica del producto final",
+    "practica_guiada": "Práctica guiada", "tarjetas": "Tarjetas de estudio",
+    "guia_autonoma": "Guía de trabajo autónomo", "guion_clase": "Guion de clase (docente)",
+    "presentacion": "Presentación (PowerPoint)",
 }
 # Listas de la presentación que el estudiante va marcando, y textos que descubre cuando quiere.
 # Las que tienen una versión con respuestas, solo para el docente.
@@ -118,6 +122,8 @@ def _marcable(titulo: str, items, nivel: int) -> str:
 def _bloque(b: dict, nivel: int) -> str:
     """Un bloque de la presentación (app.exportar.presentacion); todo texto escapado."""
     titulo = f"<h{nivel}>{escape(b['titulo'])}</h{nivel}>" if b.get("titulo") else ""
+    if b["tipo"] == "imagen":  # Sin imágenes externas en el HTML: solo el crédito.
+        return f'<p style="font-size: 12px; color: #6b4a96;"><em>{escape(b["credito"])}</em></p>'
     if b["tipo"] == "texto":
         if b.get("titulo") in TEXTOS_OCULTABLES:
             return f"<details><summary>{escape(TEXTOS_OCULTABLES[b['titulo']])}</summary><p>{escape(b['texto'])}</p></details>"
@@ -205,22 +211,90 @@ def _items(items: list[dict]) -> str:
     return "".join(partes)
 
 
+# Para qué sirve cada herramienta e instrucciones de uso (filas de la plantilla institucional).
+PROPOSITO = {
+    "cuestionario": "Comprobar lo que aprendiste en la clase y detectar qué necesitas repasar.",
+    "simulacro": "Practicar con preguntas como las de la evaluación del momento antes de rendirla.",
+    "ficha_clase": "Repasar las ideas clave de la clase y aplicarlas en un ejemplo resuelto.",
+    "practica_guiada": "Aplicar paso a paso los contenidos de la sesión en ejercicios guiados.",
+    "tarjetas": "Memorizar y repasar los conceptos clave de la sesión de forma rápida.",
+    "guia_autonoma": "Organizar tu trabajo autónomo de la sesión y llegar preparado a la siguiente clase.",
+    "guion_clase": "Guiar al docente en la conducción de la sesión.",
+    "presentacion": "Acompañar la exposición de la clase con diapositivas.",
+    "repaso_momento": "Integrar lo trabajado en las sesiones del momento con su resultado de aprendizaje.",
+    "guia_evidencia": "Entender qué se pide en la evidencia del momento y cómo se valora.",
+    "estudio_caso": "Practicar el análisis de un caso con preguntas de menor a mayor complejidad.",
+    "guia_producto_final": "Prepararte para el producto final del proyecto formativo.",
+}
+INSTRUCCIONES = {
+    "cuestionario": ["Lee cada pregunta con atención.", "Elige la opción que consideres correcta.",
+                     "Revisa los temas de las preguntas en las que dudaste."],
+    "simulacro": ["Resuelve el simulacro en un tiempo similar al de la evaluación.",
+                  "Elige una opción por pregunta.", "Repasa los contenidos en los que fallaste."],
+    "practica_guiada": ["Lee el objetivo de la práctica.", "Resuelve cada ejercicio siguiendo los pasos.",
+                        "Compara tu resultado con el resultado esperado.", "Revisa los errores que conviene evitar."],
+    "tarjetas": ["Lee el frente de la tarjeta e intenta responder sin mirar.", "Comprueba tu respuesta con el reverso.",
+                 "Repite las tarjetas que fallaste hasta dominarlas."],
+    "guia_autonoma": ["Lee el objetivo y la actividad.", "Sigue los pasos en el tiempo estimado.",
+                      "Responde el autochequeo.", "Lleva lo indicado a la siguiente clase."],
+    "estudio_caso": ["Lee el caso completo.", "Responde las preguntas en orden; cada una exige más análisis.",
+                     "Argumenta tus respuestas con los contenidos del momento."],
+}
+INSTRUCCIONES_GENERALES = ["Lee el material completo.", "Desarrolla cada sección en el orden en que aparece.",
+                           "Revisa tu trabajo con las preguntas o la lista de verificación, si las hay."]
+
+
+def _texto(valor: str) -> str:
+    return escape(legible(valor))
+
+
+def _proposito(herramienta: str, contenido) -> str:
+    # Si la herramienta trae su propio objetivo (práctica, guía autónoma, guion), se usa ese.
+    if isinstance(contenido, dict):
+        for seccion in contenido.values():
+            if isinstance(seccion, dict) and isinstance(seccion.get("objetivo"), str) and seccion["objetivo"].strip():
+                return _texto(seccion["objetivo"])
+    return _texto(PROPOSITO.get(herramienta, "Trabajar los contenidos del sílabo con esta herramienta."))
+
+
 def exportar_html(recurso: dict, contexto: ContextoClase) -> str:
     herramienta = recurso["herramienta"]
     contenido = recurso["contenido"]
-    cuerpo = legible(IMPRIMIR + _cuerpo(herramienta, contenido))
-    ras = legible(", ".join(f"{r.id}: {r.texto}" for r in contexto.ra))
-    pie = (f"<p>{escape(contexto.asignatura)} · {escape(nombre_ambito(contexto.clase_id))} · {contexto.fecha:%d/%m/%Y}</p>"
-           f"<p><strong>Resultados de aprendizaje:</strong> {escape(ras)}</p>"
-           f"<p><strong>Política de IA:</strong> {escape(legible(contexto.politica_ia or SIN_POLITICA))}</p>"
-           f"<p><em>{escape(PIE)}</em></p>")
-    titulo = NOMBRES.get(herramienta, herramienta)
+    nombre = NOMBRES.get(herramienta, herramienta)
     # En el ámbito de asignatura el título del momento es la propia asignatura: no repetirlo.
-    sub = contexto.asignatura if contexto.momento_titulo == contexto.asignatura else f"{contexto.asignatura} · {contexto.momento_titulo}"
-    return (
-        "<!DOCTYPE html>\n<html lang=\"es\"><head><meta charset=\"utf-8\">"
-        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
-        f"<title>{escape(titulo)} · {escape(contexto.asignatura)}</title><style>{ESTILO}</style></head><body>"
-        f"<header><h1>{escape(titulo)}</h1><p class=\"sub\">{escape(sub)}</p></header>"
-        f"<main>{cuerpo}</main><footer>{pie}</footer><script>{SCRIPT}</script></body></html>"
-    )
+    actividad = (f"{nombre} · {contexto.asignatura}" if contexto.momento_titulo == contexto.asignatura
+                 else f"{nombre} · {contexto.momento_titulo}")
+    problema = [f"<p style=\"margin: 0 0 8px 0;\">{_texto(contexto.problema.descripcion)}</p>",
+                f"<p style=\"margin: 0 0 8px 0;\"><strong style=\"color: #3a1467;\">Reto:</strong> "
+                f"{_texto(contexto.problema.reto)}</p>"]
+    if contexto.pis is not None and contexto.pis.nombre.strip():
+        problema.append(f"<p style=\"margin: 0;\"><strong style=\"color: #3a1467;\">Proyecto integrador (PIS):</strong> "
+                        f"{_texto(contexto.pis.nombre)}</p>")
+    recursos = [f"<strong>Material:</strong> {_texto(nombre)} elaborado a partir del sílabo de {escape(contexto.asignatura)}"]
+    if contexto.contenidos:
+        recursos.append("<strong>Contenidos:</strong> " + _texto("; ".join(contexto.contenidos)))
+    evidencia = (lista([_texto(e) for e in contexto.entregables_momento]) if contexto.entregables_momento
+                 else "<p style=\"margin: 0;\">Esta herramienta es de práctica y no tiene entregable propio.</p>")
+    evidencia += ("<p style=\"margin: 10px 0 0 0;\"><strong style=\"color: #3a1467;\">Entregable:</strong> "
+                  "esta herramienta te prepara para la evidencia del momento; no la reemplaza.</p>")
+    condiciones = lista([
+        f"<strong>Fecha:</strong> {escape(nombre_ambito(contexto.clase_id))} · {contexto.fecha:%d/%m/%Y}",
+        f"<strong>Uso de IA:</strong> {_texto(contexto.politica_ia or SIN_POLITICA)} Declara qué herramienta usaste, "
+        "en qué parte del trabajo y cómo verificaste la información.",
+        f"<em>{escape(PIE)}</em>",
+    ])
+    secciones = [
+        ("RESULTADO DE APRENDIZAJE RELACIONADO", lista([_texto(f"{r.id}: {r.texto}") for r in contexto.ra])),
+        ("¿Para qué realizas esta actividad?", _proposito(herramienta, contenido)),
+        ("Caso, problema o reto del territorio", "".join(problema)),
+        ("Instrucciones", lista([escape(i) for i in INSTRUCCIONES.get(herramienta, INSTRUCCIONES_GENERALES)],
+                                numerada=True)),
+        (nombre, en_linea(legible(IMPRIMIR + _cuerpo(herramienta, contenido)))),
+        ("Recurso que debes utilizar", lista(recursos)),
+        ("Evidencia o producto", evidencia),
+        ("Evaluación", lista(["Actividad formativa. La evidencia del momento se valora con la "
+                              "<strong>Rúbrica de evaluación Acceder</strong>."])),
+        ("Condiciones de entrega", condiciones),
+    ]
+    return documento(titulo_pagina=f"{nombre} · {contexto.asignatura}", nombre_actividad=legible(actividad),
+                     secciones=secciones, estilo=ESTILO, script=SCRIPT)

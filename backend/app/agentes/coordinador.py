@@ -30,6 +30,11 @@ class _ClienteConLease:
         self.comprobar = comprobar
         self.registrar_tokens = registrar_tokens
 
+    @property
+    def contexto_max(self) -> int:
+        from app.llm.prompts import limite_contexto
+        return limite_contexto(self.cliente)
+
     def contar_tokens(self, mensajes):
         self.comprobar()
         n = self.cliente.contar_tokens(mensajes)

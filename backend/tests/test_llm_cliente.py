@@ -309,3 +309,62 @@ def test_pedir_json_reintenta_si_finish_reason_length():
 def test_ultimo_json_dos_objetos():
     assert ultimo_json('{"a":1} texto {"b":2}') == {"b": 2}
     assert ultimo_json('x {"a":{"b":1}} fin') == {"a": {"b": 1}}
+
+
+# --- DeepSeek ---
+
+def _cliente_deepseek(manejador):
+    cuerpos = []
+
+    def transporte(peticion: httpx.Request):
+        cuerpos.append((peticion.url.path, json.loads(peticion.content)))
+        return manejador(peticion)
+
+    cliente = ClienteVLLM("https://api.deepseek.test", "deepseek-v4-pro", 120, 2, lambda _: None,
+                          transporte=httpx.MockTransport(transporte), proveedor="deepseek")
+    return cliente, cuerpos
+
+
+def _deepseek(contenido, razonamiento=None):
+    def manejador(p):
+        mensaje = {"role": "assistant", "content": contenido}
+        if razonamiento:
+            mensaje["reasoning_content"] = razonamiento
+        cuerpo = _respuesta_chat(contenido)
+        cuerpo["choices"][0]["message"] = mensaje
+        return httpx.Response(200, json=cuerpo)
+    return manejador
+
+
+def test_deepseek_usa_json_object_con_el_esquema_en_el_prompt_y_sin_tokenize():
+    c, cuerpos = _cliente_deepseek(_deepseek('{"a":1}'))
+    r = _completar(c, esquema=ESQUEMA)
+    assert r.texto == '{"a":1}'
+    assert [ruta for ruta, _ in cuerpos] == ["/chat/completions"]
+    cuerpo = cuerpos[0][1]
+    assert cuerpo["response_format"] == {"type": "json_object"}
+    assert cuerpo["thinking"] == {"type": "disabled"}
+    assert "repetition_penalty" not in cuerpo and "chat_template_kwargs" not in cuerpo
+    assert cuerpo["messages"][:-1] == MSJ
+    ultimo = cuerpo["messages"][-1]
+    assert ultimo["role"] == "system" and "JSON" in ultimo["content"]
+    assert json.dumps(ESQUEMA, ensure_ascii=False) in ultimo["content"]
+
+
+def test_deepseek_sin_esquema_no_agrega_instruccion_y_activa_razonamiento():
+    c, cuerpos = _cliente_deepseek(_deepseek("hola", razonamiento="pensé"))
+    r = _completar(c, pensar=True)
+    cuerpo = cuerpos[0][1]
+    assert cuerpo["messages"] == MSJ and "response_format" not in cuerpo
+    assert cuerpo["thinking"] == {"type": "enabled"}
+    assert (r.texto, r.razonamiento) == ("hola", "pensé")
+
+
+def test_deepseek_estima_tokens_sin_servidor():
+    c, _ = _cliente_deepseek(_deepseek("x"))
+    assert c.contar_tokens([{"role": "user", "content": "a" * 300}]) == 104
+
+
+def test_proveedor_desconocido():
+    with pytest.raises(ValueError):
+        ClienteVLLM(BASE, "m", 1, 1, lambda _: None, proveedor="otro")

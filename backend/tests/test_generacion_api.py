@@ -70,7 +70,10 @@ def test_catalogo_solo_workers_disponibles_y_orden_de_facultad(entorno):
     _, _, d, aid, _ = entorno
     r = d.get(f"/asignaturas/{aid}/herramientas?ambito=clase")
     assert r.status_code == 200
-    assert [h["id"] for h in r.json()["herramientas"]] == ["cuestionario", "ficha_clase"]
+    assert [h["id"] for h in r.json()["herramientas"]] == [
+        # Primero las recomendadas por la facultad, en su orden; luego las demás de clase (V2).
+        "practica_guiada", "cuestionario", "ficha_clase", "tarjetas", "guia_autonoma", "guion_clase",
+        "presentacion"]
     assert r.json()["perfil_sugerido"] == "fundamentacion"
     # P3a/P3b: el ámbito momento ofrece sus propias herramientas, nunca las de clase.
     momento = [h["id"] for h in d.get(f"/asignaturas/{aid}/herramientas?ambito=momento").json()["herramientas"]]

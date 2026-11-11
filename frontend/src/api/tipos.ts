@@ -116,7 +116,8 @@ export type Bloque =
   | { tipo: 'texto'; titulo: string; texto: string; ruta: Ruta | null }
   | { tipo: 'lista'; titulo: string; items: string[]; numerada: boolean; ruta: Ruta | null }
   | { tipo: 'tabla'; titulo: string; columnas: string[]; filas: string[][]; rutas: (Ruta | null)[][] }
-  | { tipo: 'grupo'; titulo: string; bloques: Bloque[] };
+  | { tipo: 'grupo'; titulo: string; bloques: Bloque[] }
+  | { tipo: 'imagen'; titulo: string; hash: string; credito: string; vista?: string };
 
 export interface Recurso extends RecursoResumen {
   contenido: unknown;

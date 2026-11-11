@@ -219,18 +219,40 @@ class ServicioRecursos:
             if r["validado_por"] is None:
                 raise HTTPException(409, "Valida el recurso antes de descargarlo")
             contexto = _contexto(r, None)
-            if formato not in ("html", "pdf", "docx"):
+            if formato not in ("html", "pdf", "docx", "pptx"):
                 raise HTTPException(422, "Formato no soportado")
+            if formato == "pptx" and (r["herramienta"] != "presentacion" or docente):
+                raise HTTPException(422, "Solo la presentación se descarga en PowerPoint")
             if docente and (formato == "html" or r["herramienta"] not in CON_RESPUESTAS):
                 raise HTTPException(422, "Esta versión no está disponible")
             nombre = nombre_archivo(r["herramienta"], r["ambito_id"], contexto.asignatura, formato, docente)
+            imagenes = {}
+            if formato == "pptx":
+                from app.herramientas.imagenes import hashes, leer
+                for h in hashes(r["contenido"]):
+                    leida = leer(conn, h)
+                    if leida:
+                        imagenes[h] = leida[0]
         if formato == "html":
             return nombre, exportar_html(r, contexto)
+        if formato == "pptx":
+            from app.exportar.pptx import exportar_pptx
+            return nombre, exportar_pptx(r, contexto, imagenes)
         from app.exportar.documento import exportar_documento, FormulaInvalida
         try:
             return nombre, exportar_documento(r, contexto, formato, docente)
         except FormulaInvalida:
             raise HTTPException(422, "No se pudo representar una fórmula. Revisa su notación antes de exportar.") from None
+
+    def imagen(self, aid, rid, correo, hash_):
+        """Imagen de una diapositiva: solo si este recurso la referencia y el docente tiene acceso."""
+        from app.herramientas.imagenes import hashes, leer
+        with self._acceso(aid, correo) as (conn, _):
+            r = _recurso(conn, aid, rid)
+            leida = leer(conn, hash_) if hash_ in hashes(r["contenido"]) else None
+        if leida is None:
+            raise HTTPException(404, "Imagen inexistente en este recurso")
+        return leida
 
     def validar(self, aid, rid, correo, revision):
         """El docente da por revisado el recurso (spec §13); exigido para exportar."""
