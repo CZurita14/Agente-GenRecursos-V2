@@ -185,3 +185,22 @@ def test_unsplash_no_repite_la_misma_foto_aunque_cambie_la_url():
     buscar = crear_buscador(unsplash_clave="clave-unsplash", transporte=_transporte(llamadas=llamadas))
     assert buscar("aula", usadas).fuente == "Unsplash"
     assert buscar("aula", usadas).fuente != "Unsplash"
+
+
+def test_portada_y_titulos_ordenados_en_16_9(silabo):
+    from pptx import Presentation
+    from app.exportar.pptx import exportar_pptx
+    ctx = contexto_clase(silabo, "M2-S1")
+    datos = _presentacion(silabo)
+    datos["titulo"] = "Sensibilización, contextualización y conceptualización: comprensión del caso y fundamentos"
+    prs = Presentation(io.BytesIO(exportar_pptx({"contenido": {"presentacion": datos}}, ctx, {})))
+    portada, segunda = list(prs.slides)[:2]
+    titulo, sub = portada.shapes.title, portada.placeholders[1]
+    assert titulo.top + titulo.height <= sub.top  # La línea de datos no se monta sobre el título.
+    assert sub.top + sub.height <= prs.slide_height
+    assert all(f.left + f.width <= prs.slide_width for f in portada.shapes)
+    assert segunda.shapes.title.left == segunda.placeholders[1].left  # Título alineado con el texto.
+
+    ultima = list(prs.slides)[-1]
+    assert {p.font.size for p in ultima.placeholders[1].text_frame.paragraphs} != {None}
+    assert None not in {p.font.size for p in ultima.placeholders[1].text_frame.paragraphs}
