@@ -14,6 +14,8 @@ FICHA = {"conceptual": {"ideas_clave": ["Idea A", "Idea B", "Idea C"], "relacion
                         "autocomprobacion": ["Q1", "Q2", "Q3"]}}
 _LARGO = "Texto de prueba con la longitud suficiente para la herramienta."
 CON_IA = {
+    "presentacion": {"presentacion": {"titulo": "Título de prueba", "diapositivas": [
+        {"titulo": "Uno", "puntos": ["a", "b"], "notas": "Notas de prueba para el docente."}]}},
     "practica_guiada": {"practica": {"objetivo": _LARGO, "ejercicios": [
         {"enunciado": _LARGO, "pasos": ["p1", "p2"], "resultado_esperado": "r"}], "errores_a_evitar": ["e"]}},
     "tarjetas": {"mazo": {"tarjetas": [{"frente": "f", "reverso": "r", "contenido": "c"}]}},

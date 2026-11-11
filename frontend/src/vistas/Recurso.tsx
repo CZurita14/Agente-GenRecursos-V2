@@ -240,6 +240,8 @@ export function Recurso({ aid, rid, puedeValidar, onVolver, onSesionVencida, onT
         <div className="flex flex-wrap gap-3">
           <a href={urlExportar(aid, r.id, 'pdf')} download className="text-action underline">Descargar PDF</a>
           <a href={urlExportar(aid, r.id, 'docx')} download className="text-action underline">Descargar Word</a>
+          {r.herramienta === 'presentacion' &&
+            <a href={urlExportar(aid, r.id, 'pptx')} download className="text-action underline">Descargar PowerPoint</a>}
         </div>
         {CON_RESPUESTAS.has(r.herramienta) && puedeValidar && <div className="rounded-lg border border-line p-3 space-y-2">
           <p className="text-sm"><strong>Solo para el docente.</strong> Las descargas de arriba son para el estudiante y no llevan respuestas. Estas sí: no las compartas.</p>

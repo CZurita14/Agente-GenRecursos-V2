@@ -100,5 +100,5 @@ export const editar = (aid: string, rid: string, revision: number, contenido: un
   pedir<Recurso>(`/asignaturas/${enc(aid)}/recursos/${enc(rid)}`, { method: 'PUT', body: json({ revision, contenido }) });
 
 /** Descarga directa (enlace): la cookie viaja sola y la API exige la validación (409 si no). */
-export const urlExportar = (aid: string, rid: string, formato: 'html' | 'pdf' | 'docx' = 'html', docente = false) =>
+export const urlExportar = (aid: string, rid: string, formato: 'html' | 'pdf' | 'docx' | 'pptx' = 'html', docente = false) =>
   `${BASE}/asignaturas/${enc(aid)}/recursos/${enc(rid)}/exportar?formato=${formato}${docente ? '&version=docente' : ''}`;

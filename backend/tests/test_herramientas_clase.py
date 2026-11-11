@@ -14,7 +14,7 @@ from app.silabo.contexto import contexto_clase
 from app.silabo.modelo import Actividad
 
 ESTILO = EstiloFacultad(tipos_de_caso=["datasets"], software_habitual=["Git"])
-NUEVAS = ("practica_guiada", "tarjetas", "guia_autonoma", "guion_clase")
+NUEVAS = ("practica_guiada", "tarjetas", "guia_autonoma", "guion_clase", "presentacion")
 
 
 def _tarea(ctx):
@@ -34,6 +34,10 @@ def _salida(herramienta, ctx):
         return {"objetivo": texto, "actividad": texto, "pasos": ["Leer", "Resolver", "Revisar"],
                 "tiempo_estimado": "2 horas", "para_la_siguiente_clase": "Traer el ejercicio",
                 "autochequeo": ["¿Entendí?", "¿Revisé?", "¿Comparé?"], "conexion_pis": "Aporta al módulo"}
+    if herramienta == "presentacion":
+        d = {"titulo": "Diapositiva de prueba", "puntos": ["Idea uno", "Idea dos"],
+             "notas": "Explicar la idea con un ejemplo del sílabo."}
+        return {"titulo": "Presentación de la clase", "diapositivas": [d] * 6}
     fase = {"fase": "inicio", "minutos": 20, "docente": "Presenta el tema", "estudiantes": "Responden preguntas"}
     return {"objetivo": texto, "fases": [fase, {**fase, "fase": "desarrollo"}, {**fase, "fase": "cierre"}],
             "preguntas_detonantes": ["¿Por qué?", "¿Cómo?"], "conexion_pis": ""}
@@ -114,3 +118,18 @@ def test_trabajo_completo_con_coordinador(herramienta, conn, silabo):
     r = conn.execute("select * from recurso").fetchone()
     assert cierre.estado == r["estado"] == "listo"
     assert set(r["contenido"]) == set(DEFINICIONES[herramienta].secciones)
+
+
+def test_la_presentacion_se_exporta_a_pptx(silabo):
+    from io import BytesIO
+    from pptx import Presentation
+    from app.exportar.pptx import exportar_pptx
+    ctx = contexto_clase(silabo, "M2-S1")
+    datos = _salida("presentacion", ctx)
+    binario = exportar_pptx({"herramienta": "presentacion", "contenido": {"presentacion": datos}}, ctx)
+    prs = Presentation(BytesIO(binario))
+    diapositivas = list(prs.slides)
+    assert len(diapositivas) == 1 + 6 + 1  # portada, contenido y datos del recurso
+    assert diapositivas[0].shapes.title.text == "Presentación de la clase"
+    assert diapositivas[1].notes_slide.notes_text_frame.text.startswith("Explicar")
+    assert "asistencia de IA" in diapositivas[-1].placeholders[1].text_frame.text

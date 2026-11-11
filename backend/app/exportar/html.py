@@ -26,6 +26,7 @@ NOMBRES = {
     "rubrica_momento": "Rúbrica del momento", "rubrica_final": "Rúbrica del producto final",
     "practica_guiada": "Práctica guiada", "tarjetas": "Tarjetas de estudio",
     "guia_autonoma": "Guía de trabajo autónomo", "guion_clase": "Guion de clase (docente)",
+    "presentacion": "Presentación (PowerPoint)",
 }
 # Listas de la presentación que el estudiante va marcando, y textos que descubre cuando quiere.
 # Las que tienen una versión con respuestas, solo para el docente.

@@ -271,7 +271,16 @@ def _guion(c: dict) -> list[dict]:
     return bloques
 
 
+def _diapositivas(c: dict) -> list[dict]:
+    p = c["presentacion"]
+    return [_texto("Título", p["titulo"], ["presentacion", "titulo"])] + [_grupo(f"Diapositiva {n}: {d['titulo']}", [
+        _lista("Puntos", d["puntos"], ruta=["presentacion", "diapositivas", n - 1, "puntos"]),
+        _texto("Notas para el docente", d["notas"], ["presentacion", "diapositivas", n - 1, "notas"]),
+    ]) for n, d in enumerate(p["diapositivas"], 1)]
+
+
 VISTAS: dict[str, Callable[[dict], list[dict]]] = {
+    "presentacion": _diapositivas,
     "practica_guiada": _practica, "tarjetas": _tarjetas, "guia_autonoma": _guia_autonoma, "guion_clase": _guion,
     "rubrica_momento": _rubrica_momento, "rubrica_final": _rubrica_final,
     "ficha_clase": _ficha, "repaso_momento": _repaso, "guia_evidencia": _guia, "estudio_caso": _caso,

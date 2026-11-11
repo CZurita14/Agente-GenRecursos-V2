@@ -14,7 +14,7 @@ from app.agentes.verificador import (
     verificar_repaso,
 )
 from app.herramientas.esquemas import (
-    GuiaAutonoma, GuionClase, PracticaGuiada, Tarjetas,
+    GuiaAutonoma, GuionClase, PracticaGuiada, Presentacion, Tarjetas,
     EstudioCaso, FichaAplicacion, FichaConceptual, GuiaEvidencia, GuiaProductoFinal, RepasoMomento,
 )
 from app.silabo.contexto import ContextoClase
@@ -60,6 +60,7 @@ DEFINICIONES: dict[str, Definicion] = {
     "tarjetas": _clase("mazo", Tarjetas),
     "guia_autonoma": _clase("guia_autonoma", GuiaAutonoma,
                             _con_actividad("actividad_autonoma", "actividades de trabajo autónomo")),
+    "presentacion": _clase("presentacion", Presentacion),
     "guion_clase": _clase("guion", GuionClase, _con_actividad("actividad_docente", "actividades con el docente")),
     "cuestionario": Definicion("clase", es_quiz=True),
     "simulacro": Definicion("momento", es_quiz=True, requisitos=_exige("ra", "contenidos")),

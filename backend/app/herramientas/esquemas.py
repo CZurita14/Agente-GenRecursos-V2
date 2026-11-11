@@ -294,3 +294,20 @@ def esquema_guion_clase() -> dict:
                      "fases": {"type": "array", "items": fase, "minItems": 3, "maxItems": 6},
                      "preguntas_detonantes": _textos(2, 5), "conexion_pis": {"type": "string"}},
                     ("conexion_pis",))
+
+
+class Diapositiva(_Cerrado):
+    titulo: str = Field(min_length=3, max_length=80)
+    puntos: list[str] = Field(min_length=2, max_length=6)
+    notas: str = Field(min_length=20)
+
+
+class Presentacion(_Cerrado):
+    titulo: str = Field(min_length=5, max_length=120)
+    diapositivas: list[Diapositiva] = Field(min_length=6, max_length=12)
+
+
+def esquema_presentacion() -> dict:
+    diapositiva = _cerrado({"titulo": {"type": "string"}, "puntos": _textos(2, 6), "notas": {"type": "string"}})
+    return _cerrado({"titulo": {"type": "string"},
+                     "diapositivas": {"type": "array", "items": diapositiva, "minItems": 6, "maxItems": 12}})

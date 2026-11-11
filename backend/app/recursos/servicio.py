@@ -219,13 +219,18 @@ class ServicioRecursos:
             if r["validado_por"] is None:
                 raise HTTPException(409, "Valida el recurso antes de descargarlo")
             contexto = _contexto(r, None)
-            if formato not in ("html", "pdf", "docx"):
+            if formato not in ("html", "pdf", "docx", "pptx"):
                 raise HTTPException(422, "Formato no soportado")
+            if formato == "pptx" and (r["herramienta"] != "presentacion" or docente):
+                raise HTTPException(422, "Solo la presentación se descarga en PowerPoint")
             if docente and (formato == "html" or r["herramienta"] not in CON_RESPUESTAS):
                 raise HTTPException(422, "Esta versión no está disponible")
             nombre = nombre_archivo(r["herramienta"], r["ambito_id"], contexto.asignatura, formato, docente)
         if formato == "html":
             return nombre, exportar_html(r, contexto)
+        if formato == "pptx":
+            from app.exportar.pptx import exportar_pptx
+            return nombre, exportar_pptx(r, contexto)
         from app.exportar.documento import exportar_documento, FormulaInvalida
         try:
             return nombre, exportar_documento(r, contexto, formato, docente)

@@ -6,8 +6,8 @@ clase: PIS, sesión con fecha, actividades con el docente, prácticas y autónom
 from app.agentes.workers.base import REGLAS_COMUNES
 from app.agentes.workers.momento import NO_RESOLVER, WorkerSeccion, _Seccion
 from app.herramientas.esquemas import (
-    GuiaAutonoma, GuionClase, PracticaGuiada, Tarjetas, esquema_guia_autonoma, esquema_guion_clase,
-    esquema_practica_guiada, esquema_tarjetas,
+    GuiaAutonoma, GuionClase, PracticaGuiada, Presentacion, Tarjetas, esquema_guia_autonoma, esquema_guion_clase,
+    esquema_practica_guiada, esquema_presentacion, esquema_tarjetas,
 )
 
 PRACTICA_GUIADA = WorkerSeccion(
@@ -51,4 +51,16 @@ GUION_CLASE = WorkerSeccion(
         "desarrollo, cierre) con los minutos de cada una, qué hace el docente y qué hacen los estudiantes "
         "(sumando aproximadamente las horas con el docente del sílabo); de 2 a 5 preguntas detonantes; "
         "y en «conexion_pis», cómo se vincula la sesión con el PIS (o deja vacío si no hay PIS).")),
+)
+
+PRESENTACION = WorkerSeccion(
+    "presentacion",
+    REGLAS_COMUNES + " Preparas las diapositivas de la clase (PowerPoint) para que el docente la presente: "
+    "pocas ideas por diapositiva, frases breves y notas para el docente." + NO_RESOLVER,
+    _Seccion(Presentacion, lambda c: esquema_presentacion(), lambda t: (
+        "Presentación de la clase: un título y de 6 a 12 diapositivas en orden: apertura (objetivo y "
+        "conexión con el problema o el PIS), una o más por cada contenido de la sesión, una con la "
+        "actividad práctica o con el docente (sin resolverla), una con el trabajo autónomo y un cierre. "
+        "Cada diapositiva: título (máx. 80 caracteres), de 2 a 6 puntos breves (máx. 160 caracteres cada "
+        "uno) y «notas» para el docente con lo que debe explicar.")),
 )

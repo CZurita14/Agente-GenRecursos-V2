@@ -17,6 +17,7 @@ export const NOMBRES: Record<string, string> = {
   tarjetas: 'Tarjetas de estudio',
   guia_autonoma: 'Guía de trabajo autónomo',
   guion_clase: 'Guion de clase (docente)',
+  presentacion: 'Presentación (PowerPoint)',
 };
 
 export const SIN_IA = new Set(['hoja_ruta', 'autoevaluacion_rubrica', 'autoevaluacion_final', 'lista_evidencia', 'rubrica_momento', 'rubrica_final']);
