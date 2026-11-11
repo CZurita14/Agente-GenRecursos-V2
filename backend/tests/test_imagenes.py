@@ -122,6 +122,8 @@ def test_pptx_con_imagen_y_credito(silabo):
     assert sum(1 for f in primera.shapes if f.shape_type == 13) == 1  # 13 = imagen
     assert "Imagen: Ana · Licencia Pexels · Pexels" in primera.notes_slide.notes_text_frame.text
     assert all(f.left + f.width <= prs.slide_width for f in primera.shapes)
+    cuerpo, titulo = primera.placeholders[1], primera.shapes.title
+    assert cuerpo.height > 0 and cuerpo.top >= titulo.top + titulo.height  # El texto no tapa el título.
     assert sum(1 for f in list(prs.slides)[2].shapes if f.shape_type == 13) == 0
 
 

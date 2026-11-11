@@ -25,7 +25,9 @@ def _con_imagen(diapositiva, datos: bytes) -> bool:
     escala = min(ancho_max / foto.width, alto / foto.height)
     foto.width, foto.height = int(foto.width * escala), int(foto.height * escala)
     foto.left = x_imagen + (ancho_max - foto.width) // 2
-    cuerpo.left, cuerpo.width = izquierda, ancho_texto - (izquierda - _MARGEN)
+    # Las cuatro medidas juntas: si solo se fijan left/width, python-pptx deja top y height en 0.
+    cuerpo.left, cuerpo.top = izquierda, arriba
+    cuerpo.width, cuerpo.height = ancho_texto - (izquierda - _MARGEN), alto
     return True
 
 
