@@ -108,6 +108,9 @@ def validar_contenido(
                     for s, m in zip(definicion.secciones, definicion.modelos)}
         if herramienta == "estudio_caso" and canonico["caso"]["escenario"] != original["caso"]["escenario"]:
             raise EdicionInvalida  # El escenario lo fija el código (C9).
+        from app.herramientas.imagenes import hashes
+        if not hashes(canonico) <= hashes(original):
+            raise EdicionInvalida  # Las imágenes las busca el sistema; editar solo puede quitarlas.
         return canonico, {definicion.id_revision: definicion.verificar(canonico, contexto)}
     except (ValidationError, EdicionInvalida, TypeError, AttributeError):
         raise EdicionInvalida("El contenido editado no es válido.") from None

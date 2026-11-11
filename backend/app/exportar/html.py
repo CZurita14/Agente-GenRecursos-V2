@@ -122,6 +122,8 @@ def _marcable(titulo: str, items, nivel: int) -> str:
 def _bloque(b: dict, nivel: int) -> str:
     """Un bloque de la presentación (app.exportar.presentacion); todo texto escapado."""
     titulo = f"<h{nivel}>{escape(b['titulo'])}</h{nivel}>" if b.get("titulo") else ""
+    if b["tipo"] == "imagen":  # Sin imágenes externas en el HTML: solo el crédito.
+        return f'<p style="font-size: 12px; color: #6b4a96;"><em>{escape(b["credito"])}</em></p>'
     if b["tipo"] == "texto":
         if b.get("titulo") in TEXTOS_OCULTABLES:
             return f"<details><summary>{escape(TEXTOS_OCULTABLES[b['titulo']])}</summary><p>{escape(b['texto'])}</p></details>"

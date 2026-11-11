@@ -2,7 +2,7 @@
 from typing import Any, Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, Path, Query, Request
 from fastapi.responses import Response
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
 
@@ -72,6 +72,13 @@ def obtener(asig: UUID, rid: UUID, request: Request):
 @router.put("/recursos/{rid}")
 def editar(asig: UUID, rid: UUID, datos: Edicion, request: Request):
     return request.app.state.recursos.editar(asig, rid, request.state.usuario, datos.revision, datos.contenido)
+
+
+@router.get("/recursos/{rid}/imagenes/{hash_}")
+def imagen(asig: UUID, rid: UUID, request: Request, hash_: str = Path(pattern=r"^[0-9a-f]{64}$")):
+    datos, tipo = request.app.state.recursos.imagen(asig, rid, request.state.usuario, hash_)
+    return Response(datos, media_type=tipo, headers={"Cache-Control": "private, max-age=86400",
+                                                     "X-Content-Type-Options": "nosniff"})
 
 
 @router.post("/recursos/{rid}/validar")

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { CheckCircle2, Download, Pencil, ShieldCheck, Trash2 } from 'lucide-react';
 import { Alert, Badge, Button, Card, Modal } from '../components';
-import { ErrorApi, editar, recurso as cargarRecurso, urlExportar, validar } from '../api/cliente';
+import { ErrorApi, editar, recurso as cargarRecurso, urlExportar, urlImagen, validar } from '../api/cliente';
 import { leer, poner } from '../api/edicion';
 import type { Bloque, Recurso as TipoRecurso, Ruta } from '../api/tipos';
 import { CON_RESPUESTAS, SIN_IA, legible, nombreAmbito, nombreHerramienta } from '../api/herramientas';
@@ -47,9 +47,12 @@ function Campo({ etiqueta, valor, onCambio, filas = 2 }: { etiqueta: string; val
 }
 
 /** Bloque de la presentación ordenada; con `ed`, los textos que tienen ruta se editan (React escapa el texto). */
-function VistaBloque({ b, nivel = 2, ed }: { b: Bloque; nivel?: number; ed?: Editor }): ReactNode {
+function VistaBloque({ b, nivel = 2, ed, img }: { b: Bloque; nivel?: number; ed?: Editor; img?: (hash: string) => string }): ReactNode {
   const Titulo = `h${Math.min(nivel + 1, 6)}` as 'h3';
   const titulo = <Titulo className={nivel === 2 ? 'font-bold' : 'text-sm font-bold'}>{b.titulo}</Titulo>;
+  if (b.tipo === 'imagen') return img ? <figure className="max-w-md">
+    <img src={img(b.hash)} alt="" loading="lazy" className="rounded-lg border border-line w-full" />
+    <figcaption className="text-xs text-muted mt-1">{b.credito}</figcaption></figure> : null;
   if (b.tipo === 'texto') {
     const ruta = b.ruta;
     return <section>{titulo}{ed && ruta
@@ -78,7 +81,7 @@ function VistaBloque({ b, nivel = 2, ed }: { b: Bloque; nivel?: number; ed?: Edi
       })}</tr>)}</tbody>
     </table></div></section>;
   return <section className="rounded-lg border border-line p-3 space-y-3">{titulo}
-    {b.bloques.map((x, i) => <VistaBloque key={i} b={x} nivel={nivel + 1} ed={ed} />)}</section>;
+    {b.bloques.map((x, i) => <VistaBloque key={i} b={x} nivel={nivel + 1} ed={ed} img={img} />)}</section>;
 }
 
 /** Pregunta en modo lectura, con la clave marcada. */
@@ -223,7 +226,7 @@ export function Recurso({ aid, rid, puedeValidar, onVolver, onSesionVencida, onT
         {avisos[item.item_id]?.map((a, i) => <Alert key={i} tone="warning" className="mt-2">{legible(a)}</Alert>)}
       </li>)}</ol> : <>
         {Object.entries(avisos).map(([id, lista]) => lista.map((a, i) => <Alert key={`${id}${i}`} tone="warning" className="mb-2">{legible(a)}</Alert>))}
-        <div className="space-y-4">{r.presentacion.map((b, i) => <VistaBloque key={i} b={b} ed={editando ? ed : undefined} />)}</div>
+        <div className="space-y-4">{r.presentacion.map((b, i) => <VistaBloque key={i} b={b} ed={editando ? ed : undefined} img={h => urlImagen(aid, r.id, h)} />)}</div>
       </>}
     </Card>
 

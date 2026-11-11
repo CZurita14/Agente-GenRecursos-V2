@@ -13,6 +13,13 @@ from app.llm.cliente import ClienteSimulado
 from app.silabo.contexto import contexto_clase
 from app.silabo.modelo import Actividad
 
+@pytest.fixture(autouse=True)
+def _sin_red(monkeypatch):
+    """Las pruebas nunca buscan imágenes en internet."""
+    from app.agentes.workers import clase
+    monkeypatch.setattr(clase, "BUSCADOR", lambda: None)
+
+
 ESTILO = EstiloFacultad(tipos_de_caso=["datasets"], software_habitual=["Git"])
 NUEVAS = ("practica_guiada", "tarjetas", "guia_autonoma", "guion_clase", "presentacion")
 

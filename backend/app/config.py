@@ -22,6 +22,9 @@ class Ajustes(BaseSettings):
     llm_proveedor: Literal["vllm", "deepseek"] = "vllm"
     # False solo en desarrollo, si un antivirus inspecciona HTTPS con una raíz que Python 3.13 rechaza.
     llm_tls_estricto: bool = True
+    # Imágenes de las diapositivas: Pexels con clave; si no hay clave o resultado, Openverse (sin clave).
+    imagenes_activas: bool = True
+    pexels_api_key: SecretStr | None = None
     llm_max_concurrencia: int = 4
     llm_timeout_s: float = 120
     llm_timeout_revisor_s: float = 240

@@ -271,9 +271,20 @@ def _guion(c: dict) -> list[dict]:
     return bloques
 
 
+def credito_imagen(i: dict) -> str:
+    return f"Imagen: {i['autor']} · {i['licencia']} · {i['fuente']}" + (f" · {i['enlace']}" if i.get("enlace") else "")
+
+
+def _imagen(i: dict | None) -> list[dict]:
+    if not i or not i.get("hash"):
+        return []
+    return [{"tipo": "imagen", "titulo": "", "hash": i["hash"], "credito": credito_imagen(i)}]
+
+
 def _diapositivas(c: dict) -> list[dict]:
     p = c["presentacion"]
     return [_texto("Título", p["titulo"], ["presentacion", "titulo"])] + [_grupo(f"Diapositiva {n}: {d['titulo']}", [
+        *_imagen(d.get("imagen")),
         _lista("Puntos", d["puntos"], ruta=["presentacion", "diapositivas", n - 1, "puntos"]),
         _texto("Notas para el docente", d["notas"], ["presentacion", "diapositivas", n - 1, "notas"]),
     ]) for n, d in enumerate(p["diapositivas"], 1)]

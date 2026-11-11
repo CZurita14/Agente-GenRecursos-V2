@@ -3,6 +3,7 @@
 Cada una es una sola sección con JSON de esquema cerrado y trabaja con el JSON de trabajo de la
 clase: PIS, sesión con fecha, actividades con el docente, prácticas y autónomas, y contenidos.
 """
+from app.agentes.mensajes import TareaLote
 from app.agentes.workers.base import REGLAS_COMUNES
 from app.agentes.workers.momento import NO_RESOLVER, WorkerSeccion, _Seccion
 from app.herramientas.esquemas import (
@@ -53,6 +54,57 @@ GUION_CLASE = WorkerSeccion(
         "y en «conexion_pis», cómo se vincula la sesión con el PIS (o deja vacío si no hay PIS).")),
 )
 
+def _buscador_configurado():
+    """Buscador e inserción en la base según la configuración; None si las imágenes están apagadas."""
+    from contextlib import closing
+
+    from app.config import ajustes
+    from app.db.conexion import conectar
+    from app.herramientas.imagenes import crear_buscador, guardar
+    from app.llm.cliente import contexto_tls
+
+    config = ajustes()
+    if not config.imagenes_activas:
+        return None
+    buscar = crear_buscador(pexels_clave=config.pexels_api_key.get_secret_value() if config.pexels_api_key else None,
+                            verificar=contexto_tls(config.llm_tls_estricto))
+
+    def guardar_imagen(imagen) -> None:
+        with closing(conectar(config.database_url)) as conn:
+            conn.autocommit = True
+            guardar(conn, imagen)
+    return buscar, guardar_imagen
+
+
+# Se reemplaza en las pruebas: (buscar(consulta, usadas), guardar(imagen)) o None.
+BUSCADOR = _buscador_configurado
+# Tiempo máximo buscando imágenes por presentación: las que falten quedan sin imagen.
+PRESUPUESTO_IMAGENES_S = 60
+
+
+def con_imagenes(datos: dict, tarea: TareaLote) -> dict:
+    """Una imagen por diapositiva con palabras de búsqueda; sin imagen si no hay resultado o falla la red."""
+    import time
+    herramientas = BUSCADOR()
+    diapositivas = []
+    usadas: set[str] = set()
+    limite = time.monotonic() + PRESUPUESTO_IMAGENES_S
+    for d in datos["diapositivas"]:
+        d = {**d, "imagen": None}
+        if (herramientas is not None and d.get("imagen_busqueda", "").strip()
+                and time.monotonic() < limite):
+            buscar, guardar_imagen = herramientas
+            imagen = buscar(d["imagen_busqueda"], usadas)
+            if imagen is not None:
+                try:
+                    guardar_imagen(imagen)
+                    d["imagen"] = imagen.credito()
+                except Exception:  # Sin imagen antes que sin presentación.
+                    d["imagen"] = None
+        diapositivas.append(d)
+    return {**datos, "diapositivas": diapositivas}
+
+
 PRESENTACION = WorkerSeccion(
     "presentacion",
     REGLAS_COMUNES + " Preparas las diapositivas de la clase (PowerPoint) para que el docente la presente: "
@@ -62,5 +114,8 @@ PRESENTACION = WorkerSeccion(
         "conexión con el problema o el PIS), una o más por cada contenido de la sesión, una con la "
         "actividad práctica o con el docente (sin resolverla), una con el trabajo autónomo y un cierre. "
         "Cada diapositiva: título (máx. 80 caracteres), de 2 a 6 puntos breves (máx. 160 caracteres cada "
-        "uno) y «notas» para el docente con lo que debe explicar.")),
+        "uno), «notas» para el docente con lo que debe explicar e «imagen_busqueda»: de 2 a 4 palabras EN "
+        "INGLÉS para buscar una foto que ilustre el tema (sin marcas, personas famosas ni texto; vacío si "
+        "la diapositiva no necesita imagen).")),
+    completar=con_imagenes,
 )

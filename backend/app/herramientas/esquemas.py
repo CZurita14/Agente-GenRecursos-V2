@@ -296,10 +296,21 @@ def esquema_guion_clase() -> dict:
                     ("conexion_pis",))
 
 
+class CreditoImagen(_Cerrado):
+    hash: str = Field(pattern=r"^[0-9a-f]{64}$")
+    autor: str
+    licencia: str
+    fuente: str
+    enlace: str = ""
+
+
 class Diapositiva(_Cerrado):
     titulo: str = Field(min_length=3, max_length=80)
     puntos: list[str] = Field(min_length=2, max_length=6)
     notas: str = Field(min_length=20)
+    # Palabras en inglés para buscar la imagen; la imagen y su crédito los agrega el código.
+    imagen_busqueda: str = Field(default="", max_length=60)
+    imagen: CreditoImagen | None = None
 
 
 class Presentacion(_Cerrado):
@@ -308,6 +319,7 @@ class Presentacion(_Cerrado):
 
 
 def esquema_presentacion() -> dict:
-    diapositiva = _cerrado({"titulo": {"type": "string"}, "puntos": _textos(2, 6), "notas": {"type": "string"}})
+    diapositiva = _cerrado({"titulo": {"type": "string"}, "puntos": _textos(2, 6), "notas": {"type": "string"},
+                            "imagen_busqueda": {"type": "string"}})
     return _cerrado({"titulo": {"type": "string"},
                      "diapositivas": {"type": "array", "items": diapositiva, "minItems": 6, "maxItems": 12}})

@@ -115,6 +115,8 @@ def _docx(bloques):
             return
         if b.get('titulo'):
             texto(d.add_heading('', min(nivel, 9)), b['titulo'])
+        if b['tipo'] == 'imagen':
+            b = {'tipo': 'texto', 'titulo': '', 'texto': b['credito']}
         if b['tipo'] == 'texto':
             texto(d.add_paragraph(), b['texto'])
         elif b['tipo'] == 'lista':
@@ -173,6 +175,8 @@ def _pdf(bloques):
             return
         if b.get('titulo'):
             historia.extend(texto(b['titulo'], f'Heading{min(nivel, 3)}'))
+        if b['tipo'] == 'imagen':
+            b = {'tipo': 'texto', 'titulo': '', 'texto': b['credito']}
         if b['tipo'] == 'texto':
             historia.extend(texto(b['texto']))
         elif b['tipo'] == 'lista':
