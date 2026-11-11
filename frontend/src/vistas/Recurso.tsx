@@ -46,12 +46,12 @@ function Campo({ etiqueta, valor, onCambio, filas = 2 }: { etiqueta: string; val
     className="mt-1 w-full rounded-md border border-line bg-surface px-3 py-2 text-sm text-fg" />;
 }
 
-/** Bloque de la presentación ordenada; con `ed`, los textos que tienen ruta se editan (React escapa el texto). */
+/** Bloque de la presentación ordenada (las fotos de Unsplash se muestran desde su CDN, como exige); con `ed`, los textos que tienen ruta se editan (React escapa el texto). */
 function VistaBloque({ b, nivel = 2, ed, img }: { b: Bloque; nivel?: number; ed?: Editor; img?: (hash: string) => string }): ReactNode {
   const Titulo = `h${Math.min(nivel + 1, 6)}` as 'h3';
   const titulo = <Titulo className={nivel === 2 ? 'font-bold' : 'text-sm font-bold'}>{b.titulo}</Titulo>;
   if (b.tipo === 'imagen') return img ? <figure className="max-w-md">
-    <img src={img(b.hash)} alt="" loading="lazy" className="rounded-lg border border-line w-full" />
+    <img src={b.vista?.startsWith('https://images.unsplash.com/') ? b.vista : img(b.hash)} alt="" loading="lazy" className="rounded-lg border border-line w-full" />
     <figcaption className="text-xs text-muted mt-1">{b.credito}</figcaption></figure> : null;
   if (b.tipo === 'texto') {
     const ruta = b.ruta;

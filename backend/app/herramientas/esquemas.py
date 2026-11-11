@@ -302,6 +302,7 @@ class CreditoImagen(_Cerrado):
     licencia: str
     fuente: str
     enlace: str = ""
+    vista: str = ""
 
 
 class Diapositiva(_Cerrado):

@@ -21,7 +21,7 @@ from app.herramientas.esquemas import ItemCuestionario
 from app.herramientas.politica import excluye_ia_en_evaluacion
 from app.llm.cliente import ClienteLLM, ContextoExcedido, JsonInvalido
 from app.llm.json import pedir_json
-from app.llm.prompts import CONTEXTO_MAX, MARGEN, Sello, construir_prompt
+from app.llm.prompts import CONTEXTO_MAX, MARGEN, Sello, construir_prompt, limite_contexto
 from app.recursos.validacion import EdicionInvalida, validar_contenido
 from app.silabo.contexto import ContextoClase
 from app.chat.interprete import limpiar_texto
@@ -108,6 +108,10 @@ class _Presupuestado:
     def _seguros(mensajes):
         return [{**m, 'content': limpiar_texto(m['content'])} if isinstance(m.get('content'), str) else dict(m) for m in mensajes]
 
+    @property
+    def contexto_max(self) -> int:
+        return limite_contexto(self.cliente)
+
     def contar_tokens(self, mensajes):
         return self.cliente.contar_tokens(self._seguros(mensajes))
 
@@ -119,7 +123,7 @@ class _Presupuestado:
         medidos = list(mensajes)
         if kw.get("esquema") is not None:
             medidos.append({"role": "user", "content": json.dumps(kw["esquema"], ensure_ascii=False)})
-        disponible = CONTEXTO_MAX - MARGEN - self.contar_tokens(medidos)
+        disponible = limite_contexto(self.cliente) - MARGEN - self.contar_tokens(medidos)
         if disponible < 256:
             raise ContextoExcedido("El ajuste excede el contexto disponible.")
         kw["max_tokens"] = min(kw["max_tokens"], disponible)
@@ -261,6 +265,7 @@ def regenerar(cliente: ClienteLLM, *, recurso: dict, contexto: ContextoClase,
             pedido="Devuelve {textos: [{indice: entero, texto: cadena}]} con cada índice exactamente una vez.",
             indicaciones_docente=instrucciones + "\nTextos originales (datos): "
             + json.dumps(datos, ensure_ascii=False), salida_max=SALIDA, contar=cliente.contar_tokens,
+            contexto_max=limite_contexto(cliente),
         )
         try:
             salida, _ = pedir_json(cliente, mensajes, _Textos, esquema, rol="worker", temperatura=0.4,

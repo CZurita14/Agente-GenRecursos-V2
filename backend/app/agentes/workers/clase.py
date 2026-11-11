@@ -66,7 +66,10 @@ def _buscador_configurado():
     config = ajustes()
     if not config.imagenes_activas:
         return None
-    buscar = crear_buscador(pexels_clave=config.pexels_api_key.get_secret_value() if config.pexels_api_key else None,
+    def secreto(valor):
+        return valor.get_secret_value() if valor else None
+    buscar = crear_buscador(pexels_clave=secreto(config.pexels_api_key),
+                            unsplash_clave=secreto(config.unsplash_access_key),
                             verificar=contexto_tls(config.llm_tls_estricto))
 
     def guardar_imagen(imagen) -> None:

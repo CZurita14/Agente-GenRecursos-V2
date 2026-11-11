@@ -1,4 +1,4 @@
-"""Imágenes de las diapositivas: Pexels, respaldo en Openverse, guardado por hash y exportación."""
+"""Imágenes de las diapositivas: Unsplash, Pexels, Wikimedia, respaldo en Openverse, guardado por hash y exportación."""
 import io
 import json
 from uuid import uuid4
@@ -22,10 +22,27 @@ def _png(color=(58, 20, 103), tam=(64, 40)) -> bytes:
 PNG = _png()
 
 
-def _transporte(pexels=True, openverse=True, tipo="image/png", datos=PNG, llamadas=None):
+def _transporte(pexels=True, openverse=True, tipo="image/png", datos=PNG, llamadas=None, unsplash=True,
+                wikimedia=False, licencia_wikimedia="CC BY-SA 4.0"):
     def manejar(r: httpx.Request):
         if llamadas is not None:
             llamadas.append(str(r.url))
+        if r.url.host == "api.unsplash.com":
+            if r.url.path.endswith("/download"):
+                return httpx.Response(200, json={"url": "registrado"})
+            assert r.headers["Authorization"] == "Client-ID clave-unsplash"
+            fotos = [{"id": "foto1", "urls": {"regular": f"https://images.unsplash.com/photo-1?ixid={len(llamadas or [])}"},
+                      "links": {"download_location": "https://api.unsplash.com/photos/1/download"},
+                      "user": {"name": "Eva", "links": {"html": "https://unsplash.com/@eva"}}}]
+            return httpx.Response(200, json={"results": fotos if unsplash else []})
+        if r.url.host == "commons.wikimedia.org":
+            assert "Etiquette" in r.headers["User-Agent"]
+            pags = {"1": {"index": 1, "title": "File:Diagrama.png", "imageinfo": [{
+                "mime": "image/png", "thumburl": "https://upload.wikimedia.test/d.png",
+                "descriptionurl": "https://commons.wikimedia.org/wiki/File:Diagrama.png",
+                "extmetadata": {"LicenseShortName": {"value": licencia_wikimedia},
+                                "Artist": {"value": '<a href="//x">Rosa &amp; Co</a>'}}}]}}
+            return httpx.Response(200, json={"query": {"pages": pags}} if wikimedia else {})
         if r.url.host == "api.pexels.com":
             assert r.headers["Authorization"] == "clave-pexels"
             fotos = [{"src": {"large": "https://images.pexels.test/1.png"}, "photographer": "Ana", "url": "https://pexels.test/1"}]
@@ -129,3 +146,40 @@ def test_agotado_el_presupuesto_no_busca_mas(monkeypatch, silabo):
     monkeypatch.setattr(clase, "BUSCADOR", lambda: (lambda q, u: llamadas.append(q), lambda i: None))
     clase.con_imagenes(_presentacion(silabo), None)
     assert llamadas == []
+
+
+def test_unsplash_primero_registra_el_uso_y_da_credito():
+    llamadas = []
+    imagen = crear_buscador(unsplash_clave="clave-unsplash", pexels_clave="clave-pexels",
+                            transporte=_transporte(llamadas=llamadas))("code", set())
+    assert (imagen.fuente, imagen.autor, imagen.licencia) == ("Unsplash", "Eva", "Licencia Unsplash")
+    assert imagen.vista.startswith("https://images.unsplash.com/") and "utm_source=" in imagen.enlace
+    assert any(u.endswith("/photos/1/download") for u in llamadas)  # Exigido por Unsplash.
+    assert not any("pexels" in u or "wikimedia" in u for u in llamadas)
+
+
+def test_sin_unsplash_usa_wikimedia_con_licencia_libre():
+    imagen = crear_buscador(unsplash_clave="clave-unsplash", transporte=_transporte(unsplash=False, wikimedia=True))(
+        "flowchart", set())
+    assert (imagen.fuente, imagen.autor, imagen.licencia) == ("Wikimedia Commons", "Rosa & Co", "CC BY-SA 4.0")
+    assert imagen.vista == "" and imagen.enlace.endswith("File:Diagrama.png")
+
+
+def test_wikimedia_descarta_licencias_no_libres():
+    for licencia in ("CC BY-NC 2.0", "Fair use", "All rights reserved"):
+        imagen = crear_buscador(transporte=_transporte(wikimedia=True, licencia_wikimedia=licencia))("x", set())
+        assert imagen.fuente == "Openverse", licencia
+
+
+def test_la_vista_web_solo_usa_el_cdn_de_unsplash():
+    from app.exportar.presentacion import _imagen
+    base = Imagen(PNG, "image/png", "Eva", "Licencia Unsplash", "Unsplash", "", "https://images.unsplash.com/p").credito()
+    assert _imagen(base)[0]["vista"] == "https://images.unsplash.com/p"
+    assert "vista" not in _imagen({**base, "vista": "https://malicioso.test/x.png"})[0]
+
+
+def test_unsplash_no_repite_la_misma_foto_aunque_cambie_la_url():
+    usadas, llamadas = set(), []
+    buscar = crear_buscador(unsplash_clave="clave-unsplash", transporte=_transporte(llamadas=llamadas))
+    assert buscar("aula", usadas).fuente == "Unsplash"
+    assert buscar("aula", usadas).fuente != "Unsplash"

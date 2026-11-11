@@ -143,6 +143,7 @@ def construir_prompt(
     indicaciones_docente: str = "",
     salida_max: int,
     contar: Callable[[list[dict]], int],
+    contexto_max: int = CONTEXTO_MAX,
 ) -> list[dict]:
     """Devuelve `[system, user]`; recorta si no cabe y falla si ni así.
 
@@ -187,7 +188,7 @@ def construir_prompt(
 
     def cabe(k: int, n: int) -> tuple[bool, list[dict]]:
         msgs = armar(k, n)
-        return contar(msgs) + salida_max + MARGEN <= CONTEXTO_MAX, msgs
+        return contar(msgs) + salida_max + MARGEN <= contexto_max, msgs
 
     ok, msgs = cabe(len(ya), total_rubrica)
     if ok:
@@ -215,3 +216,8 @@ def construir_prompt(
     if r is None:
         raise ContextoExcedido(f"la clase {sello.clase_id} no cabe en el contexto del modelo")
     return r[1]
+
+
+def limite_contexto(cliente) -> int:
+    """Ventana del cliente (DeepSeek: 1M); los dobles de prueba sin el atributo usan la del vLLM local."""
+    return getattr(cliente, "contexto_max", CONTEXTO_MAX)

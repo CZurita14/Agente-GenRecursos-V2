@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from app.agentes.mensajes import EntregaLote, TareaLote
 from app.llm.cliente import ClienteLLM
 from app.llm.json import pedir_json
-from app.llm.prompts import Sello, construir_prompt
+from app.llm.prompts import Sello, construir_prompt, limite_contexto
 
 SALIDA_WORKER = 3500  # tokens máximos de salida por lote (spec §5.3)
 TEMPERATURA_WORKER = 0.4  # spec §5.2
@@ -50,7 +50,7 @@ def pedir(tarea: TareaLote, cliente: ClienteLLM, *, instrucciones: str, pedido: 
         sello=sello_de(tarea), instrucciones=instrucciones, contexto=tarea.contexto,
         estilo=tarea.estilo, ya_generado=tarea.ya_generado, pedido=pedido,
         indicaciones_docente=tarea.instrucciones,
-        salida_max=SALIDA_WORKER, contar=cliente.contar_tokens,
+        salida_max=SALIDA_WORKER, contar=cliente.contar_tokens, contexto_max=limite_contexto(cliente),
     )
     salida, respuesta = pedir_json(
         cliente, mensajes, modelo, esquema, rol="worker", temperatura=TEMPERATURA_WORKER,

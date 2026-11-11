@@ -13,7 +13,7 @@ from app.config import ajustes
 from app.herramientas.esquemas import ItemCuestionario
 from app.llm.cliente import ClienteLLM
 from app.llm.json import ultimo_json
-from app.llm.prompts import Sello, construir_prompt
+from app.llm.prompts import Sello, construir_prompt, limite_contexto
 from app.silabo.contexto import ContextoClase
 
 # El prompt reserva 3 500 tokens (tope del constructor); el razonamiento necesita más,
@@ -103,6 +103,7 @@ def _consultar(cliente: ClienteLLM, contexto: ContextoClase, pedido: str, modelo
         sello=Sello(codigo_pf=contexto.codigo_pf, clase_id=contexto.clase_id, fecha=contexto.fecha),
         instrucciones=INSTRUCCIONES, contexto=contexto, estilo=_SIN_ESTILO, ya_generado=[],
         pedido=pedido, salida_max=SALIDA_PROMPT, contar=cliente.contar_tokens,
+        contexto_max=limite_contexto(cliente),
     )
     timeout = timeout_s if timeout_s is not None else ajustes().llm_timeout_revisor_s
     for _ in range(INTENTOS):

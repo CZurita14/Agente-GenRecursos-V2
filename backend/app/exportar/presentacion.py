@@ -278,7 +278,10 @@ def credito_imagen(i: dict) -> str:
 def _imagen(i: dict | None) -> list[dict]:
     if not i or not i.get("hash"):
         return []
-    return [{"tipo": "imagen", "titulo": "", "hash": i["hash"], "credito": credito_imagen(i)}]
+    bloque = {"tipo": "imagen", "titulo": "", "hash": i["hash"], "credito": credito_imagen(i)}
+    if str(i.get("vista", "")).startswith("https://images.unsplash.com/"):
+        bloque["vista"] = i["vista"]  # Unsplash exige mostrar su foto desde su CDN.
+    return [bloque]
 
 
 def _diapositivas(c: dict) -> list[dict]:

@@ -112,6 +112,11 @@ class ClienteVLLM:
         self._sdk = openai.OpenAI(base_url=base_url, api_key=api_key, timeout=timeout_s,
                                   max_retries=0, http_client=self._http)
 
+    @property
+    def contexto_max(self) -> int:
+        """Ventana del modelo: 1M en DeepSeek, 8192 en el vLLM local."""
+        return CONTEXTO_DEEPSEEK if self._proveedor == "deepseek" else CONTEXTO_MAXIMO
+
     def contar_tokens(self, mensajes: list[dict]) -> int:
         if self._proveedor == "deepseek":
             # DeepSeek no expone /tokenize: estimación conservadora para español (≈3 caracteres por token).
