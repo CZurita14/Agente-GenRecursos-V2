@@ -233,15 +233,17 @@ export function Recurso({ aid, rid, puedeValidar, onVolver, onSesionVencida, onT
     <Card title="Paso 5 · Valida y descarga para Canvas" icon={<ShieldCheck aria-hidden="true" />}>
       {editando ? <p className="text-sm text-muted">Guarda o cancela la edición antes de validar.</p> : r.validado ? <div className="space-y-3">
         <Alert tone="success">Validado por {r.validado_por}. Ya puedes descargarlo y subirlo a Canvas.</Alert>
-        <a href={urlExportar(aid, r.id)} download
+        {/* Las diapositivas se descargan primero en PowerPoint; el resto, en HTML institucional para Canvas. */}
+        <a href={urlExportar(aid, r.id, r.herramienta === 'presentacion' ? 'pptx' : 'html')} download
           className="inline-flex items-center gap-2 rounded-lg bg-action hover:bg-action-hover text-white px-4 py-2 font-medium">
-          <Download aria-hidden="true" className="w-4 h-4" />Descargar HTML para Canvas
+          <Download aria-hidden="true" className="w-4 h-4" />
+          {r.herramienta === 'presentacion' ? 'Descargar PowerPoint (.pptx)' : 'Descargar HTML para Canvas'}
         </a>
         <div className="flex flex-wrap gap-3">
+          {r.herramienta === 'presentacion' &&
+            <a href={urlExportar(aid, r.id)} download className="text-action underline">Descargar HTML para Canvas</a>}
           <a href={urlExportar(aid, r.id, 'pdf')} download className="text-action underline">Descargar PDF</a>
           <a href={urlExportar(aid, r.id, 'docx')} download className="text-action underline">Descargar Word</a>
-          {r.herramienta === 'presentacion' &&
-            <a href={urlExportar(aid, r.id, 'pptx')} download className="text-action underline">Descargar PowerPoint</a>}
         </div>
         {CON_RESPUESTAS.has(r.herramienta) && puedeValidar && <div className="rounded-lg border border-line p-3 space-y-2">
           <p className="text-sm"><strong>Solo para el docente.</strong> Las descargas de arriba son para el estudiante y no llevan respuestas. Estas sí: no las compartas.</p>
@@ -252,7 +254,9 @@ export function Recurso({ aid, rid, puedeValidar, onVolver, onSesionVencida, onT
         </div>}
       </div> : !puedeValidar ? <p className="text-sm text-muted">Un editor o el dueño del Proyecto Formativo debe validarlo antes de descargarlo.</p>
         : <div className="space-y-3">
-          <p className="text-sm text-muted">La descarga se habilita cuando validas el recurso: confirma que lo revisaste.</p>
+          <p className="text-sm text-muted">{r.herramienta === 'presentacion'
+            ? 'La descarga en PowerPoint (.pptx) se habilita cuando validas la presentación: confirma que la revisaste.'
+            : 'La descarga se habilita cuando validas el recurso: confirma que lo revisaste.'}</p>
           <Button onClick={() => cantidad > 0 ? setConfirmar(true) : validarRecurso()} loading={validando}>Validar recurso</Button>
         </div>}
     </Card>

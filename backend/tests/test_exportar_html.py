@@ -55,7 +55,7 @@ def test_html_secciones(silabo):
     assert "<ol><li>P1</li></ol>" in html
     hoja = generar_sin_ia("hoja_ruta", silabo, "asignatura")
     html = exportar_html(_recurso("hoja_ruta", hoja, "asignatura"), contexto_por_id(silabo, "asignatura"))
-    assert "Calendario de clases" in html and "<table>" in html and "numero_clase" not in html.lower() and silabo.problema.producto_final[:30] in html
+    assert "Calendario de clases" in html and "<table style=\"border-collapse: collapse;" in html and "numero_clase" not in html.lower() and silabo.problema.producto_final[:30] in html
 
 
 def _producir_validado(entorno):
@@ -92,7 +92,7 @@ def test_formato_no_soportado_422(entorno):
 def test_autoevaluacion_interactiva(silabo):
     c = generar_sin_ia("autoevaluacion_rubrica", silabo, "M2")
     html = exportar_html(_recurso("autoevaluacion_rubrica", c, "M2"), contexto_por_id(silabo, "M2"))
-    assert html.count("<fieldset data-autoev>") == len(c["indicadores"])
+    assert html.count(" data-autoev>") == len(c["indicadores"])
     assert 'type="radio"' in html and "data-subir=" in html and "data-resumen" in html
     # El descriptor del siguiente nivel viaja escapado para mostrarlo al marcar.
     f = c["indicadores"][0]
@@ -163,7 +163,7 @@ def test_rubrica_es_la_del_silabo(silabo, herramienta, ambito):
     assert [f["indicador"] for f in c["indicadores"]] == [f.indicador for f in fuente]
     assert all(f["descriptores"]["resolutivo"] == g.niveles.get("resolutivo", "") for f, g in zip(c["indicadores"], fuente))
     html = exportar_html(_recurso(herramienta, c, ambito), contexto_por_id(silabo, ambito))
-    assert "<table>" in html and "Resolutivo" in html and "data-imprimir" in html
+    assert "<table style=\"border-collapse: collapse;" in html and "Resolutivo" in html and "data-imprimir" in html
 
 
 def test_generar_no_duplica_lo_que_esta_en_curso(entorno):
@@ -204,3 +204,18 @@ def test_cabecera_no_se_rompe_al_normalizar():
 
 def test_archivo_del_docente_se_distingue():
     assert nombre_archivo("cuestionario", "M1-S1", "DATOS", "pdf", docente=True) == "Respuestas - Cuestionario - Momento 1, sesión 1 - Datos.pdf"
+
+
+def test_html_usa_la_plantilla_institucional(silabo):
+    """Tabla institucional con estilos en línea (Canvas quita <style>), sus filas y el botón al inicio del curso."""
+    ctx = contexto_clase(silabo, "M2-S1")
+    html = exportar_html(_recurso("cuestionario", [_item(1)]), ctx)
+    assert "linear-gradient(135deg, #3A1467 0%, #230C3E 100%)" in html and "border-bottom: 5px solid #F37121" in html
+    filas = ["RESULTADO DE APRENDIZAJE RELACIONADO", "¿Para qué realizas esta actividad?",
+             "Caso, problema o reto del territorio", "Instrucciones", "Cuestionario", "Recurso que debes utilizar",
+             "Evidencia o producto", "Evaluación", "Condiciones de entrega"]
+    cuerpo = html.split("<main>")[1]
+    posiciones = [cuerpo.index(f"color: #3a1467;\">{f}</span>") for f in filas]
+    assert posiciones == sorted(posiciones)
+    assert 'href="../pages/inicio">Inicio del curso</a>' in html and "Rúbrica de evaluación Acceder" in html
+    assert ctx.problema.reto[:30] in html
