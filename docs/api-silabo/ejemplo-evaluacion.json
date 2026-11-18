@@ -1,0 +1,782 @@
+{
+  "formato": "1.0",
+  "instrumento": "UTI 23/10/2026",
+  "silabo": {
+    "codigo": "B26-TINF-3-50001-0001",
+    "version": "1.0"
+  },
+  "revision": {
+    "etapa": "inicio",
+    "fecha": "2026-11-18"
+  },
+  "puntos": [
+    {
+      "codigo": "I.1",
+      "valor": 3,
+      "fuente": "evaluador",
+      "justificacion": "",
+      "sugerencia": "Se valora fuera del sistema: la API no envía este apartado.",
+      "pendiente": false
+    },
+    {
+      "codigo": "II.1",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.1",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.2",
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.3",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.4",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.5",
+      "valor": 5,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.6",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.7",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.8",
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.9",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "El PF no prevé propuestas de valor; se trabaja en el PIS del nivel siguiente.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.10",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.11",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.12",
+      "ra": "RA1",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.12",
+      "ra": "RA2",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.12",
+      "ra": "RA3",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "RA no declarado en el sílabo.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.12",
+      "ra": "RA4",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "RA no declarado en el sílabo.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.13",
+      "ra": "RA1",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.13",
+      "ra": "RA2",
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.13",
+      "ra": "RA3",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "RA no declarado en el sílabo.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.13",
+      "ra": "RA4",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "RA no declarado en el sílabo.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.14",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.15",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.16",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.17",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.18",
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.19",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.20",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.21",
+      "valor": 5,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.22",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.23",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "Metodología no seleccionada por el docente.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.24",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "Metodología no seleccionada por el docente.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.25",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "Metodología no seleccionada por el docente.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.26",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.27",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "Metodología no seleccionada por el docente.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.28",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "Metodología no seleccionada por el docente.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "III.29",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "Metodología no seleccionada por el docente.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.1",
+      "momento": 1,
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.1",
+      "momento": 2,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.2",
+      "momento": 1,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.2",
+      "momento": 2,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.3",
+      "momento": 1,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.3",
+      "momento": 2,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.4",
+      "momento": 1,
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.4",
+      "momento": 2,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.5",
+      "momento": 1,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.5",
+      "momento": 2,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.6",
+      "momento": 1,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.6",
+      "momento": 2,
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.7",
+      "momento": 1,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.7",
+      "momento": 2,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.8",
+      "momento": 1,
+      "valor": 5,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.8",
+      "momento": 2,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.9",
+      "momento": 1,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.9",
+      "momento": 2,
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.10",
+      "momento": 1,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.10",
+      "momento": 2,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.11",
+      "momento": 1,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.11",
+      "momento": 2,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.12",
+      "momento": 1,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.12",
+      "momento": 2,
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.13",
+      "momento": 1,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.13",
+      "momento": 2,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.14",
+      "momento": 1,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.14",
+      "momento": 2,
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.15",
+      "momento": 1,
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "IV.15",
+      "momento": 2,
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.1",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.2",
+      "valor": 5,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.3",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.4",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.5",
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.6",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.7",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.8",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.9",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.10",
+      "valor": 4,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.11",
+      "valor": 2,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "Precisar el componente con criterios verificables.",
+      "pendiente": false
+    },
+    {
+      "codigo": "V.12",
+      "valor": "NA",
+      "fuente": "automatica",
+      "justificacion": "El PF no forma parte de una microcredencial.",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "VI.1",
+      "valor": 3,
+      "fuente": "ia",
+      "justificacion": "",
+      "sugerencia": "",
+      "pendiente": false
+    },
+    {
+      "codigo": "VII.1",
+      "valor": 3,
+      "fuente": "evaluador",
+      "justificacion": "",
+      "sugerencia": "Se valora fuera del sistema: la API no envía este apartado.",
+      "pendiente": false
+    }
+  ],
+  "apartados": {
+    "I": {
+      "peso": 5,
+      "puntos": 3,
+      "maximo": 5,
+      "aplicables": 1,
+      "na": 0,
+      "nd": 0,
+      "por_valorar": 0,
+      "pendientes": 0,
+      "resultado": 3.0
+    },
+    "II": {
+      "peso": 5,
+      "puntos": 4,
+      "maximo": 5,
+      "aplicables": 1,
+      "na": 0,
+      "nd": 0,
+      "por_valorar": 0,
+      "pendientes": 0,
+      "resultado": 4.0
+    },
+    "III": {
+      "peso": 20,
+      "puntos": 79,
+      "maximo": 120,
+      "aplicables": 24,
+      "na": 11,
+      "nd": 0,
+      "por_valorar": 0,
+      "pendientes": 0,
+      "resultado": 13.17
+    },
+    "IV": {
+      "peso": 30,
+      "puntos": 95,
+      "maximo": 150,
+      "aplicables": 30,
+      "na": 0,
+      "nd": 0,
+      "por_valorar": 0,
+      "pendientes": 0,
+      "resultado": 19.0
+    },
+    "V": {
+      "peso": 30,
+      "puntos": 36,
+      "maximo": 55,
+      "aplicables": 11,
+      "na": 1,
+      "nd": 0,
+      "por_valorar": 0,
+      "pendientes": 0,
+      "resultado": 19.64
+    },
+    "VI": {
+      "peso": 5,
+      "puntos": 3,
+      "maximo": 5,
+      "aplicables": 1,
+      "na": 0,
+      "nd": 0,
+      "por_valorar": 0,
+      "pendientes": 0,
+      "resultado": 3.0
+    },
+    "VII": {
+      "peso": 5,
+      "puntos": 3,
+      "maximo": 5,
+      "aplicables": 1,
+      "na": 0,
+      "nd": 0,
+      "por_valorar": 0,
+      "pendientes": 0,
+      "resultado": 3.0
+    }
+  },
+  "total": 64.81,
+  "completa": true,
+  "sugerencias_generales": "Ejemplo ilustrativo: los niveles no corresponden a una revisión real."
+}

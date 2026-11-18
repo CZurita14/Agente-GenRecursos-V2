@@ -106,6 +106,8 @@ def test_arbol_esquema_es_el_del_archivo():
     ("[12345] A99-AAAA-9-99999-9999 PARALELO 1".replace("A99-AAAA-9-99999-9999", "B26-SOFT-3-56146-1727"),
      ("12345", "B26-SOFT-3-56146-1727", "1")),
     ("[7] S91-SIMU-3-90001-9001 PARALELO 12", ("7", "S91-SIMU-3-90001-9001", "12")),
+    ("[8] B26-ENF-1-50001-0001 PARALELO 2", ("8", "B26-ENF-1-50001-0001", "2")),            # sigla de 3 letras
+    ("[9] B26-M-CIBER-1-50002-0002 PARALELO 1", ("9", "B26-M-CIBER-1-50002-0002", "1")),    # posgrado, con prefijo
 ])
 def test_separar_codigo(texto, esperado):
     assert separar_codigo(texto) == esperado

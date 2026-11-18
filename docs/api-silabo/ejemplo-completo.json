@@ -1,0 +1,221 @@
+{
+  "facultad": "Facultad de Ingenierías",
+  "carrera": "Tecnologías de la Información",
+  "periodo": {
+    "codigo": "B26",
+    "inicio": "2026-09-28",
+    "fin": "2027-02-14"
+  },
+  "proyecto_formativo": {
+    "codigo": "B26-TINF-3-50001-0001",
+    "nombre": "Bases de datos relacionales",
+    "version": "1.0",
+    "aprobado": "2026-09-01",
+    "nivel": 3,
+    "uoc": "PROFESIONAL",
+    "modalidad": "PRESENCIAL",
+    "creditos": 3,
+    "horas": {
+      "total": 144,
+      "contacto": 48,
+      "autonomo": 64,
+      "practico": 32
+    },
+    "horario": [
+      {
+        "dia": "martes",
+        "inicio": "07:00",
+        "fin": "09:00"
+      },
+      {
+        "dia": "jueves",
+        "inicio": "07:00",
+        "fin": "08:00"
+      }
+    ]
+  },
+  "competencia_perfil": "Diseña soluciones de información que responden a necesidades de organizaciones del territorio.",
+  "resultados_aprendizaje": [
+    {
+      "id": "RA1",
+      "texto": "Modela datos de un caso real con el modelo entidad-relación.",
+      "evidencia": "Diagrama entidad-relación validado"
+    },
+    {
+      "id": "RA2",
+      "texto": "Implementa la base de datos y sus consultas en un gestor relacional.",
+      "evidencia": "Base de datos con consultas documentadas"
+    }
+  ],
+  "problema": {
+    "descripcion": "Las organizaciones comunitarias registran sus datos en hojas sueltas y los pierden.",
+    "reto": "Diseñar una base de datos que conserve y relacione esos registros.",
+    "producto_final": "Base de datos normalizada con consultas documentadas"
+  },
+  "momentos": [
+    {
+      "numero": 1,
+      "titulo": "Modelado conceptual",
+      "fecha_inicio": "2026-09-28",
+      "fecha_fin": "2026-10-25",
+      "ra": [
+        "RA1"
+      ],
+      "evidencia": "Diagrama entidad-relación del caso",
+      "politica_ia": "Se permite IA para revisar la redacción, no para generar el diagrama.",
+      "rubrica": [
+        {
+          "indicador": "Identifica entidades y relaciones",
+          "niveles": {
+            "receptivo": "Nombra entidades sin relaciones.",
+            "resolutivo": "Relaciona entidades con cardinalidad correcta.",
+            "reflexivo": "Justifica cada relación con el caso.",
+            "critico": "Evalúa alternativas de modelado.",
+            "cocreativo": "Propone mejoras con la organización."
+          }
+        }
+      ],
+      "sesiones": [
+        {
+          "numero": 1,
+          "fecha": "2026-09-29",
+          "contenidos": [
+            "Entidades, atributos y relaciones"
+          ],
+          "docente": {
+            "texto": "Explica el modelo entidad-relación con un caso de inventario.",
+            "horas": 2,
+            "asincronica": {
+              "texto": "Foro: dudas sobre cardinalidad.",
+              "horas": 1
+            }
+          },
+          "practico": {
+            "texto": "Modelan en parejas el registro de socios de una cooperativa. PAE 1.",
+            "horas": 1
+          },
+          "autonomo": {
+            "texto": "Leen el capítulo de modelado y resuelven la TAREA 1.",
+            "horas": 2
+          }
+        },
+        {
+          "numero": 2,
+          "fecha": "2026-10-01",
+          "contenidos": [
+            "Cardinalidad y participación",
+            "Atributos clave"
+          ],
+          "docente": {
+            "texto": "Analiza errores frecuentes de cardinalidad.",
+            "horas": 1,
+            "asincronica": null
+          },
+          "practico": {
+            "texto": "",
+            "horas": 0
+          },
+          "autonomo": {
+            "texto": "Corrigen el borrador del diagrama.",
+            "horas": 2
+          }
+        },
+        {
+          "numero": 3,
+          "fecha": null,
+          "contenidos": [],
+          "docente": {
+            "texto": "Tutoría de recuperación, sin fecha programada.",
+            "horas": 1,
+            "asincronica": null
+          },
+          "practico": {
+            "texto": "",
+            "horas": 0
+          },
+          "autonomo": {
+            "texto": "",
+            "horas": 0
+          }
+        }
+      ],
+      "recursos": "Laboratorio de computación, gestor de bases de datos, aula virtual."
+    },
+    {
+      "numero": 2,
+      "titulo": "Implementación y consultas",
+      "fecha_inicio": "2026-10-26",
+      "fecha_fin": "2026-11-22",
+      "ra": [
+        "RA2"
+      ],
+      "evidencia": "Base de datos implementada con diez consultas",
+      "politica_ia": "Se permite IA para explicar errores de sintaxis, citando su uso.",
+      "recursos": "Gestor de bases de datos.",
+      "rubrica": [
+        {
+          "indicador": "Implementa tablas y restricciones",
+          "niveles": {
+            "receptivo": "Crea tablas sin claves.",
+            "resolutivo": "Crea tablas con claves primarias y foráneas.",
+            "reflexivo": "Explica cada restricción.",
+            "critico": "Evalúa el efecto de las restricciones.",
+            "cocreativo": "Ajusta el diseño con los usuarios."
+          }
+        }
+      ],
+      "sesiones": [
+        {
+          "numero": 4,
+          "fecha": "2026-10-27",
+          "contenidos": [
+            "Lenguaje de definición de datos"
+          ],
+          "docente": {
+            "texto": "Demuestra la creación de tablas y restricciones.",
+            "horas": 2,
+            "asincronica": null
+          },
+          "practico": {
+            "texto": "Implementan el modelo del momento 1.",
+            "horas": 1
+          },
+          "autonomo": {
+            "texto": "Preparan la EVALUACIÓN COGNITIVA 1.",
+            "horas": 2
+          }
+        }
+      ]
+    }
+  ],
+  "competencia_pf": "Implementa bases de datos relacionales que resuelven necesidades de información de una organización.",
+  "metacompetencia": "Trabaja de forma colaborativa y ética con datos de terceros.",
+  "pis": {
+    "nombre": "Sistema de información para una cooperativa del territorio",
+    "aporte": "Aporta el modelo y la base de datos del sistema."
+  },
+  "metodologias": [
+    "Aprendizaje basado en proyectos",
+    "Estudio de casos"
+  ],
+  "rubrica_producto_final": [
+    {
+      "indicador": "Normalización de la base de datos",
+      "niveles": {
+        "receptivo": "Tablas sin normalizar.",
+        "resolutivo": "Tablas en tercera forma normal.",
+        "reflexivo": "Explica las decisiones de normalización.",
+        "critico": "Evalúa el costo de desnormalizar.",
+        "cocreativo": "Ajusta el diseño con los usuarios."
+      }
+    }
+  ],
+  "bibliografia": {
+    "basica": [
+      "Autor, A. (2020). Fundamentos de bases de datos. Editorial."
+    ],
+    "complementaria": [
+      "Autor, B. (2022). Diseño de bases de datos relacionales. Editorial."
+    ]
+  }
+}

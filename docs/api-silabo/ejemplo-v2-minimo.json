@@ -1,0 +1,172 @@
+{
+  "contrato": "2.0",
+  "facultad": "Facultad de Ingenierías",
+  "carrera": "Tecnologías de la Información",
+  "periodo": {
+    "codigo": "B26",
+    "inicio": "2026-09-28",
+    "fin": "2027-02-14"
+  },
+  "proyecto_formativo": {
+    "codigo": "B26-TINF-3-50001-0001",
+    "nombre": "Bases de datos relacionales",
+    "version": "1.0",
+    "aprobado": "2026-09-01",
+    "nivel": 3,
+    "uoc": "",
+    "modalidad": "",
+    "formacion": "",
+    "creditos": null,
+    "horas": null,
+    "horario": [],
+    "prerrequisitos": [],
+    "correquisitos": []
+  },
+  "competencia_perfil": "Diseña soluciones de información que responden a necesidades de organizaciones del territorio.",
+  "competencia_pf": "",
+  "metacompetencia": "",
+  "habilidades_blandas": [],
+  "ejes_transversales": {
+    "sostenibilidad_ods": {
+      "aplica": false,
+      "descripcion": "",
+      "justificacion_na": "No pertinente al PF.",
+      "ods": []
+    },
+    "interculturalidad": {
+      "aplica": false,
+      "descripcion": "",
+      "justificacion_na": "No pertinente al PF."
+    },
+    "internacionalizacion": {
+      "aplica": false,
+      "descripcion": "",
+      "justificacion_na": "No pertinente al PF.",
+      "tipo": null,
+      "actores": "",
+      "actividad": "",
+      "producto": ""
+    },
+    "interdisciplinariedad": {
+      "aplica": false,
+      "descripcion": "",
+      "justificacion_na": "No pertinente al PF.",
+      "disciplinas": []
+    },
+    "emprendimiento": {
+      "aplica": false,
+      "descripcion": "",
+      "justificacion_na": "No pertinente al PF."
+    },
+    "educacion_financiera": {
+      "aplica": false,
+      "descripcion": "",
+      "justificacion_na": "No pertinente al PF."
+    }
+  },
+  "inclusion": {
+    "barreras": "",
+    "apoyos": ""
+  },
+  "contribucion_perfil": "",
+  "resultados_aprendizaje": [
+    {
+      "id": "RA1",
+      "texto": "Modela datos de un caso real con el modelo entidad-relación.",
+      "evidencia": ""
+    }
+  ],
+  "problema": {
+    "descripcion": "Las organizaciones comunitarias registran sus datos en hojas sueltas y los pierden.",
+    "reto": "Diseñar una base de datos que conserve y relacione esos registros.",
+    "producto_final": "Base de datos normalizada con consultas documentadas"
+  },
+  "pis": {
+    "aplica": false,
+    "nombre": "",
+    "descripcion": "",
+    "aporte": "",
+    "justificacion_na": "El PF no forma parte de un PIS."
+  },
+  "metodologias": {
+    "clase_invertida": {
+      "antes": "",
+      "durante": "",
+      "despues": ""
+    },
+    "complementarias": []
+  },
+  "momentos": [
+    {
+      "numero": 1,
+      "titulo": "Modelado conceptual",
+      "fecha_inicio": "2026-09-28",
+      "fecha_fin": "2026-10-25",
+      "ra": [
+        "RA1"
+      ],
+      "evidencia": "",
+      "politica_ia": "",
+      "rubrica": [],
+      "sesiones": [
+        {
+          "numero": 1,
+          "fecha": "2026-09-29",
+          "contenidos": [
+            "Entidades, atributos y relaciones"
+          ],
+          "docente": {
+            "texto": "Explica el modelo entidad-relación con un caso de inventario.",
+            "horas": 2,
+            "asincronica": {
+              "texto": "Foro: dudas sobre cardinalidad.",
+              "horas": 1
+            }
+          },
+          "practico": {
+            "texto": "Modelan en parejas el registro de socios de una cooperativa. PAE 1.",
+            "horas": 1
+          },
+          "autonomo": {
+            "texto": "Leen el capítulo de modelado y resuelven la TAREA 1.",
+            "horas": 2
+          }
+        }
+      ],
+      "recursos": ""
+    }
+  ],
+  "rubrica_producto_final": [],
+  "evaluacion": {
+    "proceso": {
+      "inicial": "",
+      "seguimiento": "",
+      "final": ""
+    },
+    "agentes": {
+      "autoevaluacion": "",
+      "coevaluacion": "",
+      "heteroevaluacion": ""
+    },
+    "retroalimentacion": "",
+    "metacompetencia": "",
+    "gobernanza_ia": "",
+    "calificacion": {
+      "componentes": [],
+      "reglas": ""
+    },
+    "mejora": "",
+    "credencial": {
+      "aplica": false,
+      "nombre": "",
+      "desempeno": "",
+      "evidencias": "",
+      "criterios": "",
+      "justificacion_na": "El PF no forma parte de una microcredencial."
+    }
+  },
+  "bibliografia": {
+    "basica": [],
+    "complementaria": []
+  }
+}

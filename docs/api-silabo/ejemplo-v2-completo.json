@@ -1,0 +1,350 @@
+{
+  "contrato": "2.0",
+  "facultad": "Facultad de Ingenierías",
+  "carrera": "Tecnologías de la Información",
+  "periodo": {
+    "codigo": "B26",
+    "inicio": "2026-09-28",
+    "fin": "2027-02-14"
+  },
+  "proyecto_formativo": {
+    "codigo": "B26-TINF-3-50001-0001",
+    "nombre": "Bases de datos relacionales",
+    "version": "1.0",
+    "aprobado": "2026-09-01",
+    "nivel": 3,
+    "uoc": "PROFESIONAL",
+    "modalidad": "PRESENCIAL",
+    "creditos": 3,
+    "horas": {
+      "total": 144,
+      "contacto": 48,
+      "autonomo": 64,
+      "practico": 32
+    },
+    "horario": [
+      {
+        "dia": "martes",
+        "inicio": "07:00",
+        "fin": "09:00"
+      },
+      {
+        "dia": "jueves",
+        "inicio": "07:00",
+        "fin": "08:00"
+      }
+    ],
+    "formacion": "Grado",
+    "prerrequisitos": [
+      "Fundamentos de programación"
+    ],
+    "correquisitos": []
+  },
+  "competencia_perfil": "Diseña soluciones de información que responden a necesidades de organizaciones del territorio.",
+  "competencia_pf": "Implementa bases de datos relacionales que resuelven necesidades de información de una organización.",
+  "metacompetencia": "Trabaja de forma colaborativa y ética con datos de terceros.",
+  "habilidades_blandas": [
+    "Trabajo colaborativo",
+    "Comunicación asertiva con usuarios",
+    "Autorregulación"
+  ],
+  "ejes_transversales": {
+    "sostenibilidad_ods": {
+      "aplica": true,
+      "ods": [
+        9,
+        11
+      ],
+      "descripcion": "La base de datos reduce la pérdida de registros de la cooperativa.",
+      "justificacion_na": ""
+    },
+    "interculturalidad": {
+      "aplica": true,
+      "descripcion": "Se recogen los términos que usan los socios para nombrar sus datos.",
+      "justificacion_na": ""
+    },
+    "internacionalizacion": {
+      "aplica": true,
+      "tipo": "clase_espejo",
+      "actores": "Docente de una universidad aliada",
+      "actividad": "Clase espejo sobre modelado de datos comunitarios",
+      "producto": "Informe comparado de modelos",
+      "descripcion": "Contraste de casos con otra universidad.",
+      "justificacion_na": ""
+    },
+    "interdisciplinariedad": {
+      "aplica": true,
+      "disciplinas": [
+        "Contabilidad",
+        "Gestión comunitaria"
+      ],
+      "descripcion": "Contabilidad define los datos financieros que se registran.",
+      "justificacion_na": ""
+    },
+    "emprendimiento": {
+      "aplica": false,
+      "descripcion": "",
+      "justificacion_na": "El PF no prevé propuestas de valor; se trabaja en el PIS del nivel siguiente."
+    },
+    "educacion_financiera": {
+      "aplica": true,
+      "descripcion": "Se estima el costo de mantener la base de datos.",
+      "justificacion_na": ""
+    }
+  },
+  "inclusion": {
+    "barreras": "Estudiantes sin computador propio.",
+    "apoyos": "Laboratorio abierto y materiales accesibles en el aula virtual."
+  },
+  "contribucion_perfil": "El PF desarrolla el diseño de soluciones de información que pide el perfil de egreso.",
+  "resultados_aprendizaje": [
+    {
+      "id": "RA1",
+      "texto": "Modela datos de un caso real con el modelo entidad-relación.",
+      "evidencia": "Diagrama entidad-relación validado"
+    },
+    {
+      "id": "RA2",
+      "texto": "Implementa la base de datos y sus consultas en un gestor relacional.",
+      "evidencia": "Base de datos con consultas documentadas"
+    }
+  ],
+  "problema": {
+    "descripcion": "Las organizaciones comunitarias registran sus datos en hojas sueltas y los pierden.",
+    "reto": "Diseñar una base de datos que conserve y relacione esos registros.",
+    "producto_final": "Base de datos normalizada con consultas documentadas"
+  },
+  "pis": {
+    "aplica": true,
+    "nombre": "Sistema de información para una cooperativa del territorio",
+    "descripcion": "Los PF del nivel construyen juntos el sistema de información de la cooperativa.",
+    "aporte": "Aporta el modelo y la base de datos del sistema. Entrega en la semana 8, coordinada con Programación web.",
+    "justificacion_na": ""
+  },
+  "metodologias": {
+    "clase_invertida": {
+      "antes": "Leen y ven un video corto antes de cada sesión.",
+      "durante": "Prueba breve de comprensión y aplicación al caso.",
+      "despues": "Reflexión escrita sobre lo que cambiarían del modelo."
+    },
+    "complementarias": [
+      {
+        "tipo": "aprendizaje_basado_problemas",
+        "nombre": "Aprendizaje basado en problemas (ABP)",
+        "justificacion": "El problema de la cooperativa guía el modelado.",
+        "aplicada_en": [
+          "M1-S1",
+          "M2-S4"
+        ]
+      },
+      {
+        "tipo": "estudio_caso",
+        "nombre": "Estudio de caso",
+        "justificacion": "El caso de inventario muestra errores típicos de cardinalidad.",
+        "aplicada_en": [
+          "M1-S2"
+        ]
+      }
+    ]
+  },
+  "momentos": [
+    {
+      "numero": 1,
+      "titulo": "Modelado conceptual",
+      "fecha_inicio": "2026-09-28",
+      "fecha_fin": "2026-10-25",
+      "ra": [
+        "RA1"
+      ],
+      "evidencia": "Diagrama entidad-relación del caso",
+      "politica_ia": "Se permite IA para revisar la redacción, no para generar el diagrama.",
+      "rubrica": [
+        {
+          "indicador": "Identifica entidades y relaciones",
+          "niveles": {
+            "receptivo": "Nombra entidades sin relaciones.",
+            "resolutivo": "Relaciona entidades con cardinalidad correcta.",
+            "reflexivo": "Justifica cada relación con el caso.",
+            "critico": "Evalúa alternativas de modelado.",
+            "cocreativo": "Propone mejoras con la organización."
+          }
+        }
+      ],
+      "sesiones": [
+        {
+          "numero": 1,
+          "fecha": "2026-09-29",
+          "contenidos": [
+            "Entidades, atributos y relaciones"
+          ],
+          "docente": {
+            "texto": "Explica el modelo entidad-relación con un caso de inventario.",
+            "horas": 2,
+            "asincronica": {
+              "texto": "Foro: dudas sobre cardinalidad.",
+              "horas": 1
+            }
+          },
+          "practico": {
+            "texto": "Modelan en parejas el registro de socios de una cooperativa. PAE 1.",
+            "horas": 1
+          },
+          "autonomo": {
+            "texto": "Leen el capítulo de modelado y resuelven la TAREA 1.",
+            "horas": 2
+          }
+        },
+        {
+          "numero": 2,
+          "fecha": "2026-10-01",
+          "contenidos": [
+            "Cardinalidad y participación",
+            "Atributos clave"
+          ],
+          "docente": {
+            "texto": "Analiza errores frecuentes de cardinalidad.",
+            "horas": 1,
+            "asincronica": null
+          },
+          "practico": {
+            "texto": "",
+            "horas": 0
+          },
+          "autonomo": {
+            "texto": "Corrigen el borrador del diagrama.",
+            "horas": 2
+          }
+        },
+        {
+          "numero": 3,
+          "fecha": null,
+          "contenidos": [],
+          "docente": {
+            "texto": "Tutoría de recuperación, sin fecha programada.",
+            "horas": 1,
+            "asincronica": null
+          },
+          "practico": {
+            "texto": "",
+            "horas": 0
+          },
+          "autonomo": {
+            "texto": "",
+            "horas": 0
+          }
+        }
+      ],
+      "recursos": "Laboratorio de computación, gestor de bases de datos, aula virtual."
+    },
+    {
+      "numero": 2,
+      "titulo": "Implementación y consultas",
+      "fecha_inicio": "2026-10-26",
+      "fecha_fin": "2026-11-22",
+      "ra": [
+        "RA2"
+      ],
+      "evidencia": "Base de datos implementada con diez consultas",
+      "politica_ia": "Se permite IA para explicar errores de sintaxis, citando su uso.",
+      "recursos": "Gestor de bases de datos.",
+      "rubrica": [
+        {
+          "indicador": "Implementa tablas y restricciones",
+          "niveles": {
+            "receptivo": "Crea tablas sin claves.",
+            "resolutivo": "Crea tablas con claves primarias y foráneas.",
+            "reflexivo": "Explica cada restricción.",
+            "critico": "Evalúa el efecto de las restricciones.",
+            "cocreativo": "Ajusta el diseño con los usuarios."
+          }
+        }
+      ],
+      "sesiones": [
+        {
+          "numero": 4,
+          "fecha": "2026-10-27",
+          "contenidos": [
+            "Lenguaje de definición de datos"
+          ],
+          "docente": {
+            "texto": "Demuestra la creación de tablas y restricciones.",
+            "horas": 2,
+            "asincronica": null
+          },
+          "practico": {
+            "texto": "Implementan el modelo del momento 1.",
+            "horas": 1
+          },
+          "autonomo": {
+            "texto": "Preparan la EVALUACIÓN COGNITIVA 1.",
+            "horas": 2
+          }
+        }
+      ]
+    }
+  ],
+  "rubrica_producto_final": [
+    {
+      "indicador": "Normalización de la base de datos",
+      "niveles": {
+        "receptivo": "Tablas sin normalizar.",
+        "resolutivo": "Tablas en tercera forma normal.",
+        "reflexivo": "Explica las decisiones de normalización.",
+        "critico": "Evalúa el costo de desnormalizar.",
+        "cocreativo": "Ajusta el diseño con los usuarios."
+      }
+    }
+  ],
+  "evaluacion": {
+    "proceso": {
+      "inicial": "Diagnóstico de modelado en la sesión 1.",
+      "seguimiento": "Revisión del diagrama y de la base.",
+      "final": "Defensa del producto con la cooperativa."
+    },
+    "agentes": {
+      "autoevaluacion": "Lista de cotejo al cierre de cada momento.",
+      "coevaluacion": "Revisión entre parejas del diagrama.",
+      "heteroevaluacion": "Rúbrica del docente para cada evidencia."
+    },
+    "retroalimentacion": "Comentarios escritos con nivel alcanzado y una mejora concreta por evidencia.",
+    "metacompetencia": "Bitácora de decisiones éticas sobre los datos de terceros.",
+    "gobernanza_ia": "Declaración del uso de IA y contraste de sus respuestas con la documentación.",
+    "calificacion": {
+      "componentes": [
+        {
+          "nombre": "Evidencia del momento 1",
+          "porcentaje": 30,
+          "momento": 1
+        },
+        {
+          "nombre": "Evidencia del momento 2",
+          "porcentaje": 30,
+          "momento": 2
+        },
+        {
+          "nombre": "Producto final",
+          "porcentaje": 40,
+          "momento": null
+        }
+      ],
+      "reglas": "Nota sobre 10; cada evidencia se califica con su rúbrica."
+    },
+    "mejora": "Los resultados por RA se revisan con la coordinación al final del periodo.",
+    "credencial": {
+      "aplica": false,
+      "nombre": "",
+      "desempeno": "",
+      "evidencias": "",
+      "criterios": "",
+      "justificacion_na": "El PF no forma parte de una microcredencial."
+    }
+  },
+  "bibliografia": {
+    "basica": [
+      "Autor, A. (2020). Fundamentos de bases de datos. Editorial."
+    ],
+    "complementaria": [
+      "Autor, B. (2022). Diseño de bases de datos relacionales. Editorial."
+    ]
+  }
+}

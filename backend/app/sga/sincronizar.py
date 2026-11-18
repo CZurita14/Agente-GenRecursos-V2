@@ -11,7 +11,8 @@ from dataclasses import dataclass, field
 from psycopg.types.json import Jsonb
 
 from app.sga.proveedor import SGANoDisponible, SilaboNoDisponible
-from app.sga.traductor import a_contrato
+from app.sga import contrato_v2
+from app.sga.traductor import a_contrato_con_avisos
 from app.silabo.integridad import SilaboInvalido, cargar_silabo
 
 
@@ -48,17 +49,21 @@ def _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir=True) -
         crudo = proveedor.obtener_silabo(permiso, materia)
     except (SGANoDisponible, SilaboNoDisponible):
         return MateriaEstado(**base, estado="no_disponible", asignatura_id=previa_id)
+    if contrato_v2.es_v2(crudo) and (fallos_v2 := contrato_v2.reglas(crudo)):
+        return MateriaEstado(**base, estado="invalida", fallos=fallos_v2, asignatura_id=previa_id)
     try:
-        silabo = cargar_silabo(a_contrato(crudo))
+        contrato, avisos = a_contrato_con_avisos(crudo)
+        silabo = cargar_silabo(contrato)
     except SilaboInvalido as e:
         return MateriaEstado(**base, estado="invalida", fallos=list(e.fallos), asignatura_id=previa_id)
     if silabo.proyecto_formativo.codigo != materia.codigo_pf:
         return MateriaEstado(**base, estado="invalida", asignatura_id=previa_id,
                              fallos=["proyecto_formativo.codigo: no coincide con la materia del SGA"])
     if previa and previa["version_silabo"] == silabo.proyecto_formativo.version:
-        return MateriaEstado(**base, estado="sin_cambios", asignatura_id=previa_id)
+        return MateriaEstado(**base, estado="sin_cambios", fallos=avisos, asignatura_id=previa_id)
     guardado = servicio.guardar(correo, silabo)
-    return MateriaEstado(**base, estado="importada", asignatura_id=guardado["id"],
+    # En una materia importada, `fallos` lleva los avisos (p. ej. sesiones sin fecha que no entraron).
+    return MateriaEstado(**base, estado="importada", fallos=avisos, asignatura_id=guardado["id"],
                          clases_cambiadas=guardado["clases_cambiadas"])
 
 

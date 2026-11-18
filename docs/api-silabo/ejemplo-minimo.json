@@ -2,15 +2,15 @@
   "facultad": "Facultad de Ingenierías",
   "carrera": "Tecnologías de la Información",
   "periodo": {
-    "codigo": "2026-1",
-    "inicio": "2026-03-02",
-    "fin": "2026-06-21"
+    "codigo": "B26",
+    "inicio": "2026-09-28",
+    "fin": "2027-02-14"
   },
   "proyecto_formativo": {
-    "codigo": "TI-0301",
+    "codigo": "B26-TINF-3-50001-0001",
     "nombre": "Bases de datos relacionales",
-    "version": "2",
-    "aprobado": "2026-01-15",
+    "version": "1.0",
+    "aprobado": "2026-09-01",
     "nivel": 3
   },
   "competencia_perfil": "Diseña soluciones de información que responden a necesidades de organizaciones del territorio.",
@@ -30,9 +30,11 @@
     {
       "numero": 1,
       "titulo": "Modelado conceptual",
-      "fecha_inicio": "2026-03-02",
-      "fecha_fin": "2026-03-29",
-      "ra": ["RA1"],
+      "fecha_inicio": "2026-09-28",
+      "fecha_fin": "2026-10-25",
+      "ra": [
+        "RA1"
+      ],
       "evidencia": "Diagrama entidad-relación del caso",
       "politica_ia": "Se permite IA para revisar la redacción, no para generar el diagrama.",
       "rubrica": [
@@ -49,29 +51,22 @@
       ],
       "sesiones": [
         {
-          "id": "M1-S1",
           "numero": 1,
-          "fecha": "2026-03-03",
-          "semana_periodo": 1,
-          "contenidos": ["Entidades, atributos y relaciones"],
-          "docente": {"texto": "Explica el modelo entidad-relación con un caso de inventario."},
-          "practico": {"texto": "Modelan en parejas el registro de socios de una cooperativa."},
-          "autonomo": {"texto": "Leen el capítulo de modelado y resuelven el cuestionario."},
-          "entregables": ["Borrador del diagrama"]
+          "fecha": "2026-09-29",
+          "contenidos": [
+            "Entidades, atributos y relaciones"
+          ],
+          "docente": {
+            "texto": "Explica el modelo entidad-relación con un caso de inventario."
+          },
+          "practico": {
+            "texto": "Modelan en parejas el registro de socios de una cooperativa."
+          },
+          "autonomo": {
+            "texto": "Leen el capítulo de modelado y resuelven el cuestionario."
+          }
         }
       ]
-    }
-  ],
-  "rubrica_producto_final": [
-    {
-      "indicador": "Normalización de la base de datos",
-      "niveles": {
-        "receptivo": "Tablas sin normalizar.",
-        "resolutivo": "Tablas en tercera forma normal.",
-        "reflexivo": "Explica las decisiones de normalización.",
-        "critico": "Evalúa el costo de desnormalizar.",
-        "cocreativo": "Ajusta el diseño con los usuarios."
-      }
     }
   ]
 }

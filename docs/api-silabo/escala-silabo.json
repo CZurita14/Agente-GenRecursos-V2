@@ -1,0 +1,1094 @@
+{
+  "instrumento": "Escala general de evaluación de sílabos",
+  "version": "UTI 23/10/2026",
+  "niveles": [
+    {
+      "valor": 1,
+      "nombre": "receptivo",
+      "descriptor": "Reconoce o enuncia el componente con información básica. Su relación con el desempeño profesional y el territorio es inicial y faltan decisiones operativas."
+    },
+    {
+      "valor": 2,
+      "nombre": "resolutivo",
+      "descriptor": "Concreta el componente mediante actividades, procedimientos o productos viables para resolver una necesidad profesional. La articulación con los demás elementos y la reflexión ética son básicas."
+    },
+    {
+      "valor": 3,
+      "nombre": "reflexivo",
+      "descriptor": "Justifica y articula el componente con RA, perfil y problema. Analiza causas e implicaciones éticas y prevé metacognición, retroalimentación y ajustes fundamentados."
+    },
+    {
+      "valor": 4,
+      "nombre": "crítico",
+      "descriptor": "Problematiza supuestos, causas estructurales, sesgos o desigualdades pertinentes. Integra perspectivas y fuentes, argumenta decisiones y prevé auditoría, autonomía y responsabilidad ética."
+    },
+    {
+      "valor": 5,
+      "nombre": "cocreativo",
+      "descriptor": "Planifica cocreación pertinente con estudiantes y actores, integra saberes e innovación y prevé validación y mejora sostenible con criterios verificables de aporte al territorio."
+    }
+  ],
+  "codigos": {
+    "ND": "No documentado: ausencia comprobada del componente. Vale cero y cuenta en el máximo.",
+    "NA": "No aplica: exclusión curricular justificada. Sale del máximo. Solo en los puntos con admite_na y con justificación."
+  },
+  "calculo": "Resultado del apartado = puntos obtenidos ÷ (preguntas aplicables × 5) × peso. NA se excluye del denominador; ND vale 0. En IV se suman los puntos de todos los momentos (75 por momento sin NA). Total = suma de los siete apartados.",
+  "apartados": [
+    {
+      "codigo": "I",
+      "nombre": "Perfil del docente",
+      "peso": 5
+    },
+    {
+      "codigo": "II",
+      "nombre": "Presentación del proyecto formativo",
+      "peso": 5
+    },
+    {
+      "codigo": "III",
+      "nombre": "Mapa de formación",
+      "peso": 20
+    },
+    {
+      "codigo": "IV",
+      "nombre": "Momentos del proyecto formativo",
+      "peso": 30
+    },
+    {
+      "codigo": "V",
+      "nombre": "Evaluación",
+      "peso": 30
+    },
+    {
+      "codigo": "VI",
+      "nombre": "Bibliografía",
+      "peso": 5
+    },
+    {
+      "codigo": "VII",
+      "nombre": "Firmas de responsabilidad",
+      "peso": 5
+    }
+  ],
+  "puntos": [
+    {
+      "codigo": "I.1",
+      "apartado": "I",
+      "titulo": "Perfil del docente",
+      "pregunta": "¿El perfil identifica al docente, sus títulos, contacto, ORCID y experiencia, y sustenta su pertinencia profesional, pedagógica y ética para acompañar este PF de acuerdo con el perfil docente institucional?",
+      "referentes": [
+        "M11",
+        "C",
+        "SI"
+      ],
+      "rutas": [],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": true
+    },
+    {
+      "codigo": "II.1",
+      "apartado": "II",
+      "titulo": "Presentación del proyecto formativo",
+      "pregunta": "¿Nombre, unidad curricular, créditos, horas por componente, periodo, nivel, modalidad, formación, horarios, prerrequisitos y correquisitos son completos, consistentes y coherentes con el proyecto aprobado de carrera o programa y la trayectoria del estudiante?",
+      "referentes": [
+        "M3",
+        "M12",
+        "C",
+        "SII"
+      ],
+      "rutas": [
+        "periodo",
+        "proyecto_formativo.nombre",
+        "proyecto_formativo.uoc",
+        "proyecto_formativo.creditos",
+        "proyecto_formativo.horas",
+        "proyecto_formativo.nivel",
+        "proyecto_formativo.modalidad",
+        "proyecto_formativo.formacion",
+        "proyecto_formativo.horario",
+        "proyecto_formativo.prerrequisitos",
+        "proyecto_formativo.correquisitos"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.1",
+      "apartado": "III",
+      "titulo": "Competencia del perfil de egreso",
+      "pregunta": "¿La competencia específica corresponde al perfil aprobado, se vincula con los problemas y procesos profesionales de la carrera o programa y expresa verbo en presente, proceso, finalidad y territorio o condición de impacto?",
+      "referentes": [
+        "M3",
+        "C"
+      ],
+      "rutas": [
+        "competencia_perfil"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.2",
+      "apartado": "III",
+      "titulo": "Competencia del proyecto formativo",
+      "pregunta": "¿La competencia del PF articula un verbo de desempeño en presente, un proceso profesional, una finalidad y un territorio o condición de impacto, con complejidad socioformativa pertinente y contribución explícita al perfil de egreso?",
+      "referentes": [
+        "M3",
+        "M4",
+        "C"
+      ],
+      "rutas": [
+        "competencia_pf"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.3",
+      "apartado": "III",
+      "titulo": "Metacompetencia transversal",
+      "pregunta": "¿La metacompetencia seleccionada corresponde al catálogo institucional y se concreta como desempeño con verbo en presente, proceso profesional, finalidad y territorio o impacto, integrando direccionamiento, metacognición, decisiones éticas y mejora?",
+      "referentes": [
+        "M3",
+        "M5"
+      ],
+      "rutas": [
+        "metacompetencia"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.4",
+      "apartado": "III",
+      "titulo": "Habilidades blandas",
+      "pregunta": "¿Las habilidades asociadas a la metacompetencia se precisan como actuaciones observables en las actividades y productos del PF, con colaboración, autorregulación, comunicación, pensamiento sociocrítico y compromiso ético pertinentes?",
+      "referentes": [
+        "M1",
+        "M5"
+      ],
+      "rutas": [
+        "habilidades_blandas"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.5",
+      "apartado": "III",
+      "titulo": "Sostenibilidad y ODS",
+      "pregunta": "¿El PF relaciona los ODS pertinentes con el problema territorial y prevé actividades, decisiones y productos que permitan valorar aportes sostenibles y sus posibles efectos sociales y ambientales?",
+      "referentes": [
+        "M2",
+        "M6"
+      ],
+      "rutas": [
+        "ejes_transversales.sostenibilidad_ods"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.6",
+      "apartado": "III",
+      "titulo": "Interculturalidad",
+      "pregunta": "¿El PF integra saberes científicos y territoriales, reconoce la diversidad cultural y lingüística y prevé diálogo de saberes, análisis de desigualdades y participación respetuosa de los actores?",
+      "referentes": [
+        "M2",
+        "M6"
+      ],
+      "rutas": [
+        "ejes_transversales.interculturalidad"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.7",
+      "apartado": "III",
+      "titulo": "Internacionalización",
+      "pregunta": "¿Se planifica una experiencia internacional pertinente, como clase espejo, experiencia COIL, movilidad, colaboración o contraste de casos y fuentes, con actores, actividad y producto definidos y conexión con el territorio del PF?",
+      "referentes": [
+        "M2",
+        "SIII"
+      ],
+      "rutas": [
+        "ejes_transversales.internacionalizacion"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.8",
+      "apartado": "III",
+      "titulo": "Interdisciplinariedad",
+      "pregunta": "¿Se integran aportes de otras disciplinas y saberes para investigar el problema y construir el producto, con contribuciones y coordinación explícitas, en lugar de enumerar áreas sin articulación?",
+      "referentes": [
+        "M2",
+        "M6"
+      ],
+      "rutas": [
+        "ejes_transversales.interdisciplinariedad"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.9",
+      "apartado": "III",
+      "titulo": "Emprendimiento",
+      "pregunta": "¿El PF prevé identificar oportunidades y diseñar propuestas de valor viables e innovadoras para el territorio, incluido el emprendimiento disruptivo cuando corresponda, valorando sostenibilidad, responsabilidad social y su pertinencia al campo profesional?",
+      "referentes": [
+        "M2",
+        "M7",
+        "C"
+      ],
+      "rutas": [
+        "ejes_transversales.emprendimiento"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.10",
+      "apartado": "III",
+      "titulo": "Educación financiera",
+      "pregunta": "¿Se integra la toma de decisiones financieras responsables mediante análisis de costos, recursos, riesgos o viabilidad de las propuestas del PF, considerando sus consecuencias éticas y territoriales?",
+      "referentes": [
+        "M2",
+        "SIII"
+      ],
+      "rutas": [
+        "ejes_transversales.educacion_financiera"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.11",
+      "apartado": "III",
+      "titulo": "Inclusión y barreras",
+      "pregunta": "¿Se identifican posibles barreras de acceso, aprendizaje y participación, y se planifican apoyos, materiales accesibles, alternativas y ajustes que permitan demostrar los mismos desempeños con equidad?",
+      "referentes": [
+        "M1",
+        "M2"
+      ],
+      "rutas": [
+        "inclusion.barreras",
+        "inclusion.apoyos"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.12",
+      "apartado": "III",
+      "titulo": "Resultado de aprendizaje RA",
+      "pregunta": "¿El RA expresa un verbo de desempeño en presente de mediana o alta complejidad, un proceso profesional relevante e innovador y una condición de pertinencia o impacto, coherentes con la competencia, el territorio y la taxonomía socioformativa?",
+      "referentes": [
+        "M3",
+        "M4",
+        "C"
+      ],
+      "rutas": [
+        "resultados_aprendizaje[].texto"
+      ],
+      "repetir_por": "ra",
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.13",
+      "apartado": "III",
+      "titulo": "Evidencia del RA",
+      "pregunta": "¿La evidencia del RA permite valorar una actuación profesional auténtica, observable y verificable, con criterios de calidad, contribución al producto final y participación propia del estudiante, incluso cuando utiliza IA?",
+      "referentes": [
+        "M8",
+        "M9"
+      ],
+      "rutas": [
+        "resultados_aprendizaje[].evidencia"
+      ],
+      "repetir_por": "ra",
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.14",
+      "apartado": "III",
+      "titulo": "Secuencia y progresión de los RA",
+      "pregunta": "¿El conjunto de RA sigue una progresión de complejidad coherente con la taxonomía socioformativa, evita repeticiones y cubre los desempeños que exigen la competencia y el producto central del PF?",
+      "referentes": [
+        "M3",
+        "M4"
+      ],
+      "rutas": [
+        "resultados_aprendizaje"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.15",
+      "apartado": "III",
+      "titulo": "Contribución al perfil de egreso",
+      "pregunta": "¿Se explica cómo la competencia, la metacompetencia, los RA y el producto del PF contribuyen a desempeños concretos del perfil de egreso y a la trayectoria formativa de la carrera o programa?",
+      "referentes": [
+        "M3",
+        "M5",
+        "C"
+      ],
+      "rutas": [
+        "contribucion_perfil"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.16",
+      "apartado": "III",
+      "titulo": "Problema del territorio",
+      "pregunta": "¿El problema, necesidad u oportunidad delimita un territorio y sus relaciones, identifica actores y una brecha sustentada en datos y fuentes, examina causas e implicaciones éticas y justifica un aporte viable a su transformación?",
+      "referentes": [
+        "M1",
+        "M2",
+        "M6"
+      ],
+      "rutas": [
+        "problema.descripcion"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.17",
+      "apartado": "III",
+      "titulo": "Pregunta o reto",
+      "pregunta": "¿La pregunta o reto es clara, desafiante y viable, surge del problema territorial, moviliza los RA y orienta decisiones profesionales y la cocreación de soluciones con los actores pertinentes?",
+      "referentes": [
+        "M6",
+        "M7"
+      ],
+      "rutas": [
+        "problema.reto"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.18",
+      "apartado": "III",
+      "titulo": "Producto central del PF",
+      "pregunta": "¿El producto final integra los RA, demuestra un desempeño profesional pertinente y prevé uso, validación y aporte al territorio, con criterios verificables de calidad, autoría, viabilidad y actuación ética?",
+      "referentes": [
+        "M6",
+        "M8",
+        "M9"
+      ],
+      "rutas": [
+        "problema.producto_final"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.19",
+      "apartado": "III",
+      "titulo": "Proyecto interdisciplinario socioformativo",
+      "pregunta": "¿El PIS identifica un problema común del territorio y articula PF, disciplinas y actores en investigación, cocreación y validación de soluciones, con una metacompetencia y propósito compartidos?",
+      "referentes": [
+        "M6",
+        "C"
+      ],
+      "rutas": [
+        "pis.nombre",
+        "pis.descripcion"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.20",
+      "apartado": "III",
+      "titulo": "Aporte del PF al PIS",
+      "pregunta": "¿Se precisa qué producto, proceso o desempeño aporta el PF al PIS, con RA, responsabilidades, coordinación y fechas, dentro de la carga regular y sin duplicar contenidos o entregas?",
+      "referentes": [
+        "M6",
+        "C"
+      ],
+      "rutas": [
+        "pis.aporte"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.21",
+      "apartado": "III",
+      "titulo": "Clase invertida",
+      "pregunta": "¿La clase invertida articula preparación autónoma previa accesible, comprobación de comprensión, aplicación y diálogo con el docente, y reflexión o transferencia posterior, al servicio del problema y los productos del PF?",
+      "referentes": [
+        "M7",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.clase_invertida.antes",
+        "metodologias.clase_invertida.durante",
+        "metodologias.clase_invertida.despues"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "III.22",
+      "apartado": "III",
+      "titulo": "Aprendizaje basado en problemas",
+      "pregunta": "¿La metodología, cuando se selecciona, plantea un problema territorial que exige investigar, contrastar fuentes y justificar soluciones profesionales, con acompañamiento, producto y evaluación coherentes con el PF?",
+      "referentes": [
+        "M7",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.complementarias[tipo=aprendizaje_basado_problemas]"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false,
+      "metodologia": "aprendizaje_basado_problemas"
+    },
+    {
+      "codigo": "III.23",
+      "apartado": "III",
+      "titulo": "Aprendizaje basado en retos",
+      "pregunta": "¿La metodología, cuando se selecciona, organiza un reto territorial viable, investigación, diseño de alternativas, validación y valoración del aporte, con participación de actores y resultados ligados al PF?",
+      "referentes": [
+        "M7",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.complementarias[tipo=aprendizaje_basado_retos]"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false,
+      "metodologia": "aprendizaje_basado_retos"
+    },
+    {
+      "codigo": "III.24",
+      "apartado": "III",
+      "titulo": "Aprendizaje servicio",
+      "pregunta": "¿La metodología, cuando se selecciona, articula aprendizajes y un servicio acordado con actores del territorio, prevé reciprocidad, reflexión ética y valoración conjunta del beneficio y del desempeño profesional?",
+      "referentes": [
+        "M1",
+        "M7",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.complementarias[tipo=aprendizaje_servicio]"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false,
+      "metodologia": "aprendizaje_servicio"
+    },
+    {
+      "codigo": "III.25",
+      "apartado": "III",
+      "titulo": "Aprendizaje cooperativo",
+      "pregunta": "¿La metodología, cuando se selecciona, define interdependencia, roles, responsabilidad individual, interacción y revisión del trabajo colectivo, vinculadas con la metacompetencia y los productos del PF?",
+      "referentes": [
+        "M5",
+        "M7",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.complementarias[tipo=aprendizaje_cooperativo]"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false,
+      "metodologia": "aprendizaje_cooperativo"
+    },
+    {
+      "codigo": "III.26",
+      "apartado": "III",
+      "titulo": "Estudio de caso",
+      "pregunta": "¿La metodología, cuando se selecciona, propone un caso profesional contextualizado que exige contrastar información, analizar alternativas y argumentar decisiones éticas, con producto y criterios de valoración explícitos?",
+      "referentes": [
+        "M4",
+        "M7",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.complementarias[tipo=estudio_caso]"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false,
+      "metodologia": "estudio_caso"
+    },
+    {
+      "codigo": "III.27",
+      "apartado": "III",
+      "titulo": "Cocreación y diálogo de saberes",
+      "pregunta": "¿La metodología, cuando se selecciona, define participación de actores y saberes diversos, deliberación, diseño compartido y validación de propuestas, cuidando justicia cognitiva, reciprocidad y pertinencia territorial?",
+      "referentes": [
+        "M2",
+        "M6",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.complementarias[tipo=cocreacion_dialogo_saberes]"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false,
+      "metodologia": "cocreacion_dialogo_saberes"
+    },
+    {
+      "codigo": "III.28",
+      "apartado": "III",
+      "titulo": "Rutinas y destrezas de pensamiento",
+      "pregunta": "¿La metodología, cuando se selecciona, explicita cómo se harán visibles la argumentación, el contraste de fuentes, la metacognición y la auditoría de IA, con registros útiles para mejorar el proyecto?",
+      "referentes": [
+        "M4",
+        "M5",
+        "M8",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.complementarias[tipo=rutinas_destrezas_pensamiento]"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false,
+      "metodologia": "rutinas_destrezas_pensamiento"
+    },
+    {
+      "codigo": "III.29",
+      "apartado": "III",
+      "titulo": "Otras metodologías pertinentes",
+      "pregunta": "¿Las demás metodologías elegidas se identifican y justifican por su aporte a los RA, la inclusión, la investigación y la transformación territorial, con actividades y evaluación operativas?",
+      "referentes": [
+        "M7",
+        "SIII"
+      ],
+      "rutas": [
+        "metodologias.complementarias[tipo=otra]"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false,
+      "metodologia": "otra"
+    },
+    {
+      "codigo": "IV.1",
+      "apartado": "IV",
+      "titulo": "Nombre y función del momento",
+      "pregunta": "¿El momento tiene un nombre y una función definida en la secuencia del PF, derivada de los RA y del proceso de investigación, actuación y aporte frente al problema?",
+      "referentes": [
+        "M3",
+        "M7",
+        "SIV"
+      ],
+      "rutas": [
+        "momentos[].titulo"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.2",
+      "apartado": "IV",
+      "titulo": "Fechas del momento",
+      "pregunta": "¿El inicio y el cierre son coherentes con las sesiones, el calendario académico, las dependencias entre productos y la disponibilidad de los actores del territorio?",
+      "referentes": [
+        "M3",
+        "C",
+        "SIV"
+      ],
+      "rutas": [
+        "momentos[].fecha_inicio",
+        "momentos[].fecha_fin"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.3",
+      "apartado": "IV",
+      "titulo": "Resultados de aprendizaje seleccionados",
+      "pregunta": "¿Los RA seleccionados corresponden a los desempeños que se desarrollan en este momento y permiten verificar su contribución al logro de la competencia y la metacompetencia del PF?",
+      "referentes": [
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "rutas": [
+        "momentos[].ra"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.4",
+      "apartado": "IV",
+      "titulo": "Evidencia o producto del momento",
+      "pregunta": "¿El producto parcial permite observar el desempeño asociado al RA, tiene calidad y alcance definidos y se articula con el producto central del PF y con el PIS cuando corresponde?",
+      "referentes": [
+        "M6",
+        "M9"
+      ],
+      "rutas": [
+        "momentos[].evidencia"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.5",
+      "apartado": "IV",
+      "titulo": "Sesiones y fechas",
+      "pregunta": "¿Cada sesión se identifica y fecha, sigue una secuencia profesional viable y prevé los encuentros, entregas y revisiones necesarios para construir y mejorar el producto?",
+      "referentes": [
+        "M7",
+        "M10",
+        "SIV"
+      ],
+      "rutas": [
+        "momentos[].sesiones[].numero",
+        "momentos[].sesiones[].fecha"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.6",
+      "apartado": "IV",
+      "titulo": "Actividades con el docente",
+      "pregunta": "¿El acompañamiento docente promueve investigación, diálogo, argumentación, toma de decisiones, orientación ética y retroalimentación, con acciones concretas relacionadas con el problema y los RA?",
+      "referentes": [
+        "M7",
+        "M8",
+        "M10"
+      ],
+      "rutas": [
+        "momentos[].sesiones[].docente"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.7",
+      "apartado": "IV",
+      "titulo": "Horas de aprendizaje",
+      "pregunta": "¿Las horas de las sesiones y componentes corresponden a la carga del PF, al esfuerzo de los productos y a las actividades previstas, sin superponer o contabilizar dos veces el mismo trabajo?",
+      "referentes": [
+        "M3",
+        "C",
+        "SIV"
+      ],
+      "rutas": [
+        "momentos[].sesiones[].docente.horas",
+        "momentos[].sesiones[].practico.horas",
+        "momentos[].sesiones[].autonomo.horas"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.8",
+      "apartado": "IV",
+      "titulo": "Actividades práctico experimentales",
+      "pregunta": "¿Las prácticas, talleres, simulaciones, laboratorios o intervenciones permiten aplicar, poner a prueba y mejorar soluciones profesionales, con condiciones de realización, seguridad y resultados observables?",
+      "referentes": [
+        "M7",
+        "M9",
+        "C"
+      ],
+      "rutas": [
+        "momentos[].sesiones[].practico"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.9",
+      "apartado": "IV",
+      "titulo": "Actividades autónomas",
+      "pregunta": "¿El trabajo autónomo define preparación, investigación, elaboración y reflexión con tiempos y productos viables, favorece autorregulación y juicio propio y se conecta con los encuentros y el proyecto?",
+      "referentes": [
+        "M5",
+        "M7",
+        "M8"
+      ],
+      "rutas": [
+        "momentos[].sesiones[].autonomo"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.10",
+      "apartado": "IV",
+      "titulo": "Contenidos esenciales",
+      "pregunta": "¿Los saberes científicos, tecnológicos y culturales cumplen los mínimos del proyecto aprobado de carrera o programa y son los necesarios para realizar las actividades, construir las evidencias y abordar los procesos profesionales del momento?",
+      "referentes": [
+        "M3",
+        "M7",
+        "C"
+      ],
+      "rutas": [
+        "momentos[].sesiones[].contenidos"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.11",
+      "apartado": "IV",
+      "titulo": "Recursos y escenarios",
+      "pregunta": "¿Los materiales, fuentes, tecnologías, entornos y actores son pertinentes, accesibles y disponibles para realizar el momento y favorecen investigación, pensamiento sociocrítico y uso responsable de IA?",
+      "referentes": [
+        "M1",
+        "M2",
+        "M7"
+      ],
+      "rutas": [
+        "momentos[].recursos"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.12",
+      "apartado": "IV",
+      "titulo": "Gobernanza sociocrítica y ética de IA",
+      "pregunta": "¿La política del momento precisa propósitos, decisiones y supervisión humana; uso declarado, fuentes verificadas y auditoría continua de sesgos; protección de datos, ciberseguridad, propiedad intelectual y autoría; autonomía, proyecto ético de vida y mejora responsable del aporte territorial?",
+      "referentes": [
+        "M1",
+        "M5",
+        "M8"
+      ],
+      "rutas": [
+        "momentos[].politica_ia"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.13",
+      "apartado": "IV",
+      "titulo": "Vinculación de la rúbrica del momento",
+      "pregunta": "¿La rúbrica identifica exactamente la evidencia y los RA del momento, y permite valorar el aporte de la competencia, metacompetencia y ejes pertinentes sin confundirlos con el producto final del PF?",
+      "referentes": [
+        "M5",
+        "M9",
+        "SIV"
+      ],
+      "rutas": [
+        "momentos[].rubrica"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.14",
+      "apartado": "IV",
+      "titulo": "Indicadores de la rúbrica",
+      "pregunta": "¿Los indicadores son observables, claros y pertinentes al desempeño profesional y al problema, e incluyen los saberes, decisiones éticas, colaboración y gobernanza de IA que efectivamente exige el momento?",
+      "referentes": [
+        "M4",
+        "M8",
+        "M9"
+      ],
+      "rutas": [
+        "momentos[].rubrica[].indicador"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "IV.15",
+      "apartado": "IV",
+      "titulo": "Descriptores de los cinco niveles",
+      "pregunta": "¿Cada indicador diferencia receptivo, resolutivo, reflexivo, crítico y cocreativo mediante actuaciones y condiciones verificables, desde el reconocimiento hasta la cocreación pertinente, sin limitarse a adjetivos o cantidad de tareas?",
+      "referentes": [
+        "M4",
+        "M9"
+      ],
+      "rutas": [
+        "momentos[].rubrica[].niveles"
+      ],
+      "repetir_por": "momento",
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.1",
+      "apartado": "V",
+      "titulo": "Producto final del PF",
+      "pregunta": "¿La rúbrica final identifica el producto central declarado en III y valora su integración, pertinencia profesional y aporte territorial, en lugar de copiar automáticamente una evidencia parcial de un momento?",
+      "referentes": [
+        "M6",
+        "M9",
+        "SV"
+      ],
+      "rutas": [
+        "rubrica_producto_final"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.2",
+      "apartado": "V",
+      "titulo": "RA y desempeños evaluados",
+      "pregunta": "¿La evaluación final cubre los RA y las competencias y metacompetencias declaradas, con correspondencia explícita entre cada indicador y los desempeños que el producto permite demostrar?",
+      "referentes": [
+        "M3",
+        "M5",
+        "M9"
+      ],
+      "rutas": [
+        "rubrica_producto_final[].indicador"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.3",
+      "apartado": "V",
+      "titulo": "Indicadores de desempeño",
+      "pregunta": "¿Los indicadores valoran actuaciones profesionales observables, argumentación, integración de saberes y aporte al problema, con criterios claros de pertinencia, originalidad, colaboración y responsabilidad ética?",
+      "referentes": [
+        "M4",
+        "M8",
+        "M9"
+      ],
+      "rutas": [
+        "rubrica_producto_final[].indicador"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.4",
+      "apartado": "V",
+      "titulo": "Descriptores socioformativos",
+      "pregunta": "¿Cada indicador de la rúbrica final distingue los cinco niveles solicitados con desempeños verificables, complejidad contextual y criterios de calidad, incluida la cocreación y validación territorial cuando son pertinentes?",
+      "referentes": [
+        "M4",
+        "M9"
+      ],
+      "rutas": [
+        "rubrica_producto_final[].niveles"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.5",
+      "apartado": "V",
+      "titulo": "Proceso y producto",
+      "pregunta": "¿Se planifica evaluación inicial, seguimiento de entregas y evaluación final que permitan valorar avances y decisiones, además del producto, con criterios compartidos y sin duplicar la calificación de la misma evidencia?",
+      "referentes": [
+        "M9",
+        "M10"
+      ],
+      "rutas": [
+        "evaluacion.proceso"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.6",
+      "apartado": "V",
+      "titulo": "Autoevaluación coevaluación y heteroevaluación",
+      "pregunta": "¿Se precisan quién evalúa, cuándo y con qué criterios en la autoevaluación, coevaluación y heteroevaluación, para desarrollar metacognición, corresponsabilidad, juicio propio y mejora del desempeño?",
+      "referentes": [
+        "M5",
+        "M9",
+        "M10"
+      ],
+      "rutas": [
+        "evaluacion.agentes"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.7",
+      "apartado": "V",
+      "titulo": "Retroalimentación socioformativa",
+      "pregunta": "¿Se planifica retroalimentación que indique logros, nivel y sugerencias concretas, con diálogo, oportunidad de mejorar las evidencias y revisión de los cambios y de su aporte al problema territorial?",
+      "referentes": [
+        "M9",
+        "M10"
+      ],
+      "rutas": [
+        "evaluacion.retroalimentacion"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.8",
+      "apartado": "V",
+      "titulo": "Metacompetencia y proyecto ético de vida",
+      "pregunta": "¿Se valora el avance en la metacompetencia seleccionada mediante decisiones, colaboración y reflexión sobre metas, responsabilidad, autonomía y mejora personal y profesional, vinculadas con el proyecto ético de vida?",
+      "referentes": [
+        "M1",
+        "M5",
+        "M9"
+      ],
+      "rutas": [
+        "evaluacion.metacompetencia"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.9",
+      "apartado": "V",
+      "titulo": "Autoría y gobernanza de IA",
+      "pregunta": "¿La evaluación exige uso de IA declarado, trazabilidad del proceso, contraste de fuentes y sesgos, argumentación y decisiones propias, protección de datos y rendición de cuentas sobre consecuencias para las personas y el territorio?",
+      "referentes": [
+        "M8",
+        "M9"
+      ],
+      "rutas": [
+        "evaluacion.gobernanza_ia"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.10",
+      "apartado": "V",
+      "titulo": "Reglas de calificación",
+      "pregunta": "¿Se explicitan ponderaciones, cálculo, criterios y equivalencias institucionales vigentes, con suma sobre 100 % cuando se usan porcentajes y una relación clara entre evidencias parciales y finales?",
+      "referentes": [
+        "M9",
+        "C"
+      ],
+      "rutas": [
+        "evaluacion.calificacion"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.11",
+      "apartado": "V",
+      "titulo": "Uso de resultados para la mejora",
+      "pregunta": "¿Los resultados permiten identificar brechas por RA y metacompetencia y planificar apoyos, revisión del PF y seguimiento de mejoras, con responsables y plazos definidos?",
+      "referentes": [
+        "M9",
+        "M10"
+      ],
+      "rutas": [
+        "evaluacion.mejora"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "V.12",
+      "apartado": "V",
+      "titulo": "Microcredencial o credencial cuando corresponda",
+      "pregunta": "¿Si el PF contribuye a una credencial, se identifican el desempeño que acredita, evidencias mínimas, criterios aprobados de otorgamiento y registro de logros, sin confundirlos con la nota general del PF, considerando que la acreditación exige como mínimo el nivel crítico de la rúbrica institucional (M9, Tabla 4)?",
+      "referentes": [
+        "M12",
+        "M9",
+        "C"
+      ],
+      "rutas": [
+        "evaluacion.credencial"
+      ],
+      "repetir_por": null,
+      "admite_na": true,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "VI.1",
+      "apartado": "VI",
+      "titulo": "Bibliografía",
+      "pregunta": "¿La bibliografía básica y complementaria es pertinente a los RA, al problema y a los contenidos, combina fuentes actuales y fundamentales, reconoce diversidad de saberes, es accesible y verificable y tiene registros completos en el formato requerido?",
+      "referentes": [
+        "M2",
+        "M7",
+        "SVI"
+      ],
+      "rutas": [
+        "bibliografia.basica",
+        "bibliografia.complementaria"
+      ],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": false
+    },
+    {
+      "codigo": "VII.1",
+      "apartado": "VII",
+      "titulo": "Firmas de responsabilidad",
+      "pregunta": "¿Se identifican docente y coordinador de carrera o programa, o autoridad responsable, sus funciones, firmas, fechas y versión del sílabo, con registro de revisión y aprobación que asegure responsabilidad y trazabilidad conforme al procedimiento institucional?",
+      "referentes": [
+        "M10",
+        "C",
+        "SVII"
+      ],
+      "rutas": [],
+      "repetir_por": null,
+      "admite_na": false,
+      "fuera_del_contrato": true
+    }
+  ]
+}
