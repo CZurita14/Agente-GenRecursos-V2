@@ -74,6 +74,8 @@ def _validar(ruta: Path, exigir_aprobado: bool) -> tuple[dict, float]:
     if exigir_aprobado:
         if meta.get("preliminar") is True:
             raise RazonadorInvalido("el modelo es preliminar (entrenado con sílabos simulados): no se sirve")
+        if meta.get("exploratorio") is True:
+            raise RazonadorInvalido("el modelo es exploratorio (sin el mínimo de facultades): no se sirve")
         sep = meta.get("separacion")
         if isinstance(sep, dict) and any(
             isinstance(c, str) and c.startswith("SIM-")

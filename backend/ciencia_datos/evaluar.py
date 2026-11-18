@@ -478,6 +478,8 @@ def ejecutar(
     version = meta["version"]
     if meta.get("preliminar") is True and not humo:
         raise EntradaInvalida("el modelo es preliminar (entrenado con sílabos simulados): solo se evalúa con --humo")
+    if meta.get("exploratorio") is True:
+        raise EntradaInvalida("el modelo es exploratorio (sin el mínimo de facultades): no se evalúa para aprobar")
     if not humo:
         sep_meta = meta.get("separacion")
         codigos = [c for clave in ("entrenamiento", "prueba") if isinstance(sep_meta, dict)

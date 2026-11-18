@@ -379,6 +379,12 @@ def test_produccion_rechaza_un_preliminar_aunque_diga_aprobado(carpeta_con):
         Razonador.cargar(ruta, exigir_aprobado=True)
 
 
+def test_produccion_rechaza_un_exploratorio_aunque_diga_aprobado(carpeta_con):
+    ruta = carpeta_con({"humo": False, "aprobado": True, "umbral": 0.7, "exploratorio": True})
+    with pytest.raises(RazonadorInvalido, match="exploratorio"):
+        Razonador.cargar(ruta, exigir_aprobado=True)
+
+
 def test_desarrollo_si_carga_un_preliminar(carpeta_con, monkeypatch):
     monkeypatch.setattr(modulo, "_abrir", lambda ruta, longitud: (lambda t: np.eye(len(t))))
     ruta = carpeta_con({"humo": False, "aprobado": False, "umbral": None, "preliminar": True})

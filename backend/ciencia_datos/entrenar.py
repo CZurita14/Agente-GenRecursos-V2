@@ -13,6 +13,7 @@ import json
 import random
 import sys
 import warnings
+from collections import Counter
 from pathlib import Path
 
 from app.agentes.facultades import cargar_catalogo, normalizar
@@ -207,6 +208,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--epocas", type=int, default=1)
     p.add_argument("--humo", action="store_true", help="prueba rápida: sin exigir el mínimo")
     p.add_argument("--sin-ajuste", action="store_true", help="exporta el modelo base sin entrenar")
+    p.add_argument("--exploratorio", action="store_true",
+                   help="solo sílabos reales, sin exigir el mínimo de facultades; el modelo nunca se aprueba ni se sirve")
     a = p.parse_args(argv)
 
     if (a.salida / "metadatos.json").exists() or (a.salida / CANDADO).exists():
@@ -216,7 +219,9 @@ def main(argv: list[str] | None = None) -> int:
     catalogo = cargar_catalogo(RAIZ / "kb" / "catalogo.yaml")
     mapa, sin_sigla = codigo_a_facultad(silabos, catalogo)
     preliminar = any(es_simulado(c) for c in mapa)
-    if not preliminar and not a.humo and not cumple_minimo(mapa):
+    if a.exploratorio and preliminar:
+        raise SystemExit("--exploratorio solo acepta sílabos reales; quite las carpetas de simulados.")
+    if not preliminar and not a.humo and not a.exploratorio and not cumple_minimo(mapa):
         raise SystemExit(
             f"Se exige un mínimo de {MIN_FACULTADES} facultades con {MIN_POR_FACULTAD} sílabos "
             "cada una; use --humo para una prueba rápida."
@@ -250,7 +255,7 @@ def main(argv: list[str] | None = None) -> int:
     excluidos = sum(1 for k in candidatos if k in prohibidos)
     textos = [t for k, t in candidatos.items() if k not in prohibidos]
     casi_repetidos = 0
-    if preliminar and not a.sin_ajuste and textos:
+    if (preliminar or a.exploratorio) and not a.sin_ajuste and textos:
         # Ningún texto de entrenamiento se parece a lo que prueba o controla.
         vectores = _vectorizar_base(a.base, textos + textos_de_comparacion)
         textos, casi_repetidos = filtrar(
@@ -270,6 +275,10 @@ def main(argv: list[str] | None = None) -> int:
         "separacion": separacion,
         "huella_separacion": huella(separacion),
     }
+    if a.exploratorio:
+        # Sin el mínimo de facultades no hay validez externa: se mide, pero nunca se aprueba ni se sirve.
+        metadatos |= {"exploratorio": True, "n_casi_repetidos_excluidos": casi_repetidos,
+                      "por_facultad": dict(sorted(Counter(mapa.values()).items()))}
     if preliminar:
         metadatos |= {
             "preliminar": True,
@@ -290,6 +299,7 @@ def main(argv: list[str] | None = None) -> int:
         f"entrenamiento={len(sep.entrenamiento)} prueba={len(sep.prueba)} "
         f"fragmentos={n_entrenados} excluidos_por_prueba={excluidos} facultades_sin_sigla={sin_sigla} avisos={len(sep.avisos)}"
         + (f" preliminar=True control_real={len(sep.control)} casi_repetidos_excluidos={casi_repetidos}" if preliminar else "")
+        + (f" exploratorio=True casi_repetidos_excluidos={casi_repetidos}" if a.exploratorio else "")
     )
     recuento: dict[str, int] = {}
     for raiz in a.silabos:
