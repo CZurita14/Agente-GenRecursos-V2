@@ -12,6 +12,8 @@ La V2 recibe del SGA tres documentos JSON. Cada uno tiene un esquema (JSON Schem
 
 El código del proyecto formativo identifica el sílabo: la materia lo trae en `codigo_pf` y el sílabo en `proyecto_formativo.codigo`; deben coincidir.
 
+> **Rama `V3-SilabosPesos`:** el sistema solo acepta el sílabo **v2.0**. Un sílabo sin `"contrato": "2.0"` queda como `invalida` con el fallo `contrato: se requiere la versión 2.0` y no reemplaza la versión guardada. El v1.0 se documenta como referencia; para convertir sílabos 1.0 de prueba: `python herramientas/migrar_a_v2.py <archivo.json>...`.
+
 **Estado del contrato del sílabo:** v1.0, definido el 2026-11-16 con 51 sílabos reales del periodo B26 (9 carreras, 4 facultades). Los 51 cumplen el esquema y entran al sistema. Falta que TI confirme los puntos de [Preguntas para TI](#preguntas-para-ti).
 
 ## Principio: el SGA envía lo que guarda
@@ -158,7 +160,7 @@ Corrida del 2026-11-16 sobre 51 sílabos únicos del periodo B26: 201 momentos y
 
 ## Contrato v2.0 y escala de evaluación
 
-El v2.0 (2026-11-18) agrega al sílabo todo lo que valora la *Escala general de evaluación de sílabos* (UTI, 23/10/2026). Lleva `"contrato": "2.0"` en la raíz; el sistema acepta el v1.0 y el v2.0, y lleva el v2.0 a la forma interna del v1.0 con `backend/app/sga/contrato_v2.py`.
+El v2.0 (2026-11-18) agrega al sílabo todo lo que valora la *Escala general de evaluación de sílabos* (UTI, 23/10/2026). Lleva `"contrato": "2.0"` en la raíz. En la rama `V3-SilabosPesos` es el único contrato que entra; `backend/app/sga/contrato_v2.py` lo lleva a la forma interna con que se generan los recursos.
 
 **Regla general:** toda clave obligatoria debe venir. Un texto o una lista vacíos, o `null` en `creditos` y `horas`, significan **ND** (no documentado) para la escala. Un componente que no aplica al PF va con `"aplica": false` y su `justificacion_na` no vacía (**NA**). Solo admiten NA los puntos que admite la escala.
 

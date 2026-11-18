@@ -1,4 +1,5 @@
 {
+  "contrato": "2.0",
   "facultad": "FACULTAD DE INGENIERIAS",
   "carrera": "SOFTWARE",
   "periodo": {
@@ -32,11 +33,58 @@
         "inicio": "20:00",
         "fin": "20:59"
       }
-    ]
+    ],
+    "formacion": "",
+    "prerrequisitos": [],
+    "correquisitos": []
   },
   "competencia_perfil": "ADMINISTRA BASES DE DATOS, PARA GARANTIZAR LA SEGURIDAD, INTEGRIDAD Y CONFIDENCIALIDAD DE LA INFORMACIÓN, MEDIANTE EL USO DE SISTEMAS GESTORES DE BASE DE DATOS QUE SE ADAPTEN AL CONTEXTO LABORAL, ACTUANDO ÉTICA Y HONESTIDAD.",
   "competencia_pf": "",
   "metacompetencia": "Pensamiento sociocrítico y sistémico para la toma de decisiones estratégicas",
+  "habilidades_blandas": [],
+  "ejes_transversales": {
+    "sostenibilidad_ods": {
+      "aplica": true,
+      "descripcion": "",
+      "justificacion_na": "",
+      "ods": []
+    },
+    "interculturalidad": {
+      "aplica": true,
+      "descripcion": "",
+      "justificacion_na": ""
+    },
+    "internacionalizacion": {
+      "aplica": true,
+      "descripcion": "",
+      "justificacion_na": "",
+      "tipo": null,
+      "actores": "",
+      "actividad": "",
+      "producto": ""
+    },
+    "interdisciplinariedad": {
+      "aplica": true,
+      "descripcion": "",
+      "justificacion_na": "",
+      "disciplinas": []
+    },
+    "emprendimiento": {
+      "aplica": true,
+      "descripcion": "",
+      "justificacion_na": ""
+    },
+    "educacion_financiera": {
+      "aplica": true,
+      "descripcion": "",
+      "justificacion_na": ""
+    }
+  },
+  "inclusion": {
+    "barreras": "",
+    "apoyos": ""
+  },
+  "contribucion_perfil": "",
   "resultados_aprendizaje": [
     {
       "id": "RA1",
@@ -65,14 +113,33 @@
     "producto_final": "Portafolio de Análisis y Modelado Estadístico de Seguridad Digital: un compendio técnico que incluye un dataset depurado, matrices probabilísticas de vulnerabilidades, sustentación inferencial de umbrales para la detección de anomalías y los parámetros matemáticos de un algoritmo predictivo de amenazas listos para su codificación."
   },
   "pis": {
+    "aplica": true,
     "nombre": "Desarrollo de soluciones de software para el monitoreo y gestión de la seguridad digital en Ecuador.",
-    "aporte": "Este módulo aporta el sustento cuantitativo (el \"motor lógico\") del software de seguridad. Provee los umbrales de detección de anomalías fundamentados en inferencia estadística (intervalos de confianza) y las reglas predictivas necesarias para que los estudiantes programen las condicionales y alertas de seguridad dentro del código fuente del sistema."
+    "descripcion": "",
+    "aporte": "Este módulo aporta el sustento cuantitativo (el \"motor lógico\") del software de seguridad. Provee los umbrales de detección de anomalías fundamentados en inferencia estadística (intervalos de confianza) y las reglas predictivas necesarias para que los estudiantes programen las condicionales y alertas de seguridad dentro del código fuente del sistema.",
+    "justificacion_na": ""
   },
-  "metodologias": [
-    "Clase Invertida",
-    "Aprendizaje Basado en Problemas (ABP)",
-    "Aprendizaje Cooperativo (AC)"
-  ],
+  "metodologias": {
+    "clase_invertida": {
+      "antes": "",
+      "durante": "",
+      "despues": ""
+    },
+    "complementarias": [
+      {
+        "tipo": "aprendizaje_basado_problemas",
+        "nombre": "Aprendizaje Basado en Problemas (ABP)",
+        "justificacion": "",
+        "aplicada_en": []
+      },
+      {
+        "tipo": "aprendizaje_cooperativo",
+        "nombre": "Aprendizaje Cooperativo (AC)",
+        "justificacion": "",
+        "aplicada_en": []
+      }
+    ]
+  },
   "momentos": [
     {
       "numero": 2,
@@ -365,6 +432,34 @@
       }
     }
   ],
+  "evaluacion": {
+    "proceso": {
+      "inicial": "",
+      "seguimiento": "",
+      "final": ""
+    },
+    "agentes": {
+      "autoevaluacion": "",
+      "coevaluacion": "",
+      "heteroevaluacion": ""
+    },
+    "retroalimentacion": "",
+    "metacompetencia": "",
+    "gobernanza_ia": "",
+    "calificacion": {
+      "componentes": [],
+      "reglas": ""
+    },
+    "mejora": "",
+    "credencial": {
+      "aplica": true,
+      "nombre": "",
+      "desempeno": "",
+      "evidencias": "",
+      "criterios": "",
+      "justificacion_na": ""
+    }
+  },
   "bibliografia": {
     "basica": [],
     "complementaria": []

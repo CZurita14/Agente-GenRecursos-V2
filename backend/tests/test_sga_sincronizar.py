@@ -141,6 +141,41 @@ def test_silabo_invalido(conn, servicio, base):
     assert {x.estado for x in r.materias if x.codigo_pf == PF_A} <= {"importada", "sin_cambios"}
 
 
+@pytest.mark.parametrize("contrato", [None, "1.0", "3.0"])
+def test_solo_entra_el_contrato_2(conn, servicio, base, contrato):
+    """V3: un sílabo sin `"contrato": "2.0"` se rechaza y no reemplaza la versión guardada."""
+    sync(conn, servicio, base)
+    antes = conn.execute("select id,version_silabo from asignatura where codigo_pf=%s", (PF_B,)).fetchone()
+
+    def cambia(materia, crudo):
+        if materia.codigo_pf == PF_B:
+            crudo = json.loads(json.dumps(crudo))
+            if contrato is None:
+                del crudo["contrato"]
+            else:
+                crudo["contrato"] = contrato
+            crudo["proyecto_formativo"]["version"] = "9.9"
+        return crudo
+
+    r = sync(conn, servicio, Envoltorio(base, cambia=cambia))
+    m = next(m for m in r.materias if m.codigo_pf == PF_B)
+    assert m.estado == "invalida" and m.fallos == ["contrato: se requiere la versión 2.0"]
+    assert m.asignatura_id == str(antes["id"])
+    assert conn.execute("select id,version_silabo from asignatura where codigo_pf=%s", (PF_B,)).fetchone() == antes
+
+
+def test_contrato_2_con_reglas_rotas_no_entra(conn, servicio, base):
+    def cambia(materia, crudo):
+        if materia.codigo_pf == PF_B:
+            crudo = json.loads(json.dumps(crudo))
+            del crudo["inclusion"]
+        return crudo
+
+    r = sync(conn, servicio, Envoltorio(base, cambia=cambia))
+    m = next(m for m in r.materias if m.codigo_pf == PF_B)
+    assert m.estado == "invalida" and m.fallos == ["inclusion: falta"]
+
+
 def _id_sesion(fila):
     return fila["silabo"]["momentos"][0]["sesiones"][0]["id"]
 

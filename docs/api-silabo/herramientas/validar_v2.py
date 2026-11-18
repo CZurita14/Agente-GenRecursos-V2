@@ -19,6 +19,8 @@ from app.sga import contrato_v2  # noqa: E402
 from app.sga.traductor import a_contrato_con_avisos  # noqa: E402
 from app.silabo.escala import catalogo, revision_automatica, validar_evaluacion  # noqa: E402
 from app.silabo.integridad import SilaboInvalido, cargar_silabo  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from migrar_a_v2 import migrar, plano  # noqa: E402
 
 leer = lambda n: json.loads((DOCS / n).read_text(encoding="utf-8"))
 E_SIL, E_EV = leer("silabo-api.v2.schema.json"), leer("evaluacion-silabo.schema.json")
@@ -177,59 +179,6 @@ d["metodologias"]["complementarias"][1]["tipo"] = "aprendizaje_basado_problemas"
 check("regla: metodología repetida", bool(contrato_v2.reglas(d)))
 
 # 4. Migración de los 51 sílabos reales (v1) al v2 y revisión automática
-def plano(x):
-    return "".join(ch for ch in unicodedata.normalize("NFD", x.lower()) if unicodedata.category(ch) != "Mn")
-
-
-TIPO = [("clase invertida", None), ("problemas", "aprendizaje_basado_problemas"), ("retos", "aprendizaje_basado_retos"),
-        ("servicio", "aprendizaje_servicio"), ("cooperativo", "aprendizaje_cooperativo"), ("caso", "estudio_caso"),
-        ("cocreacion", "cocreacion_dialogo_saberes"), ("rutinas", "rutinas_destrezas_pensamiento")]
-
-
-def migrar(j):
-    eje = lambda **x: {"aplica": True, "descripcion": "", "justificacion_na": "", **x}
-    pf = copy.deepcopy(j["proyecto_formativo"])
-    pf.setdefault("uoc", ""); pf.setdefault("modalidad", ""); pf.setdefault("creditos", None)
-    pf.setdefault("horas", None); pf.setdefault("horario", [])
-    pf.update(formacion="", prerrequisitos=[], correquisitos=[])
-    comp = []
-    for nombre in j.get("metodologias", []):
-        tipo = next((t for k, t in TIPO if k in plano(nombre)), "otra")
-        if tipo:
-            comp.append({"tipo": tipo, "nombre": nombre, "justificacion": "", "aplicada_en": []})
-    pis = j.get("pis") or {}
-    momentos = copy.deepcopy(j["momentos"])
-    for m in momentos:
-        m.setdefault("recursos", "")
-        for s in m["sesiones"]:
-            for k in ("id", "semana_periodo", "entregables"):
-                s.pop(k, None)
-    return {
-        "contrato": "2.0", "facultad": j["facultad"], "carrera": j["carrera"], "periodo": j["periodo"],
-        "proyecto_formativo": pf, "competencia_perfil": j["competencia_perfil"],
-        "competencia_pf": j.get("competencia_pf", ""), "metacompetencia": j.get("metacompetencia", ""),
-        "habilidades_blandas": [],
-        "ejes_transversales": {"sostenibilidad_ods": eje(ods=[]), "interculturalidad": eje(),
-                               "internacionalizacion": eje(tipo=None, actores="", actividad="", producto=""),
-                               "interdisciplinariedad": eje(disciplinas=[]), "emprendimiento": eje(),
-                               "educacion_financiera": eje()},
-        "inclusion": {"barreras": "", "apoyos": ""}, "contribucion_perfil": "",
-        "resultados_aprendizaje": j["resultados_aprendizaje"], "problema": j["problema"],
-        "pis": {"aplica": True, "nombre": pis.get("nombre", ""), "descripcion": "", "aporte": pis.get("aporte", ""),
-                "justificacion_na": ""},
-        "metodologias": {"clase_invertida": {"antes": "", "durante": "", "despues": ""}, "complementarias": comp},
-        "momentos": momentos, "rubrica_producto_final": j.get("rubrica_producto_final", []),
-        "evaluacion": {"proceso": {"inicial": "", "seguimiento": "", "final": ""},
-                       "agentes": {"autoevaluacion": "", "coevaluacion": "", "heteroevaluacion": ""},
-                       "retroalimentacion": "", "metacompetencia": "", "gobernanza_ia": "",
-                       "calificacion": {"componentes": [], "reglas": ""}, "mejora": "",
-                       "credencial": {"aplica": True, "nombre": "", "desempeno": "", "evidencias": "", "criterios": "",
-                                      "justificacion_na": ""}},
-        "bibliografia": {"basica": j.get("bibliografia", {}).get("basica", []),
-                         "complementaria": j.get("bibliografia", {}).get("complementaria", [])},
-    }
-
-
 docs = {}
 for carpeta in ("datos_cd/silabos_b26", "datos_cd/silabos_b26b"):
     for f in sorted((V2 / carpeta).rglob("*.json")):

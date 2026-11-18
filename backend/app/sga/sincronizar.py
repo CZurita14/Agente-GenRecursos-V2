@@ -49,7 +49,11 @@ def _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir=True) -
         crudo = proveedor.obtener_silabo(permiso, materia)
     except (SGANoDisponible, SilaboNoDisponible):
         return MateriaEstado(**base, estado="no_disponible", asignatura_id=previa_id)
-    if contrato_v2.es_v2(crudo) and (fallos_v2 := contrato_v2.reglas(crudo)):
+    # V3: solo entra el contrato 2.0 (Escala general de evaluación de sílabos, UTI 23/10/2026).
+    if not contrato_v2.es_v2(crudo):
+        return MateriaEstado(**base, estado="invalida", asignatura_id=previa_id,
+                             fallos=[f"contrato: se requiere la versión {contrato_v2.VERSION}"])
+    if fallos_v2 := contrato_v2.reglas(crudo):
         return MateriaEstado(**base, estado="invalida", fallos=fallos_v2, asignatura_id=previa_id)
     try:
         contrato, avisos = a_contrato_con_avisos(crudo)
