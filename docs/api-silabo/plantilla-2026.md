@@ -48,7 +48,7 @@ La estructura se obtuvo solo de las líneas que se repiten en al menos el 80 % d
 
 1. **La plantilla no pide todo lo que la escala valora.** Con esta plantilla, V.5 a V.12 (30 % del apartado V) y el detalle de metodologías (III.21–III.29) salen siempre ND. Hay que decidir con la UTI si la plantilla se amplía o si la escala se ajusta a la plantilla.
 2. **Tres ajustes al contrato 2.0** para calzar con la plantilla: `metacompetencia` como una de 5 opciones fijas, `inclusion` como texto único (o barreras y apoyos opcionales), y el PIS como «proyecto interdisciplinario socioformativo».
-3. **El lector de la V1 no lee los apartados nuevos.** Lee lo que ya existía (RA, momentos, sesiones, rúbricas, PIS, metodologías, bibliografía) en 13 de 15. Para habilidades blandas, ejes, inclusión, contribución, prerrequisitos y metacompetencia hace falta ampliar el lector.
+3. **Lector de PDF ampliado (2026-11-23).** `backend/ciencia_datos/lector_pdf/` (traído de la V1, fuera de la aplicación) lee ahora prerrequisitos, correquisitos, nivel de formación, habilidades blandas, ejes (con ODS e internacionalización), inclusión y contribución al perfil, y entrega el JSON 2.0 directo: `python -m ciencia_datos.lector_pdf.lote <carpeta PDF> <salida>`. Una sesión o momento sin fecha legible ya no rechaza el PDF: la fecha queda nula y la validación lo informa.
 4. **TI:** si el SGA guarda los mismos campos que la plantilla, su API llevará estas mismas brechas.
 
 ## Cumplimiento de los apartados que el lector aún no lee
@@ -68,3 +68,15 @@ Medido en los 15 PDF (incluidos los 2 que el lector no abre), contando caractere
 | Evaluación V.5–V.12 | V.5–V.12 | 0 | La plantilla no tiene el apartado |
 
 Además, entre los apartados que el lector sí lee, 1 sílabo no trae competencia del proyecto formativo (III.2) y 1 no trae rúbrica del producto final (V.1–V.4).
+
+## Resultado con el lector ampliado
+
+Los 15 PDF se convierten a JSON 2.0 y los 15 cumplen las reglas del contrato. 14 cumplen el esquema y entran al sistema; uno no, porque 2 de sus momentos dicen «por definir» en lugar de fechas y no tienen sesiones. Otro entra con 2 sesiones sin fecha, que no se importan (aviso).
+
+ND que quedan, por causa:
+
+| Causa | Puntos (sílabos con ND) |
+|---|---|
+| El sílabo no declara el eje y no justifica | III.5 ODS (5), III.6 interculturalidad (9), III.7 internacionalización (12), III.8 interdisciplinariedad (1), III.9 emprendimiento (7), III.10 educación financiera (12) |
+| El sílabo deja vacío el campo | III.2 competencia del PF (1), III.19 nombre del PIS (2), IV.11 recursos de un momento (3), V.1–V.4 rúbrica final (1) |
+| La plantilla no tiene el apartado | III.21 clase invertida (14), V.5–V.12 (14) |

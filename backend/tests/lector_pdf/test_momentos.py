@@ -140,10 +140,12 @@ def test_rubrica_no_absorbe_tablas_ajenas():
     assert [f["indicador"] for f in m["rubrica"]] == ["Estructuración", "Reporte en JASP", "Línea base"]
 
 
-def test_sesion_con_celda_partida_no_se_pierde_en_silencio():
+def test_sesion_sin_fecha_legible_no_se_pierde_en_silencio():
+    # Antes se rechazaba todo el sílabo; ahora la sesión queda con fecha nula, el contrato 2.0 la
+    # admite y el traductor avisa al docente que no se importó.
     partida = ["Sesión 2", "Clase", None, "6.0", "", "", "", "", "• X"]
-    with pytest.raises(SilaboIlegible):
-        leer_momentos([_cabecera() + [SESION_1, partida] + _cierre()], INICIO)
+    [m] = leer_momentos([_cabecera() + [SESION_1, partida] + _cierre()], INICIO)
+    assert [(s["numero"], s["fecha"]) for s in m["sesiones"]] == [(1, date(2026, 10, 7)), (2, None)]
 
 
 def test_politica_partida_entre_paginas_se_une():

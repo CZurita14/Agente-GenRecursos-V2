@@ -25,13 +25,23 @@ def fecha_dmy(texto: str) -> date:
     return date(anio, mes, dia)
 
 
+def fecha_o_none(texto: str | None) -> date | None:
+    """Fecha dd/mm/aaaa, o None si el sílabo trae otra cosa («Por definir»)."""
+    try:
+        return fecha_dmy(texto or "")
+    except ValueError:
+        return None
+
+
 def horas(texto: str | None) -> float:
     texto = (texto or "").strip().replace(",", ".")
     return float(texto) if texto else 0.0
 
 
-def semana_periodo(fecha: date, inicio: date) -> int:
+def semana_periodo(fecha: date | None, inicio: date) -> int | None:
     """Semana 1 = la que empieza el lunes de la semana de `inicio`."""
+    if fecha is None:
+        return None
     lunes = inicio - timedelta(days=inicio.weekday())
     return (fecha - lunes).days // 7 + 1
 

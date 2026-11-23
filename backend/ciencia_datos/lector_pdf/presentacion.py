@@ -52,6 +52,18 @@ def _a_la_derecha(tablas: list[Tabla], rotulo: str) -> str:
     return ""
 
 
+def _fila_sin_rotulo_antes(tablas: list[Tabla], rotulo: str) -> str:
+    """Texto de la fila sin rótulo que precede a la fila del rótulo dado. Pasa cuando una tabla
+    empieza en página nueva y la fila anterior perdió su rótulo (p. ej. «Problema, necesidad…»)."""
+    for tabla in tablas:
+        for i, fila in enumerate(tabla):
+            if i and normalizar_clave(fila[0] if fila else "").startswith(rotulo):
+                previa = [c or "" for c in tabla[i - 1]]
+                if previa and not previa[0].strip():
+                    return limpio(" ".join(c for c in previa[1:] if c.strip()))
+    return ""
+
+
 def _debajo(tablas: list[Tabla], rotulo: str) -> str | None:
     """Celda de la fila siguiente en la misma columna que el rótulo (None si no está)."""
     for tabla in tablas:
@@ -78,13 +90,29 @@ def _vinetas(texto: str) -> list[str]:
     return [limpio(l.lstrip("•●-")) for l in (texto or "").splitlines() if l.strip().lstrip("•●-").strip()]
 
 
+def _resultados(tablas_iii: list[Tabla]) -> list[dict]:
+    """Filas «RAn»; una fila sin id justo después, en una tabla de RA, continúa el RA anterior
+    (la tabla se partió entre páginas)."""
+    ras: list[dict] = []
+    for tabla in tablas_iii:
+        de_ra = any(normalizar_clave(c).startswith("RESULTADOS DE APRENDIZAJE Y EVIDENCIAS") for c in (tabla[0] if tabla else []) if c)
+        for f in ([c or "" for c in fila] for fila in tabla):
+            if len(f) < 3:
+                continue
+            if re.fullmatch(r"RA\d+", f[0].strip()):
+                ras.append({"id": f[0].strip(), "texto": limpio(f[1]), "evidencia": limpio(f[2])})
+            elif de_ra and ras and not f[0].strip() and (f[1].strip() or f[2].strip()):
+                ras[-1]["texto"] = limpio(f"{ras[-1]['texto']} {f[1]}")
+                ras[-1]["evidencia"] = limpio(f"{ras[-1]['evidencia']} {f[2]}")
+    return ras
+
+
 def leer_cabecera(portada: str, tablas_ii: list[Tabla], tablas_iii: list[Tabla]) -> dict:
     """Campos de cabecera de SilaboUTI (dicts con los tipos del contrato)."""
     p = _portada(portada)
     nivel = re.search(r"\d+", _requerido(_debajo(tablas_ii, "NIVEL"), "Nivel"))
     meta = next((l for l in (_debajo(tablas_iii, "METACOMPETENCIA") or "").splitlines() if "(X)" in l.upper()), "")
-    ras = [{"id": f[0].strip(), "texto": limpio(f[1]), "evidencia": limpio(f[2])}
-           for f in filas(tablas_iii) if re.fullmatch(r"RA\d+", f[0].strip()) and len(f) >= 3]
+    ras = _resultados(tablas_iii)
     return {
         "facultad": p["facultad"],
         "carrera": p["carrera"],
@@ -108,7 +136,8 @@ def leer_cabecera(portada: str, tablas_ii: list[Tabla], tablas_iii: list[Tabla])
         "metacompetencia": limpio(re.sub(r"^\s*\(X\)\s*", "", meta, flags=re.I)),
         "resultados_aprendizaje": ras,
         "problema": {
-            "descripcion": _a_la_derecha(tablas_iii, "PROBLEMA, NECESIDAD"),
+            "descripcion": (_a_la_derecha(tablas_iii, "PROBLEMA, NECESIDAD")
+                            or _fila_sin_rotulo_antes(tablas_iii, "PREGUNTA O RETO")),
             "reto": _a_la_derecha(tablas_iii, "PREGUNTA O RETO"),
             "producto_final": _a_la_derecha(tablas_iii, "EVIDENCIA DE DESEMPENO CENTRAL"),
         },

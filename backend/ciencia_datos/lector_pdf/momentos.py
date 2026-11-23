@@ -8,12 +8,12 @@ import re
 from datetime import date
 
 from ciencia_datos.lector_pdf.errores import SilaboIlegible
-from ciencia_datos.lector_pdf.texto import Tabla, entregables_en, fecha_dmy, horas, limpio, normalizar_clave, semana_periodo
+from ciencia_datos.lector_pdf.texto import Tabla, entregables_en, fecha_o_none, horas, limpio, normalizar_clave, semana_periodo
 
 NIVELES = {"RECEPTIVO": "receptivo", "RESOLUTIVO": "resolutivo", "REFLEXIVO": "reflexivo",
            "CRITICO": "critico", "COCREATIVO": "cocreativo"}
 _MOMENTO = re.compile(r"MOMENTO (\d+)$")
-_SESION = re.compile(r"Sesi[oó]n\s+(\d+)\s+(\d{2}/\d{2}/\d{4})")
+_SESION = re.compile(r"Sesi[oó]n\s+(\d+)(?:\s+(\d{2}/\d{2}/\d{4}))?")
 _ASINCRONICA = re.compile(r"Otras actividades con el\s+docente\s*\((\d+(?:[.,]\d+)?)\s*h\)\s*:?", re.I)
 # CONTENIDO va antes que SESION: «Contenido de la sesión» es la columna de contenidos.
 _ROLES = (("CONTENIDO", "contenidos"), ("SESION", "sesion"), ("DOCENTE", "docente"),
@@ -167,7 +167,8 @@ def leer_momentos(tablas_iv: list[Tabla], inicio_periodo: date) -> list[dict]:
                 estado = "rubrica"
             elif estado == "cabecera" and clave.startswith("FECHA"):
                 inicio, _, fin = _valor(fila).partition(" al ")
-                actual["fecha_inicio"], actual["fecha_fin"] = fecha_dmy(inicio), fecha_dmy(fin)
+                # «Por definir» u otro texto: queda None y la validación del contrato lo informa.
+                actual["fecha_inicio"], actual["fecha_fin"] = fecha_o_none(inicio), fecha_o_none(fin)
             elif estado == "cabecera" and clave.startswith("RESULTADOS DE APRENDIZAJE"):
                 actual["ra"] = re.findall(r"RA\d+", _valor(fila))
             elif estado == "cabecera" and clave.startswith("EVIDENCIA DE DESEMPENO"):
@@ -178,7 +179,8 @@ def leer_momentos(tablas_iv: list[Tabla], inicio_periodo: date) -> list[dict]:
                     return fila[k] if k is not None and k < len(fila) else ""
                 inicio_sesion = _SESION.match(fila[0].strip())
                 if inicio_sesion:
-                    crudas.append({"numero": int(inicio_sesion.group(1)), "fecha": fecha_dmy(inicio_sesion.group(2)),
+                    # Sesión sin fecha legible: fecha None (el contrato 2.0 la admite con un aviso).
+                    crudas.append({"numero": int(inicio_sesion.group(1)), "fecha": fecha_o_none(inicio_sesion.group(2)),
                                    **{r: celda(r) for r in ("docente", "practico", "autonomo", "contenidos")},
                                    **{f"horas_{r}": celda(f"horas_{r}") for r in ("docente", "practico", "autonomo")}})
                 elif clave.startswith("SESION"):
