@@ -24,7 +24,7 @@ La estructura se obtuvo solo de las líneas que se repiten en al menos el 80 % d
 | II. Presentación | Tabla: créditos, horas, periodo, nivel, modalidad; unidad de organización curricular | `proyecto_formativo.{creditos,horas,nivel,modalidad,uoc}` | II.1 | Coincide |
 | III. Horas por componente | Contacto con el docente, práctico-experimental, autónomo | `proyecto_formativo.horas` | II.1 | Coincide |
 | III. Horarios | Contacto y práctico-experimental; a menudo «Sin horario registrado» | `proyecto_formativo.horario[]` | II.1 | «Sin horario registrado» = lista vacía |
-| III. Prerrequisitos / correquisitos | Texto; «Ninguno» en 14 de 15 | `proyecto_formativo.prerrequisitos[]`, `correquisitos[]` | II.1 | «Ninguno» = lista vacía (válido) |
+| III. Prerrequisitos / correquisitos | Prerrequisitos: «Ninguno» en 14 de 15. Correquisitos: lista de proyectos formativos en los 15 | `proyecto_formativo.prerrequisitos[]`, `correquisitos[]` | II.1 | «Ninguno» = lista vacía (válido) |
 | III. Competencia del perfil de egreso | Texto | `competencia_perfil` | III.1 | Coincide |
 | III. Competencia del proyecto formativo | Texto | `competencia_pf` | III.2 | Coincide |
 | III. Metacompetencia transversal | **Casillas**: 5 opciones fijas, la elegida con `(X)` | `metacompetencia` (texto) | III.3 | **Ajuste:** conviene un `enum` con las 5 opciones |
@@ -50,3 +50,21 @@ La estructura se obtuvo solo de las líneas que se repiten en al menos el 80 % d
 2. **Tres ajustes al contrato 2.0** para calzar con la plantilla: `metacompetencia` como una de 5 opciones fijas, `inclusion` como texto único (o barreras y apoyos opcionales), y el PIS como «proyecto interdisciplinario socioformativo».
 3. **El lector de la V1 no lee los apartados nuevos.** Lee lo que ya existía (RA, momentos, sesiones, rúbricas, PIS, metodologías, bibliografía) en 13 de 15. Para habilidades blandas, ejes, inclusión, contribución, prerrequisitos y metacompetencia hace falta ampliar el lector.
 4. **TI:** si el SGA guarda los mismos campos que la plantilla, su API llevará estas mismas brechas.
+
+## Cumplimiento de los apartados que el lector aún no lee
+
+Medido en los 15 PDF (incluidos los 2 que el lector no abre), contando caracteres entre cada encabezado y el siguiente, sin leer el contenido.
+
+| Apartado | Escala | Cumplen | Dónde no cumplen |
+|---|---|---|---|
+| Prerrequisitos | II.1 | 15 | — (14 dicen «Ninguno», válido) |
+| Correquisitos | II.1 | 15 | — |
+| Habilidades blandas | III.4 | 15 | — (de 36 a 137 caracteres: listas cortas) |
+| Ejes transversales | III.5–III.10 | 15 con al menos 1 eje | 3 declaran los 6 ejes; 12 declaran de 1 a 3 sin decir por qué los demás no aplican |
+| Inclusión | III.11 | 13 | 1 vacío (7 caracteres) y 1 muy breve (92 caracteres) |
+| Contribución al perfil | III.15 | 15 | — |
+| Clase invertida (antes, durante, después) | III.21 | 0 | Los 15 solo la nombran en la lista de metodologías |
+| Metodologías complementarias (justificación y sesiones) | III.22–III.29 | 0 | Los 15 solo las listan (de 1 a 4 además de la clase invertida) |
+| Evaluación V.5–V.12 | V.5–V.12 | 0 | La plantilla no tiene el apartado |
+
+Además, entre los apartados que el lector sí lee, 1 sílabo no trae competencia del proyecto formativo (III.2) y 1 no trae rúbrica del producto final (V.1–V.4).
