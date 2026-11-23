@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BookOpen, FolderOpen, Home, LogOut } from 'lucide-react';
 import { AppLayout } from './components';
+import { PanelConsumo } from './components/PanelConsumo';
 import type { Ambito, Rol, TrabajoCreado } from './api/tipos';
 import { useSesion } from './sesion/useSesion';
 import { Actividad } from './vistas/Actividad';
@@ -55,6 +56,8 @@ export default function App() {
   </div>;
 
   const aMenu = (curso: Curso) => setRuta({ vista: 'asignatura', curso });
+  // El panel de consumo muestra el proyecto formativo abierto; fuera de uno, todos los de la cuenta.
+  const aidAbierto = 'curso' in ruta ? ruta.curso.aid : ruta.vista === 'recursos' ? ruta.aid : undefined;
 
   return <AppLayout items={MENU} activeId={pestana(ruta)} onChange={id => setRuta({ vista: id } as Ruta)} actions={acciones}>
     {ruta.vista === 'inicio' && <Inicio onGenerar={() => setRuta({ vista: 'generar' })} />}
@@ -79,5 +82,6 @@ export default function App() {
       onTrabajos={ids => setRuta({ vista: 'progreso', curso: { ...ruta.curso, nombre: ruta.curso.nombre ?? 'Proyecto Formativo' },
         creados: ids.map(id => ({ id, herramienta: 'recurso', estado: 'en_cola' })) })}
       onSesionVencida={expirar} onVolver={() => setRuta(ruta.volver)} />}
+    <PanelConsumo aid={aidAbierto} onSesionVencida={expirar} />
   </AppLayout>;
 }

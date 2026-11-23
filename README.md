@@ -113,6 +113,13 @@ AUTH_SECRETO=<al menos 32 caracteres aleatorios propios>
 
 El SGA simulado lee `usuarios.json`, `materias/<usuario>.json` y `sga_silabos/<codigo_pf>.json` de esa carpeta: dos docentes de prueba (`docente.uno`, `docente.dos`) y tres sílabos simulados `S91-SIMU-…` que traen claves privadas falsas para comprobar que el traductor las descarta. `usuarios.json` guarda solo el hash SHA-256 de cada clave; **las claves de prueba están en las constantes de las pruebas** (`backend/tests/test_auth.py`), no en la documentación. El proveedor simulado no se admite con `ENTORNO=produccion`.
 
+### Panel de consumo de tokens
+
+Un botón fijo abajo a la derecha abre el consumo de la IA **de los proyectos formativos de la cuenta** (el abierto, o todos los de la cuenta): tokens de entrada y salida, llamadas, fallos, tiempo, costo estimado, consumo por herramienta (con el promedio por recurso y la parte del revisor), chat de ajustes y últimos trabajos. Los `ADMINISTRADORES` entran directo; los demás docentes, con la clave del panel, que abre el panel 30 minutos en esa sesión (5 intentos cada 15 minutos).
+
+La clave nunca se guarda en claro: en el `.env` va `CONSUMO_CLAVE_HASH`, generado con `printf '%s
+' '<clave>' | python -m app.operacion hash-clave` desde `backend/`. El costo usa `LLM_PRECIO_ENTRADA_USD_MTOK` y `LLM_PRECIO_SALIDA_USD_MTOK`; sin ellos el panel muestra solo tokens. Es un máximo aproximado: no se registran los aciertos de caché de DeepSeek.
+
 ### Producción
 
 Exige `SGA_PROVEEDOR=real`, que depende de TI (B-SGA1): [docs/sga/para-TI.md](docs/sga/para-TI.md). El despliegue institucional (servidor, DNS, TLS, servidor de IA) está en [docs/entrega-ti.md](docs/entrega-ti.md); la operación, el respaldo y la restauración, en [docs/operacion.md](docs/operacion.md); la API, en [docs/desarrollo-api.md](docs/desarrollo-api.md).
