@@ -11,7 +11,7 @@ test('tokens abreviados en español', () => {
 });
 
 test('costo con y sin precio configurado', () => {
-  assert.equal(formatoCosto(null), 'sin precio configurado');
+  assert.equal(formatoCosto(null), '—');
   assert.equal(formatoCosto(1.4237), 'US$ 1,42');
   assert.equal(formatoCosto(0.0012), 'US$ 0,0012');
 });

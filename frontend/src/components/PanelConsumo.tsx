@@ -77,7 +77,7 @@ export function PanelConsumo({ aid, onSesionVencida }: PanelConsumoProps) {
 
     {abierto && <section id="panel-consumo" role="dialog" aria-modal="false" aria-labelledby="titulo-consumo"
       className="fixed z-40 w-[min(26rem,calc(100vw-2rem))] max-h-[calc(100vh-7rem)] overflow-y-auto rounded-xl border border-line bg-surface p-4 text-sm text-fg shadow-lg"
-      style={{ right: 'max(1rem, env(safe-area-inset-right))', bottom: 'calc(max(1rem, env(safe-area-inset-bottom)) + 3.25rem)' }}>
+      style={{ right: 'max(1rem, env(safe-area-inset-right))', bottom: 'calc(max(1rem, env(safe-area-inset-bottom)) + 3.75rem)' }}>
       <div className="mb-3 flex items-center justify-between">
         <h2 id="titulo-consumo" className="flex items-center gap-2 font-bold">
           {bloqueado && <Lock aria-hidden="true" className="h-4 w-4" />}Consumo de IA
@@ -118,7 +118,8 @@ export function PanelConsumo({ aid, onSesionVencida }: PanelConsumoProps) {
           </div>
           <p className="text-xs text-muted">
             {datos.totales.fallos} fallos · {formatoDuracion(datos.totales.segundos)} de IA
-            {datos.costo_usd !== null && ' · el costo es un máximo: no cuenta la caché de DeepSeek'}
+            {datos.costo_usd !== null ? ' · el costo es un máximo: no cuenta la caché de DeepSeek'
+              : ' · costo: sin precio de DeepSeek configurado'}
           </p>
 
           <Tabla titulo="Por herramienta" columnas={['Herramienta', 'Recursos', 'Tokens', 'Por recurso', 'Revisión']}
