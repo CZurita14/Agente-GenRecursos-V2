@@ -31,9 +31,9 @@ La estructura se obtuvo solo de las líneas que se repiten en al menos el 80 % d
 | III. Habilidades blandas | Viñetas | `habilidades_blandas[]` | III.4 | Coincide |
 | III. Ejes transversales | Tabla «Eje · Cómo se evidencia en las actividades del PF», una fila por eje | `ejes_transversales.<eje>.descripcion` | III.5–III.10 | **Brecha:** la plantilla no pide justificación de NA ni ODS numerados ni tipo de internacionalización. Un eje sin fila no dice si es ND o NA |
 | III. Inclusión | Texto único | `inclusion.{barreras,apoyos}` | III.11 | **Ajuste:** la plantilla no separa barreras y apoyos |
-| III. RA y evidencias | Tabla «RA · Resultado de aprendizaje · Evidencia de desempeño» | `resultados_aprendizaje[]` | III.12–III.13 | Coincide |
-| III. Contribución al perfil | Texto | `contribucion_perfil` | III.14 | Coincide |
-| III. Problema del territorio | Tabla «Problema, necesidad u oportunidad» | `problema` | III.15–III.18 | Coincide |
+| III. RA y evidencias | Tabla «RA · Resultado de aprendizaje · Evidencia de desempeño» | `resultados_aprendizaje[]` | III.12–III.14 | Coincide |
+| III. Contribución al perfil | Texto | `contribucion_perfil` | III.15 | Coincide |
+| III. Problema del territorio | Tabla «Problema, necesidad u oportunidad» | `problema` | III.16–III.18 | Coincide |
 | III. Proyecto interdisciplinario socioformativo | Nombre y «Aporte del proyecto formativo…» | `pis.{nombre,descripcion,aporte}` | III.19–III.20 | **Ajuste:** se llama «interdisciplinario socioformativo», no «integrador de saberes»; no tiene casilla de NA |
 | III. Metodología activa | Viñetas: Clase invertida (15), ABP (13), Estudio de caso (9)… | `metodologias.clase_invertida`, `complementarias[]` | III.21–III.29 | **Brecha:** sin antes, durante y después de la clase invertida; sin justificación ni sesiones donde se aplica cada metodología |
 | IV. Momentos | Por momento: título, fechas, RA, evidencia, política de IA, recursos | `momentos[]` | IV.1–IV.15 | Coincide |
