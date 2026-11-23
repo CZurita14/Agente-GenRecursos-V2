@@ -19,6 +19,7 @@ class ControlAcceso:
             "generar_correo_hora": (config.limite_generar_correo_hora, 3600),
             "editar_correo_minuto": (config.limite_editar_correo_minuto, 60),
             "audit_429_minuto": (1, 60),
+            "consumo_clave_usuario_15min": (5, 900),
         })
 
     def ip(self, ip, operacion, metodo):

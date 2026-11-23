@@ -8,11 +8,13 @@ Controlar el gasto de tokens de la IA para evaluar el sistema y el costo de gene
 
 ## Objetivos
 
+0. **Alcance (ajuste del usuario, 2026-11-23):** el panel muestra solo el consumo de los proyectos formativos de la cuenta que ingresó (dueño o con acceso), nunca los de otros docentes. Dentro de un proyecto formativo, muestra ese; fuera, todos los de la cuenta, con un selector. También para administradores.
+
 1. Un botón fijo en la esquina inferior derecha de todas las pantallas (sesión iniciada) que muestra los tokens del mes y abre un panel sobre el contenido, sin mover la página.
 2. El panel muestra, para un periodo (hoy, 7 días, mes o rango de hasta 31 días):
    - totales: tokens de entrada y salida, llamadas, fallos, segundos de IA y costo estimado en USD;
    - por herramienta: recursos generados, tokens totales, promedio por recurso y parte de la revisión;
-   - por asignatura: tokens por proyecto formativo (nombre y código);
+   - por proyecto formativo de la cuenta: tokens (nombre y código);
    - chat de ajustes aparte;
    - últimos 20 trabajos: herramienta, ámbito, estado, tokens y duración. Nunca texto del contenido.
 3. Acceso: los administradores (`ADMINISTRADORES`) entran directo. Cualquier otro docente con sesión iniciada entra con la **clave del panel**.

@@ -5,6 +5,7 @@ Salida JSON mínima y código 0/1. No consulta IA. El contenedor usa
 WORKER_GRACIA_S limita el cierre a 570 s por defecto, siempre menos de 600 s.
 """
 import argparse
+import sys
 import json
 import math
 import os
@@ -168,8 +169,16 @@ def salud_worker(config, *, ruta=None, reloj=time.monotonic, identidad=identidad
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('comando', choices=['migrar', 'preparado', 'salud-worker', 'health-worker'])
+    parser.add_argument('comando', choices=['migrar', 'preparado', 'salud-worker', 'health-worker', 'hash-clave'])
     comando = parser.parse_args(argv).comando
+    if comando == 'hash-clave':
+        # Clave del panel de consumo por la entrada estándar (no queda en el historial de la consola).
+        from app.control.clave import hashear
+        clave = sys.stdin.readline().rstrip(chr(13) + chr(10))
+        if not clave:
+            return 1
+        print(hashear(clave))
+        return 0
     ok = False
     try:
         config = ajustes()

@@ -48,6 +48,11 @@ class Ajustes(BaseSettings):
     # Presupuesto de la sincronización dentro del ingreso: el proxy corta la petición a los 65 s.
     sga_sincronizacion_max_s: float = Field(default=45, gt=0, lt=65)
     administradores: list[str] = Field(default_factory=list)
+    # Panel de consumo: hash PBKDF2 de la clave (python -m app.operacion hash-clave) y precios por millón
+    # de tokens para el costo estimado. Sin hash, solo los administradores ven el panel.
+    consumo_clave_hash: SecretStr | None = None
+    llm_precio_entrada_usd_mtok: float | None = Field(default=None, ge=0)
+    llm_precio_salida_usd_mtok: float | None = Field(default=None, ge=0)
     proxies_confiables: list[str] = Field(default_factory=list)
     limite_ip_minuto: int = Field(default=600, ge=1, le=100000)
     limite_usuario_minuto: int = Field(default=120, ge=1, le=100000)

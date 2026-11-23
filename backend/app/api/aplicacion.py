@@ -13,6 +13,7 @@ import psycopg
 from app.agentes.facultades import cargar_catalogo, cargar_perfiles
 from app.api.asignaturas import router as asignaturas_router
 from app.api.admin import router as admin_router
+from app.api.consumo import router as consumo_router
 from app.api.auth import router as auth_router
 from app.api.cuerpo import LimiteJSON
 from app.api.recursos import router as recursos_router
@@ -80,6 +81,7 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
     app.include_router(recursos_router)
     app.include_router(chat_router)
     app.include_router(admin_router)
+    app.include_router(consumo_router)
     app.include_router(privacidad_router)
     # La incorporación previa al middleware de acceso lo deja por dentro:
     # CORS → sesión/Origin → límite de cuerpo → parser JSON/rutas.
