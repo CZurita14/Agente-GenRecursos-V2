@@ -1,0 +1,83 @@
+{
+  "agentId": "generador-recursos-uti",
+  "name": "Generador de Recursos de Estudio",
+  "description": "Genera con IA herramientas de estudio (cuestionarios, fichas, prácticas, tarjetas, presentaciones, guías y casos) a partir del sílabo de cada proyecto formativo, que recibe del SGA en JSON (contrato 2.0). El monitor observa su salud y su actividad; no hay pesos ni entrenamiento que controlar.",
+  "integration": "uti-v1",
+  "environment": "development",
+  "baseUrl": "http://localhost:8001",
+  "authentication": {
+    "type": "bearer",
+    "credentialDelivery": "Archivo de texto entregado en mano o por un mensaje cifrado acordado; nunca por correo abierto ni dentro de esta ficha.",
+    "permissions": "Solo lectura de GET /v1/capabilities, /v1/health y /v1/events. El token no abre ninguna otra ruta del Generador.",
+    "expirationAndRenewal": "No caduca. Se rota generando uno nuevo (python -m app.operacion token-monitor <archivo>), cambiando MONITOR_TOKEN_HASH en el .env del Generador, reiniciando su API y guardando el token nuevo en el monitor."
+  },
+  "capabilities": {
+    "configuration": false,
+    "training": false
+  },
+  "weightRules": {},
+  "currentConfiguration": null,
+  "jointWeightConstraints": [],
+  "metrics": {
+    "scope": "Proceso de la API del Generador (servidor FastAPI).",
+    "measurementWindow": "cpuPercent: desde la consulta anterior. memoryMb: memoria residente en el instante. errorRate: llamadas a la IA fallidas de los últimos 15 minutos (se omite si no hubo llamadas).",
+    "availableFields": [
+      "cpuPercent",
+      "memoryMb",
+      "errorRate"
+    ]
+  },
+  "training": {
+    "supported": false,
+    "acceptedDatasetRefs": [],
+    "parametersAndLimits": "No aplica",
+    "infrastructure": "No aplica",
+    "evaluationAndArtifacts": "No aplica",
+    "deploymentAndRollback": "No aplica"
+  },
+  "network": {
+    "requirements": "Acceso HTTP al puerto 8001 del equipo del Generador. Monitor en el mismo equipo: ninguno. Desde otro equipo: misma red, URL http://<IP del equipo>:8001 y el puerto 8001 abierto en el firewall de Windows."
+  },
+  "operations": {
+    "idempotencyRetention": "No aplica: el agente no expone operaciones (configuration=false y training=false).",
+    "lookupByIdempotencyKey": false,
+    "survivesRestart": false,
+    "failureMessage": false
+  },
+  "events": {
+    "supported": true,
+    "eventTypes": [
+      "servicio.iniciado",
+      "recurso.solicitado",
+      "recurso.generado",
+      "recurso.revision_requerida",
+      "recurso.fallido",
+      "chat.atendido",
+      "chat.fallido",
+      "silabo.importado",
+      "silabo.invalido",
+      "silabo.no_disponible"
+    ],
+    "retention": "Los eventos se arman a partir de los trabajos y las sincronizaciones guardados en la base del Generador, que no se borran automáticamente.",
+    "cursorValidity": "Indefinida: cursor opaco por fecha e identificador; no caduca ni se invalida al reiniciar.",
+    "personalDataExclusion": "Los mensajes se arman con campos fijos: herramienta, ámbito (momento y sesión), estado, duración, tokens y rutas de campos que fallan. Nunca incluyen correos, nombres, texto del sílabo, contenido de recursos, conversaciones ni razonamiento del modelo. Las materias se identifican solo por su código de proyecto formativo."
+  },
+  "documentation": {
+    "openapiFile": "monitor-api-v1.json (se implementan GET /v1/capabilities, /v1/health y /v1/events)",
+    "examplesDirectory": "ejemplos-respuestas.json",
+    "utiV1Differences": [
+      "No implementa /v1/config, /v1/config/apply, /v1/training-jobs ni /v1/operations, porque declara configuration=false y training=false."
+    ],
+    "rateLimits": "600 solicitudes por minuto por IP (LIMITE_IP_MINUTO). El monitor consulta cada 10 segundos."
+  },
+  "technicalContact": {
+    "name": "REEMPLAZAR",
+    "email": "REEMPLAZAR"
+  },
+  "knownLimitations": [
+    "Sin pesos ni entrenamiento controlables desde el monitor.",
+    "cpuPercent y memoryMb requieren el paquete psutil en el servidor; sin él se omiten.",
+    "servicio.iniciado se emite una vez por arranque de la API.",
+    "En desarrollo la URL es localhost; para producción se acordará la URL con TI (detrás del proxy, https://<servidor>/api)."
+  ]
+}

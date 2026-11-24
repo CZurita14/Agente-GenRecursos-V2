@@ -1,0 +1,19 @@
+KIT DE INTEGRACIÓN - GENERADOR DE RECURSOS DE ESTUDIO CON EL MONITOR DE AGENTES UTI
+
+Contenido
+- ficha-agente.json: ficha del agente para «Registrar agente» (sin credenciales).
+- monitor-api-v1.json: contrato UTI v1 (1.1.0). El Generador implementa GET /v1/capabilities, /v1/health y /v1/events.
+- ejemplos-respuestas.json: respuestas reales del Generador en desarrollo.
+
+Pasos en el monitor
+1. Abrir /monitor > Registrar agente.
+2. Importar ficha-agente.json. Copia el ID (generador-recursos-uti), el nombre, el entorno, la URL y la descripción.
+3. Si el monitor no corre en el mismo equipo del Generador, cambiar la URL base a http://<IP del equipo del Generador>:8001.
+4. Pegar el token en «Token del agente». El token NO está en este kit: se entrega aparte por un canal seguro.
+5. Guardar agente. El monitor comprueba la conexión: debe verse el agente como listo y, en Registro de actividad, sus eventos.
+
+Antes de entregar
+- Completar technicalContact (nombre y correo del responsable) en ficha-agente.json.
+
+Qué no hace este agente
+- No tiene pesos ni entrenamiento: el monitor solo observa salud y actividad.
