@@ -88,3 +88,17 @@ Los «válidos» del Generador hacia el validador se logran rellenando lo que el
    - horas `null` permitidas o no.
 4. **Reglas aparte para cada sistema sobre el mismo esquema:** el validador acepta todo lo que cumple el esquema y diagnostica; el Generador agrega sus «requisitos para generar» (1 a 4 RA en orden, al menos un momento y una sesión con fecha, metacompetencia del catálogo).
 5. **El Generador consume el 0.2.0 con un adaptador** hacia su formato interno, como ya hace con el 2.0. La generación de recursos no cambia.
+
+## 6. Decisión aplicada (24/11/2026): el Generador consume `silabo-api/0.1.0` tal cual
+
+Por indicación del usuario, el Generador adopta el contrato del validador sin modificarlo; la propuesta del 0.2.0 queda para cuando se agreguen los campos de la escala.
+
+| Comprobación | Resultado |
+|---|---|
+| Ejemplo 6.1 del validador | Cumple su esquema, los requisitos para generar y entra al sistema sin avisos |
+| Sílabo interno y avisos, 2.0 directo frente a 2.0 → validador → sistema | Idénticos en 98 de 98 sílabos reales que entran (14 de Ingeniería 2026, 82 del corpus anterior, 2 ejemplos); el restante no entra por ninguno de los dos caminos |
+| Huellas de herramientas (contexto, prompts, plan, requisitos, herramientas sin IA, menú, fragmentos, agente) | 480 410 entradas idénticas (`equivalencia_herramientas.py`) |
+| Prueba de equivalencia con la V1 (59 huellas) con los fixtures en el formato del validador | Idéntica |
+| PDF de Ingeniería 2026 → JSON del validador | 15 de 15 cumplen su esquema |
+
+Lo que el contrato del validador no trae y la escala de la UTI sí valora (NA justificado, ODS, detalle de metodologías, bloque V.5 a V.12) queda vacío en `a_v2` y la escala lo marca ND. Las horas vacías del validador siguen vacías en el Generador (nunca 0).

@@ -13,7 +13,7 @@ import re
 import unicodedata
 from datetime import date, timedelta
 
-from app.sga import contrato_v2
+from app.sga import contrato_v2, contrato_validador
 
 _FILA_RUBRICA = {"indicador": None, "niveles": None}
 _ACTIVIDAD = {"texto": None, "horas": None}
@@ -158,9 +158,12 @@ def _completar(contrato: dict) -> list[str]:
 def a_contrato_con_avisos(crudo: dict) -> tuple[dict, list[str]]:
     """Sílabo del contrato (lista blanca y campos derivados) y los avisos de lo que no se importó.
 
-    Acepta el contrato v1.0 y el v2.0 (`"contrato": "2.0"`); el v2.0 se lleva primero a la forma del v1.0.
+    Acepta el JSON del Validador (`"contrato": "silabo-api/0.1.0"`, el definitivo), el v2.0 y el v1.0; los dos
+    primeros se llevan antes a la forma del v1.0.
     """
-    if contrato_v2.es_v2(crudo):
+    if contrato_validador.es_validador(crudo):
+        crudo = contrato_validador.a_interno(crudo)
+    elif contrato_v2.es_v2(crudo):
         crudo = contrato_v2.a_v1(crudo)
     contrato = _filtrar(crudo, _ARBOL)
     avisos = _completar(contrato) if isinstance(contrato, dict) else []

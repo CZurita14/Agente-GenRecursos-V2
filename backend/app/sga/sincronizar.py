@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from psycopg.types.json import Jsonb
 
 from app.sga.proveedor import SGANoDisponible, SilaboNoDisponible
-from app.sga import contrato_v2
+from app.sga import contrato_validador
 from app.sga.traductor import a_contrato_con_avisos
 from app.silabo.integridad import SilaboInvalido, cargar_silabo
 
@@ -49,12 +49,12 @@ def _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir=True) -
         crudo = proveedor.obtener_silabo(permiso, materia)
     except (SGANoDisponible, SilaboNoDisponible):
         return MateriaEstado(**base, estado="no_disponible", asignatura_id=previa_id)
-    # V3: solo entra el contrato 2.0 (Escala general de evaluación de sílabos, UTI 23/10/2026).
-    if not contrato_v2.es_v2(crudo):
+    # Contrato definitivo: el JSON del Validador de Sílabos (silabo-api/0.1.0), tal cual.
+    if not contrato_validador.es_validador(crudo):
         return MateriaEstado(**base, estado="invalida", asignatura_id=previa_id,
-                             fallos=[f"contrato: se requiere la versión {contrato_v2.VERSION}"])
-    if fallos_v2 := contrato_v2.reglas(crudo):
-        return MateriaEstado(**base, estado="invalida", fallos=fallos_v2, asignatura_id=previa_id)
+                             fallos=[f"contrato: se requiere {contrato_validador.VERSION}"])
+    if fallos_contrato := contrato_validador.reglas(crudo):
+        return MateriaEstado(**base, estado="invalida", fallos=fallos_contrato, asignatura_id=previa_id)
     try:
         contrato, avisos = a_contrato_con_avisos(crudo)
         silabo = cargar_silabo(contrato)
