@@ -1,7 +1,8 @@
 KIT DE INTEGRACIÓN - GENERADOR DE RECURSOS DE ESTUDIO CON EL MONITOR DE AGENTES UTI
 
 Contenido
-- ficha-agente.json: ficha del agente para «Registrar agente» (sin credenciales).
+- REGISTRAR-AGENTE.txt: el valor de cada campo del formulario «Registrar agente», en su orden.
+- ficha-agente.json: ficha para «Importar ficha del kit» (sin credenciales).
 - monitor-api-v1.json: contrato UTI v1 (1.1.0). El Generador implementa GET /v1/capabilities, /v1/health y /v1/events.
 - ejemplos-respuestas.json: respuestas reales del Generador en desarrollo.
 

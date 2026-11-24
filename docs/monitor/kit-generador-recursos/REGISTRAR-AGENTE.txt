@@ -1,0 +1,38 @@
+DATOS PARA EL FORMULARIO «REGISTRAR AGENTE»
+Generador de Recursos de Estudio - mismo orden que el formulario
+
+Importar ficha del kit (ficha-agente.json, opcional)
+  Seleccionar el archivo ficha-agente.json de este kit. Llena Nombre, ID estable, Entorno,
+  Descripción y URL base. Si no se importa, escribir los valores de abajo a mano.
+
+Nombre
+  Generador de Recursos de Estudio
+
+ID estable (acordar con el proveedor)
+  generador-recursos-uti
+  (Debe quedar exactamente así: es el agentId que responde la API en /v1/capabilities.)
+
+Modo
+  API real · conexión pendiente   ->   API real
+
+Entorno
+  Desarrollo
+
+Descripción
+  Genera con IA herramientas de estudio a partir del sílabo de cada proyecto formativo
+  (contrato JSON 2.0 del SGA).
+
+URL base (opcional por ahora)
+  http://localhost:8001            si el monitor corre en el mismo equipo del Generador
+  http://<IP del equipo>:8001      si corre en otro equipo de la misma red
+  (Sin barra al final. El monitor agrega /v1/capabilities, /v1/health y /v1/events.)
+
+Token del agente (opcional, se guarda cifrado)
+  NO está en este kit. Se entrega aparte por un canal seguro (archivo en mano o mensaje cifrado).
+  Pegarlo tal cual, sin la palabra Bearer ni espacios.
+
+Guardar agente
+  Al guardar con URL y token, el monitor comprueba la conexión. Debe verse:
+  - Estado: listo (en línea).
+  - Capacidades: sin configuración de pesos y sin entrenamiento.
+  - Registro de actividad: eventos del Generador (recursos generados, fallidos, chat, sílabos).

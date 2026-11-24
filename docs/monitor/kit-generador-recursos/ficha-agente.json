@@ -1,10 +1,11 @@
 {
-  "agentId": "generador-recursos-uti",
   "name": "Generador de Recursos de Estudio",
-  "description": "Genera con IA herramientas de estudio (cuestionarios, fichas, prácticas, tarjetas, presentaciones, guías y casos) a partir del sílabo de cada proyecto formativo, que recibe del SGA en JSON (contrato 2.0). El monitor observa su salud y su actividad; no hay pesos ni entrenamiento que controlar.",
-  "integration": "uti-v1",
+  "agentId": "generador-recursos-uti",
+  "mode": "API real",
   "environment": "development",
+  "description": "Genera con IA herramientas de estudio a partir del sílabo de cada proyecto formativo (contrato JSON 2.0 del SGA).",
   "baseUrl": "http://localhost:8001",
+  "integration": "uti-v1",
   "authentication": {
     "type": "bearer",
     "credentialDelivery": "Archivo de texto entregado en mano o por un mensaje cifrado acordado; nunca por correo abierto ni dentro de esta ficha.",
