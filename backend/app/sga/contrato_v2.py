@@ -7,8 +7,34 @@ las descarta después la lista blanca del traductor. Nunca muta la entrada ni fa
 lo que no reconoce lo deja igual para que lo informe la validación.
 """
 import copy
+import unicodedata
 
 VERSION = "2.0"
+
+# III.3: la plantilla de sílabo 2026 ofrece 5 metacompetencias fijas y el docente marca una. El SGA puede
+# enviarlas con otra grafía (el PDF dice «e ia»): se comparan sin mayúsculas ni tildes y se guardan así.
+METACOMPETENCIAS = (
+    "Innovación y emprendimiento sostenible con impacto territorial",
+    "Gobernanza ética de tecnologías digitales e IA",
+    "Liderazgo colaborativo e intercultural para la transformación territorial",
+    "Metacognición estratégica y proyecto ético de vida",
+    "Pensamiento sociocrítico y sistémico para la toma de decisiones estratégicas",
+)
+
+
+def _plano(texto: str) -> str:
+    sin_tildes = "".join(c for c in unicodedata.normalize("NFD", texto) if unicodedata.category(c) != "Mn")
+    return " ".join(sin_tildes.upper().split())
+
+
+_POR_CLAVE = {_plano(m): m for m in METACOMPETENCIAS}
+
+
+def metacompetencia_oficial(texto) -> str | None:
+    """Forma oficial de la metacompetencia; "" si viene vacía (ND); None si no es del catálogo."""
+    if not isinstance(texto, str):
+        return None
+    return "" if not texto.strip() else _POR_CLAVE.get(_plano(texto))
 
 NOMBRE_METODOLOGIA = {
     "aprendizaje_basado_problemas": "Aprendizaje basado en problemas (ABP)",
@@ -36,8 +62,11 @@ def reglas(crudo: dict) -> list[str]:
     1. Las claves obligatorias de la raíz vienen.
     2. Los RA se numeran RA1, RA2, ... en orden y sin saltos (la escala valora RA1 a RA4).
     3. Cada tipo de metodología complementaria aparece una vez, salvo `otra`.
+    4. La metacompetencia, si viene, es una de las 5 del catálogo institucional.
     """
     fallos = [f"{k}: falta" for k in RAIZ_OBLIGATORIA if k not in crudo]
+    if "metacompetencia" in crudo and metacompetencia_oficial(crudo["metacompetencia"]) is None:
+        fallos.append("metacompetencia: no es una de las 5 del catálogo institucional")
     ras = crudo.get("resultados_aprendizaje")
     if isinstance(ras, list):
         for i, r in enumerate(ras):
@@ -77,6 +106,9 @@ def a_v1(crudo: dict) -> dict:
     """Copia del sílabo v2.0 con la forma del v1.0 en las claves que cambiaron."""
     d = copy.deepcopy(crudo)
     d.pop("contrato", None)
+    oficial = metacompetencia_oficial(d.get("metacompetencia"))
+    if oficial is not None and "metacompetencia" in d:
+        d["metacompetencia"] = oficial
     if "metodologias" in d:
         d["metodologias"] = _metodologias(d["metodologias"])
     pis = d.get("pis")

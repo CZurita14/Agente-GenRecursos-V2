@@ -42,7 +42,7 @@
   },
   "competencia_perfil": "Diseña soluciones de información que responden a necesidades de organizaciones del territorio.",
   "competencia_pf": "Implementa bases de datos relacionales que resuelven necesidades de información de una organización.",
-  "metacompetencia": "Trabaja de forma colaborativa y ética con datos de terceros.",
+  "metacompetencia": "Gobernanza ética de tecnologías digitales e IA",
   "habilidades_blandas": [
     "Trabajo colaborativo",
     "Comunicación asertiva con usuarios",
@@ -92,10 +92,7 @@
       "justificacion_na": ""
     }
   },
-  "inclusion": {
-    "barreras": "Estudiantes sin computador propio.",
-    "apoyos": "Laboratorio abierto y materiales accesibles en el aula virtual."
-  },
+  "inclusion": "Barreras: estudiantes sin computador propio. Apoyos: laboratorio abierto y materiales accesibles en el aula virtual.",
   "contribucion_perfil": "El PF desarrolla el diseño de soluciones de información que pide el perfil de egreso.",
   "resultados_aprendizaje": [
     {

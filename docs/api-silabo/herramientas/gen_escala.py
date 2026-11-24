@@ -35,7 +35,7 @@ RUTAS = {
     "III.5": ["ejes_transversales.sostenibilidad_ods"], "III.6": ["ejes_transversales.interculturalidad"],
     "III.7": ["ejes_transversales.internacionalizacion"], "III.8": ["ejes_transversales.interdisciplinariedad"],
     "III.9": ["ejes_transversales.emprendimiento"], "III.10": ["ejes_transversales.educacion_financiera"],
-    "III.11": ["inclusion.barreras", "inclusion.apoyos"],
+    "III.11": ["inclusion"],
     "III.12": ["resultados_aprendizaje[].texto"], "III.13": ["resultados_aprendizaje[].evidencia"],
     "III.14": ["resultados_aprendizaje"], "III.15": ["contribucion_perfil"],
     "III.16": ["problema.descripcion"], "III.17": ["problema.reto"], "III.18": ["problema.producto_final"],

@@ -94,13 +94,15 @@ def test_momento_y_sesion_sin_fecha():
 
 def test_migrar_con_apartados_cumple_reglas_2():
     base = leer_cabecera(PORTADA, TABLAS_II, TABLAS_III)
-    base |= {"momentos": [], "rubrica_producto_final": [], "bibliografia": {"basica": [], "complementaria": []}}
+    base |= {"momentos": [], "rubrica_producto_final": [], "bibliografia": {"basica": [], "complementaria": []},
+             # La tabla sintética recorta la opción; en un sílabo real viene completa (una de las 5 del catálogo).
+             "metacompetencia": "Pensamiento sociocrítico y sistémico para la toma de decisiones estratégicas"}
     a = leer_apartados_2026(TABLAS_II + REQUISITOS, TABLAS_III + NUEVAS_III)
     v2 = migrar(base, apartados=a)
     assert contrato_v2.reglas(v2) == []
     assert v2["habilidades_blandas"] == a["habilidades_blandas"]
     assert v2["proyecto_formativo"]["correquisitos"] == a["correquisitos"]
-    assert v2["inclusion"] == {"barreras": "Ajustes de tiempo", "apoyos": ""}
+    assert v2["inclusion"] == "Ajustes de tiempo"
     assert v2["ejes_transversales"]["sostenibilidad_ods"]["ods"] == [9, 11]
     assert v2["ejes_transversales"]["emprendimiento"] == {"aplica": True, "descripcion": "", "justificacion_na": ""}
     assert [c["tipo"] for c in v2["metodologias"]["complementarias"]] == ["aprendizaje_basado_problemas"]

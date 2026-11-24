@@ -181,3 +181,33 @@ def test_validar_evaluacion_detecta_errores():
 def test_vacio():
     assert vacio("  ") and vacio([]) and vacio({"aplica": True, "descripcion": "", "justificacion_na": "x"})
     assert not vacio(0) and not vacio(False) and not vacio({"descripcion": "", "ods": [3]})
+
+
+# --- ajustes por la plantilla de sílabo 2026 (docs/api-silabo/plantilla-2026.md) ---------------
+
+
+@pytest.mark.parametrize("valor", ["", "Gobernanza ética de tecnologías digitales e ia",
+                                   "  PENSAMIENTO SOCIOCRITICO Y SISTEMICO PARA LA TOMA DE DECISIONES ESTRATEGICAS "])
+def test_metacompetencia_del_catalogo_sin_importar_mayusculas_ni_tildes(valor):
+    d = _leer("ejemplo-v2-completo.json")
+    d["metacompetencia"] = valor
+    assert contrato_v2.reglas(d) == []
+
+
+def test_metacompetencia_fuera_del_catalogo():
+    d = _leer("ejemplo-v2-completo.json")
+    d["metacompetencia"] = "Trabaja en equipo"
+    assert contrato_v2.reglas(d) == ["metacompetencia: no es una de las 5 del catálogo institucional"]
+
+
+def test_metacompetencia_queda_con_su_forma_oficial():
+    d = _leer("ejemplo-v2-completo.json")
+    d["metacompetencia"] = "gobernanza etica de tecnologias digitales e IA"
+    assert contrato_v2.a_v1(d)["metacompetencia"] == "Gobernanza ética de tecnologías digitales e IA"
+    assert len(contrato_v2.METACOMPETENCIAS) == 5
+
+
+def test_inclusion_es_un_texto():
+    d = _leer("ejemplo-v2-completo.json")
+    assert isinstance(d["inclusion"], str) and d["inclusion"]
+    assert isinstance(_leer("ejemplo-v2-minimo.json")["inclusion"], str)

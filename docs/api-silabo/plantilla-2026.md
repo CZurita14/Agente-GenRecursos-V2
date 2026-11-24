@@ -27,10 +27,10 @@ La estructura se obtuvo solo de las líneas que se repiten en al menos el 80 % d
 | III. Prerrequisitos / correquisitos | Prerrequisitos: «Ninguno» en 14 de 15. Correquisitos: lista de proyectos formativos en los 15 | `proyecto_formativo.prerrequisitos[]`, `correquisitos[]` | II.1 | «Ninguno» = lista vacía (válido) |
 | III. Competencia del perfil de egreso | Texto | `competencia_perfil` | III.1 | Coincide |
 | III. Competencia del proyecto formativo | Texto | `competencia_pf` | III.2 | Coincide |
-| III. Metacompetencia transversal | **Casillas**: 5 opciones fijas, la elegida con `(X)` | `metacompetencia` (texto) | III.3 | **Ajuste:** conviene un `enum` con las 5 opciones |
+| III. Metacompetencia transversal | **Casillas**: 5 opciones fijas, la elegida con `(X)` | `metacompetencia` (texto) | III.3 | **Ajustado (2026-11-24):** una de las 5 del catálogo; se compara sin mayúsculas ni tildes |
 | III. Habilidades blandas | Viñetas | `habilidades_blandas[]` | III.4 | Coincide |
 | III. Ejes transversales | Tabla «Eje · Cómo se evidencia en las actividades del PF», una fila por eje | `ejes_transversales.<eje>.descripcion` | III.5–III.10 | **Brecha:** la plantilla no pide justificación de NA ni ODS numerados ni tipo de internacionalización. Un eje sin fila no dice si es ND o NA |
-| III. Inclusión | Texto único | `inclusion.{barreras,apoyos}` | III.11 | **Ajuste:** la plantilla no separa barreras y apoyos |
+| III. Inclusión | Texto único | `inclusion` (texto) | III.11 | **Ajustado (2026-11-24):** un solo texto |
 | III. RA y evidencias | Tabla «RA · Resultado de aprendizaje · Evidencia de desempeño» | `resultados_aprendizaje[]` | III.12–III.14 | Coincide |
 | III. Contribución al perfil | Texto | `contribucion_perfil` | III.15 | Coincide |
 | III. Problema del territorio | Tabla «Problema, necesidad u oportunidad» | `problema` | III.16–III.18 | Coincide |
@@ -47,7 +47,7 @@ La estructura se obtuvo solo de las líneas que se repiten en al menos el 80 % d
 ## Consecuencias
 
 1. **La plantilla no pide todo lo que la escala valora.** Con esta plantilla, V.5 a V.12 (30 % del apartado V) y el detalle de metodologías (III.21–III.29) salen siempre ND. Hay que decidir con la UTI si la plantilla se amplía o si la escala se ajusta a la plantilla.
-2. **Tres ajustes al contrato 2.0** para calzar con la plantilla: `metacompetencia` como una de 5 opciones fijas, `inclusion` como texto único (o barreras y apoyos opcionales), y el PIS como «proyecto interdisciplinario socioformativo».
+2. **Ajustes al contrato 2.0, ya aplicados (2026-11-24):** `metacompetencia` debe ser una de las 5 opciones fijas (regla 4 del contrato), `inclusion` es un texto único y el PIS se describe como «proyecto interdisciplinario socioformativo».
 3. **Lector de PDF ampliado (2026-11-23).** `backend/ciencia_datos/lector_pdf/` (traído de la V1, fuera de la aplicación) lee ahora prerrequisitos, correquisitos, nivel de formación, habilidades blandas, ejes (con ODS e internacionalización), inclusión y contribución al perfil, y entrega el JSON 2.0 directo: `python -m ciencia_datos.lector_pdf.lote <carpeta PDF> <salida>`. Una sesión o momento sin fecha legible ya no rechaza el PDF: la fecha queda nula y la validación lo informa.
 4. **TI:** si el SGA guarda los mismos campos que la plantilla, su API llevará estas mismas brechas.
 

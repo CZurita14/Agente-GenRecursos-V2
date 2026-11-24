@@ -177,6 +177,9 @@ check("regla: RA con salto", bool(contrato_v2.reglas(d)))
 d = copy.deepcopy(completo)
 d["metodologias"]["complementarias"][1]["tipo"] = "aprendizaje_basado_problemas"
 check("regla: metodología repetida", bool(contrato_v2.reglas(d)))
+d = copy.deepcopy(completo)
+d["metacompetencia"] = "Trabaja en equipo"
+check("regla: metacompetencia fuera del catálogo", bool(contrato_v2.reglas(d)))
 
 # 4. Migración de los 51 sílabos reales (v1) al v2 y revisión automática
 docs = {}

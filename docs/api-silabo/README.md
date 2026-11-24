@@ -169,10 +169,10 @@ El v2.0 (2026-11-18) agrega al sílabo todo lo que valora la *Escala general de 
 | Clave nueva | Punto de la escala | Forma |
 |---|---|---|
 | `proyecto_formativo.formacion`, `prerrequisitos[]`, `correquisitos[]` | II.1 | Texto y listas. Lista vacía de requisitos = «no requiere según la malla» (válido). `uoc`, `modalidad`, `creditos`, `horas` y `horario` pasan a obligatorias |
-| `competencia_pf`, `metacompetencia` | III.2, III.3 | Pasan a obligatorias |
+| `competencia_pf`, `metacompetencia` | III.2, III.3 | Pasan a obligatorias. `metacompetencia` es una de las 5 del catálogo institucional (regla 4) |
 | `habilidades_blandas[]` | III.4 | Una por elemento |
 | `ejes_transversales` | III.5 a III.10 | Seis objetos fijos: `sostenibilidad_ods` (con `ods[]`, números 1 a 17), `interculturalidad`, `internacionalizacion` (con `tipo`: `clase_espejo`, `coil`, `movilidad`, `colaboracion`, `contraste_casos_fuentes`, `otra` o `null`, y `actores`, `actividad`, `producto`), `interdisciplinariedad` (con `disciplinas[]`), `emprendimiento`, `educacion_financiera`. Cada uno con `aplica`, `descripcion`, `justificacion_na` |
-| `inclusion` | III.11 | `barreras`, `apoyos`. No admite NA |
+| `inclusion` | III.11 | Un solo texto con barreras y apoyos, como en la plantilla. No admite NA |
 | `contribucion_perfil` | III.15 | Texto |
 | `resultados_aprendizaje[]` | III.12 a III.14 | De 1 a 4, con ids `RA1`, `RA2`, ... en orden y sin saltos |
 | `pis` | III.19, III.20 | Pasa a obligatorio: `aplica`, `nombre`, `descripcion`, `aporte`, `justificacion_na` |
@@ -185,7 +185,7 @@ El v2.0 (2026-11-18) agrega al sílabo todo lo que valora la *Escala general de 
 
 Los apartados **I (perfil del docente)** y **VII (firmas)** siguen fuera de la API por privacidad: el evaluador los valora fuera del sistema (`"fuente": "evaluador"`).
 
-Reglas del v2.0 que se suman a las siete de integridad (`contrato_v2.reglas`): claves obligatorias de la raíz presentes, RA numerados sin saltos y cada tipo de metodología una sola vez (salvo `otra`). Un sílabo que no las cumple queda `invalida`.
+Reglas del v2.0 que se suman a las siete de integridad (`contrato_v2.reglas`): claves obligatorias de la raíz presentes, RA numerados sin saltos, cada tipo de metodología una sola vez (salvo `otra`) y la metacompetencia, si viene, una de las 5 del catálogo institucional (sin importar mayúsculas ni tildes; el sistema guarda la forma oficial). Un sílabo que no las cumple queda `invalida`.
 
 ### Resultado de la evaluación
 

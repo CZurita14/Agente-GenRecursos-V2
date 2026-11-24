@@ -40,8 +40,8 @@ c["ejes_transversales"] = {
     "educacion_financiera": {"aplica": True, "descripcion": "Se estima el costo de mantener la base de datos.",
                              "justificacion_na": ""},
 }
-c["inclusion"] = {"barreras": "Estudiantes sin computador propio.",
-                  "apoyos": "Laboratorio abierto y materiales accesibles en el aula virtual."}
+c["inclusion"] = ("Barreras: estudiantes sin computador propio. Apoyos: laboratorio abierto y materiales "
+                  "accesibles en el aula virtual.")
 c["contribucion_perfil"] = "El PF desarrolla el diseño de soluciones de información que pide el perfil de egreso."
 c["resultados_aprendizaje"] = copy.deepcopy(v1["resultados_aprendizaje"])
 c["problema"] = copy.deepcopy(v1["problema"])
@@ -95,7 +95,7 @@ for k in m["ejes_transversales"]:
 m["ejes_transversales"]["sostenibilidad_ods"]["ods"] = []
 m["ejes_transversales"]["interdisciplinariedad"]["disciplinas"] = []
 m["ejes_transversales"]["internacionalizacion"].update(tipo=None, actores="", actividad="", producto="")
-m["inclusion"] = {"barreras": "", "apoyos": ""}
+m["inclusion"] = ""
 m["contribucion_perfil"] = ""
 m["resultados_aprendizaje"] = [{"id": "RA1", "texto": c["resultados_aprendizaje"][0]["texto"], "evidencia": ""}]
 m["pis"] = {"aplica": False, "nombre": "", "descripcion": "", "aporte": "", "justificacion_na": "El PF no forma parte de un PIS."}

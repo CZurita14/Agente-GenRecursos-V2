@@ -286,8 +286,7 @@
         "M2"
       ],
       "rutas": [
-        "inclusion.barreras",
-        "inclusion.apoyos"
+        "inclusion"
       ],
       "repetir_por": null,
       "admite_na": false,

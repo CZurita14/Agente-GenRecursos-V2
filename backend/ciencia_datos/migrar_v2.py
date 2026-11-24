@@ -63,8 +63,7 @@ def migrar(j: dict, *, apartados: dict | None = None, extras: bool = False) -> d
         "competencia_pf": j.get("competencia_pf", ""), "metacompetencia": j.get("metacompetencia", ""),
         "habilidades_blandas": a.get("habilidades_blandas", []),
         "ejes_transversales": {k: _eje(k, ejes.get(k)) for k in _EJES},
-        # La plantilla 2026 trae un solo texto de inclusión: va en `barreras` hasta que el contrato lo unifique.
-        "inclusion": {"barreras": a.get("inclusion", ""), "apoyos": ""},
+        "inclusion": a.get("inclusion", ""),
         "contribucion_perfil": a.get("contribucion_perfil", ""),
         "resultados_aprendizaje": j["resultados_aprendizaje"], "problema": j["problema"],
         "pis": pis_v2,
