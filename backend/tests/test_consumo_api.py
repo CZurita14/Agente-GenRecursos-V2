@@ -55,21 +55,24 @@ def _trabajo(conn, aid, herramienta, *, tipo="generacion", estado="listo", hace=
                  "tokens_entrada,tokens_salida,creado,actualizado) values (%s,%s,'general','clase','M1-S1',%s,%s,%s,%s,%s,%s,%s)",
                  (tid, aid, herramienta, tipo, estado, sum(l[1] for l in llamadas), sum(l[2] for l in llamadas),
                   creado, creado + timedelta(minutes=3)))
-    for rol, e, s, seg, ok in llamadas:
-        conn.execute("insert into llamada_llm (trabajo_id,asignatura_id,rol,tokens_entrada,tokens_salida,segundos,ok,creado) "
-                     "values (%s,%s,%s,%s,%s,%s,%s,%s)", (tid, aid, rol, e, s, seg, ok, creado))
+    for rol, e, s, seg, ok, *costo in llamadas:
+        # costo = (modelo, tokens en caché, costo_usd); sin él, una llamada anterior al registro de costo.
+        modelo, cache, usd = costo or (None, 0, None)
+        conn.execute("insert into llamada_llm (trabajo_id,asignatura_id,rol,tokens_entrada,tokens_salida,segundos,ok,creado,"
+                     "modelo,tokens_cache,costo_usd) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                     (tid, aid, rol, e, s, seg, ok, creado, modelo, cache, usd))
     return tid
 
 
 @pytest.fixture
 def sembrado(entorno, silabo, conn):
     construir, cliente = entorno
-    app = construir(llm_precio_entrada_usd_mtok=0.5, llm_precio_salida_usd_mtok=2.0)
+    app = construir()
     cliente(app)  # arranca la aplicación (lifespan) antes de usar sus servicios
     mia = app.state.asignaturas.guardar(YO, silabo)["id"]
     ajena = app.state.asignaturas.guardar(OTRO, silabo)["id"]
-    _trabajo(conn, mia, "cuestionario", llamadas=(("worker", 10_000, 4_000, 5.0, True),
-                                                   ("revisor", 30_000, 6_000, 9.0, True)))
+    _trabajo(conn, mia, "cuestionario", llamadas=(("worker", 10_000, 4_000, 5.0, True, "deepseek-v4-pro", 8_000, 0.02),
+                                                   ("revisor", 30_000, 6_000, 9.0, True, "deepseek-v4-pro", 20_000, 0.03)))
     _trabajo(conn, mia, "tarjetas", llamadas=(("worker", 3_000, 1_000, 1.0, True),
                                               ("worker", 1_000, 0, 0.5, False)))
     _trabajo(conn, mia, "chat", tipo="chat", llamadas=(("coordinador", 2_000, 500, 1.0, True),))
@@ -217,19 +220,18 @@ def test_por_herramienta_chat_y_costo(sembrado):
     assert set(h) == {"cuestionario", "tarjetas"}
     assert h["cuestionario"]["recursos"] == 1 and h["cuestionario"]["tokens"] == 50_000
     assert h["cuestionario"]["por_recurso"] == 50_000 and h["cuestionario"]["parte_revision"] == 0.72
+    assert h["cuestionario"]["costo_usd"] == 0.05  # lo guardado por cada llamada
     assert d["chat"] == {"pedidos": 1, "tokens": 2_500}
-    # 46 000 × 0,5 / 1e6 + 11 500 × 2 / 1e6
-    assert d["costo_usd"] == 0.046
+    assert d["totales"]["tokens_cache"] == 28_000
 
 
-def test_costo_sin_precios(entorno, silabo, conn):
-    construir, cliente = entorno
-    app = construir()
-    c = cliente(app, YO)
-    aid = app.state.asignaturas.guardar(YO, silabo)["id"]
-    _trabajo(conn, aid, "tarjetas")
-    _desbloquear(c)
-    assert c.get("/consumo").json()["costo_usd"] is None
+def test_costo_guardado_mas_estimacion_de_llamadas_antiguas(sembrado):
+    d = _resumen(sembrado)
+    # Guardado: 0,02 + 0,03. Antiguas (sin modelo) a tarifa máxima de v4-pro: entrada 1,32 y salida 3,96 por millón.
+    antiguas = ((3_000 + 1_000 + 2_000) * 1.32 + (1_000 + 0 + 500) * 3.96) / 1e6
+    assert d["costo_usd"] == round(0.05 + antiguas, 4)
+    assert d["costo_estimado_llamadas"] == 3
+    assert d["tarifa"]["vigencia"] == "2026-11-24"
 
 
 def test_recientes_sin_contenido(sembrado):
@@ -241,7 +243,7 @@ def test_recientes_sin_contenido(sembrado):
 def test_periodo_vacio(sembrado):
     d = _resumen(sembrado, desde="2020-01-01", hasta="2020-01-02")
     assert d["totales"]["tokens_entrada"] == 0 and d["por_herramienta"] == [] and d["recientes"] == []
-    assert d["costo_usd"] == 0.0
+    assert d["costo_usd"] == 0.0 and d["costo_estimado_llamadas"] == 0
 
 
 def test_rango_maximo(sembrado):

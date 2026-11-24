@@ -7,11 +7,14 @@ import ssl
 import threading
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Callable, Protocol
 from uuid import UUID
 
 import httpx
 import openai
+
+from app.llm import precios
 
 CONTEXTO_MAXIMO = 8192
 MARGEN_SEGURIDAD = 300
@@ -145,7 +148,7 @@ class ClienteVLLM:
                   trabajo_id: UUID | None, asignatura_id: UUID | None,
                   timeout_s: float | None = None) -> Respuesta:
         inicio = time.monotonic()
-        tokens_entrada = tokens_salida = 0
+        tokens_entrada = tokens_salida = tokens_cache = 0
         ok = False
         try:
             with self._semaforo:
@@ -183,16 +186,22 @@ class ClienteVLLM:
             uso = finalizacion.usage
             tokens_entrada = uso.prompt_tokens if uso else entrada
             tokens_salida = uso.completion_tokens if uso else 0
+            tokens_cache = _tokens_en_cache(uso)
             ok = True
             return Respuesta(texto, razonamiento, tokens_entrada, tokens_salida,
                              round(time.monotonic() - inicio, 3),
                              finalizacion.choices[0].finish_reason or "stop")
         finally:
             try:
+                # Costo con la tarifa de la hora de la llamada (pico o no) y su caché, como lo cobra DeepSeek.
+                costo_usd = (precios.costo(self._modelo, tokens_cache, tokens_entrada - tokens_cache, tokens_salida,
+                                           datetime.now(timezone.utc))
+                             if self._proveedor == "deepseek" else None)
                 self._registrar({
                     "trabajo_id": trabajo_id, "asignatura_id": asignatura_id, "rol": rol,
                     "tokens_entrada": tokens_entrada, "tokens_salida": tokens_salida,
-                    "segundos": round(time.monotonic() - inicio, 3), "ok": ok})
+                    "segundos": round(time.monotonic() - inicio, 3), "ok": ok,
+                    "modelo": self._modelo, "tokens_cache": tokens_cache, "costo_usd": costo_usd})
             except Exception:  # el registro nunca debe tapar el resultado ni el error original
                 registro.exception("no se pudo registrar la llamada al modelo (rol %s)", rol)
 
@@ -205,6 +214,19 @@ class ClienteVLLM:
             except (openai.APIConnectionError, openai.InternalServerError) as error:
                 ultimo = error
         raise ServidorNoDisponible(f"el servidor de IA no responde: {ultimo}") from ultimo
+
+
+def _tokens_en_cache(uso) -> int:
+    """Tokens de entrada que DeepSeek cobró como caché (`prompt_cache_hit_tokens` o
+    `prompt_tokens_details.cached_tokens`); 0 si el servidor no lo informa (vLLM)."""
+    if uso is None:
+        return 0
+    extras = getattr(uso, "model_extra", None) or {}
+    valor = getattr(uso, "prompt_cache_hit_tokens", None) or extras.get("prompt_cache_hit_tokens")
+    if valor is None:
+        detalle = getattr(uso, "prompt_tokens_details", None)
+        valor = getattr(detalle, "cached_tokens", None) if detalle is not None else None
+    return max(0, min(int(valor or 0), int(uso.prompt_tokens or 0)))
 
 
 class ClienteSimulado:

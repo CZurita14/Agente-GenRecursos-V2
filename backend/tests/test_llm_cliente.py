@@ -368,3 +368,38 @@ def test_deepseek_estima_tokens_sin_servidor():
 def test_proveedor_desconocido():
     with pytest.raises(ValueError):
         ClienteVLLM(BASE, "m", 1, 1, lambda _: None, proveedor="otro")
+
+
+# --- costo por llamada (app/llm/precios.py) ---------------------------------------------------
+
+
+def _deepseek_con_cache(campo):
+    def manejador(p):
+        cuerpo = _respuesta_chat("ok")
+        cuerpo["usage"] = {"prompt_tokens": 1000, "completion_tokens": 200, "total_tokens": 1200, **campo}
+        return httpx.Response(200, json=cuerpo)
+    return manejador
+
+
+@pytest.mark.parametrize("campo", [{"prompt_cache_hit_tokens": 600, "prompt_cache_miss_tokens": 400},
+                                   {"prompt_tokens_details": {"cached_tokens": 600}}])
+def test_deepseek_registra_modelo_cache_y_costo(campo):
+    from datetime import datetime, timezone
+    from app.llm import precios
+    registros = []
+    c = ClienteVLLM("https://api.deepseek.test", "deepseek-v4-pro", 120, 2, registros.append,
+                    transporte=httpx.MockTransport(_deepseek_con_cache(campo)), proveedor="deepseek")
+    _completar(c)
+    r = registros[0]
+    assert (r["modelo"], r["tokens_cache"], r["tokens_entrada"], r["tokens_salida"]) == ("deepseek-v4-pro", 600, 1000, 200)
+    ahora = datetime.now(timezone.utc)
+    esperado = {precios.costo("deepseek-v4-pro", 600, 400, 200, ahora.replace(hour=2, minute=0)),   # pico, si es día hábil
+                precios.costo("deepseek-v4-pro", 600, 400, 200, ahora.replace(hour=15, minute=0))}  # fuera de pico
+    assert r["costo_usd"] in esperado
+
+
+def test_vllm_local_no_tiene_costo():
+    registros = []
+    c, _ = _cliente(_normal(), registros)
+    _completar(c)
+    assert (registros[0]["modelo"], registros[0]["tokens_cache"], registros[0]["costo_usd"]) == ("m", 0, None)

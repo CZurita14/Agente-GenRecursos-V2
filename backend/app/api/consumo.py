@@ -75,10 +75,6 @@ def consumo(request: Request, desde: date | None = None, hasta: date | None = No
         raise HTTPException(422, "Intervalo máximo de 31 días")
     inicio = datetime.combine(desde, time.min, tzinfo=timezone.utc)
     fin = datetime.combine(hasta + timedelta(days=1), time.min, tzinfo=timezone.utc)
-    config = request.app.state.config
-    precios = ((config.llm_precio_entrada_usd_mtok, config.llm_precio_salida_usd_mtok)
-               if config.llm_precio_entrada_usd_mtok is not None and config.llm_precio_salida_usd_mtok is not None
-               else None)
     correo = request.state.usuario
     with closing(request.app.state.conexion()) as conn:
         conn.autocommit = True
@@ -90,5 +86,5 @@ def consumo(request: Request, desde: date | None = None, hasta: date | None = No
             if asignatura not in propias:
                 raise HTTPException(404, "Proyecto Formativo inexistente")
             propias = [asignatura]
-        datos = resumen(conn, propias, inicio, fin, precios)
+        datos = resumen(conn, propias, inicio, fin)
     return {"desde": desde, "hasta": hasta, **datos}

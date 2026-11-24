@@ -1,31 +1,48 @@
-"""Consumo de tokens de la IA por proyecto formativo, herramienta y trabajo. Sin texto del contenido."""
+"""Consumo de tokens de la IA por proyecto formativo, herramienta y trabajo. Sin texto del contenido.
+
+El costo es el que cada llamada guardó al hacerse (tarifa de su modelo, su hora y su caché, como lo
+cobra DeepSeek). Las llamadas anteriores a ese registro (modelo nulo) se estiman como entrada sin
+caché en horario pico de deepseek-v4-pro, el máximo posible, y se cuentan aparte.
+"""
 from datetime import datetime
+
+from app.llm import precios
+
+_ESTIMACION = precios.tarifa("deepseek-v4-pro")
+# Costo SQL de una fila: el guardado, o la estimación máxima si es anterior al registro de costo.
+_COSTO = (f"coalesce(l.costo_usd, case when l.modelo is null then (l.tokens_entrada*{_ESTIMACION[1]} "
+          f"+ l.tokens_salida*{_ESTIMACION[2]})/1000000.0 else 0 end)")
 
 
 def _redondeo(x: float | None, n: int) -> float:
     return round(float(x or 0), n)
 
 
-def resumen(conn, asignaturas: list, inicio: datetime, fin: datetime, precios: tuple[float, float] | None) -> dict:
+def resumen(conn, asignaturas: list, inicio: datetime, fin: datetime) -> dict:
     """`asignaturas`: ids a los que la cuenta tiene acceso (ya filtrados). Todo dentro de [inicio, fin)."""
     p = (asignaturas, inicio, fin)
     base = ("from llamada_llm l left join trabajo t on t.id=l.trabajo_id "
             "where l.asignatura_id=any(%s) and l.creado>=%s and l.creado<%s")
     t = conn.execute("select count(*) llamadas, coalesce(sum(l.tokens_entrada),0) tokens_entrada, "
                      "coalesce(sum(l.tokens_salida),0) tokens_salida, coalesce(sum(l.segundos),0) segundos, "
-                     "count(*) filter (where not l.ok) fallos " + base, p).fetchone()
+                     "count(*) filter (where not l.ok) fallos, coalesce(sum(l.tokens_cache),0) tokens_cache, "
+                     f"coalesce(sum({_COSTO}),0) costo, count(*) filter (where l.modelo is null and "
+                     "l.tokens_entrada+l.tokens_salida>0) estimadas " + base, p).fetchone()
     totales = {"llamadas": t["llamadas"], "tokens_entrada": int(t["tokens_entrada"]),
-               "tokens_salida": int(t["tokens_salida"]), "segundos": _redondeo(t["segundos"], 1), "fallos": t["fallos"]}
+               "tokens_salida": int(t["tokens_salida"]), "segundos": _redondeo(t["segundos"], 1), "fallos": t["fallos"],
+               "tokens_cache": int(t["tokens_cache"])}
     por_herramienta = []
     for f in conn.execute("select t.herramienta, count(distinct l.trabajo_id) recursos, "
                           "sum(l.tokens_entrada+l.tokens_salida) tokens, "
-                          "sum(l.tokens_entrada+l.tokens_salida) filter (where l.rol='revisor') revision "
+                          "sum(l.tokens_entrada+l.tokens_salida) filter (where l.rol='revisor') revision, "
+                          f"sum({_COSTO}) costo "
                           + base + " and coalesce(t.tipo,'generacion')<>'chat' and t.herramienta is not null "
                           "group by 1 order by 3 desc", p):
         tokens = int(f["tokens"])
         por_herramienta.append({"herramienta": f["herramienta"], "recursos": f["recursos"], "tokens": tokens,
                                 "por_recurso": round(tokens / f["recursos"]) if f["recursos"] else 0,
-                                "parte_revision": _redondeo((f["revision"] or 0) / tokens if tokens else 0, 2)})
+                                "parte_revision": _redondeo((f["revision"] or 0) / tokens if tokens else 0, 2),
+                                "costo_usd": _redondeo(f["costo"], 4)})
     chat = conn.execute("select count(distinct l.trabajo_id) pedidos, coalesce(sum(l.tokens_entrada+l.tokens_salida),0) tokens "
                         + base + " and t.tipo='chat'", p).fetchone()
     proyectos = [{"id": str(f["id"]), "codigo_pf": f["codigo_pf"], "nombre": f["nombre"], "tokens": int(f["tokens"] or 0),
@@ -43,9 +60,7 @@ def resumen(conn, asignaturas: list, inicio: datetime, fin: datetime, precios: t
                  for f in conn.execute("select herramienta, ambito_id, estado, tokens_entrada, tokens_salida, creado, actualizado "
                                        "from trabajo where asignatura_id=any(%s) and tipo='generacion' "
                                        "and creado>=%s and creado<%s order by creado desc limit 20", p)]
-    costo = None
-    if precios is not None:
-        costo = round(totales["tokens_entrada"] / 1e6 * precios[0] + totales["tokens_salida"] / 1e6 * precios[1], 4)
     return {"totales": totales, "por_herramienta": por_herramienta,
             "chat": {"pedidos": chat["pedidos"], "tokens": int(chat["tokens"])}, "proyectos": proyectos,
-            "recientes": recientes, "costo_usd": costo}
+            "recientes": recientes, "costo_usd": _redondeo(t["costo"], 4),
+            "costo_estimado_llamadas": t["estimadas"], "tarifa": {"vigencia": precios.VIGENCIA, "fuente": precios.FUENTE}}
