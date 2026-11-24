@@ -1,0 +1,105 @@
+{
+  "nota": "Respuestas reales del adaptador en http://172.18.3.25 (24/11/2026), sin token. Eventos: uno por tipo.",
+  "GET /v1/capabilities": {
+    "status": 200,
+    "body": {
+      "protocolVersion": "1",
+      "agentId": "generador-recursos-uti",
+      "configuration": false,
+      "training": false,
+      "weightRules": {}
+    }
+  },
+  "GET /v1/health": {
+    "status": 200,
+    "body": {
+      "status": "ready",
+      "metrics": {
+        "cpuPercent": 5.3,
+        "memoryMb": 58.6
+      }
+    }
+  },
+  "GET /v1/events?limit=100": {
+    "status": 200,
+    "body": {
+      "agentId": "generador-recursos-uti",
+      "events": [
+        {
+          "id": "trabajo:c88bbf33-3384-4165-bb97-45e74764285c:solicitado",
+          "agentId": "generador-recursos-uti",
+          "timestamp": "2026-11-10T15:23:14.126869Z",
+          "severity": "info",
+          "type": "recurso.solicitado",
+          "status": "queued",
+          "message": "Se solicitó Cuestionario (Momento 2, sesión 1).",
+          "executionId": "c88bbf33-3384-4165-bb97-45e74764285c"
+        },
+        {
+          "id": "trabajo:c88bbf33-3384-4165-bb97-45e74764285c:requiere_revision",
+          "agentId": "generador-recursos-uti",
+          "timestamp": "2026-11-10T15:44:56.943242Z",
+          "severity": "warning",
+          "type": "recurso.revision_requerida",
+          "status": "needs_review",
+          "message": "Cuestionario generado con observaciones del control de calidad (Momento 2, sesión 1).",
+          "executionId": "c88bbf33-3384-4165-bb97-45e74764285c",
+          "metadata": {
+            "durationMs": 1302816,
+            "count": 131313,
+            "success": true
+          }
+        },
+        {
+          "id": "trabajo:aa120041-662d-4c96-8135-e8cd70fe8674:listo",
+          "agentId": "generador-recursos-uti",
+          "timestamp": "2026-11-10T19:59:28.953522Z",
+          "severity": "info",
+          "type": "recurso.generado",
+          "status": "ok",
+          "message": "Hoja de ruta del Proyecto Formativo generado (Proyecto Formativo).",
+          "executionId": "aa120041-662d-4c96-8135-e8cd70fe8674",
+          "metadata": {
+            "durationMs": 0,
+            "count": 0,
+            "success": true
+          }
+        },
+        {
+          "id": "trabajo:00719ffb-e231-48dc-af6f-af38a386edef:error",
+          "agentId": "generador-recursos-uti",
+          "timestamp": "2026-11-10T23:05:25.410747Z",
+          "severity": "error",
+          "type": "recurso.fallido",
+          "status": "failed",
+          "message": "Tarjetas de estudio no se pudo generar (Momento 1, sesión 1): KeyError: no se pudo completar el trabajo.",
+          "executionId": "00719ffb-e231-48dc-af6f-af38a386edef",
+          "metadata": {
+            "durationMs": 123,
+            "count": 0,
+            "success": false
+          }
+        },
+        {
+          "id": "servicio:2026-11-24T22:52:04.383802+00:00",
+          "agentId": "generador-recursos-uti",
+          "severity": "info",
+          "type": "servicio.iniciado",
+          "status": "ok",
+          "timestamp": "2026-11-24T22:52:04.383802Z",
+          "message": "Servicio del Generador de Recursos iniciado."
+        }
+      ],
+      "nextCursor": "MjAyNi0xMS0yNFQyMjo1MjowNC4zODM4MDIrMDA6MDB8c2VydmljaW86MjAyNi0xMS0yNFQyMjo1MjowNC4zODM4MDIrMDA6MDA",
+      "hasMore": false
+    },
+    "eventos_en_la_pagina_real": 53
+  },
+  "Sin token o con token incorrecto": {
+    "status": 401
+  },
+  "GET /v1/usage": {
+    "status": 404,
+    "nota": "Pendiente (contrato 1.2.0, provider deepseek)."
+  }
+}

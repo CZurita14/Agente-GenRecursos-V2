@@ -1,12 +1,12 @@
 DATOS PARA EL FORMULARIO «REGISTRAR AGENTE»
-Generador de Recursos de Estudio - mismo orden que el formulario
+Generador de recursos de estudio UTI - mismo orden que el formulario
 
 Importar ficha del kit (ficha-agente.json, opcional)
   Seleccionar el archivo ficha-agente.json de este kit. Llena Nombre, ID estable, Entorno,
   Descripción y URL base. Si no se importa, escribir los valores de abajo a mano.
 
 Nombre
-  Generador de Recursos de Estudio
+  Generador de recursos de estudio UTI
 
 ID estable (acordar con el proveedor)
   generador-recursos-uti
@@ -20,12 +20,11 @@ Entorno
 
 Descripción
   Genera con IA herramientas de estudio a partir del sílabo de cada proyecto formativo
-  (contrato JSON 2.0 del SGA).
+  (JSON del sílabo silabo-api/0.1.0).
 
 URL base (opcional por ahora)
-  http://localhost:8001            si el monitor corre en el mismo equipo del Generador
-  http://<IP del equipo>:8001      si corre en otro equipo de la misma red
-  (Sin barra al final. El monitor agrega /v1/capabilities, /v1/health y /v1/events.)
+  http://172.18.3.25:8766
+  (Sin barra al final. El adaptador se inicia en la PC del Generador con: powershell -File infra/iniciar-monitor.ps1)
 
 Token del agente (opcional, se guarda cifrado)
   NO está en este kit. Se entrega aparte por un canal seguro (archivo en mano o mensaje cifrado).

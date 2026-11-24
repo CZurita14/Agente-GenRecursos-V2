@@ -204,3 +204,19 @@ def test_comando_token_monitor(tmp_path, capsys):
     assert len(token) >= 40 and token not in salida
     assert salida == hashlib.sha256(token.encode()).hexdigest()
     assert operacion.main(["token-monitor", str(destino)]) != 0 or destino.read_text(encoding="utf-8").strip() == token
+
+
+# --- servidor aparte del monitor (8766) --------------------------------------------------------
+
+
+def test_servidor_del_monitor_solo_expone_v1(nueva_conexion):
+    from app.monitor_servidor import crear_app_monitor
+    config = Ajustes(_env_file=None, database_url="no-usar", llm_base_url="http://no-usar/v1", llm_model="m",
+                     auth_secreto="s" * 48, monitor_token_hash=hashlib.sha256(TOKEN.encode()).hexdigest())
+    with TestClient(crear_app_monitor(config, conexion=nueva_conexion)) as c:
+        assert c.get("/v1/capabilities", headers=_h()).json()["agentId"] == AGENTE
+        assert c.get("/v1/health", headers=_h()).status_code == 200
+        assert c.get("/v1/events", headers=_h()).status_code == 200
+        assert c.get("/v1/capabilities").status_code == 401
+        for ruta in ("/asignaturas", "/auth/yo", "/salud", "/consumo", "/docs", "/openapi.json"):
+            assert c.get(ruta, headers=_h()).status_code == 404, ruta

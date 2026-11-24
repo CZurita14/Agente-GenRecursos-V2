@@ -1,10 +1,10 @@
 {
-  "name": "Generador de Recursos de Estudio",
+  "name": "Generador de recursos de estudio UTI",
   "agentId": "generador-recursos-uti",
   "mode": "API real",
   "environment": "development",
-  "description": "Genera con IA herramientas de estudio a partir del sílabo de cada proyecto formativo (contrato JSON 2.0 del SGA).",
-  "baseUrl": "http://localhost:8001",
+  "description": "Genera con IA herramientas de estudio a partir del sílabo de cada proyecto formativo (JSON del sílabo silabo-api/0.1.0).",
+  "baseUrl": "http://172.18.3.25:8766",
   "integration": "uti-v1",
   "authentication": {
     "type": "bearer",
@@ -37,7 +37,7 @@
     "deploymentAndRollback": "No aplica"
   },
   "network": {
-    "requirements": "Acceso HTTP al puerto 8001 del equipo del Generador. Monitor en el mismo equipo: ninguno. Desde otro equipo: misma red, URL http://<IP del equipo>:8001 y el puerto 8001 abierto en el firewall de Windows."
+    "requirements": "Adaptador en la PC del Generador, IP institucional 172.18.3.25, puerto TCP 8766 (solo /v1; el resto de la API sigue en 127.0.0.1). Regla de firewall de entrada limitada al origen 172.18.3.16 (PC del monitor). Iniciar con: powershell -File infra/iniciar-monitor.ps1"
   },
   "operations": {
     "idempotencyRetention": "No aplica: el agente no expone operaciones (configuration=false y training=false).",
@@ -79,6 +79,7 @@
     "Sin pesos ni entrenamiento controlables desde el monitor.",
     "cpuPercent y memoryMb requieren el paquete psutil en el servidor; sin él se omiten.",
     "servicio.iniciado se emite una vez por arranque de la API.",
-    "En desarrollo la URL es localhost; para producción se acordará la URL con TI (detrás del proxy, https://<servidor>/api)."
+    "GET /v1/usage (contrato 1.2.0) aún no está implementado; se hará con provider \"deepseek\".",
+    "ResourceEntry no aplica: el Generador usa la API de DeepSeek, no un servidor Qwen propio, así que no hay CPU, GPU, VRAM ni colas del servidor de inferencia que medir."
   ]
 }
