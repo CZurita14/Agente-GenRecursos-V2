@@ -2,7 +2,7 @@
 import { pedir } from './cliente';
 
 export interface ConsumoHerramienta {
-  herramienta: string; recursos: number; tokens: number; por_recurso: number; parte_revision: number;
+  herramienta: string; recursos: number; tokens: number; por_recurso: number; parte_revision: number; costo_usd: number;
 }
 export interface ConsumoProyecto { id: string; codigo_pf: string; nombre: string | null; tokens: number; recursos: number }
 export interface ConsumoReciente {
@@ -10,12 +10,15 @@ export interface ConsumoReciente {
 }
 export interface Consumo {
   desde: string; hasta: string;
-  totales: { llamadas: number; tokens_entrada: number; tokens_salida: number; segundos: number; fallos: number };
+  totales: { llamadas: number; tokens_entrada: number; tokens_salida: number; segundos: number; fallos: number; tokens_cache: number };
   por_herramienta: ConsumoHerramienta[];
   chat: { pedidos: number; tokens: number };
   proyectos: ConsumoProyecto[];
   recientes: ConsumoReciente[];
-  costo_usd: number | null;
+  /** Costo con la tarifa de DeepSeek de cada llamada; las anteriores al registro se estiman al máximo. */
+  costo_usd: number;
+  costo_estimado_llamadas: number;
+  tarifa: { vigencia: string; fuente: string };
 }
 
 export const consumo = (desde: string, hasta: string, asignatura?: string) =>

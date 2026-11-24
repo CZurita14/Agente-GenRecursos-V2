@@ -117,17 +117,23 @@ export function PanelConsumo({ aid, onSesionVencida }: PanelConsumoProps) {
               </div>)}
           </div>
           <p className="text-xs text-muted">
-            {datos.totales.fallos} fallos · {formatoDuracion(datos.totales.segundos)} de IA
-            {datos.costo_usd !== null ? ' · el costo es un máximo: no cuenta la caché de DeepSeek'
-              : ' · costo: sin precio de DeepSeek configurado'}
+            {datos.totales.fallos} fallos · {formatoDuracion(datos.totales.segundos)} de IA ·{' '}
+            {datos.totales.tokens_entrada ? Math.round(100 * datos.totales.tokens_cache / datos.totales.tokens_entrada) : 0} % de la entrada en caché
+          </p>
+          <p className="text-xs text-muted">
+            Costo con la tarifa oficial de DeepSeek del {datos.tarifa.vigencia}, por llamada: su modelo, su caché y su hora
+            (pico o fuera de pico).
+            {datos.costo_estimado_llamadas > 0 &&
+              ` Incluye ${datos.costo_estimado_llamadas} llamadas anteriores a este registro, estimadas a la tarifa máxima.`}
           </p>
 
-          <Tabla titulo="Por herramienta" columnas={['Herramienta', 'Recursos', 'Tokens', 'Por recurso', 'Revisión']}
+          <Tabla titulo="Por herramienta" columnas={['Herramienta', 'Recursos', 'Tokens/recurso', 'Costo/recurso', 'Revisión']}
             vacio="Sin recursos generados en este periodo."
-            filas={[...datos.por_herramienta.map(h => [nombreHerramienta(h.herramienta), String(h.recursos), formatoTokens(h.tokens),
-              formatoTokens(h.por_recurso), `${Math.round(h.parte_revision * 100)} %`]),
-              ...(datos.chat.pedidos ? [['Chat de ajustes', `${datos.chat.pedidos} pedidos`, formatoTokens(datos.chat.tokens),
-                formatoTokens(datos.chat.tokens / datos.chat.pedidos), '—']] : [])]} />
+            filas={[...datos.por_herramienta.map(h => [nombreHerramienta(h.herramienta), String(h.recursos),
+              formatoTokens(h.por_recurso), formatoCosto(h.recursos ? h.costo_usd / h.recursos : 0),
+              `${Math.round(h.parte_revision * 100)} %`]),
+              ...(datos.chat.pedidos ? [['Chat de ajustes', `${datos.chat.pedidos} pedidos`,
+                formatoTokens(datos.chat.tokens / datos.chat.pedidos), '—', '—']] : [])]} />
 
           {!aid && datos.proyectos.length > 1 && <Tabla titulo="Por proyecto formativo" columnas={['Proyecto formativo', 'Recursos', 'Tokens']}
             vacio="" filas={datos.proyectos.map(p => [p.nombre ?? p.codigo_pf, String(p.recursos), formatoTokens(p.tokens)])} />}

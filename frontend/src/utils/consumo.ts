@@ -11,9 +11,8 @@ export function formatoTokens(n: number): string {
   return `${decimal(n / 1_000_000, 2)} M`;
 }
 
-/** null cuando no hay precio de DeepSeek en la configuración (el panel lo explica debajo). */
-export function formatoCosto(usd: number | null): string {
-  if (usd === null) return '—';
+/** US$ con 2 decimales; con 4 cuando es menos de un centavo. */
+export function formatoCosto(usd: number): string {
   return `US$ ${decimal(usd, usd > 0 && usd < 0.01 ? 4 : 2)}`;
 }
 

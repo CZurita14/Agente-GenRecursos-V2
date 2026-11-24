@@ -10,8 +10,8 @@ test('tokens abreviados en español', () => {
   assert.equal(formatoTokens(1_230_000), '1,23 M');
 });
 
-test('costo con y sin precio configurado', () => {
-  assert.equal(formatoCosto(null), '—');
+test('costo en dólares', () => {
+  assert.equal(formatoCosto(0), 'US$ 0,00');
   assert.equal(formatoCosto(1.4237), 'US$ 1,42');
   assert.equal(formatoCosto(0.0012), 'US$ 0,0012');
 });

@@ -118,7 +118,7 @@ El SGA simulado lee `usuarios.json`, `materias/<usuario>.json` y `sga_silabos/<c
 Un botón fijo abajo a la derecha abre el consumo de la IA **de los proyectos formativos de la cuenta** (el abierto, o todos los de la cuenta): tokens de entrada y salida, llamadas, fallos, tiempo, costo estimado, consumo por herramienta (con el promedio por recurso y la parte del revisor), chat de ajustes y últimos trabajos. Los `ADMINISTRADORES` entran directo; los demás docentes, con la clave del panel, que abre el panel 30 minutos en esa sesión (5 intentos cada 15 minutos).
 
 La clave nunca se guarda en claro: en el `.env` va `CONSUMO_CLAVE_HASH`, generado con `printf '%s
-' '<clave>' | python -m app.operacion hash-clave` desde `backend/`. El costo usa `LLM_PRECIO_ENTRADA_USD_MTOK` y `LLM_PRECIO_SALIDA_USD_MTOK`; sin ellos el panel muestra solo tokens. Es un máximo aproximado: no se registran los aciertos de caché de DeepSeek.
+' '<clave>' | python -m app.operacion hash-clave` desde `backend/`. El costo es el mismo que cobra DeepSeek: cada llamada guarda su modelo, los tokens que DeepSeek tomó de su caché y su costo con la tarifa de su hora (pico o fuera de pico), según la tabla oficial copiada en `backend/app/llm/precios.py` (con su fecha de vigencia; se actualiza ahí cuando DeepSeek cambie precios). Solo los feriados chinos, que no se conocen de antemano, pueden hacer que el costo calculado quede por encima del cobrado. Las llamadas anteriores a este registro se estiman a la tarifa máxima y el panel las cuenta aparte.
 
 ### Producción
 
