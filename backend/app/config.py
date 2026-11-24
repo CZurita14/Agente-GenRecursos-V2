@@ -51,6 +51,10 @@ class Ajustes(BaseSettings):
     # Panel de consumo: hash PBKDF2 de la clave (python -m app.operacion hash-clave). Sin hash, solo los
     # administradores ven el panel. El costo sale de app/llm/precios.py (tarifas oficiales de DeepSeek).
     consumo_clave_hash: SecretStr | None = None
+    # Monitor de Agentes de la UTI (API UTI v1 en /v1): SHA-256 del token Bearer del monitor
+    # (python -m app.operacion token-monitor <archivo>) y el ID estable con que se registra el agente.
+    monitor_token_hash: SecretStr | None = None
+    monitor_agent_id: str = "generador-recursos-uti"
     proxies_confiables: list[str] = Field(default_factory=list)
     limite_ip_minuto: int = Field(default=600, ge=1, le=100000)
     limite_usuario_minuto: int = Field(default=120, ge=1, le=100000)

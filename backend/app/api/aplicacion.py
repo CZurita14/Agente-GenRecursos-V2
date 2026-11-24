@@ -14,6 +14,7 @@ from app.agentes.facultades import cargar_catalogo, cargar_perfiles
 from app.api.asignaturas import router as asignaturas_router
 from app.api.admin import router as admin_router
 from app.api.consumo import router as consumo_router
+from app.api.monitor_uti import router as monitor_router
 from app.api.auth import router as auth_router
 from app.api.cuerpo import LimiteJSON
 from app.api.recursos import router as recursos_router
@@ -82,6 +83,7 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
     app.include_router(chat_router)
     app.include_router(admin_router)
     app.include_router(consumo_router)
+    app.include_router(monitor_router)
     app.include_router(privacidad_router)
     # La incorporación previa al middleware de acceso lo deja por dentro:
     # CORS → sesión/Origin → límite de cuerpo → parser JSON/rutas.
@@ -96,7 +98,9 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         if request.method not in {"GET", "HEAD", "OPTIONS"}:
             if request.headers.get("origin") != config.api_origen:
                 return JSONResponse({"detail": "Origen no permitido"}, status_code=403)
-        publica = ((request.method in {"GET", "HEAD"} and request.url.path in {"/salud", "/auth/modo"})
+        # /v1/*: API UTI v1 del Monitor de Agentes; se autentica con su propio token Bearer, no con sesión.
+        publica = ((request.method in {"GET", "HEAD"} and (request.url.path in {"/salud", "/auth/modo"}
+                                                          or request.url.path.startswith("/v1/")))
                    or (request.method == "POST" and request.url.path in {"/auth/ingresar", "/auth/prueba"}))
         if not publica:
             usuario = None
