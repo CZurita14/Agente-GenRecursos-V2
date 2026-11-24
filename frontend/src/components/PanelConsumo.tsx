@@ -111,7 +111,7 @@ export function PanelConsumo({ aid, onSesionVencida }: PanelConsumoProps) {
         {datos && <div className="space-y-4">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {[['Entrada', formatoTokens(datos.totales.tokens_entrada)], ['Salida', formatoTokens(datos.totales.tokens_salida)],
-              ['Llamadas', String(datos.totales.llamadas)], ['Costo aprox.', formatoCosto(datos.costo_usd)]].map(([k, v]) =>
+              ['Llamadas', String(datos.totales.llamadas)], ['Costo', formatoCosto(datos.costo_usd)]].map(([k, v]) =>
               <div key={k} className="rounded-lg bg-app-soft px-2 py-1.5">
                 <p className="text-xs text-muted">{k}</p><p className="font-bold">{v}</p>
               </div>)}
