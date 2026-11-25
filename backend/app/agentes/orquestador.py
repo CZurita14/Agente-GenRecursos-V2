@@ -80,7 +80,7 @@ def crear_trabajos(conn, solicitud: SolicitudGeneracion) -> list[UUID]:
                 for h in solicitud.herramientas]
 
 
-def _fuentes_guia(conn, trabajo, silabo, ctx, config) -> dict:
+def _fuentes_guia(conn, trabajo, silabo, ctx, config, perfil=None) -> dict:
     """Bibliografía del sílabo y fuentes web (SearchAPI) del momento: solo para la guía de estudio."""
     from app.agentes.mensajes import leer
     from app.fuentes.searchapi import bibliografia_silabo, fuentes_momento
@@ -90,7 +90,9 @@ def _fuentes_guia(conn, trabajo, silabo, ctx, config) -> dict:
         return previos[0].fuentes  # Al reanudar, las mismas fuentes con las que empezó.
     web = []
     if config is not None and (n := numero_momento(ctx.clase_id)) is not None:
-        web = fuentes_momento(conn, config, trabajo.asignatura_id, n, list(ctx.contenidos), ctx.carrera)
+        fb = perfil.fuentes_bibliograficas if perfil is not None else None
+        web = fuentes_momento(conn, config, trabajo.asignatura_id, n, list(ctx.contenidos), ctx.carrera,
+                              bases=tuple(fb.bases) if fb else ("google_scholar",), desde=fb.desde if fb else None)
     return {"silabo": bibliografia_silabo(silabo), "web": web}
 
 
@@ -116,7 +118,7 @@ def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonado
             herramienta=trabajo.herramienta, perfil_dificultad=trabajo.parametros.get("perfil_dificultad", perfil_por_nivel(ctx.nivel)),
             instrucciones=trabajo.parametros.get("instrucciones", ""),
             material_momento=trabajo.parametros.get("material_momento", ""),
-            fuentes=_fuentes_guia(conn, trabajo, silabo, ctx, config) if trabajo.herramienta == "guia_estudio" else {},
+            fuentes=_fuentes_guia(conn, trabajo, silabo, ctx, config, perfiles.get(trabajo.agente)) if trabajo.herramienta == "guia_estudio" else {},
         )
         Coordinador(perfiles[trabajo.agente], WORKERS, cliente, razonador=razonador).ejecutar(
             conn, trabajo, encargo, ctx,

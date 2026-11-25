@@ -14,6 +14,12 @@ estilo:
     - fallas de sensores en una planta de tratamiento de agua
     - demoras en la entrega de pedidos de una distribuidora
     - mediciones de resistencia de materiales en un laboratorio
+# Fuentes de la guía de estudio (SearchAPI, por Google Scholar) y norma de las referencias.
+# bases: google_scholar, scopus (editoriales indexadas en Scopus), scielo, repositorios.
+fuentes_bibliograficas:
+  norma: IEEE
+  desde: 2019
+  bases: [scopus, google_scholar, scielo, repositorios]
 herramientas_recomendadas:
   clase: [practica_guiada, cuestionario, ficha_clase, tarjetas]
   momento: [guia_estudio, simulacro, estudio_caso, autoevaluacion_rubrica, repaso_momento, guia_evidencia]

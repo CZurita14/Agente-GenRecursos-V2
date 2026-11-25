@@ -1,9 +1,14 @@
-"""Fuentes web de la guía de estudio con SearchAPI (Google Scholar y Google). Solo para la guía.
+"""Fuentes web de la guía de estudio con SearchAPI (Google Scholar). Solo para la guía.
 
-Las consultas se arman con los temas del sílabo (contenidos del momento y carrera): nunca llevan
-datos del docente ni de los estudiantes. Cada resultado conserva su enlace real: el modelo solo
-puede citarlo por su identificador ([F1], [F2], …) y la bibliografía la arma el código.
-Se guardan por momento (tabla `fuente_momento`) para no gastar créditos al regenerar la guía.
+Las bases se parametrizan por perfil (agentes/<perfil>.yaml, `fuentes_bibliograficas`). Todas se
+consultan por Google Scholar, que da el enlace directo, los autores, la revista y el año (lo que
+pide la norma IEEE); el motor «google» devuelve enlaces de redirección cifrados y no se usa.
+Scopus no está en SearchAPI: se aproxima con las editoriales que indexa (no es una consulta a Scopus).
+
+Las consultas se arman con los temas del sílabo (contenidos del momento): nunca llevan datos del
+docente ni de los estudiantes. El modelo cita cada fuente por su identificador ([F1], …) y la
+bibliografía con los enlaces reales la arma el código. Se guardan por momento (`fuente_momento`)
+para no gastar créditos al regenerar la guía.
 """
 from __future__ import annotations
 
@@ -17,10 +22,22 @@ from psycopg.types.json import Jsonb
 
 registro = logging.getLogger(__name__)
 
-MAX_FUENTES_WEB = 8
+MAX_FUENTES_WEB = 10
+POR_BASE = 3  # Las primeras de cada base, alternando, para que ninguna acapare la bibliografía.
+
+# id → (nombre que se muestra, filtro que se agrega a la consulta de Google Scholar).
+BASES: dict[str, tuple[str, str]] = {
+    "google_scholar": ("Google Scholar", ""),
+    "scopus": ("Editoriales indexadas en Scopus (IEEE, Elsevier, Springer, ACM, MDPI)",
+               "source:IEEE OR source:Elsevier OR source:Springer OR source:ACM OR source:MDPI"),
+    "scielo": ("SciELO", "site:scielo.org OR site:scielo.cl OR site:scielo.org.co OR site:scielo.org.mx "
+                         "OR site:scielo.br OR site:scielo.senescyt.gob.ec"),
+    "repositorios": ("Repositorios académicos", "site:repositorio OR site:dspace OR site:handle.net OR site:edu.ec"),
+}
 # Redes sociales, video y sitios de copias no autorizadas: no son fuentes para una guía.
 EXCLUIDOS = ("facebook.", "instagram.", "tiktok.", "twitter.", "x.com", "pinterest.", "youtube.", "youtu.be",
-             "libgen", "z-lib", "sci-hub", "scribd.", "studocu.", "brainly.", "coursehero.", "monografias.com")
+             "libgen", "z-lib", "sci-hub", "scribd.", "studocu.", "brainly.", "coursehero.", "monografias.com",
+             "google.com")
 _ANIO = re.compile(r"\b(19[5-9]\d|20[0-4]\d)\b")
 
 
@@ -29,15 +46,20 @@ def _tema(texto: str) -> str:
     return " ".join(texto.split())[:70]
 
 
-def consultas(contenidos: list[str], carrera: str, n: int) -> list[tuple[str, str]]:
-    """(motor, consulta): Google Scholar para lo académico y Google para material abierto."""
+def consultas(contenidos: list[str], carrera: str, n: int, *, bases=("google_scholar",),
+              desde: int | None = None) -> list[dict]:
+    """Una consulta de Google Scholar por base (hasta `n`), con los temas del momento."""
     temas = [t for t in (_tema(c) for c in contenidos) if len(t) > 3]
     if not temas or n <= 0:
         return []
     principal = " ".join(temas[:3])[:160]
-    lista = [("google_scholar", principal),
-             ("google", f"{' '.join(temas[:2])} {carrera.lower()} pdf"[:160])]
-    return lista[:n]
+    pedidos = []
+    for base in [b for b in bases if b in BASES][:n]:
+        filtro = BASES[base][1]
+        params = {"as_ylo": str(desde)} if desde else {}
+        pedidos.append({"base": base, "motor": "google_scholar",
+                        "q": f"{principal} {filtro}".strip(), "params": params})
+    return pedidos
 
 
 def _permitido(enlace: str) -> bool:
@@ -45,7 +67,8 @@ def _permitido(enlace: str) -> bool:
     return u.scheme == "https" and bool(u.netloc) and not any(x in u.netloc.lower() for x in EXCLUIDOS)
 
 
-def normalizar(r: dict, motor: str) -> dict | None:
+def normalizar(r: dict, motor: str, base: str = "") -> dict | None:
+    """Scholar: «autores - revista, año - dominio» en `publication`."""
     enlace = r.get("link") or ""
     if not _permitido(enlace) or not (r.get("title") or "").strip():
         return None
@@ -54,24 +77,37 @@ def normalizar(r: dict, motor: str) -> dict | None:
     autores = partes[0] if len(partes) >= 2 else ", ".join(a.get("name", "") for a in r.get("authors", []) if isinstance(a, dict))
     anio = (_ANIO.search(publicacion) or _ANIO.search(r.get("date") or "") or [None])[0]
     sitio = partes[-1] if len(partes) >= 2 else (r.get("source") or urlparse(enlace).netloc)
-    return {"titulo": " ".join(r["title"].split())[:300], "autores": " ".join(autores.split())[:200],
+    revista = ""
+    if len(partes) >= 3:
+        revista = _ANIO.sub("", partes[1]).strip(" ,…")
+    titulo = " ".join(r["title"].split()).strip("\"'“”«»‘’ ")  # La referencia IEEE pone sus propias comillas.
+    return {"titulo": titulo[:300], "autores": " ".join(autores.split())[:200],
             "anio": anio, "sitio": " ".join(str(sitio).split())[:120], "tipo": (r.get("type") or "").lower()[:40],
-            "enlace": enlace[:600], "fragmento": " ".join((r.get("snippet") or "").split())[:400], "motor": motor}
+            "enlace": enlace[:600], "fragmento": " ".join((r.get("snippet") or "").split())[:400], "motor": motor,
+            "base": base, "revista": revista[:160]}
 
 
-def buscar(clave: str, url: str, pedidos: list[tuple[str, str]], *, verificar_tls=True, http=None,
+def _pedido(p) -> dict:
+    if isinstance(p, dict):
+        return p
+    motor, q = p  # Forma corta (motor, consulta).
+    return {"base": motor, "motor": motor, "q": q, "params": {}}
+
+
+def buscar(clave: str, url: str, pedidos: list, *, verificar_tls=True, http=None,
            anotar=None) -> tuple[list[dict], int, str | None]:
-    """Fuentes únicas (por enlace), con id F1…; devuelve (fuentes, créditos gastados, error).
+    """Fuentes únicas (por enlace), alternando bases, con id F1…; devuelve (fuentes, créditos, error).
 
     `anotar(motor, consulta, ok, resultados, error, segundos)` se llama por cada consulta enviada (un crédito).
     """
-    fuentes, vistos, gastados, error = [], set(), 0, None
+    por_base, vistos, gastados, error = [], set(), 0, None
     cliente = http or httpx.Client(timeout=30, verify=verificar_tls)
     try:
-        for motor, q in pedidos:
-            inicio, enviada = time.monotonic(), False
+        for p in map(_pedido, pedidos):
+            inicio, enviada, propias = time.monotonic(), False, []
+            etiqueta = f"{p['motor']}:{p['base']}"
             try:
-                r = cliente.get(url, params={"engine": motor, "q": q, "hl": "es"},
+                r = cliente.get(url, params={"engine": p["motor"], "q": p["q"], "hl": "es", **p["params"]},
                                 headers={"Authorization": f"Bearer {clave}"})
                 enviada = True
                 gastados += 1
@@ -81,24 +117,27 @@ def buscar(clave: str, url: str, pedidos: list[tuple[str, str]], *, verificar_tl
                 error = type(e).__name__  # Sin el cuerpo: podría traer la clave en la URL.
                 registro.warning("SearchAPI no respondió (%s)", error)
                 if enviada and anotar:
-                    anotar(motor, q, False, 0, error, round(time.monotonic() - inicio, 3))
+                    anotar(etiqueta, p["q"], False, 0, error, round(time.monotonic() - inicio, 3))
                 continue
             if anotar:
-                anotar(motor, q, True, len(resultados), None, round(time.monotonic() - inicio, 3))
+                anotar(etiqueta, p["q"], True, len(resultados), None, round(time.monotonic() - inicio, 3))
             for res in resultados:
-                f = normalizar(res, motor) if isinstance(res, dict) else None
+                f = normalizar(res, p["motor"], p["base"]) if isinstance(res, dict) else None
                 if f and f["enlace"] not in vistos:
                     vistos.add(f["enlace"])
-                    fuentes.append(f)
+                    propias.append(f)
+            por_base.append(propias[:POR_BASE] if len(pedidos) > 1 else propias)
     finally:
         if http is None:
             cliente.close()
-    fuentes = fuentes[:MAX_FUENTES_WEB]
+    # Alternar bases: la 1.ª de cada una, luego la 2.ª, … (orden de prioridad del perfil).
+    fuentes = [lista[k] for k in range(max((len(x) for x in por_base), default=0))
+               for lista in por_base if k < len(lista)][:MAX_FUENTES_WEB]
     return [{"id": f"F{k}", **f} for k, f in enumerate(fuentes, 1)], gastados, error
 
 
 def fuentes_momento(conn, config, asignatura_id, numero: int, contenidos: list[str], carrera: str,
-                    *, http=None) -> list[dict]:
+                    *, bases=("google_scholar",), desde: int | None = None, http=None) -> list[dict]:
     """Fuentes web guardadas del momento; si no hay y SearchAPI está configurado, las busca una vez."""
     fila = conn.execute("select fuentes from fuente_momento where asignatura_id=%s and momento=%s",
                         (asignatura_id, numero)).fetchone()
@@ -106,9 +145,10 @@ def fuentes_momento(conn, config, asignatura_id, numero: int, contenidos: list[s
         return fila["fuentes"]
     if config.searchapi_key is None:
         return []
-    pedidos = consultas(contenidos, carrera, config.searchapi_consultas_por_momento)
+    pedidos = consultas(contenidos, carrera, config.searchapi_consultas_por_momento, bases=bases, desde=desde)
     if not pedidos:
         return []
+
     def anotar(motor, consulta, ok, resultados, error, segundos):
         conn.execute("insert into busqueda_web (asignatura_id,momento,motor,consulta,ok,resultados,error,segundos) "
                      "values (%s,%s,%s,%s,%s,%s,%s,%s)",
@@ -120,7 +160,7 @@ def fuentes_momento(conn, config, asignatura_id, numero: int, contenidos: list[s
         # Un fallo total no se guarda: el próximo intento vuelve a buscar.
         conn.execute("insert into fuente_momento (asignatura_id,momento,fuentes,consultas,creditos,error) "
                      "values (%s,%s,%s,%s,%s,%s) on conflict (asignatura_id,momento) do nothing",
-                     (asignatura_id, numero, Jsonb(fuentes), Jsonb([q for _, q in pedidos]), gastados, error))
+                     (asignatura_id, numero, Jsonb(fuentes), Jsonb([p["q"] for p in pedidos]), gastados, error))
     return fuentes
 
 
@@ -136,6 +176,7 @@ def texto_fuentes(fuentes: dict) -> str:
     """Las fuentes como datos para el prompt (van dentro de <fuentes>)."""
     lineas = [f"[{b['id']}] Bibliografía {b['tipo']} del sílabo: {b['texto']}" for b in fuentes.get("silabo", [])]
     for f in fuentes.get("web", []):
-        ref = " · ".join(x for x in (f["autores"], f["anio"] or "", f["sitio"]) if x)
-        lineas.append(f"[{f['id']}] {f['titulo']} ({ref}). Resumen: {f['fragmento']}")
+        ref = " · ".join(x for x in (f["autores"], f.get("revista", ""), f["anio"] or "", f["sitio"]) if x)
+        base = BASES.get(f.get("base", ""), ("",))[0]
+        lineas.append(f"[{f['id']}] {f['titulo']} ({ref}{'; ' + base if base else ''}). Resumen: {f['fragmento']}")
     return " | ".join(lineas)

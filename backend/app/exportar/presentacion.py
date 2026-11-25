@@ -315,24 +315,64 @@ def _guia_estudio(c: dict) -> list[dict]:
         for k, e in enumerate(a["ejemplos"])]
     bloques += [_texto("Síntesis", a["sintesis"], ["aplicacion", "sintesis"]),
                 _lista("Autoevaluación", a["autoevaluacion"], numerada=True, ruta=["aplicacion", "autoevaluacion"])]
-    return bloques + _bibliografia_guia(c)
+    # Norma IEEE: citas numeradas por orden de aparición; lo guardado conserva [B…]/[F…] (la edición lo usa).
+    from app.fuentes.ieee import numeracion
+    orden = numeracion(list(_textos_bloques(bloques)))
+    return [_renumerado(b, orden) for b in bloques] + _bibliografia_guia(c, orden)
 
 
-def _bibliografia_guia(c: dict) -> list[dict]:
-    """Bibliografía del sílabo y fuentes web con su enlace real; sin ruta: el docente no la edita."""
+def _textos_bloques(bloques):
+    for b in bloques:
+        if b.get("texto"):
+            yield b["texto"]
+        yield from (x for x in b.get("items", []) if isinstance(x, str))
+        yield from (x for f in b.get("filas", []) for x in f if isinstance(x, str))
+        yield from _textos_bloques(b.get("bloques", []))
+
+
+def _renumerado(b: dict, orden: dict) -> dict:
+    from app.fuentes.ieee import renumerar
+    salida = dict(b)
+    if isinstance(salida.get("texto"), str):
+        salida["texto"] = renumerar(salida["texto"], orden)
+    if "items" in salida:
+        salida["items"] = [renumerar(x, orden) if isinstance(x, str) else x for x in salida["items"]]
+    if "filas" in salida:
+        salida["filas"] = [[renumerar(x, orden) if isinstance(x, str) else x for x in f] for f in salida["filas"]]
+    if "bloques" in salida:
+        salida["bloques"] = [_renumerado(x, orden) for x in salida["bloques"]]
+    return salida
+
+
+def _bibliografia_guia(c: dict, orden: dict | None = None) -> list[dict]:
+    """Referencias en norma IEEE con los enlaces reales; sin ruta: el docente no las edita.
+
+    «Referencias»: las citadas, numeradas como en el texto. Después, lo que no se citó: la bibliografía
+    del sílabo y las demás fuentes consultadas, también en formato IEEE.
+    """
+    from app.fuentes.ieee import referencia_silabo, referencia_web
+    from app.fuentes.searchapi import BASES
     b = (c.get("aplicacion") or {}).get("bibliografia") or {}
-    citadas = set(re.findall(r"\[([BF]\d+)\]", " ".join(
-        str(v) for s in c.values() if isinstance(s, dict) for v in _valores(s))))
+    orden = orden or {}
+    silabo = {e["id"]: e for e in b.get("silabo", [])}
+    web = {f["id"]: f for f in b.get("web", [])}
+
+    def ref(i):
+        return referencia_silabo(silabo[i]["texto"]) if i in silabo else referencia_web(web[i])
+
+    citadas = [i for i in sorted(orden, key=orden.get) if i in silabo or i in web]
     bloques = []
-    if b.get("silabo"):
-        bloques.append(_lista("Bibliografía del sílabo", [
-            f"[{e['id']}] {e['texto']} ({'básica' if e['tipo'] == 'basica' else 'complementaria'})"
-            + (" · citada en la guía" if e["id"] in citadas else "") for e in b["silabo"]]))
-    if b.get("web"):
-        bloques.append(_tabla("Fuentes consultadas (web)", ["Id", "Referencia", "Enlace", "Citada"], [
-            [f["id"], " · ".join(x for x in (f["titulo"], f.get("autores", ""), f.get("anio") or "", f.get("sitio", "")) if x),
-             f["enlace"], "sí" if f["id"] in citadas else "no"] for f in b["web"]]))
-    return [_grupo("Bibliografía", bloques)] if bloques else []
+    if citadas:
+        bloques.append(_lista("Referencias (IEEE)", [f"[{orden[i]}] {ref(i)}" for i in citadas]))
+    resto_silabo = [i for i in silabo if i not in orden]
+    if resto_silabo:
+        bloques.append(_lista("Bibliografía del sílabo no citada", [
+            f"{ref(i)} ({'básica' if silabo[i]['tipo'] == 'basica' else 'complementaria'})" for i in resto_silabo]))
+    resto_web = [i for i in web if i not in orden]
+    if resto_web:
+        bloques.append(_lista("Otras fuentes consultadas", [
+            ref(i) + (f" ({BASES[web[i]['base']][0]})" if web[i].get("base") in BASES else "") for i in resto_web]))
+    return [_grupo("Referencias", bloques)] if bloques else []
 
 
 def _valores(d):

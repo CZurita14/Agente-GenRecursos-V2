@@ -372,6 +372,8 @@ class FuenteWeb(_Cerrado):
     enlace: str = Field(pattern=r"^https://")
     fragmento: str = ""
     motor: str = ""
+    base: str = ""      # google_scholar, scopus, scielo o repositorios
+    revista: str = ""   # para la referencia IEEE
 
 
 class BibliografiaGuia(_Cerrado):

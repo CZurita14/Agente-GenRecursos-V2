@@ -44,9 +44,13 @@ def _config(**kw):
 
 
 def test_consultas_salen_de_los_temas_del_silabo():
-    pedidos = consultas(["• Distribuciones estadísticas", "2. Teorema de Bayes", "Muestreo"], "SOFTWARE", 2)
-    assert pedidos[0] == ("google_scholar", "Distribuciones estadísticas Teorema de Bayes Muestreo")
-    assert pedidos[1][0] == "google" and "software" in pedidos[1][1]
+    temas = ["• Distribuciones estadísticas", "2. Teorema de Bayes", "Muestreo"]
+    pedidos = consultas(temas, "SOFTWARE", 4, bases=("scopus", "google_scholar", "scielo", "repositorios"), desde=2019)
+    assert [p["base"] for p in pedidos] == ["scopus", "google_scholar", "scielo", "repositorios"]
+    assert all(p["motor"] == "google_scholar" and p["params"] == {"as_ylo": "2019"} for p in pedidos)
+    assert pedidos[1]["q"] == "Distribuciones estadísticas Teorema de Bayes Muestreo"
+    assert "source:IEEE" in pedidos[0]["q"] and "site:scielo.org" in pedidos[2]["q"] and "site:dspace" in pedidos[3]["q"]
+    assert len(consultas(temas, "X", 2, bases=("scopus", "google_scholar", "scielo"))) == 2  # tope de créditos
     assert consultas([], "SOFTWARE", 2) == [] and len(consultas(["Tema"], "X", 1)) == 1
 
 
@@ -77,8 +81,10 @@ def _asignatura(conn, silabo):
 def test_fuentes_se_guardan_por_momento(conn, silabo):
     ctx, aid = _asignatura(conn, silabo)
     llamadas = []
-    primera = fuentes_momento(conn, _config(), aid, 2, list(ctx.contenidos), ctx.carrera, http=_http(llamadas))
-    segunda = fuentes_momento(conn, _config(), aid, 2, list(ctx.contenidos), ctx.carrera, http=_http(llamadas))
+    primera = fuentes_momento(conn, _config(), aid, 2, list(ctx.contenidos), ctx.carrera, bases=("google_scholar", "scielo"),
+                               http=_http(llamadas))
+    segunda = fuentes_momento(conn, _config(), aid, 2, list(ctx.contenidos), ctx.carrera, bases=("google_scholar", "scielo"),
+                               http=_http(llamadas))
     assert primera == segunda and len(primera) == 2 and len(llamadas) == 2  # La segunda no gasta créditos.
     fila = conn.execute("select creditos,consultas from fuente_momento where asignatura_id=%s", (aid,)).fetchone()
     assert fila["creditos"] == 2 and len(fila["consultas"]) == 2
@@ -120,10 +126,16 @@ def test_guia_cita_fuentes_verificadas_y_trae_bibliografia(conn, silabo):
     assert "https://" not in pedidos[0]  # El modelo no recibe enlaces que pueda copiar mal.
     bib = r["contenido"]["aplicacion"]["bibliografia"]
     assert bib["web"][0]["enlace"] == "https://books.example.org/walpole" and bib["silabo"][0]["id"] == "B1"
-    grupo = next(b for b in presentar("guia_estudio", r["contenido"]) if b.get("titulo") == "Bibliografía")
-    tabla = next(b for b in grupo["bloques"] if b["tipo"] == "tabla")
-    assert tabla["filas"][0][2] == "https://books.example.org/walpole" and tabla["filas"][0][3] == "sí"
-    assert tabla["filas"][1][3] == "no"
+    bloques = presentar("guia_estudio", r["contenido"])
+    grupo = next(b for b in bloques if b.get("titulo") == "Referencias")
+    refs = {b["titulo"]: b["items"] for b in grupo["bloques"]}
+    # IEEE: [B1] aparece primero → [1]; [F1] → [2]; la referencia web lleva su enlace real.
+    assert refs["Referencias (IEEE)"][0].startswith("[1] ") and refs["Referencias (IEEE)"][1].startswith("[2] R. E. Walpole y R. H. Myers, «Probabilidad")
+    assert refs["Referencias (IEEE)"][1].endswith("Disponible en: https://books.example.org/walpole")
+    assert any("repositorio.example.edu" in x for x in refs["Otras fuentes consultadas"])
+    texto = " ".join(t for b in bloques for t in [b.get("texto", "")] + [x.get("texto", "") for x in b.get("bloques", [])])
+    assert "[1] y el texto clásico [2]" in texto and "[B1]" not in texto
+    assert "[B1]" in r["contenido"]["desarrollo_1"]["apartados"][0]["desarrollo"]  # Lo guardado no cambia.
 
     # Editar la guía no cambia la bibliografía (los enlaces los pone el sistema).
     editado = json.loads(json.dumps(r["contenido"]))
@@ -157,8 +169,10 @@ def test_cada_consulta_queda_medida_con_su_tiempo(conn, silabo):
     from datetime import datetime, timedelta, timezone
     from app.control.consumo import resumen
     ctx, aid = _asignatura(conn, silabo)
-    fuentes_momento(conn, _config(), aid, 2, list(ctx.contenidos), ctx.carrera, http=_http([]))
-    fuentes_momento(conn, _config(), aid, 3, list(ctx.contenidos), ctx.carrera, http=_http([], estado=500))
+    fuentes_momento(conn, _config(), aid, 2, list(ctx.contenidos), ctx.carrera, bases=("google_scholar", "scielo"),
+                    http=_http([]))
+    fuentes_momento(conn, _config(), aid, 3, list(ctx.contenidos), ctx.carrera, bases=("google_scholar", "scielo"),
+                    http=_http([], estado=500))
     filas = conn.execute("select momento,motor,ok,resultados,segundos from busqueda_web order by id").fetchall()
     assert [(f["momento"], f["ok"]) for f in filas] == [(2, True), (2, True), (3, False), (3, False)]
     assert all(f["segundos"] >= 0 for f in filas) and filas[0]["resultados"] == 5
