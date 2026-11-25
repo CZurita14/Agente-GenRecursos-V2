@@ -80,7 +80,21 @@ def crear_trabajos(conn, solicitud: SolicitudGeneracion) -> list[UUID]:
                 for h in solicitud.herramientas]
 
 
-def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonador=None) -> bool:
+def _fuentes_guia(conn, trabajo, silabo, ctx, config) -> dict:
+    """Bibliografía del sílabo y fuentes web (SearchAPI) del momento: solo para la guía de estudio."""
+    from app.agentes.mensajes import leer
+    from app.fuentes.searchapi import bibliografia_silabo, fuentes_momento
+    from app.momentos.trazabilidad import numero_momento
+    previos = leer(conn, trabajo.id, Encargo)
+    if previos:
+        return previos[0].fuentes  # Al reanudar, las mismas fuentes con las que empezó.
+    web = []
+    if config is not None and (n := numero_momento(ctx.clase_id)) is not None:
+        web = fuentes_momento(conn, config, trabajo.asignatura_id, n, list(ctx.contenidos), ctx.carrera)
+    return {"silabo": bibliografia_silabo(silabo), "web": web}
+
+
+def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonador=None, config=None) -> bool:
     trabajo = tomar_siguiente(conn, worker_id, lease_s)
     if trabajo is None:
         return False
@@ -102,6 +116,7 @@ def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonado
             herramienta=trabajo.herramienta, perfil_dificultad=trabajo.parametros.get("perfil_dificultad", perfil_por_nivel(ctx.nivel)),
             instrucciones=trabajo.parametros.get("instrucciones", ""),
             material_momento=trabajo.parametros.get("material_momento", ""),
+            fuentes=_fuentes_guia(conn, trabajo, silabo, ctx, config) if trabajo.herramienta == "guia_estudio" else {},
         )
         Coordinador(perfiles[trabajo.agente], WORKERS, cliente, razonador=razonador).ejecutar(
             conn, trabajo, encargo, ctx,

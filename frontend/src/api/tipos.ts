@@ -148,7 +148,8 @@ export interface MomentoDetalle {
   evidencia: string; politica_ia: string;
   sesiones: { id: string; numero: number; fecha: string | null; contenidos: string[] }[];
   contexto_docente: { texto: string; revision: number; actualizado: string | null; verificaciones: string[] } | null;
-  guia: { recurso_id: string; estado: string; validado: boolean; paginas: number; por_regenerar: boolean } | null;
+  guia: { recurso_id: string; estado: string; validado: boolean; paginas: number; por_regenerar: boolean;
+    fuentes?: { silabo: number; web: number } } | null;
   recursos: RecursoMomento[];
   resumen: { total: number; validados: number; por_regenerar: number };
 }

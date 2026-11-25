@@ -26,6 +26,11 @@ class Ajustes(BaseSettings):
     imagenes_activas: bool = True
     unsplash_access_key: SecretStr | None = None
     pexels_api_key: SecretStr | None = None
+    # Fuentes web de la guía de estudio (solo la guía): SearchAPI con Google Scholar y Google.
+    # Sin clave, la guía usa solo la bibliografía del sílabo. Cada consulta gasta un crédito.
+    searchapi_key: SecretStr | None = None
+    searchapi_url: str = "https://www.searchapi.io/api/v1/search"
+    searchapi_consultas_por_momento: int = Field(default=2, ge=0, le=5)
     llm_max_concurrencia: int = 4
     llm_timeout_s: float = 120
     llm_timeout_revisor_s: float = 240

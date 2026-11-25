@@ -175,8 +175,11 @@ function TarjetaMomento({ aid, momento: m, lector, onCambio, onError, onElegir, 
             {guia ? 'Regenerar guía' : 'Generar guía'}</Button>}
         </div>
       </div>
-      <p className="text-sm text-muted">La parte teórica del momento (de 10 a 15 páginas). Una vez validada, es la base
-        con la que se generan las herramientas del momento y de sus clases.</p>
+      <p className="text-sm text-muted">La parte teórica del momento (de 10 a 15 páginas), apoyada en la bibliografía del
+        sílabo y en fuentes web verificadas con su enlace. Una vez validada, es la base con la que se generan las
+        herramientas del momento y de sus clases.</p>
+      {guia?.fuentes && <p className="text-xs text-muted">Bibliografía: {guia.fuentes.silabo} del sílabo ·
+        {' '}{guia.fuentes.web} fuentes web con enlace</p>}
     </div>
 
     <div className="space-y-2">

@@ -315,7 +315,37 @@ def _guia_estudio(c: dict) -> list[dict]:
         for k, e in enumerate(a["ejemplos"])]
     bloques += [_texto("Síntesis", a["sintesis"], ["aplicacion", "sintesis"]),
                 _lista("Autoevaluación", a["autoevaluacion"], numerada=True, ruta=["aplicacion", "autoevaluacion"])]
-    return bloques
+    return bloques + _bibliografia_guia(c)
+
+
+def _bibliografia_guia(c: dict) -> list[dict]:
+    """Bibliografía del sílabo y fuentes web con su enlace real; sin ruta: el docente no la edita."""
+    b = (c.get("aplicacion") or {}).get("bibliografia") or {}
+    citadas = set(re.findall(r"\[([BF]\d+)\]", " ".join(
+        str(v) for s in c.values() if isinstance(s, dict) for v in _valores(s))))
+    bloques = []
+    if b.get("silabo"):
+        bloques.append(_lista("Bibliografía del sílabo", [
+            f"[{e['id']}] {e['texto']} ({'básica' if e['tipo'] == 'basica' else 'complementaria'})"
+            + (" · citada en la guía" if e["id"] in citadas else "") for e in b["silabo"]]))
+    if b.get("web"):
+        bloques.append(_tabla("Fuentes consultadas (web)", ["Id", "Referencia", "Enlace", "Citada"], [
+            [f["id"], " · ".join(x for x in (f["titulo"], f.get("autores", ""), f.get("anio") or "", f.get("sitio", "")) if x),
+             f["enlace"], "sí" if f["id"] in citadas else "no"] for f in b["web"]]))
+    return [_grupo("Bibliografía", bloques)] if bloques else []
+
+
+def _valores(d):
+    for k, v in d.items():
+        if k == "bibliografia":
+            continue
+        if isinstance(v, dict):
+            yield from _valores(v)
+        elif isinstance(v, list):
+            for x in v:
+                yield from (_valores(x) if isinstance(x, dict) else [x])
+        else:
+            yield v
 
 
 VISTAS: dict[str, Callable[[dict], list[dict]]] = {

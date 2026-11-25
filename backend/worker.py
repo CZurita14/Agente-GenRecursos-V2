@@ -131,7 +131,7 @@ def main():
                     while not detener.is_set():
                         latido.pulsar(numero)
                         trabajo = procesar_uno(conn, cliente, perfiles, worker_id, config.lease_s,
-                                               razonador=razonador)
+                                               razonador=razonador, config=config)
                         latido.pulsar(numero)
                         if not trabajo:
                             detener.wait(2)

@@ -93,6 +93,9 @@ class ServicioMomentos:
                 "guia": None if guia is None else {
                     "recurso_id": str(guia["id"]), "estado": guia["estado"], "validado": guia["validado"],
                     "paginas": round(palabras_guia(guia["contenido"] or {}) / PALABRAS_POR_PAGINA, 1),
+                    "fuentes": {k: len(((guia["contenido"] or {}).get("aplicacion") or {}).get("bibliografia", {}).get(k, [])
+                                       if isinstance(((guia["contenido"] or {}).get("aplicacion") or {}).get("bibliografia"), dict) else [])
+                                for k in ("silabo", "web")},
                     "por_regenerar": por_regenerar(guia)},
                 "recursos": lista,
                 "resumen": {"total": len(lista), "validados": sum(r["validado"] for r in lista),

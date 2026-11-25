@@ -12,7 +12,12 @@ from app.herramientas.esquemas import (
 )
 from app.agentes.verificador import MIN_PALABRAS_GUIA
 from app.llm.cliente import ClienteLLM
+from app.fuentes.searchapi import texto_fuentes
 from app.momentos.trazabilidad import fase, numero_momento
+
+CITAS = ("Cita las fuentes de <fuentes> por su identificador entre corchetes ([B1], [F2]) cada vez que uses "
+         "sus ideas, dando prioridad a la bibliografía del sílabo (B…). No cites otras fuentes, no inventes "
+         "autores, títulos ni años, y no escribas enlaces: la bibliografía con los enlaces la agrega el sistema.")
 
 SECCIONES = ("introduccion", "desarrollo_1", "desarrollo_2", "aplicacion")
 
@@ -61,7 +66,8 @@ def pedido(tarea: TareaLote) -> str:
                  "cada uno con la situación y su desarrollo explicado; en «sintesis», de 2 a 4 párrafos de "
                  "cierre; y en «autoevaluacion», de 5 a 8 preguntas abiertas para que el estudiante compruebe "
                  "su comprensión.")
-    return f"{_fase(tarea)} {texto}{extension}"
+    citas = f" {CITAS}" if tarea.fuentes.get("silabo") or tarea.fuentes.get("web") else ""
+    return f"{_fase(tarea)} {texto}{extension}{citas}"
 
 
 MODELOS = {1: (GuiaIntroduccion, esquema_guia_introduccion), 2: (GuiaDesarrollo, esquema_guia_desarrollo),
@@ -80,6 +86,11 @@ class WorkerGuiaEstudio:
         if comun:
             texto = "\n".join([texto, "", *comun])
         salida, tokens = pedir(tarea, cliente, instrucciones=INSTRUCCIONES, pedido=texto,
-                               modelo=modelo, esquema=esquema())
+                               modelo=modelo, esquema=esquema(), fuentes=texto_fuentes(tarea.fuentes))
+        contenido = salida.model_dump(exclude_none=True)
+        if tarea.lote == 4:
+            # La bibliografía la pone el código: enlaces reales de SearchAPI y la del sílabo, tal cual.
+            contenido["bibliografia"] = {"silabo": list(tarea.fuentes.get("silabo", [])),
+                                         "web": list(tarea.fuentes.get("web", []))}
         return EntregaLote(trabajo_id=tarea.trabajo_id, asignatura_id=tarea.asignatura_id, lote=tarea.lote,
-                           ronda=tarea.ronda, contenido=[salida.model_dump()], tokens=tokens)
+                           ronda=tarea.ronda, contenido=[contenido], tokens=tokens)

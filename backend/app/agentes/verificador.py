@@ -273,10 +273,32 @@ def palabras_guia(datos) -> int:
     return sum(len(t.split()) for t in _textos(datos))
 
 
+_CITA = re.compile(r"\[([BF]\d+)\]")
+_ENLACE = re.compile(r"https?://|www\.", re.I)
+
+
+def _sin_bibliografia(datos: dict) -> dict:
+    if "bibliografia" in datos:
+        return {k: v for k, v in datos.items() if k != "bibliografia"}
+    return {k: _sin_bibliografia(v) if isinstance(v, dict) else v for k, v in datos.items()}
+
+
 def verificar_guia_estudio(datos: dict, contexto: ContextoClase) -> list[str]:
-    """Una sección suelta (cada lote) o la guía completa (al cerrar): extensión, frases e integridad."""
+    """Una sección suelta (cada lote) o la guía completa (al cerrar): extensión, frases, integridad y citas."""
     completa = bool(datos) and set(datos) <= set(MIN_PALABRAS_GUIA)
+    bibliografia = ((datos.get("aplicacion") or {}) if completa else datos).get("bibliografia") or {}
+    datos = _sin_bibliografia(datos)
     fallos = verificar_ficha(datos, contexto)
+    textos = _textos(datos)
+    if any(_ENLACE.search(t) for t in textos):
+        fallos.append("escribe enlaces: los enlaces solo van en la bibliografía que arma el sistema")
+    if completa:
+        validas = {e["id"] for e in bibliografia.get("silabo", [])} | {f["id"] for f in bibliografia.get("web", [])}
+        citas = {c for t in textos for c in _CITA.findall(t)}
+        if citas - validas:
+            fallos.append(f"cita fuentes inexistentes: {', '.join(sorted(citas - validas))}")
+        if validas and not citas & validas:
+            fallos.append("la guía no cita la bibliografía ni las fuentes verificadas")
     if _copia(contexto.entregables_momento, _textos(datos)):
         fallos.append("copia el texto de la evidencia del momento")
     if completa:

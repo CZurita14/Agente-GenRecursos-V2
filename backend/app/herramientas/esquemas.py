@@ -356,11 +356,36 @@ class EjemploGuia(_Cerrado):
     desarrollo: str = Field(min_length=300)
 
 
+class EntradaSilabo(_Cerrado):
+    id: str = Field(pattern=r"^B\d+$")
+    tipo: Literal["basica", "complementaria"]
+    texto: str
+
+
+class FuenteWeb(_Cerrado):
+    id: str = Field(pattern=r"^F\d+$")
+    titulo: str
+    autores: str = ""
+    anio: str | None = None
+    sitio: str = ""
+    tipo: str = ""
+    enlace: str = Field(pattern=r"^https://")
+    fragmento: str = ""
+    motor: str = ""
+
+
+class BibliografiaGuia(_Cerrado):
+    """La arma el código con la bibliografía del sílabo y las fuentes de SearchAPI; el modelo no la llena."""
+    silabo: list[EntradaSilabo] = []
+    web: list[FuenteWeb] = []
+
+
 class GuiaAplicacion(_Cerrado):
     vinculacion_practica: str = Field(min_length=400)
     ejemplos: list[EjemploGuia] = Field(min_length=2, max_length=3)
     sintesis: str = Field(min_length=300)
     autoevaluacion: list[str] = Field(min_length=5, max_length=8)
+    bibliografia: BibliografiaGuia | None = None  # Fuera del esquema que recibe el modelo.
 
 
 def esquema_guia_introduccion() -> dict:

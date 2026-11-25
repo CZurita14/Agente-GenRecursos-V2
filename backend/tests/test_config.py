@@ -138,7 +138,7 @@ def test_worker_carga_una_vez_y_entrega_la_instancia_a_los_consumidores(monkeypa
     class Alto(Exception):
         pass
 
-    def procesar(conn, cliente, perfiles, worker_id, lease_s, razonador=None):
+    def procesar(conn, cliente, perfiles, worker_id, lease_s, razonador=None, config=None):
         recibidos.append(razonador)
         raise Alto
 
