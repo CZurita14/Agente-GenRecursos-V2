@@ -299,7 +299,10 @@ def verificar_guia_estudio(datos: dict, contexto: ContextoClase) -> list[str]:
             fallos.append(f"cita fuentes inexistentes: {', '.join(sorted(citas - validas))}")
         if validas and not citas & validas:
             fallos.append("la guía no cita la bibliografía ni las fuentes verificadas")
-    if _copia(contexto.entregables_momento, _textos(datos)):
+    # La introducción presenta el momento y puede citar su evidencia; el resto no la reproduce.
+    sin_intro = {k: v for k, v in datos.items() if k != "introduccion"} if completa else (
+        {} if "glosario" in datos else datos)
+    if _copia(contexto.entregables_momento, _textos(sin_intro)):
         fallos.append("copia el texto de la evidencia del momento")
     if completa:
         total = palabras_guia(datos)

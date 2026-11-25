@@ -45,7 +45,7 @@ def bloque_comun(tarea: TareaLote) -> list[str]:
 
 def pedir(tarea: TareaLote, cliente: ClienteLLM, *, instrucciones: str, pedido: str,
           modelo: type[BaseModel], esquema: dict, fuentes: str = "",
-          salida_max: int = SALIDA_WORKER) -> tuple[BaseModel, tuple[int, int]]:
+          salida_max: int = SALIDA_WORKER, timeout_s: float | None = None) -> tuple[BaseModel, tuple[int, int]]:
     """Arma el prompt con el constructor único y pide la salida guiada por esquema."""
     mensajes = construir_prompt(
         sello=sello_de(tarea), instrucciones=instrucciones, contexto=tarea.contexto,
@@ -55,7 +55,7 @@ def pedir(tarea: TareaLote, cliente: ClienteLLM, *, instrucciones: str, pedido: 
     )
     salida, respuesta = pedir_json(
         cliente, mensajes, modelo, esquema, rol="worker", temperatura=TEMPERATURA_WORKER,
-        max_tokens=salida_max, pensar=False,
+        max_tokens=salida_max, pensar=False, **({"timeout_s": timeout_s} if timeout_s else {}),
         trabajo_id=tarea.trabajo_id, asignatura_id=tarea.asignatura_id,
     )
     return salida, (respuesta.tokens_entrada, respuesta.tokens_salida)

@@ -3,6 +3,8 @@
 Es la base de las demás herramientas: una vez validada por el docente, su contenido entra
 como material del momento en los pedidos de las herramientas de ese momento y de sus clases.
 """
+import re
+
 from app.agentes.mensajes import EntregaLote, TareaLote
 from app.agentes.workers.base import REGLAS_COMUNES, SALIDA_WORKER, bloque_comun, pedir
 from app.agentes.workers.momento import NO_RESOLVER
@@ -17,6 +19,20 @@ from app.llm.prompts import CONTEXTO_MAX, limite_contexto
 
 # Una sección de desarrollo (1 600 a 2 000 palabras en JSON) no cabe en 3 500 tokens de salida.
 SALIDA_GUIA = 9000
+# A unos 70 tokens/s, 9 000 tokens tardan ~130 s: más que la espera normal de 120 s por llamada.
+ESPERA_GUIA_S = 300
+_URL = re.compile(r"\(?(?:https?://|www\.)\S+", re.I)
+
+
+def sin_enlaces(valor):
+    """Quita los enlaces que escriba el modelo: los únicos enlaces son los de la bibliografía."""
+    if isinstance(valor, str):
+        return " ".join(_URL.sub("", valor).split())
+    if isinstance(valor, dict):
+        return {k: sin_enlaces(v) for k, v in valor.items()}
+    if isinstance(valor, list):
+        return [sin_enlaces(v) for v in valor]
+    return valor
 from app.momentos.trazabilidad import fase, numero_momento
 
 CITAS = ("Cita las fuentes de <fuentes> por su identificador entre corchetes ([B1], [F2]) cada vez que uses "
@@ -91,8 +107,9 @@ class WorkerGuiaEstudio:
             texto = "\n".join([texto, "", *comun])
         salida, tokens = pedir(tarea, cliente, instrucciones=INSTRUCCIONES, pedido=texto,
                                modelo=modelo, esquema=esquema(), fuentes=texto_fuentes(tarea.fuentes),
-                               salida_max=SALIDA_GUIA if limite_contexto(cliente) > CONTEXTO_MAX else SALIDA_WORKER)
-        contenido = salida.model_dump(exclude_none=True)
+                               salida_max=SALIDA_GUIA if limite_contexto(cliente) > CONTEXTO_MAX else SALIDA_WORKER,
+                               timeout_s=ESPERA_GUIA_S)
+        contenido = modelo.model_validate(sin_enlaces(salida.model_dump(exclude_none=True))).model_dump(exclude_none=True)
         if tarea.lote == 4:
             # La bibliografía la pone el código: enlaces reales de SearchAPI y la del sílabo, tal cual.
             contenido["bibliografia"] = {"silabo": list(tarea.fuentes.get("silabo", [])),

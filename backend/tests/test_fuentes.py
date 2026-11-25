@@ -182,3 +182,20 @@ def test_la_guia_pide_mas_salida_solo_con_ventana_grande(silabo):
             cliente.contexto_max = ventana
         WorkerGuiaEstudio().generar(tarea, cliente)
         assert cliente.llamadas[-1]["max_tokens"] == esperado
+
+
+def test_la_guia_quita_enlaces_y_espera_mas(silabo):
+    from uuid import uuid4 as nuevo
+    from app.agentes.mensajes import EstiloFacultad, TareaLote
+    ctx = contexto_momento(silabo, "M2")
+    tarea = TareaLote(trabajo_id=nuevo(), asignatura_id=nuevo(), lote=2, ronda=0, contexto=ctx,
+                      estilo=EstiloFacultad(tipos_de_caso=[], software_habitual=[]), plan=[], ya_generado=[])
+    s = _seccion(2)
+    s["apartados"][0]["desarrollo"] += " Consulta la documentación (https://ionicframework.com/docs) y www.ejemplo.org/x."
+    cliente = ClienteSimulado({"worker": lambda m: json.dumps(s)})
+    cliente.contexto_max = 1_000_000
+    entrega = WorkerGuiaEstudio().generar(tarea, cliente)
+    texto = entrega.contenido[0]["apartados"][0]["desarrollo"]
+    assert "http" not in texto and "www." not in texto and texto.endswith("Consulta la documentación y")
+    assert cliente.llamadas[-1]["timeout_s"] == 300
+    assert verificar_guia_estudio(entrega.contenido[0], ctx) == []
