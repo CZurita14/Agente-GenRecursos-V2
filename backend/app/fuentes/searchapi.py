@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import logging
 import re
+import time
 from urllib.parse import urlparse
 
 import httpx
@@ -58,22 +59,32 @@ def normalizar(r: dict, motor: str) -> dict | None:
             "enlace": enlace[:600], "fragmento": " ".join((r.get("snippet") or "").split())[:400], "motor": motor}
 
 
-def buscar(clave: str, url: str, pedidos: list[tuple[str, str]], *, verificar_tls=True, http=None) -> tuple[list[dict], int, str | None]:
-    """Fuentes únicas (por enlace), con id F1…; devuelve (fuentes, créditos gastados, error)."""
+def buscar(clave: str, url: str, pedidos: list[tuple[str, str]], *, verificar_tls=True, http=None,
+           anotar=None) -> tuple[list[dict], int, str | None]:
+    """Fuentes únicas (por enlace), con id F1…; devuelve (fuentes, créditos gastados, error).
+
+    `anotar(motor, consulta, ok, resultados, error, segundos)` se llama por cada consulta enviada (un crédito).
+    """
     fuentes, vistos, gastados, error = [], set(), 0, None
     cliente = http or httpx.Client(timeout=30, verify=verificar_tls)
     try:
         for motor, q in pedidos:
+            inicio, enviada = time.monotonic(), False
             try:
                 r = cliente.get(url, params={"engine": motor, "q": q, "hl": "es"},
                                 headers={"Authorization": f"Bearer {clave}"})
+                enviada = True
                 gastados += 1
                 r.raise_for_status()
                 resultados = r.json().get("organic_results", [])
             except (httpx.HTTPError, ValueError) as e:
                 error = type(e).__name__  # Sin el cuerpo: podría traer la clave en la URL.
                 registro.warning("SearchAPI no respondió (%s)", error)
+                if enviada and anotar:
+                    anotar(motor, q, False, 0, error, round(time.monotonic() - inicio, 3))
                 continue
+            if anotar:
+                anotar(motor, q, True, len(resultados), None, round(time.monotonic() - inicio, 3))
             for res in resultados:
                 f = normalizar(res, motor) if isinstance(res, dict) else None
                 if f and f["enlace"] not in vistos:
@@ -98,8 +109,13 @@ def fuentes_momento(conn, config, asignatura_id, numero: int, contenidos: list[s
     pedidos = consultas(contenidos, carrera, config.searchapi_consultas_por_momento)
     if not pedidos:
         return []
+    def anotar(motor, consulta, ok, resultados, error, segundos):
+        conn.execute("insert into busqueda_web (asignatura_id,momento,motor,consulta,ok,resultados,error,segundos) "
+                     "values (%s,%s,%s,%s,%s,%s,%s,%s)",
+                     (asignatura_id, numero, motor, consulta[:300], ok, resultados, error, segundos))
+
     fuentes, gastados, error = buscar(config.searchapi_key.get_secret_value(), config.searchapi_url, pedidos,
-                                      verificar_tls=config.llm_tls_estricto, http=http)
+                                      verificar_tls=config.llm_tls_estricto, http=http, anotar=anotar)
     if fuentes or not error:
         # Un fallo total no se guarda: el próximo intento vuelve a buscar.
         conn.execute("insert into fuente_momento (asignatura_id,momento,fuentes,consultas,creditos,error) "

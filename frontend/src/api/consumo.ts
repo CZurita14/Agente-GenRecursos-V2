@@ -3,15 +3,24 @@ import { pedir } from './cliente';
 
 export interface ConsumoHerramienta {
   herramienta: string; recursos: number; tokens: number; por_recurso: number; parte_revision: number; costo_usd: number;
+  /** Tiempo de IA por recurso, en segundos (suma de sus llamadas, sin la espera en cola). */
+  segundos_por_recurso?: number;
 }
 export interface ConsumoProyecto { id: string; codigo_pf: string; nombre: string | null; tokens: number; recursos: number }
 export interface ConsumoReciente {
   herramienta: string; ambito_id: string; estado: string; tokens: number; segundos: number; creado: string;
 }
+/** SearchAPI (solo la guía de estudio): una consulta es un crédito. */
+export interface BusquedaWeb {
+  proveedor: string; creditos: number; fallidas: number; segundos: number; momentos: number;
+  saldo: number | null;
+  por_momento: { codigo_pf: string; nombre: string | null; momento: number; creditos: number; segundos: number; fuentes: number }[];
+}
 export interface Consumo {
   desde: string; hasta: string;
   totales: { llamadas: number; tokens_entrada: number; tokens_salida: number; segundos: number; fallos: number; tokens_cache: number };
   por_herramienta: ConsumoHerramienta[];
+  busqueda_web?: BusquedaWeb;
   chat: { pedidos: number; tokens: number };
   proyectos: ConsumoProyecto[];
   recientes: ConsumoReciente[];

@@ -20,6 +20,8 @@ PRESUPUESTO = {"instrucciones": 900, "clase": 900, "rubrica": 600, "perfil": 500
 CONTEXTO_MAX = 8192
 MARGEN = 300
 SALIDA_MAX_TOPE = 3500
+# Con una ventana grande (DeepSeek, 1M) la salida puede ser mayor: la guía de estudio la necesita.
+SALIDA_MAX_TOPE_AMPLIO = 16000
 
 ETIQUETAS = ("silabo", "ya_generado", "indicaciones_docente", "material_momento", "fuentes")
 _RE_ETIQUETA = re.compile(r"<\s*/?\s*(?:" + "|".join(ETIQUETAS) + r")\b[^>]*>?", re.IGNORECASE)
@@ -159,8 +161,9 @@ def construir_prompt(
     El recorte usa búsqueda binaria: 1 llamada a `contar` si todo cabe y
     O(log n) si no (en producción `contar` es una llamada HTTP).
     """
-    if not 0 < salida_max <= SALIDA_MAX_TOPE:
-        raise ValueError(f"salida_max debe estar entre 1 y {SALIDA_MAX_TOPE}")
+    tope = SALIDA_MAX_TOPE_AMPLIO if contexto_max > CONTEXTO_MAX else SALIDA_MAX_TOPE
+    if not 0 < salida_max <= tope:
+        raise ValueError(f"salida_max debe estar entre 1 y {tope}")
     if (sello.codigo_pf, sello.clase_id, sello.fecha) != (
         contexto.codigo_pf, contexto.clase_id, contexto.fecha,
     ):

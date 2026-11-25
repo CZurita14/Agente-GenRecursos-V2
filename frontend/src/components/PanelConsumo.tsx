@@ -127,13 +127,29 @@ export function PanelConsumo({ aid, onSesionVencida }: PanelConsumoProps) {
               ` Incluye ${datos.costo_estimado_llamadas} llamadas anteriores a este registro, estimadas a la tarifa máxima.`}
           </p>
 
-          <Tabla titulo="Por herramienta" columnas={['Herramienta', 'Recursos', 'Tokens/recurso', 'Costo/recurso', 'Revisión']}
+          <Tabla titulo="Por herramienta" columnas={['Herramienta', 'Recursos', 'Tokens/recurso', 'Costo/recurso', 'Tiempo/recurso', 'Revisión']}
             vacio="Sin recursos generados en este periodo."
             filas={[...datos.por_herramienta.map(h => [nombreHerramienta(h.herramienta), String(h.recursos),
               formatoTokens(h.por_recurso), formatoCosto(h.recursos ? h.costo_usd / h.recursos : 0),
-              `${Math.round(h.parte_revision * 100)} %`]),
+              formatoDuracion(h.segundos_por_recurso ?? 0), `${Math.round(h.parte_revision * 100)} %`]),
               ...(datos.chat.pedidos ? [['Chat de ajustes', `${datos.chat.pedidos} pedidos`,
-                formatoTokens(datos.chat.tokens / datos.chat.pedidos), '—', '—']] : [])]} />
+                formatoTokens(datos.chat.tokens / datos.chat.pedidos), '—', '—', '—']] : [])]} />
+
+          {datos.busqueda_web && <div className="space-y-1">
+            <h3 className="text-xs font-semibold text-muted">Búsqueda web de la guía ({datos.busqueda_web.proveedor})</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {[['Créditos', String(datos.busqueda_web.creditos)], ['Tiempo', formatoDuracion(datos.busqueda_web.segundos)],
+                ['Saldo', datos.busqueda_web.saldo === null ? '—' : String(datos.busqueda_web.saldo)]].map(([k, v]) =>
+                <div key={k} className="rounded-lg bg-app-soft px-2 py-1.5"><p className="text-xs text-muted">{k}</p><p className="font-bold">{v}</p></div>)}
+            </div>
+            <p className="text-xs text-muted">Una consulta es un crédito, también si falla
+              {datos.busqueda_web.fallidas ? ` (${datos.busqueda_web.fallidas} fallidas)` : ''}. Se buscan solo los temas del
+              sílabo y las fuentes quedan guardadas por momento: regenerar la guía no gasta créditos.</p>
+            {datos.busqueda_web.por_momento.length > 0 && <Tabla titulo="Créditos por momento"
+              columnas={['Proyecto formativo', 'Momento', 'Créditos', 'Fuentes', 'Tiempo']} vacio=""
+              filas={datos.busqueda_web.por_momento.map(m => [m.nombre ?? m.codigo_pf, `M${m.momento}`, String(m.creditos),
+                String(m.fuentes), formatoDuracion(m.segundos)])} />}
+          </div>}
 
           {!aid && datos.proyectos.length > 1 && <Tabla titulo="Por proyecto formativo" columnas={['Proyecto formativo', 'Recursos', 'Tokens']}
             vacio="" filas={datos.proyectos.map(p => [p.nombre ?? p.codigo_pf, String(p.recursos), formatoTokens(p.tokens)])} />}

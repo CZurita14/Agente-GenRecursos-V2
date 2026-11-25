@@ -18,6 +18,25 @@ def _redondeo(x: float | None, n: int) -> float:
     return round(float(x or 0), n)
 
 
+def busqueda_web(conn, p) -> dict:
+    """Consultas a SearchAPI de la guía de estudio: una consulta es un crédito, también si falló."""
+    t = conn.execute("select count(*) creditos, count(*) filter (where not ok) fallidas, coalesce(sum(segundos),0) "
+                     "segundos, count(distinct (asignatura_id, momento)) momentos from busqueda_web "
+                     "where asignatura_id=any(%s) and creado>=%s and creado<%s", p).fetchone()
+    por_momento = [{"codigo_pf": f["codigo_pf"], "nombre": f["nombre"], "momento": f["momento"],
+                    "creditos": f["creditos"], "segundos": _redondeo(f["segundos"], 1), "fuentes": f["fuentes"] or 0}
+                   for f in conn.execute(
+                       "select a.codigo_pf, a.silabo#>>'{proyecto_formativo,nombre}' nombre, b.momento, "
+                       "count(*) creditos, sum(b.segundos) segundos, (select jsonb_array_length(m.fuentes) "
+                       "from fuente_momento m where m.asignatura_id=b.asignatura_id and m.momento=b.momento) fuentes "
+                       "from busqueda_web b join asignatura a on a.id=b.asignatura_id "
+                       "where b.asignatura_id=any(%s) and b.creado>=%s and b.creado<%s "
+                       "group by a.codigo_pf, a.silabo, b.asignatura_id, b.momento order by 1, 3", p)]
+    return {"proveedor": "SearchAPI", "creditos": t["creditos"], "fallidas": t["fallidas"],
+            "segundos": _redondeo(t["segundos"], 1), "momentos": t["momentos"], "por_momento": por_momento,
+            "saldo": None}
+
+
 def resumen(conn, asignaturas: list, inicio: datetime, fin: datetime) -> dict:
     """`asignaturas`: ids a los que la cuenta tiene acceso (ya filtrados). Todo dentro de [inicio, fin)."""
     p = (asignaturas, inicio, fin)
@@ -33,7 +52,7 @@ def resumen(conn, asignaturas: list, inicio: datetime, fin: datetime) -> dict:
                "tokens_cache": int(t["tokens_cache"])}
     por_herramienta = []
     for f in conn.execute("select t.herramienta, count(distinct l.trabajo_id) recursos, "
-                          "sum(l.tokens_entrada+l.tokens_salida) tokens, "
+                          "sum(l.tokens_entrada+l.tokens_salida) tokens, coalesce(sum(l.segundos),0) segundos, "
                           "sum(l.tokens_entrada+l.tokens_salida) filter (where l.rol='revisor') revision, "
                           f"sum({_COSTO}) costo "
                           + base + " and coalesce(t.tipo,'generacion')<>'chat' and t.herramienta is not null "
@@ -42,7 +61,9 @@ def resumen(conn, asignaturas: list, inicio: datetime, fin: datetime) -> dict:
         por_herramienta.append({"herramienta": f["herramienta"], "recursos": f["recursos"], "tokens": tokens,
                                 "por_recurso": round(tokens / f["recursos"]) if f["recursos"] else 0,
                                 "parte_revision": _redondeo((f["revision"] or 0) / tokens if tokens else 0, 2),
-                                "costo_usd": _redondeo(f["costo"], 4)})
+                                "costo_usd": _redondeo(f["costo"], 4),
+                                # Tiempo de IA por recurso (suma de sus llamadas, sin la espera en cola).
+                                "segundos_por_recurso": _redondeo(f["segundos"] / f["recursos"] if f["recursos"] else 0, 1)})
     chat = conn.execute("select count(distinct l.trabajo_id) pedidos, coalesce(sum(l.tokens_entrada+l.tokens_salida),0) tokens "
                         + base + " and t.tipo='chat'", p).fetchone()
     proyectos = [{"id": str(f["id"]), "codigo_pf": f["codigo_pf"], "nombre": f["nombre"], "tokens": int(f["tokens"] or 0),
@@ -60,7 +81,7 @@ def resumen(conn, asignaturas: list, inicio: datetime, fin: datetime) -> dict:
                  for f in conn.execute("select herramienta, ambito_id, estado, tokens_entrada, tokens_salida, creado, actualizado "
                                        "from trabajo where asignatura_id=any(%s) and tipo='generacion' "
                                        "and creado>=%s and creado<%s order by creado desc limit 20", p)]
-    return {"totales": totales, "por_herramienta": por_herramienta,
+    return {"totales": totales, "por_herramienta": por_herramienta, "busqueda_web": busqueda_web(conn, p),
             "chat": {"pedidos": chat["pedidos"], "tokens": int(chat["tokens"])}, "proyectos": proyectos,
             "recientes": recientes, "costo_usd": _redondeo(t["costo"], 4),
             "costo_estimado_llamadas": t["estimadas"], "tarifa": {"vigencia": precios.VIGENCIA, "fuente": precios.FUENTE}}

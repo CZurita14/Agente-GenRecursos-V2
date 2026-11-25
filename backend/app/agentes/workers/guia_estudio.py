@@ -4,7 +4,7 @@ Es la base de las demás herramientas: una vez validada por el docente, su conte
 como material del momento en los pedidos de las herramientas de ese momento y de sus clases.
 """
 from app.agentes.mensajes import EntregaLote, TareaLote
-from app.agentes.workers.base import REGLAS_COMUNES, bloque_comun, pedir
+from app.agentes.workers.base import REGLAS_COMUNES, SALIDA_WORKER, bloque_comun, pedir
 from app.agentes.workers.momento import NO_RESOLVER
 from app.herramientas.esquemas import (
     GuiaAplicacion, GuiaDesarrollo, GuiaIntroduccion, esquema_guia_aplicacion, esquema_guia_desarrollo,
@@ -13,6 +13,10 @@ from app.herramientas.esquemas import (
 from app.agentes.verificador import MIN_PALABRAS_GUIA
 from app.llm.cliente import ClienteLLM
 from app.fuentes.searchapi import texto_fuentes
+from app.llm.prompts import CONTEXTO_MAX, limite_contexto
+
+# Una sección de desarrollo (1 600 a 2 000 palabras en JSON) no cabe en 3 500 tokens de salida.
+SALIDA_GUIA = 9000
 from app.momentos.trazabilidad import fase, numero_momento
 
 CITAS = ("Cita las fuentes de <fuentes> por su identificador entre corchetes ([B1], [F2]) cada vez que uses "
@@ -86,7 +90,8 @@ class WorkerGuiaEstudio:
         if comun:
             texto = "\n".join([texto, "", *comun])
         salida, tokens = pedir(tarea, cliente, instrucciones=INSTRUCCIONES, pedido=texto,
-                               modelo=modelo, esquema=esquema(), fuentes=texto_fuentes(tarea.fuentes))
+                               modelo=modelo, esquema=esquema(), fuentes=texto_fuentes(tarea.fuentes),
+                               salida_max=SALIDA_GUIA if limite_contexto(cliente) > CONTEXTO_MAX else SALIDA_WORKER)
         contenido = salida.model_dump(exclude_none=True)
         if tarea.lote == 4:
             # La bibliografía la pone el código: enlaces reales de SearchAPI y la del sílabo, tal cual.

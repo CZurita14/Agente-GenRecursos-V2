@@ -87,4 +87,28 @@ def consumo(request: Request, desde: date | None = None, hasta: date | None = No
                 raise HTTPException(404, "Proyecto Formativo inexistente")
             propias = [asignatura]
         datos = resumen(conn, propias, inicio, fin)
+    datos["busqueda_web"]["saldo"] = _saldo_searchapi(request.app.state.config)
     return {"desde": desde, "hasta": hasta, **datos}
+
+
+_SALDO: dict = {}
+
+
+def _saldo_searchapi(config) -> int | None:
+    """Créditos que le quedan a la cuenta de SearchAPI (consulta gratuita); 5 min en memoria, None si falla."""
+    import time as reloj
+    import httpx
+    if getattr(config, "searchapi_key", None) is None:
+        return None
+    if _SALDO and reloj.monotonic() - _SALDO["en"] < 300:
+        return _SALDO["valor"]
+    try:
+        r = httpx.get(config.searchapi_url.rsplit("/", 1)[0] + "/me", timeout=5, verify=config.llm_tls_estricto,
+                      headers={"Authorization": f"Bearer {config.searchapi_key.get_secret_value()}"})
+        r.raise_for_status()
+        d = r.json()
+        valor = (d.get("account") or d).get("remaining_credits")
+    except (httpx.HTTPError, ValueError, AttributeError):
+        return None
+    _SALDO.update(valor=valor, en=reloj.monotonic())
+    return valor

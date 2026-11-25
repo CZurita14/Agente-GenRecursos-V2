@@ -151,3 +151,34 @@ def test_texto_de_fuentes_sin_enlaces():
                                     "fragmento": "r", "enlace": "https://s.org/x"}]})
     assert "[B1]" in texto and "[F1] T (A · 2020 · s.org)" in texto and "https://" not in texto
 
+
+
+def test_cada_consulta_queda_medida_con_su_tiempo(conn, silabo):
+    from datetime import datetime, timedelta, timezone
+    from app.control.consumo import resumen
+    ctx, aid = _asignatura(conn, silabo)
+    fuentes_momento(conn, _config(), aid, 2, list(ctx.contenidos), ctx.carrera, http=_http([]))
+    fuentes_momento(conn, _config(), aid, 3, list(ctx.contenidos), ctx.carrera, http=_http([], estado=500))
+    filas = conn.execute("select momento,motor,ok,resultados,segundos from busqueda_web order by id").fetchall()
+    assert [(f["momento"], f["ok"]) for f in filas] == [(2, True), (2, True), (3, False), (3, False)]
+    assert all(f["segundos"] >= 0 for f in filas) and filas[0]["resultados"] == 5
+    ahora = datetime.now(timezone.utc)
+    bw = resumen(conn, [aid], ahora - timedelta(days=1), ahora + timedelta(days=1))["busqueda_web"]
+    assert bw["creditos"] == 4 and bw["fallidas"] == 2 and bw["momentos"] == 2
+    assert [(m["momento"], m["creditos"], m["fuentes"]) for m in bw["por_momento"]] == [(2, 2, 2), (3, 2, 0)]
+    # El fallo total no se guarda como fuentes: el próximo intento vuelve a buscar (y se vuelve a medir).
+    assert conn.execute("select count(*) n from fuente_momento where momento=3").fetchone()["n"] == 0
+
+
+def test_la_guia_pide_mas_salida_solo_con_ventana_grande(silabo):
+    from uuid import uuid4 as nuevo
+    from app.agentes.mensajes import EstiloFacultad, TareaLote
+    ctx = contexto_momento(silabo, "M2")
+    tarea = TareaLote(trabajo_id=nuevo(), asignatura_id=nuevo(), lote=2, ronda=0, contexto=ctx,
+                      estilo=EstiloFacultad(tipos_de_caso=[], software_habitual=[]), plan=[], ya_generado=[])
+    for ventana, esperado in ((1_000_000, 9000), (None, 3500)):
+        cliente = ClienteSimulado({"worker": lambda m: json.dumps(_seccion(2))})
+        if ventana:
+            cliente.contexto_max = ventana
+        WorkerGuiaEstudio().generar(tarea, cliente)
+        assert cliente.llamadas[-1]["max_tokens"] == esperado
