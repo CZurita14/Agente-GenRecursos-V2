@@ -156,3 +156,13 @@ def test_politica_partida_entre_paginas_se_une():
     [m] = leer_momentos([_cabecera() + [SESION_1] + cierre, continuacion, RUBRICA], INICIO)
     assert m["politica_ia"] == "SE PERMITE LA IA COMO APOYO PARA IDENTIFICAR RIESGOS."
     assert m["recursos"] == "Escenarios: entorno virtual"
+
+
+def test_etiqueta_de_ra_partida_entre_paginas():
+    """«Resultados de / aprendizaje» partido por un salto de página: el RA no se pierde (piloto B26)."""
+    cabecera = _cabecera()
+    cabecera[2] = ["Resultados de", None, "RA1", None, None, None, None, None, None]
+    tablas = [cabecera[:3], [["aprendizaje", None, "", None, None, None, None, None, None], *cabecera[3:], SESION_1,
+                             *_cierre(), *RUBRICA]]
+    m = leer_momentos(tablas, INICIO)[0]
+    assert m["ra"] == ["RA1"] and m["evidencia"] and len(m["sesiones"]) == 1

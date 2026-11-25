@@ -169,9 +169,10 @@ def leer_momentos(tablas_iv: list[Tabla], inicio_periodo: date) -> list[dict]:
                 inicio, _, fin = _valor(fila).partition(" al ")
                 # «Por definir» u otro texto: queda None y la validación del contrato lo informa.
                 actual["fecha_inicio"], actual["fecha_fin"] = fecha_o_none(inicio), fecha_o_none(fin)
-            elif estado == "cabecera" and clave.startswith("RESULTADOS DE APRENDIZAJE"):
+            elif estado == "cabecera" and clave.startswith("RESULTADOS DE"):
+                # «Resultados de / aprendizaje»: un salto de página puede partir la etiqueta.
                 actual["ra"] = re.findall(r"RA\d+", _valor(fila))
-            elif estado == "cabecera" and clave.startswith("EVIDENCIA DE DESEMPENO"):
+            elif estado == "cabecera" and clave.startswith("EVIDENCIA DE"):
                 actual["evidencia"], abierto = _valor(fila), "evidencia"
             elif estado == "sesiones":
                 def celda(rol: str) -> str:
