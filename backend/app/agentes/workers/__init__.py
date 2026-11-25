@@ -3,12 +3,14 @@ from app.agentes.workers.base import Worker
 from app.agentes.workers.cuestionario import WorkerCuestionario, WorkerSimulacro
 from app.agentes.workers.clase import GUIA_AUTONOMA, GUION_CLASE, PRACTICA_GUIADA, PRESENTACION, TARJETAS
 from app.agentes.workers.ficha_clase import WorkerFichaClase
+from app.agentes.workers.guia_estudio import WorkerGuiaEstudio
 from app.agentes.workers.momento import ESTUDIO_CASO, GUIA_EVIDENCIA, GUIA_PRODUCTO_FINAL, REPASO
 
 WORKERS: dict[str, Worker] = {
     "cuestionario": WorkerCuestionario(),
     "ficha_clase": WorkerFichaClase(),
     "simulacro": WorkerSimulacro(),
+    "guia_estudio": WorkerGuiaEstudio(),
     "repaso_momento": REPASO,
     "guia_evidencia": GUIA_EVIDENCIA,
     "estudio_caso": ESTUDIO_CASO,

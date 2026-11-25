@@ -20,7 +20,7 @@ PIE = "Recurso generado con asistencia de IA y revisado por el docente"
 
 NOMBRES = {
     "cuestionario": "Cuestionario", "simulacro": "Simulacro", "ficha_clase": "Ficha de clase",
-    "repaso_momento": "Repaso integrador", "guia_evidencia": "Guía de la evidencia",
+    "guia_estudio": "Guía de estudio", "repaso_momento": "Repaso integrador", "guia_evidencia": "Guía de la evidencia",
     "estudio_caso": "Estudio de caso", "guia_producto_final": "Guía del producto final",
     "hoja_ruta": "Hoja de ruta del Proyecto Formativo", "autoevaluacion_rubrica": "Autoevaluación con la rúbrica",
     "autoevaluacion_final": "Autoevaluación final", "lista_evidencia": "Lista de verificación de la evidencia",
@@ -221,6 +221,7 @@ PROPOSITO = {
     "guia_autonoma": "Organizar tu trabajo autónomo de la sesión y llegar preparado a la siguiente clase.",
     "guion_clase": "Guiar al docente en la conducción de la sesión.",
     "presentacion": "Acompañar la exposición de la clase con diapositivas.",
+    "guia_estudio": "Estudiar a fondo la teoría del momento antes de trabajar sus herramientas.",
     "repaso_momento": "Integrar lo trabajado en las sesiones del momento con su resultado de aprendizaje.",
     "guia_evidencia": "Entender qué se pide en la evidencia del momento y cómo se valora.",
     "estudio_caso": "Practicar el análisis de un caso con preguntas de menor a mayor complejidad.",

@@ -10,11 +10,12 @@ interface AsignaturaProps {
   nombre: string;
   onElegir: (ambito: Ambito, titulo: string) => void;
   onVerRecursos: () => void;
+  onVerMomentos: () => void;
   onSesionVencida: () => void;
 }
 
 /** Paso 1 del recorrido: el menú del Proyecto Formativo por semana; cada clase abre la actividad. */
-export function Asignatura({ aid, nombre, onElegir, onVerRecursos, onSesionVencida }: AsignaturaProps) {
+export function Asignatura({ aid, nombre, onElegir, onVerRecursos, onVerMomentos, onSesionVencida }: AsignaturaProps) {
   const [datos, setDatos] = useState<MenuAsignatura | null>(null);
   const [cuenta, setCuenta] = useState<Record<string, number>>({});
   const [error, setError] = useState('');
@@ -45,6 +46,7 @@ export function Asignatura({ aid, nombre, onElegir, onVerRecursos, onSesionVenci
         <p className="text-muted mt-1">Paso 1 · Elige la clase para preparar sus herramientas.</p>
       </div>
       <div className="flex flex-wrap gap-2">
+        <Button onClick={onVerMomentos}>Momentos y descarga</Button>
         <Button variant="secondary" onClick={onVerRecursos}>Ver recursos</Button>
         {puedeGenerar && <Button variant="secondary"
           onClick={() => onElegir({ tipo: 'asignatura', id: 'asignatura' }, 'Todo el Proyecto Formativo')}>

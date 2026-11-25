@@ -69,8 +69,14 @@ def crear_trabajos(conn, solicitud: SolicitudGeneracion) -> list[UUID]:
                           silabo=asignatura["silabo"], version_silabo=asignatura["version_silabo"])
         if solicitud.perfil_dificultad is not None:
             parametros["perfil_dificultad"] = solicitud.perfil_dificultad
+        from app.momentos.contexto import material_momento
+
+        def con_material(h: str) -> dict:
+            # Instantánea del contexto del docente y de la guía validada del momento.
+            material = material_momento(conn, solicitud.asignatura_id, solicitud.ambito.tipo, solicitud.ambito.id, h)
+            return {**parametros, "material_momento": material} if material else parametros
         return [encolar(conn, asignatura_id=solicitud.asignatura_id, agente=asignatura["agente"],
-                        ambito=solicitud.ambito, herramienta=h, parametros=parametros)
+                        ambito=solicitud.ambito, herramienta=h, parametros=con_material(h))
                 for h in solicitud.herramientas]
 
 
@@ -95,6 +101,7 @@ def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonado
             carrera=ctx.carrera, nivel=ctx.nivel, ambito=trabajo.ambito,
             herramienta=trabajo.herramienta, perfil_dificultad=trabajo.parametros.get("perfil_dificultad", perfil_por_nivel(ctx.nivel)),
             instrucciones=trabajo.parametros.get("instrucciones", ""),
+            material_momento=trabajo.parametros.get("material_momento", ""),
         )
         Coordinador(perfiles[trabajo.agente], WORKERS, cliente, razonador=razonador).ejecutar(
             conn, trabajo, encargo, ctx,

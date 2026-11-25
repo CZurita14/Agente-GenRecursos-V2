@@ -42,6 +42,7 @@ class Encargo(Mensaje):
     herramienta: str
     perfil_dificultad: str
     instrucciones: str = ""
+    material_momento: str = ""  # Contexto del docente y guía validada del momento (instantánea).
 
 
 class PlanRazonado(Mensaje):
@@ -67,6 +68,7 @@ class TareaLote(Mensaje):
     resultados_calculados: list[str] = []
     devoluciones: list[Devolucion] = []
     instrucciones: str = ""
+    material_momento: str = ""
 
 
 class EntregaLote(Mensaje):

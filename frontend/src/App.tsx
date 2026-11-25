@@ -10,6 +10,7 @@ import { Asignaturas } from './vistas/Asignaturas';
 import { Generar } from './vistas/Generar';
 import { Ingreso } from './vistas/Ingreso';
 import { Inicio } from './vistas/Inicio';
+import { Momentos } from './vistas/Momentos';
 import { Progreso } from './vistas/Progreso';
 import { Recurso } from './vistas/Recurso';
 import { Recursos } from './vistas/Recursos';
@@ -21,6 +22,7 @@ type Ruta =
   | { vista: 'inicio' } | { vista: 'generar' } | { vista: 'asignaturas' }
   | { vista: 'recursos'; aid?: string }
   | { vista: 'asignatura'; curso: Curso }
+  | { vista: 'momentos'; curso: Curso }
   | { vista: 'actividad'; curso: Curso; ambito: Ambito; titulo: string }
   | { vista: 'progreso'; curso: Curso; creados: TrabajoCreado[] }
   | { vista: 'recurso'; curso: Pick<Curso, 'aid' | 'rol'> & { nombre?: string }; rid: string; volver: Ruta };
@@ -67,7 +69,13 @@ export default function App() {
       onAbrir={a => aMenu({ aid: a.id, nombre: a.nombre, rol: a.rol })} />}
     {ruta.vista === 'asignatura' && <Asignatura aid={ruta.curso.aid} nombre={ruta.curso.nombre} onSesionVencida={expirar}
       onElegir={(ambito, titulo) => setRuta({ vista: 'actividad', curso: ruta.curso, ambito, titulo })}
-      onVerRecursos={() => setRuta({ vista: 'recursos', aid: ruta.curso.aid })} />}
+      onVerRecursos={() => setRuta({ vista: 'recursos', aid: ruta.curso.aid })}
+      onVerMomentos={() => setRuta({ vista: 'momentos', curso: ruta.curso })} />}
+    {ruta.vista === 'momentos' && <Momentos aid={ruta.curso.aid} nombre={ruta.curso.nombre} onSesionVencida={expirar}
+      onVolver={() => aMenu(ruta.curso)}
+      onElegir={(ambito, titulo) => setRuta({ vista: 'actividad', curso: ruta.curso, ambito, titulo })}
+      onAbrir={rid => setRuta({ vista: 'recurso', curso: ruta.curso, rid, volver: ruta })}
+      onGenerado={creados => setRuta({ vista: 'progreso', curso: ruta.curso, creados })} />}
     {ruta.vista === 'actividad' && <Actividad aid={ruta.curso.aid} ambito={ruta.ambito} titulo={ruta.titulo}
       onSesionVencida={expirar} onVolver={() => aMenu(ruta.curso)}
       onGenerado={creados => setRuta({ vista: 'progreso', curso: ruta.curso, creados })} />}

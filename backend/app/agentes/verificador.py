@@ -260,3 +260,32 @@ def verificar_herramienta_clase(nombre: str):
                 fallos.append("tarjeta con un contenido ajeno a la sesión")
         return fallos
     return verificar
+
+
+# --- Guía de estudio del momento --------------------------------------------------
+# Unas 480 palabras por página en el Word exportado: 10 a 15 páginas ≈ 4 800 a 7 200 palabras.
+PALABRAS_POR_PAGINA = 480
+MIN_PALABRAS_GUIA = {"introduccion": 600, "desarrollo_1": 1600, "desarrollo_2": 1600, "aplicacion": 1000}
+MIN_PALABRAS_GUIA_TOTAL = 10 * PALABRAS_POR_PAGINA
+
+
+def palabras_guia(datos) -> int:
+    return sum(len(t.split()) for t in _textos(datos))
+
+
+def verificar_guia_estudio(datos: dict, contexto: ContextoClase) -> list[str]:
+    """Una sección suelta (cada lote) o la guía completa (al cerrar): extensión, frases e integridad."""
+    completa = bool(datos) and set(datos) <= set(MIN_PALABRAS_GUIA)
+    fallos = verificar_ficha(datos, contexto)
+    if _copia(contexto.entregables_momento, _textos(datos)):
+        fallos.append("copia el texto de la evidencia del momento")
+    if completa:
+        total = palabras_guia(datos)
+        if total < MIN_PALABRAS_GUIA_TOTAL:
+            fallos.append(f"la guía tiene unas {total // PALABRAS_POR_PAGINA} páginas; se piden al menos 10")
+    else:
+        minimo = (MIN_PALABRAS_GUIA["introduccion"] if "glosario" in datos else
+                  MIN_PALABRAS_GUIA["aplicacion"] if "ejemplos" in datos else MIN_PALABRAS_GUIA["desarrollo_1"])
+        if (n := palabras_guia(datos)) < minimo:
+            fallos.append(f"la sección tiene {n} palabras; amplía el desarrollo hasta al menos {minimo}")
+    return fallos

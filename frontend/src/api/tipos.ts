@@ -134,3 +134,29 @@ export interface Recurso extends RecursoResumen {
   /** Claves que contradicen sus explicaciones; se calcula sobre el contenido actual. */
   revision_claves?: Record<string, string[]>;
 }
+
+export interface RecursoMomento {
+  id: string; herramienta: string; nombre: string; ambito_id: string; estado: string;
+  validado: boolean; por_regenerar: boolean;
+}
+
+export interface MomentoDetalle {
+  numero: number; id: string; titulo: string;
+  fase: { nombre: string; proposito: string };
+  fecha_inicio: string | null; fecha_fin: string | null;
+  ra: { id: string; texto: string }[];
+  evidencia: string; politica_ia: string;
+  sesiones: { id: string; numero: number; fecha: string | null; contenidos: string[] }[];
+  contexto_docente: { texto: string; revision: number; actualizado: string | null; verificaciones: string[] } | null;
+  guia: { recurso_id: string; estado: string; validado: boolean; paginas: number; por_regenerar: boolean } | null;
+  recursos: RecursoMomento[];
+  resumen: { total: number; validados: number; por_regenerar: number };
+}
+
+export interface MomentosRespuesta { rol: Rol; momentos: MomentoDetalle[] }
+
+export interface ResumenDescarga {
+  carpeta: string; validados: number; asignatura: number;
+  momentos: { numero: number; titulo: string; fase: string; total: number; validados: number;
+    por_regenerar: number; guia_validada: boolean }[];
+}

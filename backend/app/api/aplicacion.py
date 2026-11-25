@@ -18,6 +18,7 @@ from app.api.monitor_uti import router as monitor_router
 from app.api.auth import router as auth_router
 from app.api.cuerpo import LimiteJSON
 from app.api.recursos import router as recursos_router
+from app.api.momentos import router as momentos_router
 from app.api.chat import router as chat_router
 from app.api.privacidad import router as privacidad_router
 from app.api.errores import registrar_errores
@@ -27,6 +28,7 @@ from app.db.conexion import conectar
 from app.db.pool import PoolConexiones
 from app.asignaturas.servicio import ServicioAsignaturas
 from app.recursos.servicio import ServicioRecursos
+from app.momentos.servicio import ServicioMomentos
 from app.control.identidad import ProxyInvalido, ip_cliente, operacion_segura
 from app.llm.cliente import contexto_tls
 from app.control.limites import LimiteExcedido
@@ -51,6 +53,7 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         app.state.asignaturas = ServicioAsignaturas(conexion, cargar_catalogo(RAIZ / "kb/catalogo.yaml"),
                                                     app.state.perfiles)
         app.state.recursos = ServicioRecursos(conexion, app.state.perfiles)
+        app.state.momentos = ServicioMomentos(conexion, app.state.recursos)
         if isinstance(app.state.auth, ServicioAuth) and app.state.auth.asignaturas is None:
             app.state.auth.asignaturas = app.state.asignaturas
         verificar = contexto_tls(config.llm_tls_estricto) if transporte is None else True
@@ -80,6 +83,7 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
     app.include_router(auth_router)
     app.include_router(asignaturas_router)
     app.include_router(recursos_router)
+    app.include_router(momentos_router)
     app.include_router(chat_router)
     app.include_router(admin_router)
     app.include_router(consumo_router)

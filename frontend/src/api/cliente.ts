@@ -4,7 +4,7 @@
  */
 import type {
   Ambito, AsignaturaResumen, Catalogo, Materia, MenuAsignatura, Recurso, RecursoResumen, Trabajo, TrabajoCreado,
-  TipoAmbito, Usuario,
+  TipoAmbito, Usuario, MomentoDetalle, MomentosRespuesta, ResumenDescarga,
 } from './tipos';
 
 const BASE = '/api';
@@ -105,3 +105,16 @@ export const urlImagen = (aid: string, rid: string, hash: string) =>
 
 export const urlExportar = (aid: string, rid: string, formato: 'html' | 'pdf' | 'docx' | 'pptx' = 'html', docente = false) =>
   `${BASE}/asignaturas/${enc(aid)}/recursos/${enc(rid)}/exportar?formato=${formato}${docente ? '&version=docente' : ''}`;
+
+/** Momentos del Proyecto Formativo: trazabilidad, contexto del docente y guía de estudio. */
+export const momentos = (aid: string) => pedir<MomentosRespuesta>(`/asignaturas/${enc(aid)}/momentos`);
+
+/** Guarda el contexto del momento (se valida en la API; 422 con el motivo, 409 si cambió). */
+export const guardarContexto = (aid: string, numero: number, revision: number, texto: string) =>
+  pedir<MomentoDetalle>(`/asignaturas/${enc(aid)}/momentos/${numero}/contexto`,
+    { method: 'PUT', body: json({ revision, texto }) });
+
+export const resumenDescarga = (aid: string) => pedir<ResumenDescarga>(`/asignaturas/${enc(aid)}/descarga/resumen`);
+
+/** ZIP «docente_materia» con lo validado; la cookie viaja sola. */
+export const urlDescarga = (aid: string) => `${BASE}/asignaturas/${enc(aid)}/descarga`;

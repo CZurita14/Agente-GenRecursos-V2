@@ -2,6 +2,7 @@
 export const NOMBRES: Record<string, string> = {
   cuestionario: 'Cuestionario',
   ficha_clase: 'Ficha de clase',
+  guia_estudio: 'Guía de estudio del momento',
   simulacro: 'Simulacro',
   repaso_momento: 'Repaso integrador',
   guia_evidencia: 'Guía de la evidencia',

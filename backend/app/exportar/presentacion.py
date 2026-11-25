@@ -293,8 +293,33 @@ def _diapositivas(c: dict) -> list[dict]:
     ]) for n, d in enumerate(p["diapositivas"], 1)]
 
 
+def _guia_estudio(c: dict) -> list[dict]:
+    i, a = c["introduccion"], c["aplicacion"]
+    bloques = [_texto("Presentación", i["presentacion"], ["introduccion", "presentacion"]),
+               _lista("Objetivos de aprendizaje", i["objetivos"], ruta=["introduccion", "objetivos"]),
+               _lista("Ruta del momento", i["ruta_del_momento"], numerada=True, ruta=["introduccion", "ruta_del_momento"]),
+               _tabla("Glosario", ["Término", "Definición"], [[t["termino"], t["definicion"]] for t in i["glosario"]],
+                      [[["introduccion", "glosario", k, "termino"], ["introduccion", "glosario", k, "definicion"]]
+                       for k in range(len(i["glosario"]))])]
+    numero = 0
+    for seccion in ("desarrollo_1", "desarrollo_2"):
+        for k, ap in enumerate(c[seccion]["apartados"]):
+            numero += 1
+            bloques.append(_grupo(f"{numero}. {ap['titulo']}", [
+                _texto("Desarrollo", ap["desarrollo"], [seccion, "apartados", k, "desarrollo"]),
+                _lista("Puntos clave", ap["puntos_clave"], ruta=[seccion, "apartados", k, "puntos_clave"])]))
+    bloques.append(_texto("Vinculación con la práctica", a["vinculacion_practica"], ["aplicacion", "vinculacion_practica"]))
+    bloques += [_grupo(f"Ejemplo {k + 1}: {e['titulo']}", [
+        _texto("Situación", e["situacion"], ["aplicacion", "ejemplos", k, "situacion"]),
+        _texto("Desarrollo", e["desarrollo"], ["aplicacion", "ejemplos", k, "desarrollo"])])
+        for k, e in enumerate(a["ejemplos"])]
+    bloques += [_texto("Síntesis", a["sintesis"], ["aplicacion", "sintesis"]),
+                _lista("Autoevaluación", a["autoevaluacion"], numerada=True, ruta=["aplicacion", "autoevaluacion"])]
+    return bloques
+
+
 VISTAS: dict[str, Callable[[dict], list[dict]]] = {
-    "presentacion": _diapositivas,
+    "presentacion": _diapositivas, "guia_estudio": _guia_estudio,
     "practica_guiada": _practica, "tarjetas": _tarjetas, "guia_autonoma": _guia_autonoma, "guion_clase": _guion,
     "rubrica_momento": _rubrica_momento, "rubrica_final": _rubrica_final,
     "ficha_clase": _ficha, "repaso_momento": _repaso, "guia_evidencia": _guia, "estudio_caso": _caso,
