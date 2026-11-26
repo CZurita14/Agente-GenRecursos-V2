@@ -5,7 +5,7 @@ import {
   ErrorApi, generar, guardarContexto, momentos as cargarMomentos, planEvaluacion, resumenDescarga, urlDescarga,
 } from '../api/cliente';
 import type { Ambito, MomentoDetalle, PlanEvaluacion, ResumenDescarga, TrabajoCreado } from '../api/tipos';
-import { NormaModalidad, PlanMomento } from './PlanEvaluacion';
+import { NormaModalidad, PlanMomento, porcentajeMomento } from './PlanEvaluacion';
 import { fechaCorta, nombreAmbito } from '../api/herramientas';
 
 interface MomentosProps {
@@ -82,7 +82,7 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
           <span className="block font-bold">Momento {m.numero}</span>
           <span className="block text-xs text-muted">{m.fase.nombre}</span>
           {plan?.norma?.estado === 'definida' && <span className="block text-xs font-bold text-action-ink">
-            {(plan.por_momento[m.numero] ?? 0).toLocaleString('es-EC', { maximumFractionDigits: 1 })} % de la nota</span>}
+            {porcentajeMomento(plan.por_momento[m.numero] ?? 0)} de la nota</span>}
         </button>
         {i < lista.length - 1 && <ChevronRight aria-hidden="true" className="w-4 h-4 text-muted" />}
       </li>)}

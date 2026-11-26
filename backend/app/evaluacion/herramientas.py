@@ -25,7 +25,8 @@ POR_TIPO: dict[str, tuple[tuple[str, str], ...]] = {
     "taller_coevaluacion": (("rubrica_momento", MOMENTO), ("autoevaluacion_rubrica", MOMENTO)),
     "autoevaluacion": (("autoevaluacion_rubrica", MOMENTO),),
     "participacion": (("guion_clase", CLASE),),
-    "entrega_avance": (("guia_entrega", CLASE), ("insumo_respaldo", CLASE)),
+    # El insumo de respaldo no va por tipo: se ofrece en cualquier tarea evaluable complementaria (V4-2, §6.3).
+    "entrega_avance": (("guia_entrega", CLASE),),
     "avance": (("practica_guiada", CLASE), ("tarjetas", CLASE), ("guion_clase", CLASE)),
 }
 
@@ -58,26 +59,50 @@ def rangos_acumulados(sumativas: list[str]) -> dict[str, str]:
     return rangos
 
 
-def herramientas_de(tipo: str, sesion: str, acumulado: str | None = None) -> list[dict]:
+def herramientas_de(tipo: str, sesion: str, acumulado: str | None = None, dependencia=None) -> list[dict]:
     """[{herramienta, ambito: {tipo, id}}] para una actividad de esa sesión («M3-S4»).
 
     `acumulado` es el rango de momentos de la prueba («M1-M2»); sin él, el simulacro es del momento.
+    `dependencia` (de `app.evaluacion.dependencias`): si la tarea es complementaria se agrega el insumo de respaldo,
+    con el insumo previo detectado como indicación para la IA (§6.3).
     """
     momento = sesion.split("-")[0]
     ids = {CLASE: sesion, MOMENTO: momento, ASIGNATURA: "asignatura", ACUMULADO: acumulado or momento}
     tipos = {ACUMULADO: MOMENTO}
-    return [{"herramienta": h, "ambito": {"tipo": tipos.get(ambito, ambito), "id": ids[ambito]}}
-            for h, ambito in POR_TIPO.get(tipo, ())]
+    salida = [{"herramienta": h, "ambito": {"tipo": tipos.get(ambito, ambito), "id": ids[ambito]}}
+              for h, ambito in POR_TIPO.get(tipo, ())]
+    if dependencia is not None and dependencia.tipo == "complementaria" and tipo in EVALUABLES_CON_TAREA:
+        salida.append({"herramienta": "insumo_respaldo", "ambito": {"tipo": CLASE, "id": sesion},
+                       "instrucciones": indicacion_insumo(dependencia)})
+    return salida
+
+
+# Tipos evaluables que son tareas (producen un producto); en ellos el insumo de respaldo tiene sentido.
+EVALUABLES_CON_TAREA = {"entrega_avance", "practica_experimental", "ensayo", "portafolio", "cuestionario_autonomo",
+                        "proyecto_final", "estudio_caso"}
+
+
+def indicacion_insumo(d) -> str:
+    """Lo que el sistema sabe del insumo previo, como indicación para el insumo de respaldo."""
+    from app.evaluacion.dependencias import legible
+    if d.origen:
+        return (f"La tarea continúa «{d.insumo}», que se produce en {legible(d.origen)}. El insumo de respaldo "
+                "es una versión base de ese producto para quien no lo completó.")
+    if d.insumo:
+        return f"La tarea continúa «{d.insumo}» de una sesión anterior; el insumo de respaldo es una versión base de él."
+    return "La tarea continúa un producto de una sesión anterior; identifícalo en el sílabo y prepara su versión base."
 
 
 def disponibles(silabo, ofrecidas: list[dict], cache: dict | None = None) -> list[dict]:
     """Solo las herramientas que se pueden encolar con este sílabo: ámbito existente y lo que su esquema necesita.
 
-    Así el plan no ofrece, por ejemplo, la guía del producto final si el sílabo no trae la rúbrica final.
+    Así el plan no ofrece, por ejemplo, la guía del producto final si el sílabo no trae la rúbrica final, ni
+    herramientas con IA en un momento cuya política excluye la IA en una evaluación (§9.4).
     """
     from app.agentes.workers.definiciones import DEFINICIONES
     from app.cola.trabajos import Ambito
     from app.herramientas.sin_ia import HERRAMIENTAS_SIN_IA, generar_sin_ia
+    from app.recursos.servicio import _restriccion
     from app.silabo.contexto import contexto_ambito
 
     cache = {} if cache is None else cache  # (herramienta, ámbito) → se puede; compartido entre actividades
@@ -88,6 +113,8 @@ def disponibles(silabo, ofrecidas: list[dict], cache: dict | None = None) -> lis
             if nombre in HERRAMIENTAS_SIN_IA:
                 generar_sin_ia(nombre, silabo, ambito["id"])
                 return True
+            if _restriccion(silabo, ambito["tipo"], ambito["id"]):
+                return False
             return DEFINICIONES[nombre].requisitos(contexto_ambito(silabo, Ambito(ambito["tipo"], ambito["id"]))) is None
         except (KeyError, ValueError):
             return False

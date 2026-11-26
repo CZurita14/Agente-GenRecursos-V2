@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { AlertTriangle, CheckCircle2, Sparkles } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Link2, Sparkles } from 'lucide-react';
 import { Alert, Badge } from '../components';
 import { ErrorApi, generar } from '../api/cliente';
 import type { ActividadPlan, PlanEvaluacion as Plan, TrabajoCreado } from '../api/tipos';
-import { fechaCorta, nombreHerramienta } from '../api/herramientas';
+import { fechaCorta, legible, nombreAmbito, nombreHerramienta } from '../api/herramientas';
 
 /** Calificaciones del RRA en el orden de la norma, con su color de la barra. */
 export const CALIFICACIONES: { codigo: string; corto: string; color: string }[] = [
@@ -34,6 +34,8 @@ const COLUMNA: Record<string, string> = {
 };
 
 const porcentaje = (n: number) => `${n.toLocaleString('es-EC', { maximumFractionDigits: 2 })} %`;
+/** Totales por momento: un decimal, igual que en las pestañas de los momentos. */
+export const porcentajeMomento = (n: number) => `${n.toLocaleString('es-EC', { maximumFractionDigits: 1 })} %`;
 
 /** Norma del RRA de la modalidad, bloques de calificación y alertas del plan implícito en el sílabo. */
 export function NormaModalidad({ plan }: { plan: Plan }) {
@@ -75,6 +77,26 @@ export function NormaModalidad({ plan }: { plan: Plan }) {
   </section>;
 }
 
+/** §6: de qué producto previo depende la tarea; si es evaluable, se califica solo el avance nuevo (§6.4). */
+function Dependencia({ d }: { d: NonNullable<ActividadPlan['dependencia']> }) {
+  const insumo = d.insumo ? `«${legible(d.insumo)}»` : 'un producto previo';
+  if (d.roto) return <p className="text-xs text-danger flex items-start gap-1.5">
+    <AlertTriangle aria-hidden="true" className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+    Continúa {insumo}, pero ese insumo no existe en el sílabo o no tiene horas. Revisa la tarea (§6.3).</p>;
+  if (d.origen_legible) return <p className="text-xs text-muted flex items-start gap-1.5">
+    <Link2 aria-hidden="true" className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+    Continúa {insumo} de {d.origen_legible}. Se califica solo el avance nuevo.</p>;
+  return <p className="text-xs text-warning flex items-start gap-1.5">
+    <Link2 aria-hidden="true" className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+    Continúa {insumo} sin un origen claro en las sesiones anteriores; revisa su insumo previo (§6.1).</p>;
+}
+
+/** Nombre del botón; si la herramienta cubre varios momentos (simulacro del parcial), lo dice. */
+export function etiquetaBoton(h: ActividadPlan['herramientas'][number]): string {
+  const rango = /^M\d+-M\d+$/.test(h.ambito.id);
+  return rango ? `${nombreHerramienta(h.herramienta)} · ${nombreAmbito(h.ambito.id)}` : nombreHerramienta(h.herramienta);
+}
+
 interface PlanMomentoProps {
   aid: string; plan: Plan; numero: number; lector: boolean;
   onGenerado: (creados: TrabajoCreado[]) => void; onError: (e: unknown) => void;
@@ -83,7 +105,7 @@ interface PlanMomentoProps {
 /** Actividades evaluables del momento con su calificación, peso, instrumento y las herramientas que las preparan. */
 export function PlanMomento({ aid, plan, numero, lector, onGenerado, onError }: PlanMomentoProps) {
   const [generando, setGenerando] = useState('');
-  const [aviso, setAviso] = useState('');
+  const [aviso, setAviso] = useState<{ clave: string; texto: string } | null>(null);
   const propias = plan.actividades.filter(a => a.momento === numero);
   const evaluables = propias.filter(a => a.evaluable);
   const avance = [...new Set(propias.filter(a => !a.evaluable).map(a => a.sesion))]
@@ -91,12 +113,12 @@ export function PlanMomento({ aid, plan, numero, lector, onGenerado, onError }: 
   const parciales = plan.bloques.length > 1;
 
   const crear = async (clave: string, h: ActividadPlan['herramientas'][number]) => {
-    setGenerando(clave); setAviso('');
+    setGenerando(clave + h.herramienta); setAviso(null);
     try {
-      onGenerado((await generar(aid, h.ambito, [h.herramienta])).trabajos);
+      onGenerado((await generar(aid, h.ambito, [h.herramienta], h.instrucciones)).trabajos);
     } catch (e) {
       if (e instanceof ErrorApi && e.estado === 401) return onError(e);
-      setAviso(e instanceof ErrorApi ? e.message : 'No hay conexión con el servidor.');
+      setAviso({ clave, texto: e instanceof ErrorApi ? e.message : 'No hay conexión con el servidor.' });
     } finally { setGenerando(''); }
   };
 
@@ -107,8 +129,10 @@ export function PlanMomento({ aid, plan, numero, lector, onGenerado, onError }: 
   return <div className="space-y-2">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h3 className="font-bold">Plan de evaluación del momento</h3>
-      <Badge tone="highlight">{porcentaje(plan.por_momento[numero] ?? 0)} de la nota</Badge>
+      <Badge tone="highlight">{porcentajeMomento(plan.por_momento[numero] ?? 0)} de la nota</Badge>
     </div>
+    {plan.ia_restringida?.[String(numero)] && <p className="text-sm text-warning">{plan.ia_restringida[String(numero)]}
+      {' '}Se ofrecen solo las herramientas sin IA.</p>}
     {evaluables.length === 0 && <p className="text-sm text-muted">El sílabo no trae actividades evaluables en este momento.</p>}
     {grupos.map(g => <div key={g.titulo || 'todo'}>
       {g.titulo && <p className="text-xs font-bold uppercase tracking-wide text-muted mt-2">{g.titulo}</p>}
@@ -125,21 +149,22 @@ export function PlanMomento({ aid, plan, numero, lector, onGenerado, onError }: 
             </span>
           </div>
           <p className="text-sm text-muted line-clamp-2">{a.texto}</p>
+          {a.dependencia && <Dependencia d={a.dependencia} />}
           <p className="text-xs text-muted">{a.instrumento ? INSTRUMENTO[a.instrumento] ?? a.instrumento : ''}
             {a.finalidad ? ` · ${FINALIDAD[a.finalidad] ?? a.finalidad}` : ''}{a.agente ? ` · ${AGENTE[a.agente] ?? a.agente}` : ''}</p>
           {!lector && a.herramientas.length > 0 && <div className="flex flex-wrap gap-2">{a.herramientas.map(h =>
             <button key={h.herramienta} type="button" disabled={!!generando}
-              onClick={() => crear(clave + h.herramienta, h)}
+              onClick={() => crear(clave, h)}
               className="inline-flex items-center gap-1 rounded-lg border border-line px-3 py-1.5 text-sm hover:bg-app-soft disabled:opacity-60">
               <Sparkles aria-hidden="true" className="w-3.5 h-3.5 text-action-ink" />
-              {generando === clave + h.herramienta ? 'Encolando…' : nombreHerramienta(h.herramienta)}
+              {generando === clave + h.herramienta ? 'Encolando…' : etiquetaBoton(h)}
             </button>)}</div>}
+          {aviso?.clave === clave && <Alert tone="danger" role="alert">{aviso.texto}</Alert>}
         </li>;
       })}</ul>
     </div>)}
     {avance.length > 0 && <p className="text-sm text-muted border-t border-line pt-2">
       {avance.map(s => s.replace(/^M\d+-/, '')).join(', ')} · actividades de avance (no se califican): práctica guiada,
       tarjetas y guion de clase desde «Más herramientas».</p>}
-    {aviso && <Alert tone="danger" role="alert">{aviso}</Alert>}
   </div>;
 }

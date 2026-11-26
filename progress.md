@@ -18,6 +18,42 @@ Estados: `⬜ pendiente` · `🔄 en curso` · `🔁 devuelta (ronda n)` · `✅
 
 ---
 
+## Bloque V4 — el plan de evaluación, accionable
+
+**Objetivo:** que el plan implícito en el sílabo sea más útil para el docente. Revisar a la vista la pantalla de la V3; detectar la cadena de dependencias entre sesiones (prompt institucional §6); explicar cómo corregir cada alerta; y que el docente confirme o ajuste los pesos sugeridos. Se trabaja en la rama `V3-SilabosPesos` (PR #4 en borrador, sin fusionar con `main` hasta el final). Tareas elegidas por el usuario el 2026-11-26.
+
+### Tablero V4
+
+| # | Tarea | Estado |
+|---|---|---|
+| V4-1 | Revisión visual del plan en la app (botones nuevos, simulacro acumulativo en su pestaña) | ✅ hecha |
+| V4-2 | Dependencias entre sesiones (§6): tareas complementarias, insumo previo, eslabones rotos; insumo de respaldo solo donde hay dependencia | ✅ hecha |
+| V4-3 | Alertas con sugerencia de corrección (qué agregar y dónde) | 🔄 en curso |
+| V4-4 | El docente confirma o ajusta los pesos (suma 100 por bloque, guardado por versión del sílabo) | ⬜ pendiente |
+| V4-5 | Validación completa, documentación y push a la rama | ⬜ pendiente |
+
+### Bitácora V4
+
+- **2026-11-26 · V4-2 (dependencias, §6):** `app/evaluacion/dependencias.py`, con reglas deterministas y sin IA.
+  - **Clasificación:** cada tarea (columna práctico-experimental o autónoma) es independiente o complementaria. Marcadores: versión corregida o final, iteración, ajuste, aplicación de mejoras, incorporación, fase de desarrollo o entrega, «continúa con», «a partir del prototipo…». Las lecturas previas, los prerrequisitos, los ajustes razonables (DUA), «incorpora retroalimentación» y «continua» como adjetivo cuentan como independientes.
+  - **Insumo previo:** primero la sesión, práctica o momento que nombra; después el producto (prototipo, portafolio, programa…) en la sesión anterior más cercana que lo menciona; la misma sesión, solo al final. El prototipo del PIS es externo y no se busca.
+  - **Severidad:**
+    - eslabón roto (alerta) solo si la referencia no existe o el origen no tiene horas;
+    - si el producto no aparece antes, se pide revisar, porque buscar por nombre de producto es una señal débil.
+  - **Sin alerta de la cadena de evidencias (§6.5):** en el corpus salía en 106 de unas 180 transiciones, así que era ruido.
+  - **Corpus B26 (60 sílabos):** 96 complementarias, 45 con origen, 51 para revisar y 1 eslabón roto.
+  - **En la pantalla:** cada tarea complementaria dice de dónde viene y que se califica solo el avance nuevo (§6.4).
+  - **Insumo de respaldo:** se ofrece solo en tareas evaluables complementarias, y el botón le pasa a la IA el insumo previo detectado. Antes aparecía en toda entrega de avance.
+  - Pruebas: `test_evaluacion_dependencias.py`.
+
+- **2026-11-26 · V4-1 (revisión visual):** recorrido en el navegador con PPC (presencial). La norma, los parciales, el % por momento y las evaluaciones con sus botones nuevos se ven bien. Corregido:
+  - **Error de fondo:** el plan ofrecía herramientas con IA en un momento cuya política prohíbe la IA en una evaluación (M3 de PPC). Al pulsar, el backend respondía 422 y el aviso quedaba al final del momento, fuera de la vista. Ahora `disponibles` aplica la regla §9.4; el plan devuelve `ia_restringida` y la pantalla explica por qué solo hay herramientas sin IA.
+  - El aviso de error aparece junto a la actividad cuyo botón se pulsó.
+  - El botón del simulacro de un rango dice «Simulacro · Momentos 1 a 3».
+  - El % del momento usa el mismo redondeo (un decimal) en la pestaña y en el plan (antes «35 %» frente a «34,99 %»).
+
+---
+
 ## Bloque V3 — herramientas según el plan de evaluación (RRA)
 
 **Objetivo:** dejar de ofrecer todas las herramientas en todas las clases. Cada actividad del sílabo se clasifica (evaluable o de avance; calificación del RRA, instrumento, insumo previo) y el sistema ofrece solo lo que la prepara, con el peso que tiene en la nota. Mockup aprobado el 2026-11-26.

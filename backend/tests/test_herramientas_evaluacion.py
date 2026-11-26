@@ -69,7 +69,8 @@ def test_estan_registradas_con_nombre_y_vista():
     for h in NUEVAS:
         assert h in WORKERS and DEFINICIONES[h].ambito == "clase" and not DEFINICIONES[h].es_quiz
         assert h in NOMBRES
-    usadas = {h for opciones in POR_TIPO.values() for h, _ in opciones}
+    # El insumo de respaldo no va por tipo: se ofrece en las tareas complementarias (V4-2).
+    usadas = {h for opciones in POR_TIPO.values() for h, _ in opciones} | {"insumo_respaldo"}
     assert set(NUEVAS) <= usadas and usadas <= set(DEFINICIONES) | {
         "rubrica_momento", "rubrica_final", "lista_evidencia", "autoevaluacion_rubrica", "autoevaluacion_final"}
 
@@ -257,3 +258,16 @@ def test_el_plan_no_ofrece_herramientas_que_no_se_pueden_encolar(silabo):
     assert disponibles(sin_rubrica, ofrecidas) == []
     assert disponibles(silabo, herramientas_de("prueba_sumativa", "M3-S4", "M2-M9")) == [
         {"herramienta": "repaso_momento", "ambito": {"tipo": "momento", "id": "M3"}}]
+
+
+def test_en_un_momento_que_excluye_la_ia_solo_se_ofrecen_las_sin_ia(silabo):
+    """§9.4: si la política del momento prohíbe la IA en una evaluación, el plan no ofrece herramientas con IA."""
+    from app.evaluacion.herramientas import disponibles
+    momentos = [m.model_copy(update={"politica_ia": "Prueba sin uso de IA."}) if m.numero == 3 else m
+                for m in silabo.momentos]
+    restringido = silabo.model_copy(update={"momentos": momentos})
+    ofrecidas = herramientas_de("taller_coevaluacion", "M3-S1") + herramientas_de("prueba_sumativa", "M3-S4", "M2-M3")
+    assert [h["herramienta"] for h in disponibles(restringido, ofrecidas)] == [
+        "rubrica_momento", "autoevaluacion_rubrica"]
+    assert [h["herramienta"] for h in disponibles(silabo, herramientas_de("prueba_sumativa", "M3-S4", "M2-M3"))] == [
+        "simulacro", "repaso_momento"]

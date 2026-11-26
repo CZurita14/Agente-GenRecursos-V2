@@ -204,7 +204,10 @@ export interface ActividadPlan {
   bloque: number | null;
   peso_bloque: number;
   peso_final: number;
-  herramientas: { herramienta: string; ambito: Ambito }[];
+  /** §6: si la tarea continúa un producto previo, de dónde viene (null si es independiente). */
+  dependencia?: { insumo: string | null; origen: string | null; origen_legible: string | null; roto: boolean;
+    revisar: boolean } | null;
+  herramientas: { herramienta: string; ambito: Ambito; instrucciones?: string }[];
 }
 
 export interface PlanEvaluacion {
@@ -220,5 +223,7 @@ export interface PlanEvaluacion {
   por_bloque: Record<string, number>;
   por_momento: Record<string, number>;
   alertas: string[];
+  /** §9.4: momentos ("3") cuya política de IA excluye la IA en una evaluación, con el motivo. */
+  ia_restringida?: Record<string, string>;
   actividades: ActividadPlan[];
 }

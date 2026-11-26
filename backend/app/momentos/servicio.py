@@ -110,11 +110,13 @@ class ServicioMomentos:
         (una vez por versión del sílabo); mientras tanto se devuelve lo que leen las reglas.
         """
         from app.evaluacion.clasificador import textos_de
+        from app.evaluacion.dependencias import alertas_dependencias, dependencias, legible
         from app.evaluacion.herramientas import NOMBRE_TIPO, disponibles, herramientas_de, rangos_acumulados
         from app.evaluacion.norma import bloques as bloques_de
         from app.evaluacion.norma import norma_de
         from app.evaluacion.pesos import calcular
         from app.evaluacion.servicio import plan_actividades, solicitar_clasificacion
+        from app.recursos.servicio import _restriccion
 
         with closing(self.conexion()) as conn:
             conn.autocommit = True
@@ -132,16 +134,26 @@ class ServicioMomentos:
         acumulado = rangos_acumulados([x.sesion for x in actividades if x.tipo == "prueba_sumativa" and x.evaluable])
 
         cache: dict = {}
+        deps = dependencias(silabo)
+        dep_de = {(d.sesion, d.columna): d for d in deps}
+
+        def dependencia(d):
+            if d is None or d.tipo != "complementaria":
+                return None
+            return {"insumo": d.insumo, "origen": d.origen, "origen_legible": legible(d.origen) if d.origen else None,
+                    "roto": d.roto, "revisar": d.revisar}
 
         def fila(act):
             p = pesadas.get((act.sesion, act.columna, act.tipo))
+            d = dep_de.get((act.sesion, act.columna))
             return {"sesion": act.sesion, "momento": int(act.sesion.split("-")[0][1:]), "columna": act.columna,
                     "texto": textos.get(f"{act.sesion}/{act.columna}", ""), "tipo": act.tipo,
                     "nombre_tipo": NOMBRE_TIPO.get(act.tipo, act.tipo), "evaluable": act.evaluable,
                     "calificacion": act.calificacion, "instrumento": act.instrumento, "finalidad": act.finalidad,
                     "agente": act.agente, "origen": act.origen, "bloque": bloque_de.get(act.sesion),
                     "peso_bloque": p.peso_bloque if p else 0, "peso_final": p.peso_final if p else 0,
-                    "herramientas": disponibles(silabo, herramientas_de(act.tipo, act.sesion, acumulado.get(act.sesion)),
+                    "dependencia": dependencia(d),
+                    "herramientas": disponibles(silabo, herramientas_de(act.tipo, act.sesion, acumulado.get(act.sesion), d),
                                                  cache)}
 
         return {
@@ -152,7 +164,10 @@ class ServicioMomentos:
             "bloques": [{"numero": b.numero, "nombre": b.nombre, "inicio": _iso(b.inicio), "fin": _iso(b.fin),
                          "sesiones": b.sesiones} for b in bloques],
             "clasificacion_ia": estado_ia, "por_bloque": plan.por_bloque, "por_momento": plan.por_momento,
-            "alertas": plan.alertas, "actividades": [fila(x) for x in actividades],
+            "alertas": plan.alertas + alertas_dependencias(silabo, deps), "actividades": [fila(x) for x in actividades],
+            # §9.4: momentos cuya política de IA excluye la IA en una evaluación; ahí solo hay herramientas sin IA.
+            "ia_restringida": {str(m.numero): motivo for m in silabo.momentos
+                               if (motivo := _restriccion(silabo, "momento", f"M{m.numero}"))},
         }
 
     def guardar_contexto(self, aid, correo, numero, revision, texto):

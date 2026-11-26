@@ -167,7 +167,7 @@ def test_plan_de_evaluacion_por_api(entorno, conn):
     r = d.get(f"/asignaturas/{aid}/plan-evaluacion")
     assert r.status_code == 200
     plan = r.json()
-    assert plan["rol"] == "dueno" and set(plan) >= {"norma", "bloques", "actividades", "alertas", "por_momento",
+    assert plan["rol"] == "dueno" and set(plan) >= {"norma", "bloques", "actividades", "alertas", "por_momento", "ia_restringida",
                                                     "clasificacion_ia"}
     fila = plan["actividades"][0]
     assert set(fila) >= {"sesion", "columna", "texto", "tipo", "evaluable", "calificacion", "peso_final", "herramientas"}

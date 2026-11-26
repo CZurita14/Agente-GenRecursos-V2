@@ -82,9 +82,9 @@ export const menu = (aid: string) => pedir<MenuAsignatura>(`/asignaturas/${enc(a
 export const catalogo = (aid: string, tipo: TipoAmbito, id: string) =>
   pedir<Catalogo>(`/asignaturas/${enc(aid)}/herramientas?ambito=${tipo}&id=${enc(id)}`);
 
-export const generar = (aid: string, ambito: Ambito, herramientas: string[]) =>
+export const generar = (aid: string, ambito: Ambito, herramientas: string[], instrucciones?: string) =>
   pedir<{ trabajos: TrabajoCreado[] }>(`/asignaturas/${enc(aid)}/generar`,
-    { method: 'POST', body: json({ ambito, herramientas }) });
+    { method: 'POST', body: json(instrucciones ? { ambito, herramientas, instrucciones } : { ambito, herramientas }) });
 
 export const trabajos = (aid: string, ids?: string[]) => pedir<Trabajo[]>(`/asignaturas/${enc(aid)}/trabajos?limite=200${ids ? ids.map(id => `&ids=${enc(id)}`).join('') : ''}`);
 
