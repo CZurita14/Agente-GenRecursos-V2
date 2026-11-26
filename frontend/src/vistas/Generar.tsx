@@ -3,7 +3,7 @@ import { BookOpen, FileUp } from 'lucide-react';
 import { Alert, Badge, Button, Card } from '../components';
 import { ErrorApi, materias as listarMaterias, subirSilaboPdf } from '../api/cliente';
 import type { Materia, SilaboImportado } from '../api/tipos';
-import { estadoMateria, etiquetaMateria } from '../utils/materias';
+import { avisoLegible, estadoMateria, etiquetaMateria } from '../utils/materias';
 
 interface GenerarProps {
   /** Cuenta local (etapa de pruebas): sus materias vienen del PDF del sílabo, no del SGA. */
@@ -71,6 +71,10 @@ export function Generar({ cuentaLocal = false, onSesionVencida, onAbrir }: Gener
             {' '}{resultado.fallos.slice(0, 4).join('; ')}{resultado.fallos.length > 4 ? '…' : ''}</Alert>
           : <Alert tone="success" role="status"><strong>{resultado.nombre}</strong>
             {resultado.estado === 'sin_cambios' ? ' ya estaba cargada y no cambió.' : ' quedó lista en tus materias.'}</Alert>)}
+        {resultado && resultado.estado !== 'invalida' && resultado.fallos.length > 0 &&
+          <Alert tone="warning" role="status">Revisa en el PDF del sílabo:
+            <ul className="list-disc ml-5 mt-1">{resultado.fallos.slice(0, 6).map(f => <li key={f}>{avisoLegible(f)}</li>)}</ul>
+            {resultado.fallos.length > 6 && <span>y {resultado.fallos.length - 6} más.</span>}</Alert>}
         {errorPdf && <Alert tone="danger" role="alert">{errorPdf}</Alert>}
       </div>
     </Card>}

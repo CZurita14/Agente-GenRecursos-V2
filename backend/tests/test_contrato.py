@@ -47,6 +47,19 @@ def test_el_completo_entra_y_avisa_la_sesion_sin_fecha():
     assert s.pis is not None and s.momentos[0].sesiones[0].docente.asincronica is not None
 
 
+def test_avisa_las_actividades_que_parecen_cortadas_sin_mostrar_su_texto():
+    """El PDF del SGA a veces corta una celda al cambiar de página («…la participación,», «…lectura de»)."""
+    crudo = _crudo()
+    sesion = crudo["momentos"][0]["sesiones"][0]
+    sesion["docente"]["texto"] = "Se promueve la participación,"
+    sesion["autonomo"]["texto"] = "Ensayo breve: lectura crítica de"
+    sesion["practico"]["texto"] = "Práctica guiada de adaptación."
+    _, avisos = a_contrato_con_avisos(crudo)
+    assert avisos == ["momentos[0].sesiones[0].docente: el texto parece incompleto; revísalo en el sílabo",
+                      "momentos[0].sesiones[0].autonomo: el texto parece incompleto; revísalo en el sílabo"]
+    assert not any("participación" in a or "lectura" in a for a in avisos)
+
+
 def test_lo_que_envia_el_sga_se_respeta():
     d = _crudo()
     d["momentos"][0]["sesiones"][0].update(id="M1-S7", semana_periodo=3, entregables=["Informe"])

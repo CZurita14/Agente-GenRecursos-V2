@@ -14,6 +14,8 @@ NIVELES = {"RECEPTIVO": "receptivo", "RESOLUTIVO": "resolutivo", "REFLEXIVO": "r
            "CRITICO": "critico", "COCREATIVO": "cocreativo"}
 _MOMENTO = re.compile(r"MOMENTO (\d+)$")
 _SESION = re.compile(r"Sesi[oó]n\s+(\d+)(?:\s+(\d{2}/\d{2}/\d{4}))?")
+# Primera columna de una fila partida: vacía o con el resto de la fecha («14/12/2026», «al 14/12/2026»).
+_RESTO_DE_FECHA = re.compile(r"(?:\d{1,2}/\d{1,2}/\d{4}|al|\s)*", re.I)
 _ASINCRONICA = re.compile(r"Otras actividades con el\s+docente\s*\((\d+(?:[.,]\d+)?)\s*h\)\s*:?", re.I)
 # CONTENIDO va antes que SESION: «Contenido de la sesión» es la columna de contenidos.
 _ROLES = (("CONTENIDO", "contenidos"), ("SESION", "sesion"), ("DOCENTE", "docente"),
@@ -50,6 +52,22 @@ def _columnas(encabezado: list[str]) -> dict[str, int]:
     if not _ROLES_REQUERIDOS <= columnas.keys():
         raise SilaboIlegible("No se reconocen las columnas de la tabla de sesiones.")
     return columnas
+
+
+def _columnas_por_ancho(encabezado: list[str | None]) -> dict[int, dict[str, int]]:
+    """Columnas del encabezado y de su forma sin celdas combinadas (las `None` de pdfplumber).
+
+    En la página siguiente la tabla puede llegar sin la celda combinada (una columna menos);
+    cada fila se lee con el mapa de su ancho.
+    """
+    mapas = {len(encabezado): _columnas(_celdas(encabezado))}
+    compacto = [c for c in encabezado if c is not None]
+    if len(compacto) != len(encabezado):
+        try:
+            mapas.setdefault(len(compacto), _columnas(_celdas(compacto)))
+        except SilaboIlegible:
+            pass
+    return mapas
 
 
 def _contenidos(texto: str) -> list[str]:
@@ -122,7 +140,7 @@ def leer_momentos(tablas_iv: list[Tabla], inicio_periodo: date) -> list[dict]:
     """Momentos de la sección IV, en orden, con las claves del contrato `Momento`."""
     momentos: list[dict] = []
     estado = "fuera"
-    columnas: dict[str, int] = {}
+    mapas: dict[int, dict[str, int]] = {}
     crudas: list[dict] = []
     filas_rubrica: list[list[str | None]] = []
     abierto: str | None = None  # Campo de texto que una fila partida podría continuar.
@@ -156,7 +174,7 @@ def leer_momentos(tablas_iv: list[Tabla], inicio_periodo: date) -> list[dict]:
                 continue
             abierto = None
             if clave.startswith("SESION -"):
-                columnas, estado = _columnas(fila), "sesiones"
+                mapas, estado = _columnas_por_ancho(original), "sesiones"
             elif clave.startswith("TOTAL"):
                 estado = "despues"
             elif clave.startswith("RECURSOS PARA EL APRENDIZAJE"):
@@ -175,6 +193,9 @@ def leer_momentos(tablas_iv: list[Tabla], inicio_periodo: date) -> list[dict]:
             elif estado == "cabecera" and clave.startswith("EVIDENCIA DE"):
                 actual["evidencia"], abierto = _valor(fila), "evidencia"
             elif estado == "sesiones":
+                # El mapa del ancho de esta fila; si no hay uno para ese ancho, el del encabezado.
+                columnas = mapas.get(len(fila)) or next(iter(mapas.values()))
+
                 def celda(rol: str) -> str:
                     k = columnas.get(rol)
                     return fila[k] if k is not None and k < len(fila) else ""
@@ -186,7 +207,8 @@ def leer_momentos(tablas_iv: list[Tabla], inicio_periodo: date) -> list[dict]:
                                    **{f"horas_{r}": celda(f"horas_{r}") for r in ("docente", "practico", "autonomo")}})
                 elif clave.startswith("SESION"):
                     raise SilaboIlegible("Una sesión de la tabla no tiene una fecha legible.")
-                elif not fila[0].strip() and crudas:
+                elif crudas and _RESTO_DE_FECHA.fullmatch(fila[0]):
+                    # Fila partida entre páginas: continúa la sesión anterior aunque arrastre el final de su fecha.
                     previa = crudas[-1]
                     for r in ("docente", "practico", "autonomo", "contenidos"):
                         if celda(r).strip():

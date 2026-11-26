@@ -66,6 +66,27 @@ def test_fila_partida_se_une():
     assert s["contenidos"] == ["Datos unidimensionales Tasas de variación."]
 
 
+def test_fila_partida_con_resto_de_fecha_se_une():
+    """La fecha «08/12/2026 al / 14/12/2026» también se parte: la continuación trae «14/12/2026»
+    en la primera columna y no debe perderse (piloto B26: Programación Estructurada M1-S1)."""
+    abierta = ["Sesión 1\n08/12/2026\nal", "Presentación del\nproyecto formativo,", None, "6.0", "Práctica guiada de\nrepaso de",
+               "6.0", "Lectura guiada del\nexpediente", "5.0", "• Introducción a la\nprogramación estructurada:"]
+    continuacion = ["14/12/2026", "del reto y de la política.\nAplicación de la evaluación diagnóstica.\n\n"
+                    "Otras actividades con el\ndocente (4.0 h):\nForo de presentación.", None, "",
+                    "funciones y arreglos.", "", "del caso.", "", "principios y estructuras."]
+    tablas = [_cabecera() + [abierta], [ENCABEZADO, continuacion] + _cierre()]
+    [m] = leer_momentos(tablas, INICIO)
+    [s] = m["sesiones"]
+    assert s["fecha"] == date(2026, 12, 8)
+    assert s["docente"]["texto"] == ("Presentación del proyecto formativo, del reto y de la política. "
+                                     "Aplicación de la evaluación diagnóstica.")
+    assert s["docente"]["horas"] == 6.0
+    assert s["docente"]["asincronica"] == {"texto": "Foro de presentación.", "horas": 4.0}
+    assert s["practico"]["texto"] == "Práctica guiada de repaso de funciones y arreglos."
+    assert s["autonomo"]["texto"] == "Lectura guiada del expediente del caso."
+    assert s["contenidos"] == ["Introducción a la programación estructurada: principios y estructuras."]
+
+
 def test_columnas_por_palabra_clave():
     otro = ["Sesión -\nfecha", "Actividades con el\ndocente", None, None, "Hora\ns",
             "Actividades práctico-\nexperimentales", "Hora\ns", "Actividades de trabajo autónomo", "Hora\ns", "Contenidos"]

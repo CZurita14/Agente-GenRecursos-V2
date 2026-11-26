@@ -114,6 +114,22 @@ def _texto(sesion: dict, clave: str):
     return actividad.get("texto") if isinstance(actividad, dict) else None
 
 
+# Una actividad que termina en coma o en una palabra que exige continuación quedó cortada
+# (el PDF del SGA a veces pierde el final de una celda al cambiar de página).
+_CORTADO = re.compile(r"(?:,|\b(?:de|del|la|las|el|los|con|y|e|o|u|en|a|al|para|por|que|sobre|entre|sin|su|sus))\s*$",
+                      re.I)
+
+
+def _cortadas(sesion: dict) -> list[str]:
+    """Columnas de la sesión cuyo texto parece incompleto (nombres de campo, nunca el texto)."""
+    docente = sesion.get("docente")
+    asincronica = docente.get("asincronica") if isinstance(docente, dict) else None
+    textos = {"docente": _texto(sesion, "docente"),
+              "docente.asincronica": asincronica.get("texto") if isinstance(asincronica, dict) else None,
+              "practico": _texto(sesion, "practico"), "autonomo": _texto(sesion, "autonomo")}
+    return [campo for campo, texto in textos.items() if isinstance(texto, str) and _CORTADO.search(texto)]
+
+
 def _completar(contrato: dict) -> list[str]:
     """Completa en el sitio lo que el SGA no guarda y devuelve los avisos (rutas, nunca valores).
 
@@ -139,6 +155,8 @@ def _completar(contrato: dict) -> list[str]:
             if "fecha" in sesion and sesion["fecha"] is None:
                 avisos.append(f"momentos[{i}].sesiones[{j}].fecha: sin fecha programada; la sesión no se importó")
                 continue
+            avisos += [f"momentos[{i}].sesiones[{j}].{campo}: el texto parece incompleto; revísalo en el sílabo"
+                       for campo in _cortadas(sesion)]
             if "id" not in sesion and isinstance(momento.get("numero"), int) and isinstance(sesion.get("numero"), int):
                 sesion["id"] = f"M{momento['numero']}-S{sesion['numero']}"
             dia = _fecha(sesion.get("fecha"))

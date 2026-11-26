@@ -2,7 +2,7 @@
 
 > **Para qué sirve:** es la memoria del proyecto V2. Al retomar, **se lee primero este archivo** y solo después, si hace falta, el documento puntual que enlaza.
 >
-> **Última actualización:** 2026-11-10 · **Bloque activo:** V2 — plan [2026-11-09-v2-sga-json.md](docs/superpowers/plans/2026-11-09-v2-sga-json.md). Documentación hecha; faltan la revisión final y el push.
+> **Última actualización:** 2026-11-26 · **Bloque activo:** V3 — herramientas según el plan de evaluación del RRA (rama `V3-SilabosPesos`). Ver la sección *Bloque V3* justo abajo; el bloque V2 queda como historia.
 
 ## Cómo se actualiza
 
@@ -15,6 +15,50 @@
 5. Nunca se borra la historia: lo resuelto se marca como resuelto, no se elimina.
 
 Estados: `⬜ pendiente` · `🔄 en curso` · `🔁 devuelta (ronda n)` · `✅ hecha` · `⛔ bloqueada`
+
+---
+
+## Bloque V3 — herramientas según el plan de evaluación (RRA)
+
+**Objetivo:** dejar de ofrecer todas las herramientas en todas las clases. Cada actividad del sílabo se clasifica (evaluable o de avance; calificación del RRA, instrumento, insumo previo) y el sistema ofrece solo lo que la prepara, con el peso que tiene en la nota. Mockup aprobado el 2026-11-26.
+
+### Norma (decisiones del usuario)
+
+| Modalidad | Contacto / práctico / autónomo | C5 sumativa | C4 proyecto | Bloques |
+|---|---|---|---|---|
+| Presencial | 45 / 30 / 25 (C1 5 · C3 20 · C5 20) | prueba acumulativa de cada parcial | todas las entregas | 2 parciales por fecha, cada uno 100 % |
+| En línea y distancia | 55 / 20 / 25 (C1 5 · C3 10 · C5 40) | prueba + proyecto final | avances | un bloque |
+| Semipresencial (híbrida) | 45 / 30 / 25 (C5 30) | ⏸ en espera | ⏸ | ⏸ — aviso «norma pendiente», sin pesos |
+
+Fuentes: «3. Armonización del plan de evaluación con el RRA» y «2. Plan_de_evaluacion_PF_UTI _ Presencial». Supuesto por confirmar: nota final = promedio 50/50 de los parciales.
+
+### Tablero V3
+
+| # | Tarea | Estado |
+|---|---|---|
+| V3-0 | Commit de las cuentas locales de prueba (`a7720a6`) | ✅ hecha |
+| V3-1 | Lector: filas partidas entre páginas y aviso de celdas cortadas | ✅ hecha |
+| V3-2 | Norma por modalidad (tabla configurable) y parciales por fecha | 🔄 en curso |
+| V3-3 | Clasificador de actividades (rótulos y, sin rótulo, IA) | ⬜ pendiente |
+| V3-4 | Pesos sugeridos, suma por momento y parcial, auditor con alertas | ⬜ pendiente |
+| V3-5 | API y pantalla de momentos del mockup (reemplaza el menú fijo por clase) | ⬜ pendiente |
+| V3-6 | Herramientas nuevas: ficha de foro, guía de la práctica, guía de observación, guía de la tarea autónoma, diagnóstica, simulacro acumulativo, guía de la entrega, insumo de respaldo | ⬜ pendiente |
+| V3-7 | Verificación con los 4 sílabos piloto, costo medido y documentación | ⬜ pendiente |
+
+Sílabos piloto: Programación Estructurada (en línea), Electiva 2 (en línea), PPC (presencial), Electiva 5 (híbrida) — en `Desktop/SILABOS B26/`.
+
+### Bitácora V3
+
+- **2026-11-26 · V3-1:** lector (`ciencia_datos/lector_pdf/momentos.py`):
+  - Una fila de sesión partida entre páginas ya no se pierde cuando su primera celda arrastra el final de la fecha («14/12/2026»).
+  - Cada fila se lee con el mapa de columnas de su ancho, porque en la página siguiente la tabla puede llegar sin la celda combinada.
+  - El traductor avisa las actividades que terminan en coma o en una palabra que exige continuación. El aviso da la ruta y nunca el texto.
+  - Al subir el PDF, el docente ve esos avisos legibles («Momento 1, sesión 4 · trabajo autónomo»).
+  - Recuperados: Programación Estructurada M1-S1 (diagnóstica y foro) y Electiva 5 M1-S4 (foro y ensayo) y M4-S3 (trabajo final).
+  - En los 61 PDF de `SILABOS B26`, 11 celdas de otras facultades siguen cortadas, pero vienen así en el PDF del SGA (verificado en Patología Estomatológica M4-S4) y ahora generan aviso. `Silabo SIstemas de Control.pdf` sigue ilegible; queda fuera del alcance.
+  - Pruebas: backend 1 430 pasan (suite estándar); frontend 35 unitarias y 42 de navegador; tipos y build sin errores. E2E en local: cuenta de prueba, subida de Programación Estructurada (sin avisos) y Patología Estomatológica (3 avisos visibles en la pantalla).
+  - Push de la rama `V3-SilabosPesos` a `origin` (primera vez) con autorización del usuario.
+- **2026-11-26 · V3-0:** commit `a7720a6` de las cuentas locales (admin crea cuentas @indoamerica.edu.ec / @uti.edu.ec, PBKDF2, cambio obligatorio, PDF del sílabo). Pruebas de esa entrega: 1 428 backend y 34 frontend.
 
 ---
 
