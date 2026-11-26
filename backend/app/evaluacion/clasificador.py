@@ -47,7 +47,8 @@ _REGLAS: tuple[tuple[str, re.Pattern, tuple[str, ...] | None], ...] = (
     ("diagnostica", _r(r"EVALUACION DIAGNOSTICA|PRUEBA DIAGNOSTICA"), None),
     # «Repaso… para la prueba acumulativa» prepara la prueba; no es la prueba.
     ("prueba_sumativa", _r(r"(?<!PARA LA )(?:PRUEBA (?:ACUMULATIVA|PARCIAL)|PRUEBA DEL (?:PRIMER|SEGUNDO) PARCIAL|"
-                           r"EXAMEN (?:PARCIAL|FINAL))"), None),
+                           r"EXAMEN (?:PARCIAL|FINAL|INSTITUCIONAL)|"
+                           r"(?:EVALUACION|EXAMEN)(?: DEL?)?(?: PRIMER| SEGUNDO)? HEMICICLO)"), None),
     ("cuestionario_autonomo", _r(r"LECTURA GUIADA[^.]*CUESTIONARIO|CUESTIONARIO DE COMPRENSION"), ("autonomo",)),
     ("cuestionario", _r(r"CUESTIONARIO(?! DE AUTOEVALUACION)"), None),
     ("foro", _r(r"\bFORO\b(?! DE PRESENTACION)"), None),
@@ -128,6 +129,34 @@ _AVANCE = _r(r"PRACTICA GUIADA|DEMOSTRACION|AMPLIACION|INCORPORACION|AJUSTE|EXPO
              r"SOCIALIZACION|ESTRUCTURACION|DEFINICION")
 
 
+TIPOS = tuple(tipo for tipo, _, _ in _REGLAS) + ("avance",)
+
+
+def actividad_de(sesion_id: str, columna: str, tipo: str, texto: str, norma: Norma | None, origen: str) -> Actividad:
+    """Actividad de un tipo ya decidido (por la IA o el docente), con el mismo plan que las reglas."""
+    if tipo == "avance":
+        return Actividad(sesion_id, columna, "avance", False, None, None, None, None, origen)
+    return Actividad(sesion_id, columna, tipo, True, *_plan(tipo, _plano(texto), norma), origen)
+
+
+def textos_de(silabo: SilaboUTI) -> dict[str, str]:
+    """Texto de cada columna por clave «M1-S4/autonomo» (solo las que tienen texto)."""
+    return {f"{s.id}/{c}": t for m in silabo.momentos for s in m.sesiones for c, t in _textos(s).items() if t.strip()}
+
+
+def sin_duplicados(actividades: list[Actividad]) -> list[Actividad]:
+    """Una misma evaluación escrita en varias columnas de la sesión («EVALUACIÓN HEMICICLO» tres veces) cuenta una vez."""
+    vistas: set[tuple[str, str]] = set()
+    salida = []
+    for a in actividades:
+        if a.evaluable and (a.sesion, a.tipo) in vistas:
+            a = Actividad(a.sesion, a.columna, "avance", False, None, None, None, None, a.origen)
+        elif a.evaluable:
+            vistas.add((a.sesion, a.tipo))
+        salida.append(a)
+    return salida
+
+
 def clasificar(silabo: SilaboUTI, norma: Norma | None) -> list[Actividad]:
     """Actividades de todas las sesiones, en el orden del sílabo."""
     actividades: list[Actividad] = []
@@ -135,4 +164,4 @@ def clasificar(silabo: SilaboUTI, norma: Norma | None) -> list[Actividad]:
         for sesion in momento.sesiones:
             for columna, texto in _textos(sesion).items():
                 actividades += clasificar_columna(sesion.id, columna, texto, norma)
-    return actividades
+    return sin_duplicados(actividades)

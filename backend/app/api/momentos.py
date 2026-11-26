@@ -21,6 +21,12 @@ def momentos(asig: UUID, request: Request):
     return request.app.state.momentos.momentos(asig, request.state.usuario)
 
 
+@router.get("/plan-evaluacion")
+def plan_evaluacion(asig: UUID, request: Request):
+    """Plan de evaluación implícito en el sílabo (norma del RRA, bloques, pesos sugeridos y alertas)."""
+    return request.app.state.momentos.plan_evaluacion(asig, request.state.usuario)
+
+
 @router.put("/momentos/{numero}/contexto")
 def guardar_contexto(asig: UUID, datos: ContextoMomento, request: Request, numero: int = Path(ge=1, le=20)):
     return request.app.state.momentos.guardar_contexto(asig, request.state.usuario, numero, datos.revision,

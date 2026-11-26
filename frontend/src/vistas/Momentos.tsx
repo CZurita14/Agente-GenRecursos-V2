@@ -2,9 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { BookOpenCheck, ChevronRight, Download, RefreshCw } from 'lucide-react';
 import { Alert, Badge, Button } from '../components';
 import {
-  ErrorApi, generar, guardarContexto, momentos as cargarMomentos, resumenDescarga, urlDescarga,
+  ErrorApi, generar, guardarContexto, momentos as cargarMomentos, planEvaluacion, resumenDescarga, urlDescarga,
 } from '../api/cliente';
-import type { Ambito, MomentoDetalle, ResumenDescarga, TrabajoCreado } from '../api/tipos';
+import type { Ambito, MomentoDetalle, PlanEvaluacion, ResumenDescarga, TrabajoCreado } from '../api/tipos';
+import { NormaModalidad, PlanMomento } from './PlanEvaluacion';
 import { fechaCorta } from '../api/herramientas';
 
 interface MomentosProps {
@@ -26,6 +27,7 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
   const [resumen, setResumen] = useState<ResumenDescarga | null>(null);
   const [error, setError] = useState('');
   const [abierto, setAbierto] = useState<number | null>(null);
+  const [plan, setPlan] = useState<PlanEvaluacion | null>(null);
 
   const fallo = useCallback((e: unknown) => {
     if (e instanceof ErrorApi && e.estado === 401) return onSesionVencida();
@@ -44,6 +46,19 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
     return () => { vigente = false; };
   }, [aid, fallo]);
 
+  // Plan de evaluación implícito en el sílabo; mientras la IA clasifica, se vuelve a pedir cada 5 s.
+  useEffect(() => {
+    let vigente = true;
+    let espera: ReturnType<typeof setTimeout> | undefined;
+    const cargar = () => planEvaluacion(aid).then(p => {
+      if (!vigente) return;
+      setPlan(p);
+      if (p.clasificacion_ia === 'en_curso') espera = setTimeout(cargar, 5000);
+    }).catch(e => vigente && fallo(e));
+    cargar();
+    return () => { vigente = false; clearTimeout(espera); };
+  }, [aid, fallo]);
+
   const reemplazar = (m: MomentoDetalle) => {
     setLista(l => l?.map(x => x.numero === m.numero ? m : x) ?? null);
     resumenDescarga(aid).then(setResumen).catch(() => undefined);
@@ -59,31 +74,34 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
     </div>
     {error && <Alert tone="danger" role="alert">{error}</Alert>}
     {!lista && !error && <p className="text-muted" role="status">Cargando los momentos…</p>}
+    {plan && <NormaModalidad plan={plan} />}
     {lista && <ol aria-label="Trazabilidad de momentos" className="flex flex-wrap items-center gap-2">
       {lista.map((m, i) => <li key={m.numero} className="flex items-center gap-2">
         <button type="button" onClick={() => setAbierto(m.numero)} aria-current={abierto === m.numero}
           className={`rounded-lg border px-3 py-2 text-left text-sm ${abierto === m.numero ? 'border-highlight bg-highlight-soft' : 'border-line bg-surface'}`}>
           <span className="block font-bold">Momento {m.numero}</span>
           <span className="block text-xs text-muted">{m.fase.nombre}</span>
+          {plan?.norma?.estado === 'definida' && <span className="block text-xs font-bold text-action-ink">
+            {(plan.por_momento[m.numero] ?? 0).toLocaleString('es-EC', { maximumFractionDigits: 1 })} % de la nota</span>}
         </button>
         {i < lista.length - 1 && <ChevronRight aria-hidden="true" className="w-4 h-4 text-muted" />}
       </li>)}
     </ol>}
     {lista?.filter(m => m.numero === abierto).map(m => <TarjetaMomento key={m.numero} aid={aid} momento={m}
-      lector={lector} onCambio={reemplazar} onError={fallo} onElegir={onElegir} onAbrir={onAbrir}
+      lector={lector} plan={plan} onCambio={reemplazar} onError={fallo} onElegir={onElegir} onAbrir={onAbrir}
       onGenerado={onGenerado} />)}
     {resumen && <Descarga aid={aid} resumen={resumen} />}
   </>;
 }
 
 interface TarjetaProps {
-  aid: string; momento: MomentoDetalle; lector: boolean;
+  aid: string; momento: MomentoDetalle; lector: boolean; plan: PlanEvaluacion | null;
   onCambio: (m: MomentoDetalle) => void; onError: (e: unknown) => void;
   onElegir: (ambito: Ambito, titulo: string) => void; onAbrir: (rid: string) => void;
   onGenerado: (creados: TrabajoCreado[]) => void;
 }
 
-function TarjetaMomento({ aid, momento: m, lector, onCambio, onError, onElegir, onAbrir, onGenerado }: TarjetaProps) {
+function TarjetaMomento({ aid, momento: m, lector, plan, onCambio, onError, onElegir, onAbrir, onGenerado }: TarjetaProps) {
   const [texto, setTexto] = useState(m.contexto_docente?.texto ?? '');
   const [guardando, setGuardando] = useState(false);
   const [aviso, setAviso] = useState<{ tono: 'success' | 'danger'; texto: string } | null>(null);
@@ -182,12 +200,15 @@ function TarjetaMomento({ aid, momento: m, lector, onCambio, onError, onElegir, 
         {' '}{guia.fuentes.web} fuentes web con enlace</p>}
     </div>
 
+    {plan && <PlanMomento aid={aid} plan={plan} numero={m.numero} lector={lector} onGenerado={onGenerado}
+      onError={onError} />}
+
     <div className="space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-bold">Herramientas del momento</h3>
+        <h3 className="font-bold">Herramientas generadas</h3>
         {!lector && <Button size="sm" variant="secondary"
           onClick={() => onElegir({ tipo: 'momento', id: m.id }, `Momento ${m.numero} · ${m.titulo}`)}>
-          Generar herramientas</Button>}
+          Más herramientas</Button>}
       </div>
       {m.recursos.length === 0 ? <p className="text-sm text-muted">Todavía no hay herramientas generadas en este momento.</p>
         : <ul className="divide-y divide-line">{m.recursos.map(r => <li key={r.id}

@@ -39,9 +39,9 @@ Fuentes: «3. Armonización del plan de evaluación con el RRA» y «2. Plan_de_
 | V3-0 | Commit de las cuentas locales de prueba (`a7720a6`) | ✅ hecha |
 | V3-1 | Lector: filas partidas entre páginas y aviso de celdas cortadas | ✅ hecha |
 | V3-2 | Norma por modalidad (tabla configurable) y parciales por fecha | ✅ hecha |
-| V3-3 | Clasificador de actividades (rótulos y, sin rótulo, IA) | 🔄 en curso |
-| V3-4 | Pesos sugeridos, suma por momento y parcial, auditor con alertas | ⬜ pendiente |
-| V3-5 | API y pantalla de momentos del mockup (reemplaza el menú fijo por clase) | ⬜ pendiente |
+| V3-3 | Clasificador de actividades (rótulos y, sin rótulo, IA) | ✅ hecha |
+| V3-4 | Pesos sugeridos, suma por momento y parcial, auditor con alertas | ✅ hecha |
+| V3-5 | API y pantalla de momentos del mockup (reemplaza el menú fijo por clase) | ✅ hecha |
 | V3-6 | Herramientas nuevas: ficha de foro, guía de la práctica, guía de observación, guía de la tarea autónoma, diagnóstica, simulacro acumulativo, guía de la entrega, insumo de respaldo | ⬜ pendiente |
 | V3-7 | Verificación con los 4 sílabos piloto, costo medido y documentación | ⬜ pendiente |
 
@@ -49,11 +49,50 @@ Sílabos piloto: Programación Estructurada (en línea), Electiva 2 (en línea),
 
 ### Bitácora V3
 
+- **2026-11-26 · V3-5 (API y pantalla):**
+  - `GET /asignaturas/{aid}/plan-evaluacion` en `ServicioMomentos.plan_evaluacion` devuelve norma, bloques, actividades con su calificación, peso, instrumento y herramientas, más los totales por momento y bloque, las alertas y el estado de la IA. El dueño o editor encola la clasificación con IA si falta; el lector no.
+  - `app/evaluacion/herramientas.py` relaciona cada tipo de actividad con las herramientas existentes y su ámbito (clase, momento o asignatura).
+  - Frontend:
+    - `vistas/PlanEvaluacion.tsx` con `NormaModalidad` (barra del RRA, parciales con su suma sobre 100, alertas, aviso de IA en curso con consulta cada 5 s) y `PlanMomento` (evaluables por parcial, con su calificación, peso, instrumento, «sugerida por IA» y un botón por herramienta que la encola directamente);
+    - `Momentos.tsx` muestra el % de la nota en cada pestaña; «Herramientas del momento» pasa a «Herramientas generadas» y «Más herramientas» conserva el selector anterior.
+  - Correcciones al probar con Salud:
+    - «Evaluación / examen (del primer / segundo) hemiciclo» y «examen institucional» son pruebas sumativas;
+    - la misma evaluación escrita en varias columnas de la sesión cuenta una vez;
+    - el Parcial 1 cierra en la primera prueba sumativa clasificada si el texto no nombra el parcial. Adulto Mayor cierra el 30/11 en M2-S13.
+  - E2E local:
+    - cuenta de prueba con tres PDF (Programación Estructurada, PPC y Adulto Mayor; este último clasificado por el worker con IA);
+    - la pantalla de PPC muestra la norma presencial, P1 95/100 con su alerta, P2 100/100, el peso de cada momento y las 6 evaluaciones de M1;
+    - el botón «Lista de verificación de la evidencia» encola (202) y abre «Generando herramientas».
+  - Pruebas: suite estándar del backend 1 501 pasan; frontend 35 unitarias y 42 de navegador, tipos y build.
+- **2026-11-26 · V3-4:** `app/evaluacion/pesos.py`:
+  - Cada calificación del RRA se reparte en partes iguales entre sus actividades dentro de cada bloque, con 2 decimales que suman exacto. Cada bloque suma 100; en presencial cada parcial vale la mitad de la nota (supuesto).
+  - Totales por bloque y por momento.
+  - Alertas, que nombran sesiones y calificaciones y nunca texto del sílabo:
+    - calificación sin actividades;
+    - falta la diagnóstica;
+    - prácticas experimentales sin numerar;
+    - sesión con 4 o más evaluaciones;
+    - norma pendiente o desconocida (sin pesos).
+  - Pilotos:
+    - Programación Estructurada: suma 100 (M1 1 %, M2 25 %, M3 32 %, M4 42 %);
+    - PPC: P1 95/100 (falta la autónoma) y P2 100/100;
+    - Electiva 2: 80/100 (falta C4, avances) y M2-S2 sobrecargada;
+    - Electiva 5: sin pesos (híbrida en espera).
+  - Pruebas: `test_evaluacion_pesos.py` 7 nuevas.
+- **2026-11-26 · V3-3 (parte 2, IA):** `app/evaluacion/ia.py`, `servicio.py`, migración `020_clasificacion.sql` (`trabajo.tipo` admite `clasificacion` y la tabla `clasificacion_silabo` por huella del sílabo):
+  - La IA solo elige el tipo de una lista cerrada; la calificación, el instrumento y el tipo de evaluación los pone el mismo mapa de las reglas. El prompt lleva solo el texto de las actividades.
+  - Se clasifica una vez por versión del sílabo (huella SHA-256), como trabajo del worker; no se duplica, un error se puede reintentar, y un sílabo sin columnas sin rótulo no llama a la IA.
+  - Criterios para no calificar de más:
+    - la misma actividad repetida se califica solo en su última sesión;
+    - la IA sugiere como máximo 2 prácticas por momento;
+    - el pedido dice cuántas evaluaciones ya reconocieron las reglas.
+  - Real con DeepSeek en 4 sílabos de Salud (Farmacología con 0 rótulos, Adulto Mayor, Enfermería Madre y Recién Nacido, Enfermería Quirúrgica): de 19 a 29 evaluables por sílabo, 1–2 llamadas, 10–20 s, **US$ 0,002–0,005 por sílabo**.
+  - Pruebas: `test_evaluacion_servicio.py` 11 nuevas.
 - **2026-11-26 · V3-3 (parte 1, reglas):** `app/evaluacion/clasificador.py`:
   - Cada columna de cada sesión se clasifica por sus rótulos en evaluable o de avance. Las evaluables llevan su calificación del RRA, instrumento, finalidad y agente. El proyecto final va a C5 en la modalidad en línea y a C4 en la presencial.
   - Electiva 5 coincide 13/13 con su plan de evaluación aprobado (mismo instrumento y tipo); Programación Estructurada da 13 evaluables, Electiva 2 10 y PPC 26, todas con 0 columnas sin rótulo.
   - En los 60 sílabos B26 legibles (40 presenciales, 13 en línea, 7 híbridos): 386 evaluables (6,4 por sílabo, de 0 a 26) y **33 % de columnas sin rótulo**, concentradas en Salud (Adulto Mayor, Enfermería, Farmacología) y con «estudio de caso» muy usado (94).
-  - ⛔ Pendiente de decisión del usuario: cómo clasificar lo que no trae rótulo (IA, el plan de evaluación del SGA o ambos).
+  - ✅ Decisión del usuario (2026-11-26): no se pide el plan de evaluación; el plan está **implícito en el sílabo**. Lo que no trae rótulo lo clasifica la IA (parte 2).
   - Pruebas: `test_evaluacion_clasificador.py` 25 nuevas; suite estándar 1 451 pasan.
 - **2026-11-26 · V3-2:** `app/evaluacion/norma.py` + `norma_rra.json`:
   - Tabla configurable con las seis calificaciones del RRA. Se valida al cargar: cada modalidad definida suma 100 y no admite calificaciones desconocidas.

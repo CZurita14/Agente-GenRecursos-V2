@@ -113,7 +113,7 @@ def norma_de(modalidad: str | None) -> Norma | None:
 
 
 # Sesión que cierra el primer parcial: su prueba acumulativa o parcial.
-_CIERRE_P1 = re.compile(r"PRIMER PARCIAL|PARCIAL 1\b|PRIMERA PRUEBA (?:ACUMULATIVA|PARCIAL)")
+_CIERRE_P1 = re.compile(r"PRIMER PARCIAL|PARCIAL 1\b|PRIMERA PRUEBA (?:ACUMULATIVA|PARCIAL)|PRIMER HEMICICLO")
 
 
 def _textos(sesion) -> str:
@@ -123,8 +123,13 @@ def _textos(sesion) -> str:
     return _plano(" ".join(partes))
 
 
-def bloques(silabo: SilaboUTI, norma: Norma | None) -> list[Bloque]:
-    """Bloques de calificación con sus sesiones en orden de fecha; vacío si la norma está pendiente."""
+def bloques(silabo: SilaboUTI, norma: Norma | None, sumativas: list[str] | None = None) -> list[Bloque]:
+    """Bloques de calificación con sus sesiones en orden de fecha; vacío si la norma está pendiente.
+
+    El primer parcial cierra en la sesión que nombra su prueba («primer parcial», «primer hemiciclo»); si no hay,
+    en la primera sesión con una prueba sumativa (`sumativas`, del clasificador) que no sea la última; si tampoco,
+    a la mitad del periodo.
+    """
     if norma is None or norma.bloques is None:
         return []
     sesiones = sorted((s for m in silabo.momentos for s in m.sesiones), key=lambda s: (s.fecha, s.id))
@@ -138,6 +143,8 @@ def bloques(silabo: SilaboUTI, norma: Norma | None) -> list[Bloque]:
         return [bloque(1, "Bloque único", sesiones)]
     cierre = next((k for k, s in enumerate(sesiones) if _CIERRE_P1.search(_textos(s))), None)
     if cierre is None or cierre == len(sesiones) - 1:
+        cierre = next((k for k, s in enumerate(sesiones[:-1]) if s.id in set(sumativas or ())), None)
+    if cierre is None:
         mitad = sesiones[0].fecha + (sesiones[-1].fecha - sesiones[0].fecha) / 2
         cierre = max(k for k, s in enumerate(sesiones) if s.fecha <= mitad)
         cierre = min(cierre, len(sesiones) - 2)

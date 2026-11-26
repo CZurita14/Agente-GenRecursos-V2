@@ -103,6 +103,54 @@ class ServicioMomentos:
             })
         return salida
 
+    def plan_evaluacion(self, aid, correo):
+        """Plan de evaluación implícito en el sílabo: norma, bloques, actividades con su peso y alertas.
+
+        Si faltan columnas por clasificar con IA y quien consulta puede editar, se encola la clasificación
+        (una vez por versión del sílabo); mientras tanto se devuelve lo que leen las reglas.
+        """
+        from app.evaluacion.clasificador import textos_de
+        from app.evaluacion.herramientas import NOMBRE_TIPO, herramientas_de
+        from app.evaluacion.norma import bloques as bloques_de
+        from app.evaluacion.norma import norma_de
+        from app.evaluacion.pesos import calcular
+        from app.evaluacion.servicio import plan_actividades, solicitar_clasificacion
+
+        with closing(self.conexion()) as conn:
+            conn.autocommit = True
+            a, rol = exigir_acceso(conn, aid, correo)
+            silabo = SilaboUTI.model_validate(a["silabo"])
+            actividades, estado_ia = plan_actividades(conn, aid, silabo)
+            if estado_ia in ("pendiente", "error") and rol != "lector":
+                estado_ia = solicitar_clasificacion(conn, aid, a["agente"], silabo)
+        norma = norma_de(silabo.proyecto_formativo.modalidad)
+        bloques = bloques_de(silabo, norma, [x.sesion for x in actividades if x.tipo == "prueba_sumativa"])
+        textos = textos_de(silabo)
+        plan = calcular(actividades, norma, bloques, textos)
+        pesadas = {(p.actividad.sesion, p.actividad.columna, p.actividad.tipo): p for p in plan.actividades}
+        bloque_de = {s: b.numero for b in bloques for s in b.sesiones}
+
+        def fila(act):
+            p = pesadas.get((act.sesion, act.columna, act.tipo))
+            return {"sesion": act.sesion, "momento": int(act.sesion.split("-")[0][1:]), "columna": act.columna,
+                    "texto": textos.get(f"{act.sesion}/{act.columna}", ""), "tipo": act.tipo,
+                    "nombre_tipo": NOMBRE_TIPO.get(act.tipo, act.tipo), "evaluable": act.evaluable,
+                    "calificacion": act.calificacion, "instrumento": act.instrumento, "finalidad": act.finalidad,
+                    "agente": act.agente, "origen": act.origen, "bloque": bloque_de.get(act.sesion),
+                    "peso_bloque": p.peso_bloque if p else 0, "peso_final": p.peso_final if p else 0,
+                    "herramientas": herramientas_de(act.tipo, act.sesion)}
+
+        return {
+            "rol": rol, "modalidad": silabo.proyecto_formativo.modalidad,
+            "norma": None if norma is None else {
+                "modalidad": norma.modalidad, "estado": norma.estado, "bloques": norma.bloques, "pesos": norma.pesos,
+                "componentes": norma.componentes, "c5": norma.c5, "c4": norma.c4},
+            "bloques": [{"numero": b.numero, "nombre": b.nombre, "inicio": _iso(b.inicio), "fin": _iso(b.fin),
+                         "sesiones": b.sesiones} for b in bloques],
+            "clasificacion_ia": estado_ia, "por_bloque": plan.por_bloque, "por_momento": plan.por_momento,
+            "alertas": plan.alertas, "actividades": [fila(x) for x in actividades],
+        }
+
     def guardar_contexto(self, aid, correo, numero, revision, texto):
         try:
             limpio, controles = validar_contexto(texto)

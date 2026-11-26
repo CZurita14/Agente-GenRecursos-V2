@@ -4,7 +4,7 @@
  */
 import type {
   Ambito, AsignaturaResumen, Catalogo, Materia, MenuAsignatura, Recurso, RecursoResumen, Trabajo, TrabajoCreado,
-  TipoAmbito, Usuario, MomentoDetalle, MomentosRespuesta, ResumenDescarga, CuentaLocal, SilaboImportado,
+  TipoAmbito, Usuario, MomentoDetalle, MomentosRespuesta, ResumenDescarga, CuentaLocal, SilaboImportado, PlanEvaluacion,
 } from './tipos';
 
 const BASE = '/api';
@@ -108,6 +108,9 @@ export const urlExportar = (aid: string, rid: string, formato: 'html' | 'pdf' | 
 
 /** Momentos del Proyecto Formativo: trazabilidad, contexto del docente y guía de estudio. */
 export const momentos = (aid: string) => pedir<MomentosRespuesta>(`/asignaturas/${enc(aid)}/momentos`);
+
+/** Plan de evaluación implícito en el sílabo; si faltan columnas por clasificar, la API encola la IA. */
+export const planEvaluacion = (aid: string) => pedir<PlanEvaluacion>(`/asignaturas/${enc(aid)}/plan-evaluacion`);
 
 /** Guarda el contexto del momento (se valida en la API; 422 con el motivo, 409 si cambió). */
 export const guardarContexto = (aid: string, numero: number, revision: number, texto: string) =>

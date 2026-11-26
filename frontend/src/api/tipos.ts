@@ -186,3 +186,39 @@ export interface ResumenDescarga {
   momentos: { numero: number; titulo: string; fase: string; total: number; validados: number;
     por_regenerar: number; guia_validada: boolean }[];
 }
+
+/** Plan de evaluación implícito en el sílabo (norma del RRA, bloques, actividades con peso sugerido). */
+export interface ActividadPlan {
+  sesion: string;
+  momento: number;
+  columna: 'docente' | 'asincronica' | 'practico' | 'autonomo';
+  texto: string;
+  tipo: string;
+  nombre_tipo: string;
+  evaluable: boolean;
+  calificacion: string | null;
+  instrumento: string | null;
+  finalidad: string | null;
+  agente: string | null;
+  origen: 'rotulo' | 'ia' | 'sin_rotulo';
+  bloque: number | null;
+  peso_bloque: number;
+  peso_final: number;
+  herramientas: { herramienta: string; ambito: Ambito }[];
+}
+
+export interface PlanEvaluacion {
+  rol: Rol;
+  modalidad: string;
+  norma: {
+    modalidad: string; estado: 'definida' | 'pendiente'; bloques: 'parciales' | 'unico' | null;
+    pesos: Record<string, number>; componentes: Record<'contacto' | 'practico' | 'autonomo', number>;
+    c5: string | null; c4: string | null;
+  } | null;
+  bloques: { numero: number; nombre: string; inicio: string; fin: string; sesiones: string[] }[];
+  clasificacion_ia: 'no_necesaria' | 'pendiente' | 'en_curso' | 'lista' | 'error';
+  por_bloque: Record<string, number>;
+  por_momento: Record<string, number>;
+  alertas: string[];
+  actividades: ActividadPlan[];
+}

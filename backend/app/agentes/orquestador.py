@@ -109,6 +109,10 @@ def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonado
             from app.chat.ejecutor import procesar_chat
             procesar_chat(conn, trabajo, cliente, perfiles, worker_id, lease_s)  # El chat no consulta el razonador.
             return True
+        if trabajo.tipo == 'clasificacion':
+            from app.evaluacion.servicio import procesar_clasificacion
+            procesar_clasificacion(conn, trabajo, cliente, worker_id, lease_s)  # Plan implícito en el sílabo.
+            return True
         silabo = SilaboUTI.model_validate(trabajo.parametros["silabo"])
         ctx = contexto_ambito(silabo, trabajo.ambito)
         encargo = Encargo(

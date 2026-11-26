@@ -111,5 +111,21 @@ def test_una_prueba_del_primer_parcial_en_la_ultima_sesion_no_deja_vacio_el_segu
     assert p1.sesiones == ["M1-S1", "M1-S2"] and p2.sesiones == ["M2-S4"]
 
 
+def test_el_primer_hemiciclo_cierra_el_primer_parcial():
+    """En Salud la prueba se llama «examen institucional del primer hemiciclo»."""
+    silabo = _silabo(textos={(0, 0): "Examen institucional del primer hemiciclo."})
+    p1, _ = bloques(silabo, norma_de("PRESENCIAL"))
+    assert p1.sesiones == ["M1-S1"]
+
+
+def test_sin_nombre_del_parcial_cierra_en_la_primera_prueba_sumativa_clasificada():
+    """«Evaluación hemiciclo» no dice cuál: la clasificación (reglas o IA) marca dónde hay prueba sumativa."""
+    p1, p2 = bloques(_silabo(), norma_de("PRESENCIAL"), sumativas=["M1-S1", "M2-S4"])
+    assert p1.sesiones == ["M1-S1"] and p2.sesiones == ["M1-S2", "M2-S4"]
+    # Una sumativa solo en la última sesión no sirve de cierre: se parte a la mitad.
+    p1, p2 = bloques(_silabo(), norma_de("PRESENCIAL"), sumativas=["M2-S4"])
+    assert p1.sesiones == ["M1-S1", "M1-S2"]
+
+
 def test_semipresencial_pendiente_no_arma_bloques():
     assert bloques(_silabo("HIBRIDA"), norma_de("HIBRIDA")) == []

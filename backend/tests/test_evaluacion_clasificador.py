@@ -87,6 +87,20 @@ def test_una_columna_puede_traer_dos_evaluaciones_sin_duplicar_la_misma():
     assert practica.tipo == "practica_experimental"
 
 
+@pytest.mark.parametrize("texto", ["EVALUACION HEMICICLO", "Examen institucional del primer hemiciclo.",
+                                   "EXAMEN SEGUNDO HEMICICLO"])
+def test_las_pruebas_de_hemiciclo_de_salud_son_sumativas(texto):
+    assert _una("docente", texto).tipo == "prueba_sumativa"
+
+
+def test_la_misma_evaluacion_en_varias_columnas_de_la_sesion_cuenta_una_vez():
+    from app.evaluacion.clasificador import sin_duplicados
+    actividades = sin_duplicados([a for c in ("docente", "practico", "autonomo")
+                                  for a in clasificar_columna("M2-S13", c, "EVALUACION HEMICICLO", PRESENCIAL)])
+    assert [(a.columna, a.tipo) for a in actividades] == [
+        ("docente", "prueba_sumativa"), ("practico", "avance"), ("autonomo", "avance")]
+
+
 def test_sin_rotulo_queda_como_avance_para_revisar_y_vacio_no_cuenta():
     a = _una("docente", "Mesa redonda con invitados del sector.")
     assert (a.tipo, a.evaluable, a.origen) == ("avance", False, "sin_rotulo")
