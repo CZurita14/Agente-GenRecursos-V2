@@ -38,8 +38,8 @@ Fuentes: «3. Armonización del plan de evaluación con el RRA» y «2. Plan_de_
 |---|---|---|
 | V3-0 | Commit de las cuentas locales de prueba (`a7720a6`) | ✅ hecha |
 | V3-1 | Lector: filas partidas entre páginas y aviso de celdas cortadas | ✅ hecha |
-| V3-2 | Norma por modalidad (tabla configurable) y parciales por fecha | 🔄 en curso |
-| V3-3 | Clasificador de actividades (rótulos y, sin rótulo, IA) | ⬜ pendiente |
+| V3-2 | Norma por modalidad (tabla configurable) y parciales por fecha | ✅ hecha |
+| V3-3 | Clasificador de actividades (rótulos y, sin rótulo, IA) | 🔄 en curso |
 | V3-4 | Pesos sugeridos, suma por momento y parcial, auditor con alertas | ⬜ pendiente |
 | V3-5 | API y pantalla de momentos del mockup (reemplaza el menú fijo por clase) | ⬜ pendiente |
 | V3-6 | Herramientas nuevas: ficha de foro, guía de la práctica, guía de observación, guía de la tarea autónoma, diagnóstica, simulacro acumulativo, guía de la entrega, insumo de respaldo | ⬜ pendiente |
@@ -49,6 +49,17 @@ Sílabos piloto: Programación Estructurada (en línea), Electiva 2 (en línea),
 
 ### Bitácora V3
 
+- **2026-11-26 · V3-3 (parte 1, reglas):** `app/evaluacion/clasificador.py`:
+  - Cada columna de cada sesión se clasifica por sus rótulos en evaluable o de avance. Las evaluables llevan su calificación del RRA, instrumento, finalidad y agente. El proyecto final va a C5 en la modalidad en línea y a C4 en la presencial.
+  - Electiva 5 coincide 13/13 con su plan de evaluación aprobado (mismo instrumento y tipo); Programación Estructurada da 13 evaluables, Electiva 2 10 y PPC 26, todas con 0 columnas sin rótulo.
+  - En los 60 sílabos B26 legibles (40 presenciales, 13 en línea, 7 híbridos): 386 evaluables (6,4 por sílabo, de 0 a 26) y **33 % de columnas sin rótulo**, concentradas en Salud (Adulto Mayor, Enfermería, Farmacología) y con «estudio de caso» muy usado (94).
+  - ⛔ Pendiente de decisión del usuario: cómo clasificar lo que no trae rótulo (IA, el plan de evaluación del SGA o ambos).
+  - Pruebas: `test_evaluacion_clasificador.py` 25 nuevas; suite estándar 1 451 pasan.
+- **2026-11-26 · V3-2:** `app/evaluacion/norma.py` + `norma_rra.json`:
+  - Tabla configurable con las seis calificaciones del RRA. Se valida al cargar: cada modalidad definida suma 100 y no admite calificaciones desconocidas.
+  - Alias de modalidad: PRESENCIAL; EN LINEA, ONLINE y VIRTUAL; DISTANCIA (= en línea); SEMIPRESENCIAL o HIBRIDA (pendiente). Una modalidad desconocida devuelve `None`, sin pesos inventados.
+  - Bloques por fecha: un solo bloque en línea; en presencial, el Parcial 1 cierra en la sesión de su prueba acumulativa («primer parcial») o, si no se reconoce, a la mitad del periodo; la norma pendiente no arma bloques.
+  - Pilotos: PPC con P1 del 05/10 al 03/12 (cierra en M3-S4) y P2 del 07/12 al 11/02, 18 sesiones cada uno; los dos cursos en línea en un bloque; Electiva 5 pendiente. Pruebas: `test_evaluacion_norma.py` 21 nuevas.
 - **2026-11-26 · V3-1:** lector (`ciencia_datos/lector_pdf/momentos.py`):
   - Una fila de sesión partida entre páginas ya no se pierde cuando su primera celda arrastra el final de la fecha («14/12/2026»).
   - Cada fila se lee con el mapa de columnas de su ancho, porque en la página siguiente la tabla puede llegar sin la celda combinada.

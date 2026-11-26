@@ -1,0 +1,37 @@
+{
+  "fuente": "Armonización del plan de evaluación con el Reglamento de Régimen Académico (RRA) y Plan de evaluación PF UTI presencial. Decisiones del 2026-11-25 y 2026-11-26.",
+  "modalidades": {
+    "presencial": {
+      "estado": "definida",
+      "bloques": "parciales",
+      "pesos": {"C1_contacto": 5, "C3_formativa": 20, "C5_sumativa": 20, "C2_practicas": 30, "C1_autonoma": 5, "C4_proyecto": 20},
+      "c5": "prueba_de_cada_parcial",
+      "c4": "entregas_del_proyecto"
+    },
+    "en_linea": {
+      "estado": "definida",
+      "bloques": "unico",
+      "pesos": {"C1_contacto": 5, "C3_formativa": 10, "C5_sumativa": 40, "C2_practicas": 20, "C1_autonoma": 5, "C4_proyecto": 20},
+      "c5": "prueba_y_proyecto_final",
+      "c4": "avances_del_proyecto"
+    },
+    "distancia": {"igual_que": "en_linea"},
+    "semipresencial": {
+      "estado": "pendiente",
+      "bloques": null,
+      "pesos": {"C1_contacto": 5, "C3_formativa": 10, "C5_sumativa": 30, "C2_practicas": 30, "C1_autonoma": 5, "C4_proyecto": 20},
+      "c5": null,
+      "c4": null
+    }
+  },
+  "alias": {
+    "PRESENCIAL": "presencial",
+    "EN LINEA": "en_linea",
+    "ONLINE": "en_linea",
+    "VIRTUAL": "en_linea",
+    "DISTANCIA": "distancia",
+    "A DISTANCIA": "distancia",
+    "SEMIPRESENCIAL": "semipresencial",
+    "HIBRIDA": "semipresencial"
+  }
+}
