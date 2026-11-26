@@ -57,6 +57,8 @@ El razonador es **opcional y está apagado por omisión** (sin `RAZONADOR_RUTA`,
 | Estudio de caso | Momento |
 | Guía del producto final | Asignatura |
 
+**Plan de evaluación (V3):** el sistema lee el plan de evaluación implícito en el sílabo y le aplica la norma del RRA de la modalidad. Sugiere los pesos por parcial y por momento, avisa lo que falta y ofrece, junto a cada actividad evaluable, las herramientas que la preparan: guía de la práctica con guía de observación, ficha del foro con rúbrica, guía de la tarea autónoma, prueba diagnóstica, guía de la entrega con lista de cotejo, insumo de respaldo y simulacro acumulativo del parcial. Detalle, verificación y costo: [docs/plan-evaluacion.md](docs/plan-evaluacion.md).
+
 **Sin IA:** hoja de ruta, rúbrica del momento, rúbrica final, autoevaluaciones y lista de verificación de la evidencia. Salen directamente del sílabo.
 
 Los recursos se editan, se ajustan con un chat privado y se exportan a HTML, PDF y Word.
@@ -127,7 +129,7 @@ Exige `SGA_PROVEEDOR=real`, que depende de TI (B-SGA1): [docs/sga/para-TI.md](do
 ### Pruebas
 
 ```bash
-# Backend (base: 1202 pasan, 14 deseleccionadas)
+# Backend (base: 1 544 pasan, 21 omitidas, 4 deseleccionadas)
 cd backend && ../.venv/Scripts/python.exe -m pytest -m "not servidor and not modelo" -q
 # Modelo de ciencia de datos (entorno con PyTorch)
 cd backend && HF_HUB_OFFLINE=1 ../.venv-ciencia/Scripts/python.exe -m pytest -m modelo -q tests/test_razonador.py tests/test_cd_*.py
@@ -153,6 +155,7 @@ Cuando TI entregue acceso al SGA real, `python -m app.sga.comparar <carpeta_sga>
 | [docs/entrega-ti.md](docs/entrega-ti.md) | Ficha de entrega del despliegue a TI |
 | [docs/operacion.md](docs/operacion.md) | Operación, respaldo y restauración |
 | [docs/desarrollo-api.md](docs/desarrollo-api.md) | API local, configuración y pruebas |
+| [docs/plan-evaluacion.md](docs/plan-evaluacion.md) | Plan de evaluación implícito en el sílabo: norma RRA, clasificación, pesos, herramientas, verificación y costo |
 | [docs/superpowers/plans/](docs/superpowers/plans/) | Planes de implementación |
 
 ### Historia de V1

@@ -324,8 +324,16 @@ def _indicadores_ajenos(filas: list[dict], contexto: ContextoClase) -> bool:
     return any(f.get("indicador_momento") not in validos for f in filas)
 
 
+# Campo que dice qué se entrega: puede citar la entrega del sílabo, como «qué se pide» en la guía de la evidencia.
+CITA_ENTREGA = {"tarea": "producto", "entrega": "que_se_entrega", "insumo": "tarea"}
+
+
 def _base_evaluacion(nombre: str, d: dict, contexto: ContextoClase) -> list[str]:
-    fallos = verificar_herramienta_clase(nombre)({nombre: d}, contexto)
+    """Campos vacíos, frases prohibidas, RA del momento y que no copie un entregable fuera del campo que lo cita."""
+    cita = CITA_ENTREGA.get(nombre)
+    fallos = verificar_herramienta_clase(nombre)({nombre: {k: v for k, v in d.items() if k != cita}}, contexto)
+    if cita is not None and not str(d.get(cita, "")).strip():
+        fallos.append("hay campos vacíos")
     if "ra" in d and d.get("ra") not in {r.id for r in contexto.ra}:
         fallos.append("RA ajeno al momento")
     return fallos

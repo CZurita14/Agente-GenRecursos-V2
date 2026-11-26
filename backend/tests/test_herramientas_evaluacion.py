@@ -236,3 +236,24 @@ def test_simulacro_acumulativo_se_encola_y_genera_con_el_rango(conn, silabo):
     assert (fila["ambito_tipo"], fila["ambito_id"]) == ("momento", "M2-M3")
     with pytest.raises(KeyError):
         crear_trabajos(conn, SolicitudGeneracion(aid, Ambito("momento", "M3-M2"), ["simulacro"], cantidad=4))
+
+
+@pytest.mark.parametrize("herramienta,seccion,cita,otro", [
+    ("guia_tarea", "tarea", "producto", "proposito"), ("guia_entrega", "entrega", "que_se_entrega", "avance_nuevo"),
+    ("insumo_respaldo", "insumo", "tarea", "descripcion")])
+def test_el_campo_que_dice_que_se_entrega_puede_citar_la_entrega_y_el_resto_no(silabo, herramienta, seccion, cita, otro):
+    ctx = contexto_clase(silabo, "M2-S1")
+    entregable = ctx.entregables_momento[0]
+    verificar = DEFINICIONES[herramienta].verificar
+    assert verificar({seccion: {**_salida(herramienta, ctx), cita: entregable}}, ctx) == []
+    assert "copia un entregable del momento" in verificar({seccion: {**_salida(herramienta, ctx), otro: entregable}}, ctx)
+
+
+def test_el_plan_no_ofrece_herramientas_que_no_se_pueden_encolar(silabo):
+    from app.evaluacion.herramientas import disponibles
+    sin_rubrica = silabo.model_copy(update={"rubrica_producto_final": []})
+    ofrecidas = herramientas_de("proyecto_final", "M3-S4")
+    assert [h["herramienta"] for h in disponibles(silabo, ofrecidas)] == ["guia_producto_final", "rubrica_final"]
+    assert disponibles(sin_rubrica, ofrecidas) == []
+    assert disponibles(silabo, herramientas_de("prueba_sumativa", "M3-S4", "M2-M9")) == [
+        {"herramienta": "repaso_momento", "ambito": {"tipo": "momento", "id": "M3"}}]

@@ -68,3 +68,35 @@ def herramientas_de(tipo: str, sesion: str, acumulado: str | None = None) -> lis
     tipos = {ACUMULADO: MOMENTO}
     return [{"herramienta": h, "ambito": {"tipo": tipos.get(ambito, ambito), "id": ids[ambito]}}
             for h, ambito in POR_TIPO.get(tipo, ())]
+
+
+def disponibles(silabo, ofrecidas: list[dict], cache: dict | None = None) -> list[dict]:
+    """Solo las herramientas que se pueden encolar con este sílabo: ámbito existente y lo que su esquema necesita.
+
+    Así el plan no ofrece, por ejemplo, la guía del producto final si el sílabo no trae la rúbrica final.
+    """
+    from app.agentes.workers.definiciones import DEFINICIONES
+    from app.cola.trabajos import Ambito
+    from app.herramientas.sin_ia import HERRAMIENTAS_SIN_IA, generar_sin_ia
+    from app.silabo.contexto import contexto_ambito
+
+    cache = {} if cache is None else cache  # (herramienta, ámbito) → se puede; compartido entre actividades
+
+    def se_puede(h: dict) -> bool:
+        nombre, ambito = h["herramienta"], h["ambito"]
+        try:
+            if nombre in HERRAMIENTAS_SIN_IA:
+                generar_sin_ia(nombre, silabo, ambito["id"])
+                return True
+            return DEFINICIONES[nombre].requisitos(contexto_ambito(silabo, Ambito(ambito["tipo"], ambito["id"]))) is None
+        except (KeyError, ValueError):
+            return False
+
+    salida = []
+    for h in ofrecidas:
+        clave = (h["herramienta"], h["ambito"]["id"])
+        if clave not in cache:
+            cache[clave] = se_puede(h)
+        if cache[clave]:
+            salida.append(h)
+    return salida

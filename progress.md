@@ -43,11 +43,28 @@ Fuentes: «3. Armonización del plan de evaluación con el RRA» y «2. Plan_de_
 | V3-4 | Pesos sugeridos, suma por momento y parcial, auditor con alertas | ✅ hecha |
 | V3-5 | API y pantalla de momentos del mockup (reemplaza el menú fijo por clase) | ✅ hecha |
 | V3-6 | Herramientas nuevas: ficha de foro, guía de la práctica, guía de observación, guía de la tarea autónoma, diagnóstica, simulacro acumulativo, guía de la entrega, insumo de respaldo | ✅ hecha |
-| V3-7 | Verificación con los 4 sílabos piloto, costo medido y documentación | ⬜ pendiente |
+| V3-7 | Verificación con los 4 sílabos piloto, costo medido y documentación | ✅ hecha |
 
 Sílabos piloto: Programación Estructurada (en línea), Electiva 2 (en línea), PPC (presencial), Electiva 5 (híbrida) — en `Desktop/SILABOS B26/`.
 
 ### Bitácora V3
+
+- **2026-11-26 · V3-7 (verificación, costo y documentación):**
+  - Los 4 pilotos de punta a punta con DeepSeek:
+    - Programación Estructurada: 13 evaluables, bloque 100.
+    - Electiva II: 10 evaluables, bloque 80 (falta C4 proyecto).
+    - PPC: 26 evaluables, P1 95 (falta una autónoma) y P2 100.
+    - Electiva 5: 13 evaluables, coincide 13/13; norma pendiente.
+  - 19 muestras de las herramientas nuevas pasan el verificador.
+  - Correcciones:
+    - El campo que dice qué se entrega (guía de la tarea, guía de la entrega, insumo) puede citar la entrega del sílabo, y el resto no (`CITA_ENTREGA`). Antes daba «copia un entregable» en 3 de 18 casos.
+    - El plan oculta las herramientas que no se pueden encolar (`disponibles`), por ejemplo la guía del producto final sin rúbrica final (Electiva II).
+  - Costo medido en horario de descuento:
+    - herramienta nueva de punta a punta: US$ 0,008 a 0,016;
+    - simulacro acumulativo: US$ 0,08;
+    - todos los botones del plan: US$ 0,47 por PF y unos US$ 63 para 135 PF (unos US$ 114 en horario normal, estimado).
+  - Documentación: `docs/plan-evaluacion.md` y README.
+  - Pruebas: backend 1 544 pasan; frontend 37 unitarias y tipos.
 
 - **2026-11-26 · V3-6 (herramientas nuevas):**
   - Seis herramientas de clase, de una sección, en `app/agentes/workers/evaluacion.py`. Sus esquemas están en `app/herramientas/esquemas_evaluacion.py` y sus verificadores en `verificador.py`:
