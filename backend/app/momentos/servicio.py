@@ -110,7 +110,7 @@ class ServicioMomentos:
         (una vez por versión del sílabo); mientras tanto se devuelve lo que leen las reglas.
         """
         from app.evaluacion.clasificador import textos_de
-        from app.evaluacion.herramientas import NOMBRE_TIPO, herramientas_de
+        from app.evaluacion.herramientas import NOMBRE_TIPO, herramientas_de, rangos_acumulados
         from app.evaluacion.norma import bloques as bloques_de
         from app.evaluacion.norma import norma_de
         from app.evaluacion.pesos import calcular
@@ -129,6 +129,7 @@ class ServicioMomentos:
         plan = calcular(actividades, norma, bloques, textos)
         pesadas = {(p.actividad.sesion, p.actividad.columna, p.actividad.tipo): p for p in plan.actividades}
         bloque_de = {s: b.numero for b in bloques for s in b.sesiones}
+        acumulado = rangos_acumulados([x.sesion for x in actividades if x.tipo == "prueba_sumativa" and x.evaluable])
 
         def fila(act):
             p = pesadas.get((act.sesion, act.columna, act.tipo))
@@ -138,7 +139,7 @@ class ServicioMomentos:
                     "calificacion": act.calificacion, "instrumento": act.instrumento, "finalidad": act.finalidad,
                     "agente": act.agente, "origen": act.origen, "bloque": bloque_de.get(act.sesion),
                     "peso_bloque": p.peso_bloque if p else 0, "peso_final": p.peso_final if p else 0,
-                    "herramientas": herramientas_de(act.tipo, act.sesion)}
+                    "herramientas": herramientas_de(act.tipo, act.sesion, acumulado.get(act.sesion))}
 
         return {
             "rol": rol, "modalidad": silabo.proyecto_formativo.modalidad,

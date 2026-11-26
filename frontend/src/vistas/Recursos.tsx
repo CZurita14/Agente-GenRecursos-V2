@@ -15,7 +15,7 @@ interface RecursosProps {
 
 const FORMATOS = [['html', 'HTML'], ['pdf', 'PDF'], ['docx', 'Word']] as const;
 // Solo resultados finales: lo de un momento (simulacro, rúbrica del momento…) no se lista. Los datos se conservan.
-const esFinal = (r: RecursoResumen) => !/^M\d+$/.test(r.ambito_id);
+const esFinal = (r: RecursoResumen) => !/^M\d+(-M\d+)?$/.test(r.ambito_id);
 
 /** «Mis recursos»: lo generado en un Proyecto Formativo, para validarlo y descargarlo. */
 export function Recursos({ aidInicial, onAbrir, onSesionVencida, onTrabajos }: RecursosProps) {

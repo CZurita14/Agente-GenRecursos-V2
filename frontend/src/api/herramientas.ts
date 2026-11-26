@@ -19,18 +19,25 @@ export const NOMBRES: Record<string, string> = {
   guia_autonoma: 'Guía de trabajo autónomo',
   guion_clase: 'Guion de clase (docente)',
   presentacion: 'Presentación (PowerPoint)',
+  guia_practica: 'Guía de la práctica y guía de observación',
+  ficha_foro: 'Ficha del foro',
+  guia_tarea: 'Guía de la tarea autónoma',
+  prueba_diagnostica: 'Prueba diagnóstica',
+  guia_entrega: 'Guía de la entrega y lista de cotejo',
+  insumo_respaldo: 'Insumo de respaldo',
 };
 
 export const SIN_IA = new Set(['hoja_ruta', 'autoevaluacion_rubrica', 'autoevaluacion_final', 'lista_evidencia', 'rubrica_momento', 'rubrica_final']);
 
 /** Tienen una descarga aparte con las respuestas, solo para el docente; la del estudiante no las lleva. */
-export const CON_RESPUESTAS = new Set(['cuestionario', 'simulacro', 'estudio_caso']);
+export const CON_RESPUESTAS = new Set(['cuestionario', 'simulacro', 'estudio_caso', 'prueba_diagnostica']);
 
 export const nombreHerramienta = (id: string) => NOMBRES[id] ?? id;
 
 /** Códigos a nombres completos, también dentro de lo que redacta la IA; solo al mostrar. */
 export function legible(texto: string): string {
   return texto
+    .replace(/\bM([1-9]\d?)-M([1-9]\d?)\b/g, 'Momentos $1 a $2')
     .replace(/\bM([1-9]\d?)-S([1-9]\d?)\b/g, 'Momento $1, sesión $2')
     .replace(/\bRA([1-9]\d?)\b/g, 'Resultado de aprendizaje $1')
     .replace(/\bM([1-9]\d?)\b/g, 'Momento $1')

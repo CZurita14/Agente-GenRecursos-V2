@@ -9,7 +9,7 @@ from app.agentes.orquestador import SolicitudGeneracion, crear_trabajos
 from app.agentes.planificador import perfil_por_nivel
 from app.agentes.workers import WORKERS
 from app.agentes.verificador import revision_claves
-from app.agentes.workers.definiciones import DEFINICIONES
+from app.agentes.workers.definiciones import DEFINICIONES, DEL_PLAN
 from app.asignaturas.servicio import exigir_acceso
 from app.herramientas.sin_ia import HERRAMIENTAS_SIN_IA, generar_sin_ia
 from app.recursos.validacion import EdicionInvalida, validar_contenido
@@ -47,8 +47,8 @@ def _restriccion(silabo: SilaboUTI, tipo: str, ambito_id: str | None) -> str | N
     """§9.4 regla 2: motivo si el momento del ámbito excluye la IA en una evaluación."""
     numero = None
     if tipo in ("clase", "momento") and ambito_id:
-        m = re.fullmatch(r"M(\d+)(?:-S\d+)?", ambito_id)
-        numero = int(m.group(1)) if m else None
+        from app.momentos.trazabilidad import numero_momento
+        numero = numero_momento(ambito_id)
     momento = next((x for x in silabo.momentos if x.numero == numero), None)
     if momento is not None and excluye_ia_en_evaluacion(momento.politica_ia):
         return ("La política de IA de este momento excluye la IA en una evaluación, así que aquí no se "
@@ -150,7 +150,7 @@ class ServicioRecursos:
                     raise HTTPException(404, "Ámbito inexistente en este Proyecto Formativo")
             recomendaciones = self.perfiles[a["agente"]].herramientas_recomendadas.get(ambito, [])
             con_ia = [] if motivo else [h for h in WORKERS if h in DEFINICIONES and DEFINICIONES[h].ambito == ambito
-                                        and (contexto is None or DEFINICIONES[h].requisitos(contexto) is None)]
+                                        and h not in DEL_PLAN and (contexto is None or DEFINICIONES[h].requisitos(contexto) is None)]
             disponibles = con_ia + [h for h, tipo in HERRAMIENTAS_SIN_IA.items() if tipo == ambito]
             orden = [h for h in recomendaciones if h in disponibles]
             orden += sorted(h for h in disponibles if h not in orden)

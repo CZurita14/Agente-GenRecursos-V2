@@ -12,6 +12,11 @@ from app.agentes.verificador import (
     verificar_herramienta_clase,
     verificar_estudio_caso, verificar_ficha, verificar_guia_evidencia, verificar_guia_producto_final,
     verificar_guia_estudio, verificar_repaso,
+    verificar_ficha_foro, verificar_guia_entrega, verificar_guia_practica, verificar_guia_tarea,
+    verificar_insumo_respaldo, verificar_prueba_diagnostica,
+)
+from app.herramientas.esquemas_evaluacion import (
+    FichaForo, GuiaEntrega, GuiaPractica, GuiaTarea, InsumoRespaldo, PruebaDiagnostica,
 )
 from app.herramientas.esquemas import (
     GuiaAutonoma, GuionClase, PracticaGuiada, Presentacion, Tarjetas,
@@ -51,10 +56,27 @@ def _con_actividad(campo: str, nombre: str) -> Callable[[ContextoClase], str | N
     return comprobar
 
 
+def _todos(*comprobaciones: Callable[[ContextoClase], str | None]) -> Callable[[ContextoClase], str | None]:
+    def comprobar(c: ContextoClase) -> str | None:
+        return next((m for f in comprobaciones if (m := f(c))), None)
+    return comprobar
+
+
+def _evaluacion(seccion: str, modelo, verificar, requisitos) -> Definicion:
+    """Herramienta de clase del plan de evaluación (V3-6): una sección con su verificador propio."""
+    return Definicion("clase", secciones=(seccion,), modelos=(modelo,), verificar=verificar, id_revision=seccion,
+                      requisitos=requisitos)
+
+
 def _clase(nombre: str, modelo, requisitos=None) -> Definicion:
     return Definicion("clase", secciones=(nombre,), modelos=(modelo,), verificar=verificar_herramienta_clase(nombre),
                       id_revision=nombre, requisitos=requisitos or _exige("contenidos"))
 
+
+# Se ofrecen desde el plan de evaluación, junto a la actividad evaluable que preparan (V3-6),
+# no en el catálogo general de «Más herramientas».
+DEL_PLAN = frozenset({"guia_practica", "ficha_foro", "guia_tarea", "prueba_diagnostica", "guia_entrega",
+                      "insumo_respaldo"})
 
 DEFINICIONES: dict[str, Definicion] = {
     "practica_guiada": _clase("practica", PracticaGuiada),
@@ -80,4 +102,15 @@ DEFINICIONES: dict[str, Definicion] = {
     "guia_producto_final": Definicion("asignatura", secciones=("guia_final",), modelos=(GuiaProductoFinal,),
                                       verificar=verificar_guia_producto_final, id_revision="guia_final",
                                       requisitos=_exige("rubrica")),
+    # V3-6: preparan las actividades evaluables del plan implícito en el sílabo.
+    "guia_practica": _evaluacion("guia_practica", GuiaPractica, verificar_guia_practica, _todos(
+        _exige("ra"), _con_actividad("actividad_practica", "actividades práctico-experimentales"))),
+    "ficha_foro": _evaluacion("foro", FichaForo, verificar_ficha_foro, _todos(
+        _exige("contenidos"), _con_actividad("actividad_docente", "actividades con el docente"))),
+    "guia_tarea": _evaluacion("tarea", GuiaTarea, verificar_guia_tarea, _todos(
+        _exige("ra"), _con_actividad("actividad_autonoma", "actividades de trabajo autónomo"))),
+    "prueba_diagnostica": _evaluacion("diagnostica", PruebaDiagnostica, verificar_prueba_diagnostica,
+                                      _exige("contenidos")),
+    "guia_entrega": _evaluacion("entrega", GuiaEntrega, verificar_guia_entrega, _exige("contenidos")),
+    "insumo_respaldo": _evaluacion("insumo", InsumoRespaldo, verificar_insumo_respaldo, _exige("contenidos")),
 }

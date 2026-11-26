@@ -138,6 +138,8 @@ def contexto_momento(silabo: SilaboUTI, momento_id: str) -> ContextoClase:
     Mismo contrato que una clase, así el núcleo (prompts, verificador, revisor) sirve
     sin cambios. Lanza `KeyError` si el momento no existe.
     """
+    if rango := re.fullmatch(r"M(\d+)-M(\d+)", momento_id):
+        return _contexto_rango(silabo, momento_id, int(rango.group(1)), int(rango.group(2)))
     m = re.fullmatch(r"M(\d+)", momento_id)
     momento = next((x for x in silabo.momentos if m and x.numero == int(m.group(1))), None)
     if momento is None:
@@ -151,6 +153,30 @@ def contexto_momento(silabo: SilaboUTI, momento_id: str) -> ContextoClase:
         rubrica=[f.model_copy(deep=True) for f in momento.rubrica],
         politica_ia=momento.politica_ia,
         entregables_momento=_sin_repetir([momento.evidencia] + [e for s in momento.sesiones for e in s.entregables]),
+    )
+
+
+def _contexto_rango(silabo: SilaboUTI, rango_id: str, desde: int, hasta: int) -> ContextoClase:
+    """Momentos `desde`..`hasta` juntos («M1-M2»): lo que cubre una prueba acumulativa del parcial (V3-6).
+
+    Contenidos y RA de todos; rúbrica, política de IA y evidencia, del último (el que cierra el parcial).
+    """
+    momentos = [m for m in silabo.momentos if desde <= m.numero <= hasta]
+    if desde >= hasta or len(momentos) != hasta - desde + 1:
+        raise KeyError(rango_id)
+    ultimo = momentos[-1]
+    ras = {r for m in momentos for r in m.ra}
+    return ContextoClase(
+        **_base(silabo), clase_id=rango_id, fecha=momentos[0].fecha_inicio,
+        momento_titulo=" · ".join(f"M{m.numero}: {m.titulo}" for m in momentos),
+        contenidos=_sin_repetir(c for m in momentos for s in m.sesiones for c in s.contenidos),
+        actividades=_sin_repetir(f"{s.id}: {s.docente.texto} {s.practico.texto}".strip()
+                                 for m in momentos for s in m.sesiones),
+        ra=[r.model_copy(deep=True) for r in silabo.resultados_aprendizaje if r.id in ras],
+        rubrica=[f.model_copy(deep=True) for f in ultimo.rubrica],
+        politica_ia=ultimo.politica_ia,
+        entregables_momento=_sin_repetir([m.evidencia for m in momentos]
+                                         + [e for m in momentos for s in m.sesiones for e in s.entregables]),
     )
 
 
@@ -185,6 +211,6 @@ def contexto_por_id(silabo: SilaboUTI, ambito_id: str) -> ContextoClase:
     """Contexto a partir del id guardado en el recurso: `asignatura`, `M<n>` o una clase."""
     if ambito_id == "asignatura":
         return contexto_asignatura(silabo)
-    if re.fullmatch(r"M\d+", ambito_id):
+    if re.fullmatch(r"M\d+(?:-M\d+)?", ambito_id):
         return contexto_momento(silabo, ambito_id)
     return contexto_clase(silabo, ambito_id)

@@ -172,6 +172,13 @@ def test_plan_de_evaluacion_por_api(entorno, conn):
     fila = plan["actividades"][0]
     assert set(fila) >= {"sesion", "columna", "texto", "tipo", "evaluable", "calificacion", "peso_final", "herramientas"}
     assert all({"herramienta", "ambito"} <= set(h) for a in plan["actividades"] for h in a["herramientas"])
+    # Cada herramienta ofrecida se puede encolar tal cual (ámbito válido, incluido el rango del simulacro).
+    from app.silabo.contexto import contexto_ambito
+    from app.silabo.modelo import SilaboUTI
+    from app.cola.trabajos import Ambito
+    silabo = SilaboUTI.model_validate(conn.execute("select silabo from asignatura where id=%s", (aid,)).fetchone()["silabo"])
+    for h in {(h["ambito"]["tipo"], h["ambito"]["id"]) for a in plan["actividades"] for h in a["herramientas"]}:
+        contexto_ambito(silabo, Ambito(*h))
     # Si hay columnas sin rótulo, el dueño encola la clasificación una sola vez.
     if plan["clasificacion_ia"] == "en_curso":
         d.get(f"/asignaturas/{aid}/plan-evaluacion")

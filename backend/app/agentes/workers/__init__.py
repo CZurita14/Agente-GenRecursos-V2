@@ -1,5 +1,8 @@
 """Workers compartidos por herramienta (spec §3.7). Sin estado (regla A2)."""
 from app.agentes.workers.base import Worker
+from app.agentes.workers.evaluacion import (
+    FICHA_FORO, GUIA_ENTREGA, GUIA_PRACTICA, GUIA_TAREA, INSUMO_RESPALDO, PRUEBA_DIAGNOSTICA,
+)
 from app.agentes.workers.cuestionario import WorkerCuestionario, WorkerSimulacro
 from app.agentes.workers.clase import GUIA_AUTONOMA, GUION_CLASE, PRACTICA_GUIADA, PRESENTACION, TARJETAS
 from app.agentes.workers.ficha_clase import WorkerFichaClase
@@ -20,6 +23,12 @@ WORKERS: dict[str, Worker] = {
     "guia_autonoma": GUIA_AUTONOMA,
     "guion_clase": GUION_CLASE,
     "presentacion": PRESENTACION,
+    "guia_practica": GUIA_PRACTICA,
+    "ficha_foro": FICHA_FORO,
+    "guia_tarea": GUIA_TAREA,
+    "prueba_diagnostica": PRUEBA_DIAGNOSTICA,
+    "guia_entrega": GUIA_ENTREGA,
+    "insumo_respaldo": INSUMO_RESPALDO,
 }
 
 __all__ = ["WORKERS", "Worker", "WorkerCuestionario", "WorkerFichaClase", "WorkerSimulacro"]

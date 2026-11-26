@@ -42,6 +42,7 @@ def legible(texto: str) -> str:
 
     Solo al mostrar: el contenido guardado no cambia y los identificadores siguen igual.
     """
+    texto = re.sub(r"\bM([1-9]\d?)-M([1-9]\d?)\b", r"Momentos \1 a \2", texto)
     texto = re.sub(r"\bM([1-9]\d?)-S([1-9]\d?)\b", r"Momento \1, sesión \2", texto)
     texto = re.sub(r"\bRA([1-9]\d?)\b", r"Resultado de aprendizaje \1", texto)
     texto = re.sub(r"\bM([1-9]\d?)\b", r"Momento \1", texto)
@@ -388,6 +389,96 @@ def _valores(d):
             yield v
 
 
+# --- Herramientas del plan de evaluación (V3-6) ---
+
+NIVELES_RUBRICA = (("destacado", "Destacado"), ("satisfactorio", "Satisfactorio"), ("en_proceso", "En proceso"))
+TIPOS_INSUMO = {"plantilla": "Plantilla", "proyecto_base": "Proyecto base", "dataset": "Conjunto de datos",
+                "version_referencia": "Versión de referencia"}
+
+
+def _tabla_rubrica(titulo: str, seccion: str, campo: str, filas: list[dict]) -> dict:
+    return _tabla(titulo, ["Criterio", *(n for _, n in NIVELES_RUBRICA), "Indicador del momento"],
+                  [[f["criterio"], *(f[k] for k, _ in NIVELES_RUBRICA), f["indicador_momento"]] for f in filas],
+                  [[[seccion, campo, k, "criterio"], *([seccion, campo, k, n] for n, _ in NIVELES_RUBRICA), None]
+                   for k in range(len(filas))])
+
+
+def _guia_practica(c: dict) -> list[dict]:
+    g, s = c["guia_practica"], "guia_practica"
+    return [_texto("Práctica", g["titulo"], [s, "titulo"]), _texto("Objetivo", g["objetivo"], [s, "objetivo"]),
+            _texto("Se relaciona con", g["ra"]),
+            _lista("Materiales y recursos", g["materiales"], ruta=[s, "materiales"]),
+            _lista("Procedimiento", g["procedimiento"], numerada=True, ruta=[s, "procedimiento"]),
+            _lista("Qué registrar", g["registro"], ruta=[s, "registro"]),
+            _texto("Producto de la práctica", g["producto"], [s, "producto"]),
+            _lista("Condiciones", g["condiciones"], ruta=[s, "condiciones"]),
+            _tabla("Guía de observación", ["Criterio", "Evidencia observable", "Logrado", "En proceso", "No logrado"],
+                   [[o["criterio"], o["evidencia"], "", "", ""] for o in g["observacion"]],
+                   [[[s, "observacion", k, "criterio"], [s, "observacion", k, "evidencia"], None, None, None]
+                    for k in range(len(g["observacion"]))])]
+
+
+def _ficha_foro(c: dict) -> list[dict]:
+    f, s = c["foro"], "foro"
+    return [_texto("Tema", f["tema"], [s, "tema"]), _texto("Contenido de la sesión", f["contenido"]),
+            _texto("Pregunta detonante", f["pregunta_detonante"], [s, "pregunta_detonante"]),
+            _texto("Aporte inicial", f["aporte_inicial"], [s, "aporte_inicial"]),
+            _texto("Réplicas", f["replicas"], [s, "replicas"]),
+            _lista("Plazos", f.get("plazos", []), ruta=[s, "plazos"]),
+            _texto("Uso de IA", f["uso_ia"], [s, "uso_ia"]),
+            _tabla_rubrica("Rúbrica del foro", s, "rubrica", f["rubrica"]),
+            _texto("Tipo de evaluación", f.get("evaluacion", ""))]
+
+
+def _guia_tarea(c: dict) -> list[dict]:
+    t, s = c["tarea"], "tarea"
+    return [_texto("Qué entregas", t["producto"], [s, "producto"]),
+            _texto("Para qué", t["proposito"], [s, "proposito"]), _texto("Se relaciona con", t["ra"]),
+            _texto("Modalidad", t["modalidad"].capitalize()),
+            _lista("Condiciones de entrega", t["condiciones"], ruta=[s, "condiciones"]),
+            _lista("Pasos", t["pasos"], numerada=True, ruta=[s, "pasos"]),
+            _tabla_rubrica("Criterios de calidad", s, "criterios", t["criterios"]),
+            _texto("Uso de IA", t["uso_ia"], [s, "uso_ia"])]
+
+
+def _prueba_diagnostica(c: dict) -> list[dict]:
+    d, s = c["diagnostica"], "diagnostica"
+    pre = d["prerrequisitos"]
+    bloques = [_tabla("Conocimientos previos que se comprueban", ["Prerrequisito", "Por qué hace falta"],
+                      [[p["nombre"], p["por_que"]] for p in pre],
+                      [[[s, "prerrequisitos", k, "nombre"], [s, "prerrequisitos", k, "por_que"]]
+                       for k in range(len(pre))])]
+    for n, p in enumerate(d["preguntas"]):
+        nombre = pre[p["prerrequisito"] - 1]["nombre"] if 1 <= p["prerrequisito"] <= len(pre) else ""
+        letra = "abcd"[p["correcta"]]
+        bloques.append(_grupo(f"Pregunta {n + 1}" + (f" · {nombre}" if nombre else ""), [
+            _texto("Pregunta", p["pregunta"], [s, "preguntas", n, "pregunta"]),
+            _lista("Opciones", [f"{'abcd'[k]}) {o}" for k, o in enumerate(p["opciones"])]),
+            _texto("Respuesta orientativa", f"{letra}) {p['explicacion']} Si fallas: {p['si_fallas']}")]))
+    return bloques
+
+
+def _guia_entrega(c: dict) -> list[dict]:
+    e, s = c["entrega"], "entrega"
+    return [_texto("Qué se entrega", e["que_se_entrega"], [s, "que_se_entrega"]),
+            _texto("Se construye sobre", e["insumo_previo"], [s, "insumo_previo"]),
+            _texto("Qué se califica en esta entrega", e["avance_nuevo"], [s, "avance_nuevo"]),
+            _lista("Pasos", e["pasos"], numerada=True, ruta=[s, "pasos"]),
+            _tabla("Lista de cotejo", ["Ítem", "Sí", "No", "Indicador del momento"],
+                   [[i["item"], "", "", i["indicador_momento"]] for i in e["lista_cotejo"]],
+                   [[[s, "lista_cotejo", k, "item"], None, None, None] for k in range(len(e["lista_cotejo"]))]),
+            _lista("Errores comunes", e["errores_comunes"], ruta=[s, "errores_comunes"])]
+
+
+def _insumo_respaldo(c: dict) -> list[dict]:
+    i, s = c["insumo"], "insumo"
+    return [_texto("Tarea", i["tarea"], [s, "tarea"]), _texto("Necesita", i["insumo_previo"], [s, "insumo_previo"]),
+            _texto("Tipo de insumo", TIPOS_INSUMO.get(i["tipo"], i["tipo"])),
+            _texto("Descripción", i["descripcion"], [s, "descripcion"]),
+            _texto("Material de respaldo", i["contenido"], [s, "contenido"]),
+            _lista("Cómo usarlo", i["como_usarlo"], numerada=True, ruta=[s, "como_usarlo"])]
+
+
 VISTAS: dict[str, Callable[[dict], list[dict]]] = {
     "presentacion": _diapositivas, "guia_estudio": _guia_estudio,
     "practica_guiada": _practica, "tarjetas": _tarjetas, "guia_autonoma": _guia_autonoma, "guion_clase": _guion,
@@ -395,6 +486,8 @@ VISTAS: dict[str, Callable[[dict], list[dict]]] = {
     "ficha_clase": _ficha, "repaso_momento": _repaso, "guia_evidencia": _guia, "estudio_caso": _caso,
     "guia_producto_final": _guia_final, "hoja_ruta": _hoja_ruta, "autoevaluacion_rubrica": _autoevaluacion,
     "autoevaluacion_final": _autoevaluacion_final, "lista_evidencia": _lista_evidencia,
+    "guia_practica": _guia_practica, "ficha_foro": _ficha_foro, "guia_tarea": _guia_tarea,
+    "prueba_diagnostica": _prueba_diagnostica, "guia_entrega": _guia_entrega, "insumo_respaldo": _insumo_respaldo,
 }
 
 

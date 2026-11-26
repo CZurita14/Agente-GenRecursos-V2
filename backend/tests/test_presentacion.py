@@ -43,6 +43,20 @@ CON_IA = {
                                            "criterios": [{"indicador": "Ind", "como_prepararse": "Prepara"}],
                                            "recomendaciones": ["r1"]}},
 }
+def _muestras_v3_6():
+    """Herramientas del plan de evaluación (V3-6), con las mismas muestras que sus pruebas."""
+    from types import SimpleNamespace
+    from tests.test_herramientas_evaluacion import NUEVAS, _salida
+    from app.agentes.workers.definiciones import DEFINICIONES
+    ctx = SimpleNamespace(ra=[SimpleNamespace(id="RA2")], rubrica=[SimpleNamespace(indicador="Indicador 1")],
+                          contenidos=["Contenido 1"])
+    return {h: {DEFINICIONES[h].secciones[0]: {**_salida(h, ctx), **(
+        {"plazos": ["Aporte inicial: hasta el 10/10/2026"], "evaluacion": "Formativa"} if h == "ficha_foro" else {})}}
+        for h in NUEVAS}
+
+
+CON_IA.update(_muestras_v3_6())
+
 SIN_IA = [("hoja_ruta", "asignatura"), ("autoevaluacion_rubrica", "M2"), ("autoevaluacion_final", "asignatura"),
           ("lista_evidencia", "M3"),
           ("rubrica_momento", "M2"), ("rubrica_final", "asignatura")]

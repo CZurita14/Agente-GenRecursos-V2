@@ -6,7 +6,7 @@ import {
 } from '../api/cliente';
 import type { Ambito, MomentoDetalle, PlanEvaluacion, ResumenDescarga, TrabajoCreado } from '../api/tipos';
 import { NormaModalidad, PlanMomento } from './PlanEvaluacion';
-import { fechaCorta } from '../api/herramientas';
+import { fechaCorta, nombreAmbito } from '../api/herramientas';
 
 interface MomentosProps {
   aid: string;
@@ -214,7 +214,7 @@ function TarjetaMomento({ aid, momento: m, lector, plan, onCambio, onError, onEl
         : <ul className="divide-y divide-line">{m.recursos.map(r => <li key={r.id}
           className="flex flex-wrap items-center justify-between gap-2 py-2">
           <button type="button" className="text-left text-sm hover:underline" onClick={() => onAbrir(r.id)}>
-            {r.nombre} <span className="text-muted">· {r.ambito_id === m.id ? 'momento' : r.ambito_id}</span>
+            {r.nombre} <span className="text-muted">· {r.ambito_id === m.id ? 'momento' : nombreAmbito(r.ambito_id)}</span>
           </button>
           <span className="flex gap-1">
             {r.por_regenerar && <Badge tone="warning">por regenerar</Badge>}

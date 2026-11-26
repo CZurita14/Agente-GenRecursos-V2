@@ -18,8 +18,9 @@ FASES = {
 
 
 def numero_momento(ambito_id: str) -> int | None:
-    m = re.fullmatch(r"M(\d+)(?:-S\d+)?", ambito_id or "")
-    return int(m.group(1)) if m else None
+    """Momento del ámbito; en un rango de momentos («M1-M2», V3-6), el último: el que cierra el parcial."""
+    m = re.fullmatch(r"M(\d+)(?:-S\d+|-M(\d+))?", ambito_id or "")
+    return int(m.group(2) or m.group(1)) if m else None
 
 
 def fase(numero: int) -> tuple[str, str]:

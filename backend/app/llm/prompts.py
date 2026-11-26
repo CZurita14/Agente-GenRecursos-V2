@@ -54,6 +54,8 @@ def _ambito(clase_id: str) -> str:
         return "Asignatura"
     if re.fullmatch(r"M\d+", clase_id):
         return f"Momento {clase_id}"
+    if re.fullmatch(r"M\d+-M\d+", clase_id):
+        return f"Momentos {clase_id}"
     return f"Clase {clase_id}"
 
 

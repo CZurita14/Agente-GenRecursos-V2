@@ -314,3 +314,79 @@ def verificar_guia_estudio(datos: dict, contexto: ContextoClase) -> list[str]:
         if (n := palabras_guia(datos)) < minimo:
             fallos.append(f"la sección tiene {n} palabras; amplía el desarrollo hasta al menos {minimo}")
     return fallos
+
+
+# --- Herramientas del plan de evaluación (V3-6) -------------------------------------
+
+def _indicadores_ajenos(filas: list[dict], contexto: ContextoClase) -> bool:
+    from app.herramientas.esquemas_evaluacion import SIN_INDICADOR
+    validos = {f.indicador for f in contexto.rubrica} | {SIN_INDICADOR}
+    return any(f.get("indicador_momento") not in validos for f in filas)
+
+
+def _base_evaluacion(nombre: str, d: dict, contexto: ContextoClase) -> list[str]:
+    fallos = verificar_herramienta_clase(nombre)({nombre: d}, contexto)
+    if "ra" in d and d.get("ra") not in {r.id for r in contexto.ra}:
+        fallos.append("RA ajeno al momento")
+    return fallos
+
+
+def verificar_guia_practica(datos: dict, contexto: ContextoClase) -> list[str]:
+    d = _seccion(datos, "guia_practica")
+    fallos = _base_evaluacion("guia_practica", d, contexto)
+    criterios = [normalizar(c.get("criterio", "")) for c in d.get("observacion", [])]
+    if len(criterios) != len(set(criterios)):
+        fallos.append("la guía de observación repite criterios")
+    return fallos
+
+
+def verificar_ficha_foro(datos: dict, contexto: ContextoClase) -> list[str]:
+    """§5.4: la pregunta usa un contenido del momento y no se responde copiando una definición."""
+    d = _seccion(datos, "foro")
+    fallos = _base_evaluacion("foro", d, contexto)
+    if contexto.contenidos and normalizar(d.get("contenido", "")) not in {normalizar(c) for c in contexto.contenidos}:
+        fallos.append("el foro usa un contenido ajeno a la sesión")
+    pregunta = d.get("pregunta_detonante", "")
+    if "?" not in pregunta:
+        fallos.append("la pregunta detonante no es una pregunta")
+    elif re.match(r"\s*¿?\s*(QUE ES|QUE SON|DEFIN[AE])\b", normalizar(pregunta)):  # normalizar: mayúsculas
+        fallos.append("la pregunta detonante se responde con una definición")
+    if _indicadores_ajenos(d.get("rubrica", []), contexto):
+        fallos.append("criterio alineado a un indicador ajeno a la rúbrica del momento")
+    return fallos
+
+
+def verificar_guia_tarea(datos: dict, contexto: ContextoClase) -> list[str]:
+    d = _seccion(datos, "tarea")
+    fallos = _base_evaluacion("tarea", d, contexto)
+    if _indicadores_ajenos(d.get("criterios", []), contexto):
+        fallos.append("criterio alineado a un indicador ajeno a la rúbrica del momento")
+    return fallos
+
+
+def verificar_prueba_diagnostica(datos: dict, contexto: ContextoClase) -> list[str]:
+    d = _seccion(datos, "diagnostica")
+    fallos = _base_evaluacion("diagnostica", d, contexto)
+    n = len(d.get("prerrequisitos", []))
+    usados = {p.get("prerrequisito") for p in d.get("preguntas", [])}
+    if any(not isinstance(u, int) or not 1 <= u <= n for u in usados):
+        fallos.append("pregunta de un prerrequisito que no está en la lista")
+    elif len(usados) < n:
+        fallos.append("hay prerrequisitos sin pregunta")
+    for k, p in enumerate(d.get("preguntas", []), 1):
+        opciones = [normalizar(o) for o in p.get("opciones", [])]
+        if len(set(opciones)) != len(opciones):
+            fallos.append(f"la pregunta {k} repite opciones")
+    return fallos
+
+
+def verificar_guia_entrega(datos: dict, contexto: ContextoClase) -> list[str]:
+    d = _seccion(datos, "entrega")
+    fallos = _base_evaluacion("entrega", d, contexto)
+    if _indicadores_ajenos(d.get("lista_cotejo", []), contexto):
+        fallos.append("ítem alineado a un indicador ajeno a la rúbrica del momento")
+    return fallos
+
+
+def verificar_insumo_respaldo(datos: dict, contexto: ContextoClase) -> list[str]:
+    return _base_evaluacion("insumo", _seccion(datos, "insumo"), contexto)

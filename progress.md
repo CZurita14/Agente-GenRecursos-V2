@@ -42,12 +42,26 @@ Fuentes: «3. Armonización del plan de evaluación con el RRA» y «2. Plan_de_
 | V3-3 | Clasificador de actividades (rótulos y, sin rótulo, IA) | ✅ hecha |
 | V3-4 | Pesos sugeridos, suma por momento y parcial, auditor con alertas | ✅ hecha |
 | V3-5 | API y pantalla de momentos del mockup (reemplaza el menú fijo por clase) | ✅ hecha |
-| V3-6 | Herramientas nuevas: ficha de foro, guía de la práctica, guía de observación, guía de la tarea autónoma, diagnóstica, simulacro acumulativo, guía de la entrega, insumo de respaldo | ⬜ pendiente |
+| V3-6 | Herramientas nuevas: ficha de foro, guía de la práctica, guía de observación, guía de la tarea autónoma, diagnóstica, simulacro acumulativo, guía de la entrega, insumo de respaldo | ✅ hecha |
 | V3-7 | Verificación con los 4 sílabos piloto, costo medido y documentación | ⬜ pendiente |
 
 Sílabos piloto: Programación Estructurada (en línea), Electiva 2 (en línea), PPC (presencial), Electiva 5 (híbrida) — en `Desktop/SILABOS B26/`.
 
 ### Bitácora V3
+
+- **2026-11-26 · V3-6 (herramientas nuevas):**
+  - Seis herramientas de clase, de una sección, en `app/agentes/workers/evaluacion.py`. Sus esquemas están en `app/herramientas/esquemas_evaluacion.py` y sus verificadores en `verificador.py`:
+    - `guia_practica`: guía de la práctica experimental con su guía de observación (criterios observables; Logrado / En proceso / No logrado);
+    - `ficha_foro` (prompt institucional §5.3): tema, contenido de la sesión, pregunta detonante, aporte inicial con APA 7, réplicas, uso de IA y rúbrica alineada a la del momento. Los plazos sugeridos (sesión + 3 y + 6 días) y el tipo de evaluación los pone el código. El verificador aplica la §5.4: la pregunta no se responde con una definición y usa un contenido de la sesión;
+    - `guia_tarea` (§4): producto, propósito, RA, modalidad, condiciones, pasos, criterios por nivel y uso de IA;
+    - `prueba_diagnostica`: de 3 a 5 prerrequisitos y de 6 a 12 preguntas, al menos una por prerrequisito. Las respuestas van solo en la versión del docente;
+    - `guia_entrega`: qué se entrega, sobre qué se construye y qué avance nuevo se califica (§6.4), con su lista de cotejo;
+    - `insumo_respaldo` (§6.3): plantilla, proyecto base, conjunto de datos o versión de referencia para quien no completó la actividad previa.
+  - Las seis se ofrecen desde el plan de evaluación, junto a su actividad, y no en «Más herramientas» (`DEL_PLAN`).
+  - Simulacro acumulativo: el `simulacro` de cada prueba sumativa se genera sobre un rango de momentos (`M1-M2`), desde la prueba anterior hasta la suya (`rangos_acumulados`). El rango usa los contenidos y RA de todos sus momentos y la rúbrica y la política de IA del último. Se agrupa en el momento que cierra el parcial y se muestra como «Momentos 1 a 2».
+  - Prueba real con DeepSeek (Electiva 5 y Programación Estructurada): 10 herramientas, todas pasan el verificador, de US$ 0,002 a 0,006 cada una y de 10 a 19 s.
+  - E2E local con el worker real (Programación Estructurada): las 7 herramientas, incluido el simulacro `M1-M3`, se encolan desde el plan, quedan «listo», se validan y se descargan en Word y HTML. El HTML de la diagnóstica (del estudiante) no lleva clave ni repaso. Cuenta de prueba borrada.
+  - Pruebas: suite estándar del backend 1 540 pasan, 28 nuevas en `test_herramientas_evaluacion.py` (incluye el trabajo completo con el coordinador para cada herramienta); frontend 37 unitarias, 42 de navegador, tipos y build.
 
 - **2026-11-26 · V3-5 (API y pantalla):**
   - `GET /asignaturas/{aid}/plan-evaluacion` en `ServicioMomentos.plan_evaluacion` devuelve norma, bloques, actividades con su calificación, peso, instrumento y herramientas, más los totales por momento y bloque, las alertas y el estado de la IA. El dueño o editor encola la clasificación con IA si falta; el lector no.
