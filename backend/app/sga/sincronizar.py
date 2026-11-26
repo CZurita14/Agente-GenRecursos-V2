@@ -71,6 +71,20 @@ def _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir=True) -
                          clases_cambiadas=guardado["clases_cambiadas"])
 
 
+def registrar_materia(conn, correo, materia, estado: MateriaEstado) -> None:
+    """Deja la materia y el resultado de importar su sílabo en `materia_sga` (lo que lista /materias)."""
+    with conn.transaction():
+        conn.execute(
+            "insert into materia_sga (correo,id_sga,codigo_pf,paralelo,nombre,carrera,estado_sga,"
+            "estado,fallos,asignatura_id,sincronizada) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,now()) "
+            "on conflict (correo,id_sga) do update set codigo_pf=excluded.codigo_pf,"
+            "paralelo=excluded.paralelo,nombre=excluded.nombre,carrera=excluded.carrera,"
+            "estado_sga=excluded.estado_sga,estado=excluded.estado,fallos=excluded.fallos,"
+            "asignatura_id=excluded.asignatura_id,sincronizada=excluded.sincronizada",
+            (correo, materia.id_sga, materia.codigo_pf, materia.paralelo, materia.nombre,
+             materia.carrera, materia.estado, estado.estado, Jsonb(estado.fallos), estado.asignatura_id))
+
+
 def sincronizar(conn, proveedor, identidad, permiso, servicio, *, presupuesto_s: float | None = None,
                 reloj=time.monotonic) -> ResultadoSync:
     """Si el SGA no entrega la lista de materias, el error se propaga y no cambia nada.
@@ -88,16 +102,7 @@ def sincronizar(conn, proveedor, identidad, permiso, servicio, *, presupuesto_s:
     for materia in lista:
         pedir = presupuesto_s is None or reloj() - inicio < presupuesto_s
         estado = _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir)
-        with conn.transaction():
-            conn.execute(
-                "insert into materia_sga (correo,id_sga,codigo_pf,paralelo,nombre,carrera,estado_sga,"
-                "estado,fallos,asignatura_id,sincronizada) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,now()) "
-                "on conflict (correo,id_sga) do update set codigo_pf=excluded.codigo_pf,"
-                "paralelo=excluded.paralelo,nombre=excluded.nombre,carrera=excluded.carrera,"
-                "estado_sga=excluded.estado_sga,estado=excluded.estado,fallos=excluded.fallos,"
-                "asignatura_id=excluded.asignatura_id,sincronizada=excluded.sincronizada",
-                (correo, materia.id_sga, materia.codigo_pf, materia.paralelo, materia.nombre,
-                 materia.carrera, materia.estado, estado.estado, Jsonb(estado.fallos), estado.asignatura_id))
+        registrar_materia(conn, correo, materia, estado)
         resultado.append(estado)
     with conn.transaction():
         conn.execute("delete from materia_sga where correo=%s and not (id_sga = any(%s))",

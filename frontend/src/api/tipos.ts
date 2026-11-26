@@ -3,6 +3,31 @@
 export interface Usuario {
   correo: string;
   rol: string;
+  /** Etapa de pruebas: cuenta creada por un administrador (sin el SGA). */
+  cuenta_local?: boolean;
+  /** Debe cambiar la clave inicial antes de seguir. */
+  cambiar_clave?: boolean;
+  /** El servidor tiene encendidas las cuentas locales. */
+  cuentas_locales?: boolean;
+}
+
+export interface CuentaLocal {
+  correo: string;
+  nombre: string;
+  activa: boolean;
+  cambiar_clave: boolean;
+  creada: string;
+  creada_por: string;
+  ultimo_ingreso: string | null;
+  materias: number;
+}
+
+export interface SilaboImportado {
+  codigo_pf: string;
+  nombre: string;
+  estado: 'importada' | 'sin_cambios' | 'no_disponible' | 'invalida';
+  fallos: string[];
+  asignatura_id: string | null;
 }
 
 export type Rol = 'dueno' | 'editor' | 'lector';

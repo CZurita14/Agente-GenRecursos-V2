@@ -33,8 +33,13 @@ export function useSesion() {
     }
   }, []);
 
+  /** Vuelve a leer `yo()` (p. ej. después de cambiar la clave inicial). */
+  const refrescar = useCallback(async () => {
+    try { setUsuario(await yo()); } catch { setUsuario(null); }
+  }, []);
+
   /** Un 401 en cualquier vista: la sesión venció en el servidor. */
   const expirar = useCallback(() => setUsuario(null), []);
 
-  return { usuario, cargando, ingresar, ingresarPrueba, salir, expirar };
+  return { usuario, cargando, ingresar, ingresarPrueba, salir, expirar, refrescar };
 }

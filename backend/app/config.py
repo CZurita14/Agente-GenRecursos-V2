@@ -43,6 +43,10 @@ class Ajustes(BaseSettings):
     entorno: Literal["desarrollo", "produccion"] = "produccion"
     # Entrar sin autenticar contra el SGA (solo desarrollo); el ingreso normal usa el SGA.
     acceso_prueba: bool = False
+    # Etapa de pruebas: cuentas con correo institucional que crea un administrador, sin verificar el
+    # correo y sin el SGA; el docente sube el PDF de su sílabo. Prohibido en producción.
+    cuentas_locales: bool = False
+    silabo_pdf_max_bytes: int = Field(default=15 * 1024 * 1024, ge=1024, le=50 * 1024 * 1024)
     api_json_max_bytes: int = Field(default=1024 * 1024, ge=1, le=4 * 1024 * 1024)
     api_json_timeout_s: float = Field(default=30, gt=0, le=120)
     # Proveedor del SGA: "real" espera el adaptador de TI; "simulado" (solo desarrollo) lee los fixtures
@@ -112,6 +116,8 @@ class Ajustes(BaseSettings):
             raise ValueError("LLM_TLS_ESTRICTO=false solo se permite en desarrollo")
         if self.entorno == "produccion" and self.acceso_prueba:
             raise ValueError("ACCESO_PRUEBA no se permite en producción")
+        if self.entorno == "produccion" and self.cuentas_locales:
+            raise ValueError("CUENTAS_LOCALES no se permite en producción")
         if self.entorno == "produccion" and self.sga_proveedor == "simulado":
             raise ValueError("SGA_PROVEEDOR=simulado no se permite en producción")
         if self.sga_proveedor == "simulado" and (

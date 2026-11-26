@@ -4,20 +4,23 @@ from starlette.responses import JSONResponse
 
 
 class LimiteJSON:
-    def __init__(self, app, *, max_bytes: int, timeout_s: float):
+    def __init__(self, app, *, max_bytes: int, timeout_s: float, por_ruta: dict[str, int] | None = None):
         self.app, self.max_bytes, self.timeout_s = app, max_bytes, timeout_s
+        # Rutas exactas con otro tope (p. ej. el PDF del sílabo en la etapa de pruebas).
+        self.por_ruta = por_ruta or {}
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http" or scope["method"] not in {"POST", "PUT", "PATCH"}:
             await self.app(scope, receive, send)
             return
+        max_bytes = self.por_ruta.get(scope.get("path", ""), self.max_bytes)
         headers = dict(scope.get("headers", []))
         try:
             declarado = int(headers.get(b"content-length", b"0"))
         except ValueError:
             await JSONResponse({"detail": "Longitud no válida"}, status_code=400)(scope, receive, send)
             return
-        if declarado < 0 or declarado > self.max_bytes:
+        if declarado < 0 or declarado > max_bytes:
             await JSONResponse({"detail": "Solicitud demasiado grande"}, status_code=413)(scope, receive, send)
             return
         cuerpo = bytearray()
@@ -29,7 +32,7 @@ class LimiteJSON:
                         await JSONResponse({"detail": "Carga interrumpida"}, status_code=400)(scope, receive, send)
                         return
                     bloque = mensaje.get("body", b"")
-                    if len(cuerpo) + len(bloque) > self.max_bytes:
+                    if len(cuerpo) + len(bloque) > max_bytes:
                         await JSONResponse({"detail": "Solicitud demasiado grande"}, status_code=413)(scope, receive, send)
                         return
                     cuerpo.extend(bloque)

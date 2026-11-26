@@ -16,12 +16,14 @@ from app.api.admin import router as admin_router
 from app.api.consumo import router as consumo_router
 from app.api.monitor_uti import router as monitor_router
 from app.api.auth import router as auth_router
+from app.api.cuentas import router as cuentas_router
 from app.api.cuerpo import LimiteJSON
 from app.api.recursos import router as recursos_router
 from app.api.momentos import router as momentos_router
 from app.api.chat import router as chat_router
 from app.api.privacidad import router as privacidad_router
 from app.api.errores import registrar_errores
+from app.auth.cuentas import ServicioCuentas
 from app.auth.servicio import ServicioAuth
 from app.config import RAIZ, Ajustes, ajustes
 from app.db.conexion import conectar
@@ -78,7 +80,9 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         except SGAError:
             proveedor = None  # Sin SGA configurado el ingreso responde 503; /auth/prueba sigue disponible.
         app.state.auth = ServicioAuth(conexion, config.auth_secreto.get_secret_value(), proveedor,
-                                      sincronizacion_max_s=config.sga_sincronizacion_max_s)
+                                      sincronizacion_max_s=config.sga_sincronizacion_max_s,
+                                      cuentas_locales=config.cuentas_locales)
+    app.state.cuentas = ServicioCuentas(conexion)
     registrar_errores(app)
     app.include_router(auth_router)
     app.include_router(asignaturas_router)
@@ -89,9 +93,11 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
     app.include_router(consumo_router)
     app.include_router(monitor_router)
     app.include_router(privacidad_router)
+    app.include_router(cuentas_router)
     # La incorporación previa al middleware de acceso lo deja por dentro:
     # CORS → sesión/Origin → límite de cuerpo → parser JSON/rutas.
-    app.add_middleware(LimiteJSON, max_bytes=config.api_json_max_bytes, timeout_s=config.api_json_timeout_s)
+    app.add_middleware(LimiteJSON, max_bytes=config.api_json_max_bytes, timeout_s=config.api_json_timeout_s,
+                       por_ruta={"/silabos/pdf": config.silabo_pdf_max_bytes} if config.cuentas_locales else None)
 
     async def proteger(request, siguiente, ip, operacion, proxy_invalido):
         control = app.state.control

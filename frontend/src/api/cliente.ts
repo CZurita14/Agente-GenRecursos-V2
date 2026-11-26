@@ -4,7 +4,7 @@
  */
 import type {
   Ambito, AsignaturaResumen, Catalogo, Materia, MenuAsignatura, Recurso, RecursoResumen, Trabajo, TrabajoCreado,
-  TipoAmbito, Usuario, MomentoDetalle, MomentosRespuesta, ResumenDescarga,
+  TipoAmbito, Usuario, MomentoDetalle, MomentosRespuesta, ResumenDescarga, CuentaLocal, SilaboImportado,
 } from './tipos';
 
 const BASE = '/api';
@@ -63,7 +63,7 @@ export const ingresar = (usuario: string, clave: string) =>
 export const materias = () => pedir<Materia[]>('/materias');
 
 /** Si la API ofrece el acceso de prueba sin el SGA (solo en desarrollo). */
-export const modoAcceso = () => pedir<{ acceso_prueba: boolean }>('/auth/modo');
+export const modoAcceso = () => pedir<{ acceso_prueba: boolean; cuentas_locales?: boolean }>('/auth/modo');
 
 /** Sesión sin código; sin correo entra como invitado. */
 export const accesoPrueba = (correo?: string) =>
@@ -118,3 +118,24 @@ export const resumenDescarga = (aid: string) => pedir<ResumenDescarga>(`/asignat
 
 /** ZIP «docente_materia» con lo validado; la cookie viaja sola. */
 export const urlDescarga = (aid: string) => `${BASE}/asignaturas/${enc(aid)}/descarga`;
+
+/* --- Cuentas locales (etapa de pruebas): solo existen con CUENTAS_LOCALES=true en el servidor. --- */
+
+export const cuentasLocales = () => pedir<CuentaLocal[]>('/admin/cuentas');
+
+/** Alta sin verificar el correo; la API acepta solo @indoamerica.edu.ec y @uti.edu.ec (422 con el motivo). */
+export const crearCuenta = (correo: string, nombre: string, clave: string) =>
+  pedir<{ correo: string }>('/admin/cuentas', { method: 'POST', body: json({ correo, nombre, clave }) });
+
+export const restablecerClave = (correo: string, clave: string) =>
+  pedir<void>(`/admin/cuentas/${enc(correo)}/clave`, { method: 'POST', body: json({ clave }) });
+
+export const activarCuenta = (correo: string, activa: boolean) =>
+  pedir<void>(`/admin/cuentas/${enc(correo)}/estado`, { method: 'POST', body: json({ activa }) });
+
+export const cambiarClave = (actual: string, nueva: string) =>
+  pedir<void>('/auth/clave', { method: 'POST', body: json({ actual, nueva }) });
+
+/** El PDF viaja tal cual (application/pdf); la API lo lee y lo importa como una materia del SGA. */
+export const subirSilaboPdf = (archivo: File) =>
+  pedir<SilaboImportado>('/silabos/pdf', { method: 'POST', body: archivo, headers: { 'Content-Type': 'application/pdf' } });

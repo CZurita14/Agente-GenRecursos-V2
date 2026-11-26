@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, FolderOpen, Home, LogOut } from 'lucide-react';
+import { BookOpen, FolderOpen, Home, KeyRound, LogOut, Users } from 'lucide-react';
 import { AppLayout } from './components';
 import { PanelConsumo } from './components/PanelConsumo';
 import type { Ambito, Rol, TrabajoCreado } from './api/tipos';
@@ -7,6 +7,8 @@ import { useSesion } from './sesion/useSesion';
 import { Actividad } from './vistas/Actividad';
 import { Asignatura } from './vistas/Asignatura';
 import { Asignaturas } from './vistas/Asignaturas';
+import { CambiarClave } from './vistas/CambiarClave';
+import { Cuentas } from './vistas/Cuentas';
 import { Generar } from './vistas/Generar';
 import { Ingreso } from './vistas/Ingreso';
 import { Inicio } from './vistas/Inicio';
@@ -19,7 +21,7 @@ interface Curso { aid: string; nombre: string; rol: Rol }
 
 /** Ruta de la aplicación (sin router: la plantilla no trae uno). */
 type Ruta =
-  | { vista: 'inicio' } | { vista: 'generar' } | { vista: 'asignaturas' }
+  | { vista: 'inicio' } | { vista: 'generar' } | { vista: 'asignaturas' } | { vista: 'cuentas' } | { vista: 'clave' }
   | { vista: 'recursos'; aid?: string }
   | { vista: 'asignatura'; curso: Curso }
   | { vista: 'momentos'; curso: Curso }
@@ -33,12 +35,15 @@ const MENU = [
   { id: 'recursos', label: 'Mis recursos', icon: <FolderOpen aria-hidden="true" className="w-4 h-4" /> },
 ];
 
-const pestana = (r: Ruta) => r.vista === 'inicio' || r.vista === 'generar' ? 'inicio'
+const MENU_CUENTAS = { id: 'cuentas', label: 'Cuentas de prueba', icon: <Users aria-hidden="true" className="w-4 h-4" /> };
+
+const pestana = (r: Ruta) => r.vista === 'cuentas' ? 'cuentas' : r.vista === 'clave' ? 'inicio'
+  : r.vista === 'inicio' || r.vista === 'generar' ? 'inicio'
   : r.vista === 'recursos' || r.vista === 'recurso' ? 'recursos' : 'asignaturas';
 
 /** Sin sesión: ingreso. Con sesión: menú principal (opción B) y el recorrido de recursos (P6b). */
 export default function App() {
-  const { usuario, cargando, ingresar, ingresarPrueba, salir, expirar } = useSesion();
+  const { usuario, cargando, ingresar, ingresarPrueba, salir, expirar, refrescar } = useSesion();
   const [ruta, setRuta] = useState<Ruta>({ vista: 'inicio' });
 
   if (cargando) {
@@ -49,8 +54,21 @@ export default function App() {
       onIngresarPrueba={async correo => { await ingresarPrueba(correo); setRuta({ vista: 'inicio' }); }} /></AppLayout>;
   }
 
+  if (usuario.cambiar_clave) {
+    // Cuenta local con la clave inicial del administrador: no se sigue sin cambiarla.
+    return <AppLayout><CambiarClave obligatorio onListo={() => { void refrescar(); setRuta({ vista: 'inicio' }); }}
+      onSalir={salir} onSesionVencida={expirar} /></AppLayout>;
+  }
+
+  const adminCuentas = usuario.rol === 'administrador' && !!usuario.cuentas_locales;
+  const menu = adminCuentas ? [...MENU, MENU_CUENTAS] : MENU;
+
   const acciones = <div className="flex items-center gap-3 text-sm">
     <span className="text-header-muted hidden sm:inline" title="Sesión iniciada">{usuario.correo}</span>
+    {usuario.cuenta_local && <button type="button" onClick={() => setRuta({ vista: 'clave' })}
+      className="flex items-center gap-1 px-3 py-2 rounded-lg text-header-muted hover:bg-header-border hover:text-white">
+      <KeyRound aria-hidden="true" className="w-4 h-4" /><span className="hidden sm:inline">Clave</span>
+    </button>}
     <button type="button" onClick={salir}
       className="flex items-center gap-1 px-3 py-2 rounded-lg text-header-muted hover:bg-header-border hover:text-white">
       <LogOut aria-hidden="true" className="w-4 h-4" /><span>Salir</span>
@@ -61,9 +79,12 @@ export default function App() {
   // El panel de consumo muestra el proyecto formativo abierto; fuera de uno, todos los de la cuenta.
   const aidAbierto = 'curso' in ruta ? ruta.curso.aid : ruta.vista === 'recursos' ? ruta.aid : undefined;
 
-  return <AppLayout items={MENU} activeId={pestana(ruta)} onChange={id => setRuta({ vista: id } as Ruta)} actions={acciones}>
+  return <AppLayout items={menu} activeId={pestana(ruta)} onChange={id => setRuta({ vista: id } as Ruta)} actions={acciones}>
     {ruta.vista === 'inicio' && <Inicio onGenerar={() => setRuta({ vista: 'generar' })} />}
-    {ruta.vista === 'generar' && <Generar onSesionVencida={expirar}
+    {ruta.vista === 'cuentas' && adminCuentas && <Cuentas onSesionVencida={expirar} />}
+    {ruta.vista === 'clave' && <CambiarClave onListo={() => setRuta({ vista: 'inicio' })}
+      onSalir={() => setRuta({ vista: 'inicio' })} onSesionVencida={expirar} />}
+    {ruta.vista === 'generar' && <Generar cuentaLocal={!!usuario.cuenta_local} onSesionVencida={expirar}
       onAbrir={m => aMenu({ aid: m.asignatura_id, nombre: m.nombre, rol: 'dueno' })} />}
     {ruta.vista === 'asignaturas' && <Asignaturas onSesionVencida={expirar} onGenerar={() => setRuta({ vista: 'generar' })}
       onAbrir={a => aMenu({ aid: a.id, nombre: a.nombre, rol: a.rol })} />}
