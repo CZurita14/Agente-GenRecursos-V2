@@ -35,8 +35,17 @@ TLS estricto queda para el final, cuando el usuario haga las pruebas finales (de
 | V5-2 | Calidad real por herramienta: generar en los pilotos con el worker real, medir las devoluciones del revisor y el costo, ajustar los prompts | ✅ hecha (59 de 81: la cuenta de DeepSeek se quedó sin saldo) |
 | V5-3 | Revisión de seguridad de la rama (sin TLS): permisos, texto del sílabo en los prompts, escape en las exportaciones, abuso y costo del encolado masivo, secretos | ✅ hecha |
 | V5-4 | Validación completa, documentación y push | ✅ hecha |
+| V5-5 | Una sola pantalla por Proyecto Formativo: los momentos son la pantalla principal y las clases van dentro de cada momento | ✅ hecha |
 
 ### Bitácora V5
+
+- **2026-11-27 · V5-5 (pantalla única):** pedido del usuario para reducir clics.
+  - **Al entrar a un Proyecto Formativo** se abren sus momentos (`Momentos.tsx`). Ya no existe la pantalla «Paso 1 · Elige la clase» (`Asignatura.tsx` se eliminó).
+  - **En cada momento,** debajo de «Herramientas generadas», van sus clases por semana con «N recursos / sin generar»; cada una abre sus herramientas.
+  - **Arriba** quedan «Ver recursos» y «Herramientas del Proyecto Formativo»; «Volver» lleva a la lista de Proyectos Formativos.
+  - **Se recuerda el momento abierto:** al volver de una clase, de «Generando herramientas» o de un recurso se abre el mismo momento.
+  - «Mis recursos» pasa el nombre real del Proyecto Formativo, que antes aparecía como «Asignatura».
+  - Pruebas de navegador: 43 (la API simulada responde momentos, plan y resumen; dos pruebas nuevas). Verificado en la app con Electiva II.
 
 - **2026-11-27 · V5-4 (cierre):** suite estándar del backend 1 580 pasan; frontend 37 unitarias, 42 de navegador, tipos y build; `docs/plan-evaluacion.md` §8 y §9; push a `V3-SilabosPesos` (PR #4 en borrador, sin fusionar).
 

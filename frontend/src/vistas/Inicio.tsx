@@ -5,7 +5,7 @@ interface InicioProps {
   onGenerar: () => void;
 }
 
-const PASOS = ['Elige tu materia', 'Elige la clase', 'Genera y revisa'];
+const PASOS = ['Elige tu materia', 'Elige el momento o la clase', 'Genera y revisa'];
 
 /** Opción B aprobada: dos caminos lado a lado; el perfil docente se ve, pero está en espera. */
 export function Inicio({ onGenerar }: InicioProps) {

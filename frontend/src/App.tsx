@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { BookOpen, FolderOpen, Home, KeyRound, LogOut, Users } from 'lucide-react';
 import { AppLayout } from './components';
 import { PanelConsumo } from './components/PanelConsumo';
 import type { Ambito, Rol, TrabajoCreado } from './api/tipos';
 import { useSesion } from './sesion/useSesion';
 import { Actividad } from './vistas/Actividad';
-import { Asignatura } from './vistas/Asignatura';
 import { Asignaturas } from './vistas/Asignaturas';
 import { CambiarClave } from './vistas/CambiarClave';
 import { Cuentas } from './vistas/Cuentas';
@@ -23,7 +22,6 @@ interface Curso { aid: string; nombre: string; rol: Rol }
 type Ruta =
   | { vista: 'inicio' } | { vista: 'generar' } | { vista: 'asignaturas' } | { vista: 'cuentas' } | { vista: 'clave' }
   | { vista: 'recursos'; aid?: string }
-  | { vista: 'asignatura'; curso: Curso }
   | { vista: 'momentos'; curso: Curso }
   | { vista: 'actividad'; curso: Curso; ambito: Ambito; titulo: string }
   | { vista: 'progreso'; curso: Curso; creados: TrabajoCreado[] }
@@ -45,6 +43,8 @@ const pestana = (r: Ruta) => r.vista === 'cuentas' ? 'cuentas' : r.vista === 'cl
 export default function App() {
   const { usuario, cargando, ingresar, ingresarPrueba, salir, expirar, refrescar } = useSesion();
   const [ruta, setRuta] = useState<Ruta>({ vista: 'inicio' });
+  // Último momento abierto en cada Proyecto Formativo: al volver de una clase o de un recurso se abre el mismo.
+  const momentoAbierto = useRef<Record<string, number>>({});
 
   if (cargando) {
     return <AppLayout><p className="text-muted" role="status">Cargando…</p></AppLayout>;
@@ -75,7 +75,8 @@ export default function App() {
     </button>
   </div>;
 
-  const aMenu = (curso: Curso) => setRuta({ vista: 'asignatura', curso });
+  // La pantalla principal de cada Proyecto Formativo son sus momentos (con sus clases dentro).
+  const aMenu = (curso: Curso) => setRuta({ vista: 'momentos', curso });
   // El panel de consumo muestra el proyecto formativo abierto; fuera de uno, todos los de la cuenta.
   const aidAbierto = 'curso' in ruta ? ruta.curso.aid : ruta.vista === 'recursos' ? ruta.aid : undefined;
 
@@ -88,12 +89,11 @@ export default function App() {
       onAbrir={m => aMenu({ aid: m.asignatura_id, nombre: m.nombre, rol: 'dueno' })} />}
     {ruta.vista === 'asignaturas' && <Asignaturas onSesionVencida={expirar} onGenerar={() => setRuta({ vista: 'generar' })}
       onAbrir={a => aMenu({ aid: a.id, nombre: a.nombre, rol: a.rol })} />}
-    {ruta.vista === 'asignatura' && <Asignatura aid={ruta.curso.aid} nombre={ruta.curso.nombre} onSesionVencida={expirar}
-      onElegir={(ambito, titulo) => setRuta({ vista: 'actividad', curso: ruta.curso, ambito, titulo })}
+    {ruta.vista === 'momentos' && <Momentos key={ruta.curso.aid} aid={ruta.curso.aid} nombre={ruta.curso.nombre}
+      onSesionVencida={expirar} onVolver={() => setRuta({ vista: 'asignaturas' })}
+      momentoInicial={momentoAbierto.current[ruta.curso.aid]}
+      onMomento={n => { momentoAbierto.current[ruta.curso.aid] = n; }}
       onVerRecursos={() => setRuta({ vista: 'recursos', aid: ruta.curso.aid })}
-      onVerMomentos={() => setRuta({ vista: 'momentos', curso: ruta.curso })} />}
-    {ruta.vista === 'momentos' && <Momentos aid={ruta.curso.aid} nombre={ruta.curso.nombre} onSesionVencida={expirar}
-      onVolver={() => aMenu(ruta.curso)}
       onElegir={(ambito, titulo) => setRuta({ vista: 'actividad', curso: ruta.curso, ambito, titulo })}
       onAbrir={rid => setRuta({ vista: 'recurso', curso: ruta.curso, rid, volver: ruta })}
       onGenerado={creados => setRuta({ vista: 'progreso', curso: ruta.curso, creados })} />}
@@ -104,7 +104,7 @@ export default function App() {
       onVolver={() => aMenu(ruta.curso)}
       onAbrir={rid => setRuta({ vista: 'recurso', curso: ruta.curso, rid, volver: ruta })} />}
     {ruta.vista === 'recursos' && <Recursos aidInicial={ruta.aid} onSesionVencida={expirar}
-      onTrabajos={(aid, ids, rol) => setRuta({ vista: 'progreso', curso: { aid, rol, nombre: 'Asignatura' },
+      onTrabajos={(aid, ids, rol, nombre) => setRuta({ vista: 'progreso', curso: { aid, rol, nombre },
         creados: ids.map(id => ({ id, herramienta: 'recurso', estado: 'en_cola' })) })}
       onAbrir={(aid, rid, rol) => setRuta({ vista: 'recurso', curso: { aid, rol }, rid, volver: { vista: 'recursos', aid } })} />}
     {ruta.vista === 'recurso' && <Recurso key={`${ruta.curso.aid}:${ruta.rid}`} aid={ruta.curso.aid} rid={ruta.rid} puedeValidar={ruta.curso.rol !== 'lector'}

@@ -55,7 +55,7 @@ export function Progreso({ aid, creados, onAbrir, onVolver, onSesionVencida }: P
 
   return <>
     <div>
-      <Button variant="ghost" size="sm" onClick={onVolver}>← Volver al menú</Button>
+      <Button variant="ghost" size="sm" onClick={onVolver}>← Volver al Proyecto Formativo</Button>
       <h1 className="text-2xl font-bold mt-2">Generando herramientas</h1>
       <p className="text-muted mt-1">Paso 3 · La colmena está trabajando. Puedes salir: el avance queda en «Mis recursos».</p>
     </div>

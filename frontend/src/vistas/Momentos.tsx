@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
-import { BookOpenCheck, ChevronRight, Download, RefreshCw } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BookOpenCheck, CalendarDays, ChevronRight, Download, RefreshCw } from 'lucide-react';
 import { Alert, Badge, Button } from '../components';
 import {
-  ErrorApi, generar, guardarContexto, momentos as cargarMomentos, planEvaluacion, resumenDescarga, urlDescarga,
+  ErrorApi, generar, guardarContexto, menu as cargarMenu, momentos as cargarMomentos, planEvaluacion, resumenDescarga,
+  urlDescarga,
 } from '../api/cliente';
-import type { Ambito, MomentoDetalle, PlanEvaluacion, ResumenDescarga, TrabajoCreado } from '../api/tipos';
+import type { Ambito, MomentoDetalle, PlanEvaluacion, ResumenDescarga, SemanaMenu, TrabajoCreado } from '../api/tipos';
 import { NormaModalidad, PlanMomento, porcentajeMomento } from './PlanEvaluacion';
-import { fechaCorta, nombreAmbito } from '../api/herramientas';
+import { dia, fechaCorta, nombreAmbito } from '../api/herramientas';
 
 interface MomentosProps {
   aid: string;
@@ -15,14 +16,24 @@ interface MomentosProps {
   onElegir: (ambito: Ambito, titulo: string) => void;
   onAbrir: (rid: string) => void;
   onGenerado: (creados: TrabajoCreado[]) => void;
+  onVerRecursos: () => void;
   onSesionVencida: () => void;
+  /** Momento abierto al entrar (el último que usó el docente en este Proyecto Formativo). */
+  momentoInicial?: number;
+  /** Avisa qué momento abrió el docente, para volver a él al regresar de una clase o de un recurso. */
+  onMomento?: (numero: number) => void;
 }
 
 const mensaje = (e: unknown) => e instanceof ErrorApi ? e.message : 'No hay conexión con el servidor.';
 
-/** Trazabilidad M1 → M4: cada momento con su contexto (editable), su guía de estudio y sus herramientas. */
-export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado, onSesionVencida }: MomentosProps) {
+/** Pantalla principal del Proyecto Formativo: norma y plan de evaluación, y cada momento con su contexto, su guía,
+ * sus evaluaciones, sus herramientas y sus clases (todo en una pantalla, sin ir y volver). */
+export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado, onVerRecursos, onSesionVencida,
+  momentoInicial, onMomento }: MomentosProps) {
   const [lista, setLista] = useState<MomentoDetalle[] | null>(null);
+  const [semanas, setSemanas] = useState<SemanaMenu[]>([]);
+  // Solo al entrar: cambiar de pestaña no debe volver a cargar la pantalla.
+  const inicial = useRef(momentoInicial);
   const [lector, setLector] = useState(false);
   const [resumen, setResumen] = useState<ResumenDescarga | null>(null);
   const [error, setError] = useState('');
@@ -41,10 +52,17 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
       setLista(m.momentos);
       setLector(m.rol === 'lector');
       setResumen(r);
-      setAbierto(a => a ?? m.momentos[0]?.numero ?? null);
+      const elegido = m.momentos.some(x => x.numero === inicial.current) ? inicial.current : m.momentos[0]?.numero;
+      setAbierto(a => a ?? elegido ?? null);
     }).catch(e => vigente && fallo(e));
+    // Las clases por semana (antes, la pantalla «Elige la clase»); si fallan, el resto de la pantalla sigue.
+    cargarMenu(aid).then(m => vigente && setSemanas(m.menu)).catch(e => {
+      if (vigente && e instanceof ErrorApi && e.estado === 401) onSesionVencida();
+    });
     return () => { vigente = false; };
-  }, [aid, fallo]);
+  }, [aid, fallo, onSesionVencida]);
+
+  const abrir = (numero: number) => { setAbierto(numero); onMomento?.(numero); };
 
   // Plan de evaluación implícito en el sílabo; mientras la IA clasifica, se vuelve a pedir cada 5 s.
   useEffect(() => {
@@ -67,18 +85,25 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
   return <>
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div>
-        <button type="button" onClick={onVolver} className="text-sm text-muted hover:text-fg">← Volver al Proyecto Formativo</button>
+        <button type="button" onClick={onVolver} className="text-sm text-muted hover:text-fg">← Mis Proyectos Formativos</button>
         <h1 className="text-2xl font-bold mt-1">{nombre}</h1>
-        <p className="text-muted mt-1">Momentos del proyecto: contexto, guía de estudio y herramientas de cada uno.</p>
+        <p className="text-muted mt-1">Elige el momento: su plan de evaluación, sus herramientas y sus clases.</p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="secondary" onClick={onVerRecursos}>Ver recursos</Button>
+        {!lector && lista && <Button variant="secondary"
+          onClick={() => onElegir({ tipo: 'asignatura', id: 'asignatura' }, 'Todo el Proyecto Formativo')}>
+          Herramientas del Proyecto Formativo</Button>}
       </div>
     </div>
+    {lector && <Alert tone="info">Tienes acceso de lectura: puedes ver los recursos, pero no generarlos.</Alert>}
     {error && <Alert tone="danger" role="alert">{error}</Alert>}
     {!lista && !error && <p className="text-muted" role="status">Cargando los momentos…</p>}
     {plan && <NormaModalidad plan={plan} aid={aid} lector={lector} onPlan={setPlan} onError={fallo}
       onGenerado={onGenerado} />}
     {lista && <ol aria-label="Trazabilidad de momentos" className="flex flex-wrap items-center gap-2">
       {lista.map((m, i) => <li key={m.numero} className="flex items-center gap-2">
-        <button type="button" onClick={() => setAbierto(m.numero)} aria-current={abierto === m.numero}
+        <button type="button" onClick={() => abrir(m.numero)} aria-current={abierto === m.numero}
           className={`rounded-lg border px-3 py-2 text-left text-sm ${abierto === m.numero ? 'border-highlight bg-highlight-soft' : 'border-line bg-surface'}`}>
           <span className="block font-bold">Momento {m.numero}</span>
           <span className="block text-xs text-muted">{m.fase.nombre}</span>
@@ -90,7 +115,7 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
     </ol>}
     {lista?.filter(m => m.numero === abierto).map(m => <TarjetaMomento key={m.numero} aid={aid} momento={m}
       lector={lector} plan={plan} onCambio={reemplazar} onError={fallo} onElegir={onElegir} onAbrir={onAbrir}
-      onGenerado={onGenerado} />)}
+      onGenerado={onGenerado} semanas={semanas} />)}
     {resumen && <Descarga aid={aid} resumen={resumen} />}
   </>;
 }
@@ -99,10 +124,11 @@ interface TarjetaProps {
   aid: string; momento: MomentoDetalle; lector: boolean; plan: PlanEvaluacion | null;
   onCambio: (m: MomentoDetalle) => void; onError: (e: unknown) => void;
   onElegir: (ambito: Ambito, titulo: string) => void; onAbrir: (rid: string) => void;
-  onGenerado: (creados: TrabajoCreado[]) => void;
+  onGenerado: (creados: TrabajoCreado[]) => void; semanas: SemanaMenu[];
 }
 
-function TarjetaMomento({ aid, momento: m, lector, plan, onCambio, onError, onElegir, onAbrir, onGenerado }: TarjetaProps) {
+function TarjetaMomento({ aid, momento: m, lector, plan, onCambio, onError, onElegir, onAbrir, onGenerado,
+  semanas }: TarjetaProps) {
   const [texto, setTexto] = useState(m.contexto_docente?.texto ?? '');
   const [guardando, setGuardando] = useState(false);
   const [aviso, setAviso] = useState<{ tono: 'success' | 'danger'; texto: string } | null>(null);
@@ -223,7 +249,51 @@ function TarjetaMomento({ aid, momento: m, lector, plan, onCambio, onError, onEl
           </span>
         </li>)}</ul>}
     </div>
+
+    <ClasesMomento momento={m} semanas={semanas} lector={lector} onElegir={onElegir} />
   </section>;
+}
+
+/** Las clases del momento por semana; cada una abre sus herramientas (antes, una pantalla aparte). */
+function ClasesMomento({ momento: m, semanas, lector, onElegir }: { momento: MomentoDetalle; semanas: SemanaMenu[];
+  lector: boolean; onElegir: (ambito: Ambito, titulo: string) => void }) {
+  const propias = semanas.map(s => ({ ...s, clases: s.clases.filter(c => c.momento === m.numero) }))
+    .filter(s => s.clases.length > 0);
+  if (propias.length === 0) return null;
+  const cuenta = (claseId: string) => m.recursos.filter(r => r.ambito_id === claseId).length;
+  return <div className="space-y-3 border-t border-line pt-4">
+    <div>
+      <h3 className="font-bold">Clases del momento</h3>
+      <p className="text-sm text-muted">{lector ? 'Las clases del momento y sus herramientas generadas.'
+        : 'Elige una clase para preparar sus herramientas.'}</p>
+    </div>
+    {propias.map(semana => <section key={semana.numero} aria-labelledby={`semana-${m.numero}-${semana.numero}`}
+      className="space-y-2">
+      <h4 id={`semana-${m.numero}-${semana.numero}`}
+        className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-action-ink">
+        <CalendarDays aria-hidden="true" className="w-4 h-4" />
+        Semana {semana.numero} · {fechaCorta(semana.inicio)} – {fechaCorta(semana.fin)}
+      </h4>
+      <div className="grid gap-2 md:grid-cols-2">
+        {semana.clases.map(clase => {
+          const n = cuenta(clase.clase_id);
+          return <button key={clase.clase_id} type="button" disabled={lector}
+            onClick={() => onElegir({ tipo: 'clase', id: clase.clase_id },
+              `Clase ${clase.numero_clase} · ${nombreAmbito(clase.clase_id)}`)}
+            className="text-left rounded-lg border border-line p-3 hover:border-highlight focus-visible:border-highlight disabled:cursor-default">
+            <span className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-bold text-sm">{dia(clase.dia)} {fechaCorta(clase.fecha)} · Clase {clase.numero_clase}</span>
+              {n ? <Badge tone="success">{n} {n === 1 ? 'recurso' : 'recursos'}</Badge>
+                : <Badge tone="neutral">sin generar</Badge>}
+            </span>
+            <span className="block text-sm mt-1">{clase.contenidos.join(' · ')}</span>
+            {clase.entregables.length > 0 && <span className="block text-xs text-muted mt-1">
+              Entregables: {clase.entregables.join(', ')}</span>}
+          </button>;
+        })}
+      </div>
+    </section>)}
+  </div>;
 }
 
 function Descarga({ aid, resumen }: { aid: string; resumen: ResumenDescarga }) {
