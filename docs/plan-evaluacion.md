@@ -149,7 +149,52 @@ Lo que completa el docente va entre corchetes; nunca se copia texto del sílabo.
 - **Guardado:** tabla `pesos_docente`, una fila por versión del sílabo (huella). Si el sílabo cambia, vuelven los sugeridos y la pantalla pide confirmar de nuevo.
 - **Pantalla:** editor por calificación, con su suma frente al % de la norma. «Confirmar pesos» se activa solo cuando todo cuadra.
 
-## 8. Pendiente
+## 8. Preparar el parcial (V5-1)
+
+En la tarjeta de la norma, «Preparar de una vez» muestra un botón por bloque: Parcial 1, Parcial 2, o el bloque único.
+
+- **Vista previa** (`GET /asignaturas/{aid}/plan-evaluacion/lote?bloque=N`, no encola nada):
+  - las herramientas de las evaluaciones del bloque que aún no existen ni están en curso;
+  - cuántas usan IA;
+  - el **costo estimado** en horario de descuento y en horario normal (`app/evaluacion/costos.py`, calibrado con la medición real de V5-2: US$ 0,009 por herramienta de una sección y US$ 0,010 por pregunta de cuestionario o simulacro en horario de descuento; 0 sin IA).
+- **Encolar** (`POST …/lote` con `{bloque}`):
+  - el servidor recalcula el lote; nunca usa una lista enviada por el navegador;
+  - lo encola por la misma vía que cada botón: permisos de edición, §9.4 y deduplicación;
+  - como máximo 40 herramientas por vez (`MAX_LOTE`);
+  - un solo «Preparar» a la vez por asignatura (candado de la base, 409 si hay otro en curso).
+- **Lo ya generado o en curso no se repite.** Por ejemplo, en Programación Estructurada salen 23 herramientas (17 con IA), estimadas en US$ 0,33.
+
+### Calidad y costo reales (V5-2)
+
+Se prepararon con el botón todos los bloques de los 4 pilotos: 81 trabajos, en horario normal de DeepSeek.
+
+| Herramienta | Listas / completadas | Devueltas y corregidas | US$ por herramienta (horario normal) | Tiempo |
+|---|---|---|---|---|
+| Ficha del foro, guía de la tarea, prueba diagnóstica, guía de la práctica, guía de la entrega, insumo de respaldo | 18 / 18 | 1 (guía de la práctica) | 0,013 a 0,020 (insumo 0,039) | 30 a 145 s |
+| Práctica guiada, tarjetas, repaso, estudio de caso, guía del producto final | 11 / 11 | 0 | 0,012 a 0,018 | 20 a 55 s |
+| Cuestionario y simulacro de 12 preguntas | 4 / 5 | 6 | ≈ 0,22 | 12 a 15 min |
+| Herramientas sin IA (rúbricas, listas, autoevaluaciones) | 22 / 22 | — | 0 | al instante |
+
+- **Herramientas nuevas:** todas las que terminaron quedaron listas. Un cuestionario quedó en «requiere revisión»: el revisor agotó dos veces su tope de 7 000 tokens razonando (el 4 % de las revisiones lo agota). **Corregido:** tras un corte por longitud, el reintento tiene el doble de espacio.
+- **Saldo de DeepSeek:** a las 03:42 UTC la cuenta se quedó sin saldo (402 «Insufficient Balance») y los 22 trabajos que quedaban terminaron en error en un minuto. **Corregido:** un 402 o un 429 ya no hace fallar el trabajo; lo pone en espera y se reanuda solo cuando el proveedor vuelve a aceptar. Los 22 se vuelven a ofrecer con «Preparar» cuando haya saldo.
+- **Costo:** la estimación previa de los cuestionarios (US$ 0,08, medida con 6 preguntas) era baja para 12 preguntas, así que ahora el estimador cuenta por pregunta. Gasto total de la medición: US$ 2,10.
+
+## 9. Seguridad de la rama (V5-3)
+
+Revisión de la superficie nueva de V3 a V5, sin TLS: TLS estricto se activa al final, con el certificado institucional, en las pruebas finales.
+
+| Tema | Estado |
+|---|---|
+| Permisos | Todas las rutas nuevas pasan por `exigir_acceso`. Confirmar pesos, restaurarlos y encolar un lote exigen edición; el lector solo consulta. Los pedidos que modifican exigen el `Origin` permitido (CSRF). |
+| SQL | Todas las consultas nuevas usan parámetros. |
+| Texto del sílabo en los prompts | Va como dato y en una sola línea. En la clasificación con IA se quitan el separador y «id=», así que una celda no puede imitar otra actividad (corregido). La salida solo admite tipos de la lista cerrada y claves conocidas. Las indicaciones del insumo de respaldo salen de un vocabulario fijo, no del texto libre. |
+| Pesos del docente | Solo números finitos entre 0 y 100, claves de 120 caracteres como máximo y 400 claves como máximo. Antes, `NaN` (que el JSON de Python acepta) pasaba la validación y terminaba en 503 (corregido). El servidor vuelve a validar que cada calificación sume su %. |
+| Encolado masivo | Lote recalculado en el servidor, tope de 40, sin repetir lo existente, un «Preparar» a la vez por asignatura (antes un doble clic podía duplicar las herramientas con indicaciones; corregido). |
+| Exportaciones | El HTML escapa todo texto. El HTML de la diagnóstica, que es la versión del estudiante, no lleva la clave. El frontend no usa `innerHTML`. |
+| Secretos | Ninguna clave en el diff de la rama ni archivos `.env` versionados; el worker filtra las cabeceras de autorización en su registro. |
+| Riesgo aceptado | Abrir el plan como dueño o editor encola, una sola vez por versión del sílabo, la clasificación con IA (US$ 0,0001 a 0,005). La cookie es `SameSite=Lax`, así que una navegación desde otro sitio podría dispararla; es idempotente y casi sin costo. |
+
+## 10. Pendiente
 
 - Confirmar el promedio 50/50 de los parciales presenciales.
 - Definir la norma semipresencial (híbrida).

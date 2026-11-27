@@ -4,6 +4,7 @@ Cada calificación del RRA se reparte en partes iguales entre sus actividades de
 bloque único); cada bloque suma 100. En presencial la nota final es el promedio de los dos parciales (supuesto
 por confirmar con la institución). Las alertas nombran sesiones y calificaciones, nunca texto del sílabo.
 """
+import math
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -219,7 +220,8 @@ def validar_ajustes(actividades: list[Actividad], norma: Norma | None, bloques: 
         errores.append(f"Actividades que no están en el plan: {', '.join(extra)}.")
     if falta := sorted(conocidas - set(ajustes)):
         errores.append(f"Faltan los pesos de: {', '.join(falta)}.")
-    if any(not isinstance(v, (int, float)) or isinstance(v, bool) or v < 0 or v > 100 for v in ajustes.values()):
+    if any(not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or v < 0 or v > 100
+           for v in ajustes.values()):
         errores.append("Cada peso es un número entre 0 y 100.")
         return errores
     nombre_bloque = {b.numero: b.nombre for b in bloques}

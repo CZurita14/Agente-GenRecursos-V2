@@ -183,3 +183,19 @@ def test_length_con_json_completo_reintenta(ctx, monkeypatch, ficha, recupera):
     if not recupera:
         assert r.motivo == "revisor sin veredicto"
     assert len(cliente.llamadas) == 2
+
+
+def test_si_el_razonamiento_agota_la_salida_el_reintento_tiene_el_doble(ctx):
+    """V5-2: el 4 % de las revisiones reales se cortó por longitud; repetir con el mismo tope volvía a cortarse."""
+    from app.agentes.revisor import MAX_SALIDA_REVISOR
+    from app.llm.cliente import Respuesta
+
+    class Cortado(ClienteSimulado):
+        def completar(self, mensajes, **kw):
+            r = super().completar(mensajes, **kw)
+            return Respuesta("", "pensando…", 1, kw["max_tokens"], 0.0, "length") if len(self.llamadas) == 1 else r
+
+    cliente = Cortado({"revisor": [_veredicto([2]), _veredicto([2])]})
+    [resultado] = _revisar(ctx, cliente, [_item(ctx)])
+    assert [ll["max_tokens"] for ll in cliente.llamadas] == [MAX_SALIDA_REVISOR, 2 * MAX_SALIDA_REVISOR]
+    assert resultado.revisor == "ok"

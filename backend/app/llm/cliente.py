@@ -54,7 +54,12 @@ class Respuesta:
 
 
 class ServidorNoDisponible(Exception):
-    """El servidor no responde (red o 5xx) tras el reintento."""
+    """El servidor no responde (red o 5xx) tras el reintento, o rechaza por saldo o límite (402, 429)."""
+
+
+# Rechazos del proveedor que no dependen del trabajo: se espera y se reintenta en lugar de fallar.
+ESPERAR_EN = {402: "sin saldo en la cuenta del proveedor de IA (402)",
+              429: "límite de peticiones del proveedor de IA (429)"}
 
 
 class ErrorDelServidor(Exception):
@@ -213,6 +218,13 @@ class ClienteVLLM:
                 return self._sdk.chat.completions.create(**argumentos)
             except (openai.APIConnectionError, openai.InternalServerError) as error:
                 ultimo = error
+            except openai.APIStatusError as error:
+                # Sin saldo (402) o límite de peticiones (429): no es culpa del trabajo. Se pone en espera y se
+                # reanuda solo cuando el proveedor vuelva a aceptar; antes cada trabajo terminaba en error (V5-2).
+                if error.status_code in ESPERAR_EN:
+                    registro.warning("el proveedor de IA rechazó la llamada: %s", ESPERAR_EN[error.status_code])
+                    raise ServidorNoDisponible(ESPERAR_EN[error.status_code]) from None
+                raise
         raise ServidorNoDisponible(f"el servidor de IA no responde: {ultimo}") from ultimo
 
 

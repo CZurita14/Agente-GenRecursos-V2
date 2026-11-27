@@ -18,6 +18,56 @@ Estados: `⬜ pendiente` · `🔄 en curso` · `🔁 devuelta (ronda n)` · `✅
 
 ---
 
+## Bloque V5 — preparar el parcial, calidad real y seguridad
+
+**Objetivo:**
+- que el docente prepare de una vez las herramientas de un parcial, sabiendo antes cuánto cuesta;
+- medir con el worker real la calidad de cada herramienta y ajustar donde falle;
+- revisar la seguridad de toda la rama antes de fusionarla.
+
+TLS estricto queda para el final, cuando el usuario haga las pruebas finales (decisión del 2026-11-27). Se trabaja en `V3-SilabosPesos` (PR #4 en borrador).
+
+### Tablero V5
+
+| # | Tarea | Estado |
+|---|---|---|
+| V5-1 | Generar por parcial: un botón por bloque que encola las herramientas de sus evaluaciones, con el costo estimado antes de confirmar | ✅ hecha |
+| V5-2 | Calidad real por herramienta: generar en los pilotos con el worker real, medir las devoluciones del revisor y el costo, ajustar los prompts | ✅ hecha (59 de 81: la cuenta de DeepSeek se quedó sin saldo) |
+| V5-3 | Revisión de seguridad de la rama (sin TLS): permisos, texto del sílabo en los prompts, escape en las exportaciones, abuso y costo del encolado masivo, secretos | ✅ hecha |
+| V5-4 | Validación completa, documentación y push | ✅ hecha |
+
+### Bitácora V5
+
+- **2026-11-27 · V5-4 (cierre):** suite estándar del backend 1 580 pasan; frontend 37 unitarias, 42 de navegador, tipos y build; `docs/plan-evaluacion.md` §8 y §9; push a `V3-SilabosPesos` (PR #4 en borrador, sin fusionar).
+
+- **2026-11-27 · V5-2 (calidad real):** «Preparar» en todos los bloques de los 4 pilotos, con la cuenta local `prueba.v5`: 81 trabajos y US$ 2,10, en horario normal.
+  - **Resultados:**
+    - las 29 herramientas de una sección que terminaron quedaron listas (1 devuelta y corregida en la revisión);
+    - cuestionario y simulacro: 4 de 5 listos, unos US$ 0,22 y entre 12 y 15 minutos con 12 preguntas;
+    - sin IA: 22 de 22.
+  - **Corte por saldo:** a las 03:42 UTC DeepSeek respondió 402 «Insufficient Balance» (saldo de US$ 0,15) y los 22 trabajos restantes terminaron en error en un minuto.
+  - **Corregido:**
+    - `ClienteVLLM._pedir` convierte un 402 o un 429 en `ServidorNoDisponible`, así que el trabajo queda en espera con backoff y se reanuda solo;
+    - el revisor reintenta con el doble de salida cuando el razonamiento agota los 7 000 tokens (5 de 123 revisiones);
+    - `costos.py` se recalibró con lo medido, contando las preguntas en los cuestionarios.
+  - **Pendiente del usuario:** recargar DeepSeek. Después, «Preparar» vuelve a ofrecer los 22 trabajos que faltaron. La cuenta de prueba sigue creada para eso.
+
+- **2026-11-27 · V5-3 (seguridad, sin TLS):** revisión de la superficie nueva de V3 a V5; el detalle está en `docs/plan-evaluacion.md` §9.
+  - **Corregido:**
+    - `PUT /plan-evaluacion/pesos` aceptaba `NaN`, que esquivaba la validación y terminaba en 503. Ahora el modelo exige números finitos entre 0 y 100 y claves acotadas, y `validar_ajustes` vuelve a comprobarlo.
+    - Dos «Preparar» simultáneos podían duplicar las herramientas con indicaciones. Ahora hay un candado de la base por asignatura (409).
+    - En la clasificación con IA, una celda del sílabo podía imitar otra actividad en el prompt. Ahora el texto va en una línea, sin `|` ni «id=», y con un aviso de que es dato.
+  - **Sin hallazgos:** permisos, SQL parametrizado, escape del HTML, `innerHTML` y secretos en el diff.
+  - **Riesgo aceptado y documentado:** la clasificación que dispara un GET, que es idempotente y casi sin costo.
+  - Pruebas nuevas en `test_evaluacion_servicio.py` y `test_evaluacion_pesos.py`.
+- **2026-11-27 · V5-1 (preparar el parcial):**
+  - `GET` y `POST /plan-evaluacion/lote`, con `ServicioMomentos.lote_parcial` y `preparar_parcial`. El lote sale del mismo plan, así que respeta §9.4, los requisitos y las dependencias; omite lo ya generado o en curso; el tope es de 40.
+  - `app/evaluacion/costos.py` da el costo estimado: US$ 0,011 por herramienta de una sección, US$ 0,08 por cuestionario o simulacro y 0 sin IA; el horario normal es ×1,81.
+  - **Pantalla:** «Preparar de una vez» por bloque, con la vista previa (cuántas, cuántas con IA, costo estimado y lista) antes de encolar.
+  - **Verificado en la app:** Programación Estructurada, 23 herramientas (17 con IA), estimadas en US$ 0,33, encoladas y abiertas en «Generando herramientas».
+
+---
+
 ## Bloque V4 — el plan de evaluación, accionable
 
 **Objetivo:** que el plan implícito en el sílabo sea más útil para el docente. Revisar a la vista la pantalla de la V3; detectar la cadena de dependencias entre sesiones (prompt institucional §6); explicar cómo corregir cada alerta; y que el docente confirme o ajuste los pesos sugeridos. Se trabaja en la rama `V3-SilabosPesos` (PR #4 en borrador, sin fusionar con `main` hasta el final). Tareas elegidas por el usuario el 2026-11-26.

@@ -4,8 +4,7 @@
  */
 import type {
   Ambito, AsignaturaResumen, Catalogo, Materia, MenuAsignatura, Recurso, RecursoResumen, Trabajo, TrabajoCreado,
-  TipoAmbito, Usuario, MomentoDetalle, MomentosRespuesta, ResumenDescarga, CuentaLocal, SilaboImportado, PlanEvaluacion,
-} from './tipos';
+  TipoAmbito, Usuario, MomentoDetalle, MomentosRespuesta, ResumenDescarga, CuentaLocal, SilaboImportado, PlanEvaluacion, LoteParcial } from './tipos';
 
 const BASE = '/api';
 
@@ -115,6 +114,15 @@ export const planEvaluacion = (aid: string) => pedir<PlanEvaluacion>(`/asignatur
 /** V4-4: confirma o ajusta los pesos (422 con el motivo si una calificación no suma su % de la norma). */
 export const guardarPesos = (aid: string, pesos: Record<string, number>) =>
   pedir<PlanEvaluacion>(`/asignaturas/${enc(aid)}/plan-evaluacion/pesos`, { method: 'PUT', body: json({ pesos }) });
+
+/** V5-1: vista previa del lote de un bloque (no encola nada). */
+export const loteParcial = (aid: string, bloque: number) =>
+  pedir<LoteParcial>(`/asignaturas/${enc(aid)}/plan-evaluacion/lote?bloque=${bloque}`);
+
+/** V5-1: encola el lote del bloque; el servidor lo recalcula, no usa la lista del navegador. */
+export const prepararParcial = (aid: string, bloque: number) =>
+  pedir<{ trabajos: TrabajoCreado[]; costo_usd: number }>(`/asignaturas/${enc(aid)}/plan-evaluacion/lote`,
+    { method: 'POST', body: json({ bloque }) });
 
 /** Vuelve a los pesos sugeridos para la versión actual del sílabo. */
 export const restaurarPesos = (aid: string) =>

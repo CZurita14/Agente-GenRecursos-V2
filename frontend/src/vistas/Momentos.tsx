@@ -74,7 +74,8 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
     </div>
     {error && <Alert tone="danger" role="alert">{error}</Alert>}
     {!lista && !error && <p className="text-muted" role="status">Cargando los momentos…</p>}
-    {plan && <NormaModalidad plan={plan} aid={aid} lector={lector} onPlan={setPlan} onError={fallo} />}
+    {plan && <NormaModalidad plan={plan} aid={aid} lector={lector} onPlan={setPlan} onError={fallo}
+      onGenerado={onGenerado} />}
     {lista && <ol aria-label="Trazabilidad de momentos" className="flex flex-wrap items-center gap-2">
       {lista.map((m, i) => <li key={m.numero} className="flex items-center gap-2">
         <button type="button" onClick={() => setAbierto(m.numero)} aria-current={abierto === m.numero}

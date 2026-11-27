@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { AlertTriangle, CheckCircle2, Lightbulb, Link2, Sparkles } from 'lucide-react';
 import { Alert, Badge } from '../components';
-import { ErrorApi, generar, guardarPesos, restaurarPesos } from '../api/cliente';
-import type { ActividadPlan, PlanEvaluacion as Plan, TrabajoCreado } from '../api/tipos';
+import { ErrorApi, generar, guardarPesos, loteParcial, prepararParcial, restaurarPesos } from '../api/cliente';
+import type { ActividadPlan, LoteParcial, PlanEvaluacion as Plan, TrabajoCreado } from '../api/tipos';
 import { fechaCorta, legible, nombreAmbito, nombreHerramienta } from '../api/herramientas';
 
 /** Calificaciones del RRA en el orden de la norma, con su color de la barra. */
@@ -39,10 +39,11 @@ export const porcentajeMomento = (n: number) => `${n.toLocaleString('es-EC', { m
 
 interface NormaProps {
   plan: Plan; aid?: string; lector?: boolean; onPlan?: (p: Plan) => void; onError?: (e: unknown) => void;
+  onGenerado?: (creados: TrabajoCreado[]) => void;
 }
 
 /** Norma del RRA de la modalidad, bloques de calificación y alertas del plan implícito en el sílabo. */
-export function NormaModalidad({ plan, aid, lector = true, onPlan, onError }: NormaProps) {
+export function NormaModalidad({ plan, aid, lector = true, onPlan, onError, onGenerado }: NormaProps) {
   const { norma } = plan;
   const cumple = !!norma && norma.estado === 'definida' && plan.alertas.length === 0;
   return <section aria-labelledby="norma" className="bg-surface rounded-xl border border-line p-5 space-y-3">
@@ -90,10 +91,73 @@ export function NormaModalidad({ plan, aid, lector = true, onPlan, onError }: No
       revisa y confirma de nuevo los pesos.</p>}
     {!lector && aid && onPlan && (plan.grupos?.length ?? 0) > 0 &&
       <AjustePesos plan={plan} aid={aid} onPlan={onPlan} onError={onError} />}
+    {!lector && aid && onGenerado && <PrepararParcial plan={plan} aid={aid} onGenerado={onGenerado} onError={onError} />}
   </section>;
 }
 
 const redondear = (n: number) => Math.round(n * 100) / 100;
+const dolares = (n: number) => `US$ ${n.toLocaleString('es-EC', { minimumFractionDigits: 2, maximumFractionDigits: 3 })}`;
+
+/** V5-1: encola de una vez las herramientas de las evaluaciones de un bloque, mostrando antes cuánto cuesta. */
+function PrepararParcial({ plan, aid, onGenerado, onError }: { plan: Plan; aid: string;
+  onGenerado: (creados: TrabajoCreado[]) => void; onError?: (e: unknown) => void }) {
+  const [lote, setLote] = useState<LoteParcial | null>(null);
+  const [ocupado, setOcupado] = useState(false);
+  const [aviso, setAviso] = useState('');
+  const bloques = plan.bloques.length ? plan.bloques : [{ numero: 1, nombre: 'todo el periodo' }];
+
+  const atender = (e: unknown) => {
+    if (e instanceof ErrorApi && e.estado === 401) return onError?.(e);
+    setAviso(e instanceof ErrorApi ? e.message : 'No hay conexión con el servidor.');
+  };
+  const ver = async (bloque: number) => {
+    setOcupado(true); setAviso('');
+    try { setLote(await loteParcial(aid, bloque)); } catch (e) { atender(e); } finally { setOcupado(false); }
+  };
+  const encolar = async () => {
+    if (!lote) return;
+    setOcupado(true); setAviso('');
+    try { onGenerado((await prepararParcial(aid, lote.bloque)).trabajos); setLote(null); }
+    catch (e) { atender(e); } finally { setOcupado(false); }
+  };
+
+  return <div className="space-y-2 border-t border-line pt-3">
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-sm font-bold">Preparar de una vez:</span>
+      {bloques.map(b => <button key={b.numero} type="button" disabled={ocupado} onClick={() => ver(b.numero)}
+        className="inline-flex items-center gap-1 rounded-lg border border-line px-3 py-1.5 text-sm hover:bg-app-soft disabled:opacity-60">
+        <Sparkles aria-hidden="true" className="w-3.5 h-3.5 text-action-ink" />{b.nombre}</button>)}
+    </div>
+    {lote && <div className="space-y-2 rounded-lg border border-line p-3" role="group" aria-label={`Preparar ${lote.nombre}`}>
+      {lote.herramientas.length === 0
+        ? <p className="text-sm">Todas las herramientas de {lote.nombre} ya están generadas o en curso
+            ({lote.ya_generadas}).</p>
+        : <>
+          <p className="text-sm">Se encolan <b>{lote.herramientas.length}</b> herramientas de {lote.nombre}{' '}
+            ({lote.con_ia} con IA). Costo estimado: <b>{dolares(lote.costo_usd)}</b> en horario de descuento,
+            hasta {dolares(lote.costo_usd_horario_normal)} en horario normal.</p>
+          {lote.ya_generadas > 0 && <p className="text-xs text-muted">{lote.ya_generadas} ya están generadas o en curso y
+            no se repiten.</p>}
+          {lote.fuera_del_tope > 0 && <p className="text-xs text-warning">Hay {lote.fuera_del_tope} más; se encolan
+            como máximo {lote.herramientas.length} por vez. Vuelve a preparar el bloque cuando terminen.</p>}
+          <ul className="max-h-48 overflow-y-auto text-sm divide-y divide-line">{lote.herramientas.map(h =>
+            <li key={`${h.herramienta}-${h.ambito.id}`} className="py-1 flex justify-between gap-2">
+              <span>{nombreHerramienta(h.herramienta)} <span className="text-muted">· {nombreAmbito(h.ambito.id)}</span></span>
+              <span className="text-muted">{h.costo_usd ? dolares(h.costo_usd) : 'sin IA'}</span>
+            </li>)}</ul>
+        </>}
+      {aviso && <Alert tone="danger" role="alert">{aviso}</Alert>}
+      <div className="flex flex-wrap gap-2">
+        {lote.herramientas.length > 0 && <button type="button" disabled={ocupado} onClick={encolar}
+          className="rounded-lg bg-action px-3 py-1.5 text-sm text-white disabled:opacity-60">
+          {ocupado ? 'Encolando…' : `Encolar ${lote.herramientas.length} herramientas`}</button>}
+        <button type="button" onClick={() => setLote(null)}
+          className="rounded-lg px-3 py-1.5 text-sm text-muted hover:bg-app-soft">Cerrar</button>
+      </div>
+    </div>}
+    {!lote && aviso && <Alert tone="danger" role="alert">{aviso}</Alert>}
+  </div>;
+}
 
 /** V4-4: el docente reparte el peso entre las actividades de una misma calificación; cada una conserva su % de la norma. */
 function AjustePesos({ plan, aid, onPlan, onError }: { plan: Plan; aid: string; onPlan: (p: Plan) => void;

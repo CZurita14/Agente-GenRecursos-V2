@@ -403,3 +403,20 @@ def test_vllm_local_no_tiene_costo():
     c, _ = _cliente(_normal(), registros)
     _completar(c)
     assert (registros[0]["modelo"], registros[0]["tokens_cache"], registros[0]["costo_usd"]) == ("m", 0, None)
+
+
+@pytest.mark.parametrize("codigo,motivo", [(402, "sin saldo"), (429, "límite de peticiones")])
+def test_sin_saldo_o_limite_pone_en_espera_en_lugar_de_fallar(codigo, motivo):
+    """402 y 429 no dependen del trabajo: el worker lo pone en espera y se reanuda solo (V5-2)."""
+    llamadas = []
+
+    def manejador(p):
+        if p.url.path.endswith("/tokenize"):
+            return httpx.Response(200, json={"count": 100})
+        llamadas.append(1)
+        return httpx.Response(codigo, json={"error": {"message": "Insufficient Balance"}})
+    registros = []
+    c, _ = _cliente(manejador, registros)
+    with pytest.raises(ServidorNoDisponible, match=motivo):
+        _completar(c)
+    assert len(llamadas) == 1 and registros[-1]["ok"] is False

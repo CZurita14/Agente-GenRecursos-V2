@@ -1,9 +1,10 @@
 """Rutas de momentos: trazabilidad, contexto del docente y descarga del perfil docente."""
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Path, Request
+from fastapi import APIRouter, Path, Query, Request
 from fastapi.responses import Response
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StringConstraints
 
 from app.exportar.html import cabecera_descarga
 
@@ -29,14 +30,33 @@ def plan_evaluacion(asig: UUID, request: Request):
 
 class PesosDocente(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    # {"M2-S3/practico/practica_experimental": 7.5, …}: % de cada actividad dentro de su bloque.
-    pesos: dict[str, float] = Field(max_length=400)
+    # {"M2-S3/practico/practica_experimental": 7.5, …}: % de cada actividad dentro de su bloque. Solo números
+    # finitos (el JSON de Python acepta NaN e Infinity, que esquivarían las comparaciones) y claves acotadas.
+    pesos: dict[Annotated[str, StringConstraints(max_length=120)],
+                Annotated[float, Field(ge=0, le=100, allow_inf_nan=False)]] = Field(max_length=400)
 
 
 @router.put("/plan-evaluacion/pesos")
 def guardar_pesos(asig: UUID, datos: PesosDocente, request: Request):
     """El docente confirma o ajusta los pesos dentro de cada calificación (V4-4); devuelve el plan actualizado."""
     return request.app.state.momentos.guardar_pesos(asig, request.state.usuario, datos.pesos)
+
+
+class Parcial(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    bloque: StrictInt = Field(ge=1, le=10)
+
+
+@router.get("/plan-evaluacion/lote")
+def lote_parcial(asig: UUID, request: Request, bloque: int = Query(1, ge=1, le=10)):
+    """V5-1: herramientas que «Preparar el parcial» encolaría y su costo estimado (no encola nada)."""
+    return request.app.state.momentos.lote_parcial(asig, request.state.usuario, bloque)
+
+
+@router.post("/plan-evaluacion/lote", status_code=202)
+def preparar_parcial(asig: UUID, datos: Parcial, request: Request):
+    """V5-1: encola las herramientas de las evaluaciones del bloque (recalculadas en el servidor)."""
+    return request.app.state.momentos.preparar_parcial(asig, request.state.usuario, datos.bloque)
 
 
 @router.delete("/plan-evaluacion/pesos")

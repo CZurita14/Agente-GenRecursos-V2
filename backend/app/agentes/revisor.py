@@ -106,12 +106,16 @@ def _consultar(cliente: ClienteLLM, contexto: ContextoClase, pedido: str, modelo
         contexto_max=limite_contexto(cliente),
     )
     timeout = timeout_s if timeout_s is not None else ajustes().llm_timeout_revisor_s
+    salida = MAX_SALIDA_REVISOR
     for _ in range(INTENTOS):
         respuesta = cliente.completar(
-            mensajes, rol="revisor", esquema=None, temperatura=0, max_tokens=MAX_SALIDA_REVISOR,
+            mensajes, rol="revisor", esquema=None, temperatura=0, max_tokens=salida,
             pensar=True, trabajo_id=trabajo_id, asignatura_id=asignatura_id, timeout_s=timeout,
         )
         if respuesta.finish_reason == "length":
+            # El razonamiento agotó la salida (4 % de las revisiones en los pilotos, V5-2): repetir con el mismo
+            # tope suele cortarse otra vez, así que el reintento tiene el doble de espacio.
+            salida = MAX_SALIDA_REVISOR * 2
             continue
         try:
             return modelo.model_validate(ultimo_json(respuesta.texto))

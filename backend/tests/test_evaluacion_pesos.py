@@ -154,6 +154,7 @@ def test_el_docente_reparte_dentro_de_cada_calificacion():
     (lambda aj, a, b: aj.pop(a), "Faltan los pesos de"),
     (lambda aj, a, b: aj.update({"M9-S9/docente/foro": 1.0}), "no están en el plan"),
     (lambda aj, a, b: aj.update({a: -1.0, b: 21.0}), "entre 0 y 100"),
+    (lambda aj, a, b: aj.update({a: float("nan")}), "entre 0 y 100"),
 ])
 def test_un_reparto_que_rompe_la_norma_se_rechaza(cambio, error):
     from app.evaluacion.pesos import clave, grupos, validar_ajustes

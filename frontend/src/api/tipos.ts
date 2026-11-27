@@ -212,6 +212,13 @@ export interface ActividadPlan {
   herramientas: { herramienta: string; ambito: Ambito; instrucciones?: string }[];
 }
 
+/** V5-1: lo que «Preparar el parcial» encolaría, con su costo estimado (US$, horario de descuento). */
+export interface LoteParcial {
+  bloque: number; nombre: string; ya_generadas: number; fuera_del_tope: number; con_ia: number;
+  costo_usd: number; costo_usd_horario_normal: number;
+  herramientas: { herramienta: string; nombre: string; sesion: string; ambito: Ambito; costo_usd: number }[];
+}
+
 export interface PlanEvaluacion {
   rol: Rol;
   modalidad: string;

@@ -184,6 +184,77 @@ class ServicioMomentos:
                                if (motivo := _restriccion(silabo, "momento", f"M{m.numero}"))},
         }
 
+    # Tope de herramientas por parcial: un pedido no puede encolar más que esto (costo y abuso acotados).
+    MAX_LOTE = 40
+
+    def lote_parcial(self, aid, correo, bloque: int):
+        """V5-1: lo que «Preparar el parcial» encolaría: las herramientas de las evaluaciones del bloque que aún
+        no existen ni están en curso, con su costo estimado. Sale del mismo plan, así que respeta §9.4, los
+        requisitos del sílabo y las dependencias; nunca confía en una lista enviada por el navegador."""
+        from app.evaluacion.costos import FACTOR_HORARIO_NORMAL, costo_estimado
+        from app.exportar.html import NOMBRES as NOMBRES_HERRAMIENTA
+
+        plan = self.plan_evaluacion(aid, correo)
+        numeros = [b["numero"] for b in plan["bloques"]] or [1]
+        if bloque not in numeros:
+            raise HTTPException(404, "Bloque inexistente en el plan de este Proyecto Formativo")
+        nombre = next((b["nombre"] for b in plan["bloques"] if b["numero"] == bloque), "Todo el periodo")
+        actividades = [a for a in plan["actividades"] if a["evaluable"]
+                       and (a["bloque"] == bloque or not plan["bloques"])]
+        with closing(self.conexion()) as conn:
+            conn.autocommit = True
+            existentes = {(f["herramienta"], f["ambito_id"]) for f in conn.execute(
+                "select herramienta, ambito_id from recurso where asignatura_id=%s union "
+                "select herramienta, ambito_id from trabajo where asignatura_id=%s and tipo='generacion' "
+                "and estado in ('en_cola','en_espera','generando','verificando','revisando')", (aid, aid)).fetchall()}
+        pedidos, vistos, ya = [], set(), 0
+        for a in actividades:
+            for h in a["herramientas"]:
+                clave = (h["herramienta"], h["ambito"]["id"])
+                if clave in vistos:
+                    continue
+                vistos.add(clave)
+                if clave in existentes:
+                    ya += 1
+                    continue
+                pedidos.append({**h, "nombre": NOMBRES_HERRAMIENTA.get(h["herramienta"], h["herramienta"]),
+                                "sesion": a["sesion"], "costo_usd": costo_estimado(h["herramienta"])})
+        fuera = len(pedidos) - self.MAX_LOTE
+        pedidos = pedidos[:self.MAX_LOTE]
+        costo = round(sum(p["costo_usd"] for p in pedidos), 3)
+        return {"bloque": bloque, "nombre": nombre, "herramientas": pedidos, "ya_generadas": ya,
+                "fuera_del_tope": max(fuera, 0), "costo_usd": costo,
+                "costo_usd_horario_normal": round(costo * FACTOR_HORARIO_NORMAL, 3),
+                "con_ia": sum(p["costo_usd"] > 0 for p in pedidos)}
+
+    def preparar_parcial(self, aid, correo, bloque: int):
+        """Encola el lote del bloque por la misma vía que cada botón: permisos de edición, §9.4 y deduplicación de lo
+        que ya está en curso. Agrupa por ámbito e indicaciones; las herramientas sin IA salen al instante."""
+        from app.cola.trabajos import Ambito
+        from app.herramientas.sin_ia import HERRAMIENTAS_SIN_IA
+
+        # Un solo «Preparar» a la vez por asignatura: dos pedidos simultáneos (doble clic, dos pestañas) calcularían el
+        # mismo lote y duplicarían lo que lleva indicaciones (no pasa por la deduplicación de `generar`).
+        with closing(self.conexion()) as candado:
+            candado.autocommit = True
+            if not candado.execute("select pg_try_advisory_lock(hashtextextended(%s, 0)) as ok",
+                                   (f"lote:{aid}",)).fetchone()["ok"]:
+                raise HTTPException(409, "Ya se está preparando un parcial de este Proyecto Formativo; espera un momento.")
+            try:
+                lote = self.lote_parcial(aid, correo, bloque)
+                grupos: dict[tuple, list[str]] = {}
+                for h in lote["herramientas"]:
+                    sin_ia = h["herramienta"] in HERRAMIENTAS_SIN_IA
+                    clave = (h["ambito"]["tipo"], h["ambito"]["id"], h.get("instrucciones", ""), sin_ia)
+                    grupos.setdefault(clave, []).append(h["herramienta"])
+                trabajos = []
+                for (tipo, ambito_id, instrucciones, _), herramientas in grupos.items():
+                    r = self.recursos.generar(aid, correo, Ambito(tipo, ambito_id), herramientas, 12, instrucciones, None)
+                    trabajos += r["trabajos"]
+            finally:
+                candado.execute("select pg_advisory_unlock(hashtextextended(%s, 0))", (f"lote:{aid}",))
+        return {"trabajos": trabajos, "costo_usd": lote["costo_usd"]}
+
     def guardar_pesos(self, aid, correo, pesos: dict):
         """V4-4: el docente confirma o ajusta los pesos; cada calificación de cada bloque conserva su % de la norma."""
         from app.evaluacion.norma import bloques as bloques_de
