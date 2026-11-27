@@ -1,9 +1,10 @@
 # Plan de evaluación implícito en el sílabo (V3)
 
-> **Rama:** `V3-SilabosPesos` · **Fecha:** 2026-11-26 · **Estado:** V3-1 a V3-7 hechas.
+> **Rama:** `V3-SilabosPesos` · **Fecha:** 2026-11-27 · **Estado:** V3-1 a V3-7 y V4-1 a V4-5 hechas.
 > El docente no sube un plan de evaluación aparte: el plan **está en el sílabo**. El sistema lo lee, le aplica
 > la norma de evaluación del RRA de la modalidad, sugiere los pesos y ofrece, junto a cada actividad
-> evaluable, las herramientas que la preparan. El docente confirma los pesos en su plan de evaluación.
+> evaluable, las herramientas que la preparan. El docente confirma los pesos o los reparte dentro de cada
+> calificación (V4-4).
 
 ## 1. Norma de evaluación por modalidad
 
@@ -114,7 +115,41 @@ Estimación si el docente pulsa **todos** los botones del plan una vez:
 - **Factor ×1,81:** es la razón entre el horario normal y el de descuento que tiene el costo del informe general (US$ 487,38 frente a 268,86). Es una estimación, no una medición.
 - **Por qué es un techo:** en la práctica no se pulsan todos los botones ni se regeneran todas las herramientas.
 
-## 7. Pendiente
+## 7. El plan, accionable (bloque V4)
+
+**Revisión en la app (V4-1).**
+- Donde la política del momento excluye la IA en una evaluación (§9.4), el plan solo ofrece herramientas sin IA y dice por qué (`ia_restringida`).
+- El aviso de error aparece junto a la actividad.
+- El simulacro de un rango dice «Simulacro · Momentos 1 a 3».
+
+**Dependencias entre sesiones (V4-2, §6)** (`app/evaluacion/dependencias.py`, reglas sin IA).
+- Cada tarea práctico-experimental o autónoma es **independiente** o **complementaria**.
+- El insumo previo de una complementaria se busca en este orden:
+  1. la sesión, práctica o momento que nombra;
+  2. el producto (prototipo, portafolio, programa…) en la sesión anterior más cercana.
+- **Eslabón roto** solo si la referencia no existe o el origen no tiene horas. Si el producto no aparece antes, se pide **revisar**.
+- En la pantalla, cada complementaria dice de dónde viene y que se califica solo el avance nuevo (§6.4).
+- El **insumo de respaldo** se ofrece solo en tareas evaluables complementarias, con el insumo detectado como indicación para la IA.
+- En los 60 sílabos B26: 96 complementarias, 45 con origen, 51 para revisar y 1 eslabón roto.
+- La cadena entre evidencias de momentos (§6.5) no se revisa con reglas: en el corpus la señal salía en más de la mitad de las transiciones.
+
+**Alertas con sugerencia (V4-3).** El plan devuelve `avisos` ([{texto, sugerencia}]) y cada alerta dice cómo corregirse:
+- **Calificación que falta en un bloque:** en qué sesión agregarla (la del bloque con menos evaluaciones que tiene la columna adecuada; la prueba sumativa, al cierre) y con qué rótulo del prompt institucional.
+- **Diagnóstica:** en M1-S1.
+- **Prácticas:** la numeración correlativa.
+- **Sesión sobrecargada:** sesiones vecinas.
+- **Dependencias:** cómo nombrar el insumo (§6.3).
+
+Lo que completa el docente va entre corchetes; nunca se copia texto del sílabo.
+
+**Pesos confirmados por el docente (V4-4).** Decisión del usuario: el docente solo reparte el peso **dentro de cada calificación**, y cada calificación conserva el % de la norma.
+- **API:**
+  - `PUT /asignaturas/{aid}/plan-evaluacion/pesos` con `{pesos: {clave: %}}`. Responde 422 si una calificación no suma su % y 409 si la IA aún clasifica; el lector no puede.
+  - `DELETE /asignaturas/{aid}/plan-evaluacion/pesos` vuelve a los sugeridos.
+- **Guardado:** tabla `pesos_docente`, una fila por versión del sílabo (huella). Si el sílabo cambia, vuelven los sugeridos y la pantalla pide confirmar de nuevo.
+- **Pantalla:** editor por calificación, con su suma frente al % de la norma. «Confirmar pesos» se activa solo cuando todo cuadra.
+
+## 8. Pendiente
 
 - Confirmar el promedio 50/50 de los parciales presenciales.
 - Definir la norma semipresencial (híbrida).

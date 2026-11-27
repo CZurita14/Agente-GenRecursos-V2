@@ -112,6 +112,14 @@ export const momentos = (aid: string) => pedir<MomentosRespuesta>(`/asignaturas/
 /** Plan de evaluación implícito en el sílabo; si faltan columnas por clasificar, la API encola la IA. */
 export const planEvaluacion = (aid: string) => pedir<PlanEvaluacion>(`/asignaturas/${enc(aid)}/plan-evaluacion`);
 
+/** V4-4: confirma o ajusta los pesos (422 con el motivo si una calificación no suma su % de la norma). */
+export const guardarPesos = (aid: string, pesos: Record<string, number>) =>
+  pedir<PlanEvaluacion>(`/asignaturas/${enc(aid)}/plan-evaluacion/pesos`, { method: 'PUT', body: json({ pesos }) });
+
+/** Vuelve a los pesos sugeridos para la versión actual del sílabo. */
+export const restaurarPesos = (aid: string) =>
+  pedir<PlanEvaluacion>(`/asignaturas/${enc(aid)}/plan-evaluacion/pesos`, { method: 'DELETE' });
+
 /** Guarda el contexto del momento (se valida en la API; 422 con el motivo, 409 si cambió). */
 export const guardarContexto = (aid: string, numero: number, revision: number, texto: string) =>
   pedir<MomentoDetalle>(`/asignaturas/${enc(aid)}/momentos/${numero}/contexto`,

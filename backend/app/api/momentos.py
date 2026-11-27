@@ -27,6 +27,24 @@ def plan_evaluacion(asig: UUID, request: Request):
     return request.app.state.momentos.plan_evaluacion(asig, request.state.usuario)
 
 
+class PesosDocente(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    # {"M2-S3/practico/practica_experimental": 7.5, …}: % de cada actividad dentro de su bloque.
+    pesos: dict[str, float] = Field(max_length=400)
+
+
+@router.put("/plan-evaluacion/pesos")
+def guardar_pesos(asig: UUID, datos: PesosDocente, request: Request):
+    """El docente confirma o ajusta los pesos dentro de cada calificación (V4-4); devuelve el plan actualizado."""
+    return request.app.state.momentos.guardar_pesos(asig, request.state.usuario, datos.pesos)
+
+
+@router.delete("/plan-evaluacion/pesos")
+def restaurar_pesos(asig: UUID, request: Request):
+    """Vuelve a los pesos sugeridos para la versión actual del sílabo."""
+    return request.app.state.momentos.restaurar_pesos(asig, request.state.usuario)
+
+
 @router.put("/momentos/{numero}/contexto")
 def guardar_contexto(asig: UUID, datos: ContextoMomento, request: Request, numero: int = Path(ge=1, le=20)):
     return request.app.state.momentos.guardar_contexto(asig, request.state.usuario, numero, datos.revision,

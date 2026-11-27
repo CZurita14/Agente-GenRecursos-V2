@@ -176,25 +176,36 @@ def legible(clave: str) -> str:
     return f"Momento {m.group(1)}, sesión {m.group(2)} ({NOMBRE_COLUMNA.get(columna, columna)})" if m else clave
 
 
-def alertas_dependencias(silabo: SilaboUTI, deps: list[Dependencia] | None = None) -> list[str]:
+def alertas_dependencias(silabo: SilaboUTI, deps: list[Dependencia] | None = None,
+                         sugerencias: dict[str, str] | None = None) -> list[str]:
     """§6.3: eslabones rotos de las tareas. Nombran sesiones, no texto del sílabo.
 
     La cadena entre evidencias de momentos (§6.5) no se revisa con reglas: en el corpus B26 la señal salía en más de
     la mitad de las transiciones y no distinguía cadenas rotas de evidencias redactadas sin repetir el producto.
     """
     deps = dependencias(silabo) if deps is None else deps
-    alertas = []
+    alertas: list[str] = []
+
+    def sugerir(alerta: str, texto: str) -> None:
+        if sugerencias is not None:
+            sugerencias[alerta] = texto
     for d in deps:
         if not d.roto:
             continue
         if d.origen:
             alertas.append(f"{d.sesion} ({NOMBRE_COLUMNA[d.columna]}): continúa «{d.insumo}» de {legible(d.origen)}, "
                            "que no tiene horas en esa columna (§6.3).")
+            sugerir(alertas[-1], f"Da horas a esa columna en {legible(d.origen)} o mueve allí la actividad que "
+                                 "produce el insumo, y define un insumo de respaldo para quien no la completó.")
         else:
             alertas.append(f"{d.sesion} ({NOMBRE_COLUMNA[d.columna]}): se apoya en la {d.insumo}, que no existe en el "
                            "sílabo; corrige la referencia o agrega la actividad que produce el insumo (§6.3).")
+            sugerir(alertas[-1], "Redacta la tarea citando un insumo que exista: «A partir de [producto previo] de la "
+                                 "sesión [N], …», o agrega antes la actividad que lo produce.")
     revisar = [f"{d.sesion} ({NOMBRE_COLUMNA[d.columna]})" for d in deps if d.revisar]
     if revisar:
         alertas.append("Revisa el insumo previo de estas tareas, que continúan un producto sin un origen claro en las "
                        f"sesiones anteriores: {', '.join(revisar)} (§6.1).")
+        sugerir(alertas[-1], "Nombra el insumo en la tarea: «A partir de [producto previo] de la sesión [N], …» (§6.3). "
+                             "Si se califica, mide solo el avance nuevo (§6.4); el plan ofrece un insumo de respaldo.")
     return alertas

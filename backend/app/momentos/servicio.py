@@ -114,8 +114,8 @@ class ServicioMomentos:
         from app.evaluacion.herramientas import NOMBRE_TIPO, disponibles, herramientas_de, rangos_acumulados
         from app.evaluacion.norma import bloques as bloques_de
         from app.evaluacion.norma import norma_de
-        from app.evaluacion.pesos import calcular
-        from app.evaluacion.servicio import plan_actividades, solicitar_clasificacion
+        from app.evaluacion.pesos import calcular, clave, grupos, validar_ajustes
+        from app.evaluacion.servicio import huella, pesos_confirmados, plan_actividades, solicitar_clasificacion
         from app.recursos.servicio import _restriccion
 
         with closing(self.conexion()) as conn:
@@ -125,16 +125,22 @@ class ServicioMomentos:
             actividades, estado_ia = plan_actividades(conn, aid, silabo)
             if estado_ia in ("pendiente", "error") and rol != "lector":
                 estado_ia = solicitar_clasificacion(conn, aid, a["agente"], silabo)
+            confirmados, desactualizados = pesos_confirmados(conn, aid, huella(silabo))
         norma = norma_de(silabo.proyecto_formativo.modalidad)
         bloques = bloques_de(silabo, norma, [x.sesion for x in actividades if x.tipo == "prueba_sumativa"])
         textos = textos_de(silabo)
-        plan = calcular(actividades, norma, bloques, textos)
+        # Los pesos del docente valen solo si siguen cuadrando con el plan actual (p. ej. tras clasificar con IA).
+        ajustes = confirmados["pesos"] if confirmados and not validar_ajustes(
+            actividades, norma, bloques, confirmados["pesos"]) else None
+        plan = calcular(actividades, norma, bloques, textos, ajustes)
         pesadas = {(p.actividad.sesion, p.actividad.columna, p.actividad.tipo): p for p in plan.actividades}
         bloque_de = {s: b.numero for b in bloques for s in b.sesiones}
         acumulado = rangos_acumulados([x.sesion for x in actividades if x.tipo == "prueba_sumativa" and x.evaluable])
 
         cache: dict = {}
         deps = dependencias(silabo)
+        sugerencias = dict(plan.sugerencias)
+        alertas = plan.alertas + alertas_dependencias(silabo, deps, sugerencias)
         dep_de = {(d.sesion, d.columna): d for d in deps}
 
         def dependencia(d):
@@ -146,7 +152,8 @@ class ServicioMomentos:
         def fila(act):
             p = pesadas.get((act.sesion, act.columna, act.tipo))
             d = dep_de.get((act.sesion, act.columna))
-            return {"sesion": act.sesion, "momento": int(act.sesion.split("-")[0][1:]), "columna": act.columna,
+            return {"clave": clave(act), "sesion": act.sesion, "momento": int(act.sesion.split("-")[0][1:]),
+                    "columna": act.columna,
                     "texto": textos.get(f"{act.sesion}/{act.columna}", ""), "tipo": act.tipo,
                     "nombre_tipo": NOMBRE_TIPO.get(act.tipo, act.tipo), "evaluable": act.evaluable,
                     "calificacion": act.calificacion, "instrumento": act.instrumento, "finalidad": act.finalidad,
@@ -164,11 +171,50 @@ class ServicioMomentos:
             "bloques": [{"numero": b.numero, "nombre": b.nombre, "inicio": _iso(b.inicio), "fin": _iso(b.fin),
                          "sesiones": b.sesiones} for b in bloques],
             "clasificacion_ia": estado_ia, "por_bloque": plan.por_bloque, "por_momento": plan.por_momento,
-            "alertas": plan.alertas + alertas_dependencias(silabo, deps), "actividades": [fila(x) for x in actividades],
+            "alertas": alertas, "avisos": [{"texto": a, "sugerencia": sugerencias.get(a)} for a in alertas],
+            "actividades": [fila(x) for x in actividades],
+            # V4-4: de dónde salen los pesos y qué puede repartir el docente (dentro de cada calificación).
+            "pesos": {"origen": "docente" if ajustes else "sugeridos",
+                      "confirmado_por": confirmados["confirmado_por"] if ajustes else None,
+                      "confirmado_en": confirmados["confirmado_en"].isoformat() if ajustes else None,
+                      "desactualizados": desactualizados or bool(confirmados and not ajustes)},
+            "grupos": grupos(actividades, norma, bloques) if norma is not None and norma.estado == "definida" else [],
             # §9.4: momentos cuya política de IA excluye la IA en una evaluación; ahí solo hay herramientas sin IA.
             "ia_restringida": {str(m.numero): motivo for m in silabo.momentos
                                if (motivo := _restriccion(silabo, "momento", f"M{m.numero}"))},
         }
+
+    def guardar_pesos(self, aid, correo, pesos: dict):
+        """V4-4: el docente confirma o ajusta los pesos; cada calificación de cada bloque conserva su % de la norma."""
+        from app.evaluacion.norma import bloques as bloques_de
+        from app.evaluacion.norma import norma_de
+        from app.evaluacion.pesos import validar_ajustes
+        from app.evaluacion.servicio import guardar_pesos, huella, plan_actividades
+
+        with closing(self.conexion()) as conn:
+            with conn.transaction():
+                a, _ = exigir_acceso(conn, aid, correo, editar=True)
+                silabo = SilaboUTI.model_validate(a["silabo"])
+                actividades, estado_ia = plan_actividades(conn, aid, silabo)
+                if estado_ia in ("pendiente", "en_curso"):
+                    raise HTTPException(409, "Espera a que termine la clasificación con IA antes de confirmar los pesos.")
+                norma = norma_de(silabo.proyecto_formativo.modalidad)
+                bloques = bloques_de(silabo, norma, [x.sesion for x in actividades if x.tipo == "prueba_sumativa"])
+                pesos = {k: round(float(v), 2) for k, v in pesos.items()}
+                if errores := validar_ajustes(actividades, norma, bloques, pesos):
+                    raise HTTPException(422, " ".join(errores))
+                guardar_pesos(conn, aid, huella(silabo), pesos, correo)
+        return self.plan_evaluacion(aid, correo)
+
+    def restaurar_pesos(self, aid, correo):
+        """Vuelve a los pesos sugeridos para la versión actual del sílabo."""
+        from app.evaluacion.servicio import borrar_pesos, huella
+
+        with closing(self.conexion()) as conn:
+            with conn.transaction():
+                a, _ = exigir_acceso(conn, aid, correo, editar=True)
+                borrar_pesos(conn, aid, huella(SilaboUTI.model_validate(a["silabo"])))
+        return self.plan_evaluacion(aid, correo)
 
     def guardar_contexto(self, aid, correo, numero, revision, texto):
         try:

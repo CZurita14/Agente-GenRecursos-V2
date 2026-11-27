@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { AlertTriangle, CheckCircle2, Link2, Sparkles } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Lightbulb, Link2, Sparkles } from 'lucide-react';
 import { Alert, Badge } from '../components';
-import { ErrorApi, generar } from '../api/cliente';
+import { ErrorApi, generar, guardarPesos, restaurarPesos } from '../api/cliente';
 import type { ActividadPlan, PlanEvaluacion as Plan, TrabajoCreado } from '../api/tipos';
 import { fechaCorta, legible, nombreAmbito, nombreHerramienta } from '../api/herramientas';
 
@@ -37,8 +37,12 @@ const porcentaje = (n: number) => `${n.toLocaleString('es-EC', { maximumFraction
 /** Totales por momento: un decimal, igual que en las pestañas de los momentos. */
 export const porcentajeMomento = (n: number) => `${n.toLocaleString('es-EC', { maximumFractionDigits: 1 })} %`;
 
+interface NormaProps {
+  plan: Plan; aid?: string; lector?: boolean; onPlan?: (p: Plan) => void; onError?: (e: unknown) => void;
+}
+
 /** Norma del RRA de la modalidad, bloques de calificación y alertas del plan implícito en el sílabo. */
-export function NormaModalidad({ plan }: { plan: Plan }) {
+export function NormaModalidad({ plan, aid, lector = true, onPlan, onError }: NormaProps) {
   const { norma } = plan;
   const cumple = !!norma && norma.estado === 'definida' && plan.alertas.length === 0;
   return <section aria-labelledby="norma" className="bg-surface rounded-xl border border-line p-5 space-y-3">
@@ -69,12 +73,103 @@ export function NormaModalidad({ plan }: { plan: Plan }) {
       se muestran como actividades de avance.</p>}
     {cumple && <p className="text-sm text-success flex items-center gap-1.5">
       <CheckCircle2 aria-hidden="true" className="w-4 h-4" />El plan implícito en el sílabo cumple la norma.</p>}
-    {plan.alertas.length > 0 && <ul className="space-y-1">{plan.alertas.map(a =>
-      <li key={a} className="text-sm text-warning flex items-start gap-1.5">
-        <AlertTriangle aria-hidden="true" className="w-4 h-4 mt-0.5 shrink-0" />{a}</li>)}</ul>}
-    <p className="text-xs text-muted">Pesos sugeridos por el sistema a partir del sílabo y la norma; el docente los confirma en su
-      plan de evaluación.</p>
+    {plan.alertas.length > 0 && <ul className="space-y-2">{(plan.avisos ?? plan.alertas.map(texto => ({ texto, sugerencia: null })))
+      .map(a => <li key={a.texto} className="text-sm">
+        <p className="text-warning flex items-start gap-1.5">
+          <AlertTriangle aria-hidden="true" className="w-4 h-4 mt-0.5 shrink-0" />{a.texto}</p>
+        {a.sugerencia && <p className="text-muted ml-6 flex items-start gap-1.5">
+          <Lightbulb aria-hidden="true" className="w-3.5 h-3.5 mt-0.5 shrink-0" />{legible(a.sugerencia)}</p>}
+      </li>)}</ul>}
+    {plan.pesos?.origen === 'docente'
+      ? <p className="text-xs text-success flex items-center gap-1.5">
+          <CheckCircle2 aria-hidden="true" className="w-3.5 h-3.5" />Pesos confirmados por {plan.pesos.confirmado_por}
+          {plan.pesos.confirmado_en ? ` el ${fechaCorta(plan.pesos.confirmado_en)}` : ''}.</p>
+      : <p className="text-xs text-muted">Pesos sugeridos por el sistema a partir del sílabo y la norma; el docente los
+          confirma o reparte dentro de cada calificación.</p>}
+    {plan.pesos?.desactualizados && <p className="text-xs text-warning">El sílabo cambió desde la última confirmación:
+      revisa y confirma de nuevo los pesos.</p>}
+    {!lector && aid && onPlan && (plan.grupos?.length ?? 0) > 0 &&
+      <AjustePesos plan={plan} aid={aid} onPlan={onPlan} onError={onError} />}
   </section>;
+}
+
+const redondear = (n: number) => Math.round(n * 100) / 100;
+
+/** V4-4: el docente reparte el peso entre las actividades de una misma calificación; cada una conserva su % de la norma. */
+function AjustePesos({ plan, aid, onPlan, onError }: { plan: Plan; aid: string; onPlan: (p: Plan) => void;
+  onError?: (e: unknown) => void }) {
+  const [abierto, setAbierto] = useState(false);
+  const [pesos, setPesos] = useState<Record<string, number>>({});
+  const [guardando, setGuardando] = useState(false);
+  const [aviso, setAviso] = useState('');
+  const actividad = Object.fromEntries(plan.actividades.filter(a => a.clave).map(a => [a.clave!, a]));
+  const abrir = () => {
+    setPesos(Object.fromEntries(plan.actividades.filter(a => a.clave && a.evaluable && a.calificacion)
+      .map(a => [a.clave!, a.peso_bloque])));
+    setAviso(''); setAbierto(true);
+  };
+  const grupos = (plan.grupos ?? []).filter(g => g.claves.length > 1);
+  const suma = (claves: string[]) => redondear(claves.reduce((t, c) => t + (pesos[c] ?? 0), 0));
+  const cuadra = (plan.grupos ?? []).every(g => Math.abs(suma(g.claves) - g.peso) < 0.005);
+  const bloque = (n: number) => plan.bloques.find(b => b.numero === n)?.nombre ?? 'Bloque único';
+
+  const ejecutar = async (accion: () => Promise<Plan>) => {
+    setGuardando(true); setAviso('');
+    try { onPlan(await accion()); setAbierto(false); } catch (e) {
+      if (e instanceof ErrorApi && e.estado === 401) return onError?.(e);
+      setAviso(e instanceof ErrorApi ? e.message : 'No hay conexión con el servidor.');
+    } finally { setGuardando(false); }
+  };
+
+  if (!abierto) return <div className="flex flex-wrap gap-2">
+    <button type="button" onClick={abrir}
+      className="rounded-lg border border-line px-3 py-1.5 text-sm hover:bg-app-soft">
+      {plan.pesos?.origen === 'docente' ? 'Ajustar pesos' : 'Confirmar o ajustar pesos'}</button>
+    {plan.pesos?.origen === 'docente' && <button type="button" disabled={guardando}
+      onClick={() => ejecutar(() => restaurarPesos(aid))}
+      className="rounded-lg px-3 py-1.5 text-sm text-muted hover:bg-app-soft disabled:opacity-60">
+      Volver a los sugeridos</button>}
+  </div>;
+
+  return <div className="space-y-3 rounded-lg border border-line p-3" role="group" aria-label="Ajuste de pesos">
+    <p className="text-sm">Reparte el peso entre las actividades de cada calificación. Cada calificación conserva el % de
+      la norma; las que tienen una sola actividad no se ajustan.</p>
+    {grupos.length === 0 && <p className="text-sm text-muted">Ninguna calificación tiene más de una actividad:
+      puedes confirmar los pesos sugeridos tal cual.</p>}
+    {grupos.map(g => {
+      const total = suma(g.claves);
+      const ok = Math.abs(total - g.peso) < 0.005;
+      return <fieldset key={`${g.bloque}-${g.calificacion}`} className="space-y-1.5">
+        <legend className="text-sm font-bold flex flex-wrap items-center gap-2">
+          {plan.bloques.length > 1 ? `${bloque(g.bloque)} · ` : ''}{CORTO[g.calificacion] ?? g.calificacion}
+          <Badge tone={ok ? 'success' : 'warning'}>{porcentaje(total)} de {porcentaje(g.peso)}</Badge>
+        </legend>
+        {g.claves.map(c => {
+          const a = actividad[c];
+          return <label key={c} className="flex items-center justify-between gap-3 text-sm">
+            <span>{a ? `${legible(a.sesion)} · ${a.nombre_tipo}` : c}</span>
+            <span className="flex items-center gap-1">
+              <input type="number" min={0} max={g.peso} step={0.01} value={pesos[c] ?? 0}
+                aria-label={`Peso de ${a ? `${legible(a.sesion)}, ${a.nombre_tipo}` : c} (% del bloque)`}
+                onChange={e => setPesos(p => ({ ...p, [c]: Number(e.target.value) }))}
+                className="w-24 rounded-lg border border-line px-2 py-1 text-right" /> %
+            </span>
+          </label>;
+        })}
+      </fieldset>;
+    })}
+    {aviso && <Alert tone="danger" role="alert">{aviso}</Alert>}
+    <div className="flex flex-wrap gap-2">
+      <button type="button" disabled={!cuadra || guardando}
+        onClick={() => ejecutar(() => guardarPesos(aid, Object.fromEntries(
+          Object.entries(pesos).map(([k, v]) => [k, redondear(v)]))))}
+        className="rounded-lg bg-action px-3 py-1.5 text-sm text-white disabled:opacity-60">
+        {guardando ? 'Guardando…' : 'Confirmar pesos'}</button>
+      <button type="button" onClick={() => setAbierto(false)}
+        className="rounded-lg px-3 py-1.5 text-sm text-muted hover:bg-app-soft">Cancelar</button>
+    </div>
+    {!cuadra && <p className="text-xs text-warning">Cada calificación debe sumar exactamente su % de la norma.</p>}
+  </div>;
 }
 
 /** §6: de qué producto previo depende la tarea; si es evaluable, se califica solo el avance nuevo (§6.4). */

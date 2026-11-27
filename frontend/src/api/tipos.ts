@@ -189,6 +189,8 @@ export interface ResumenDescarga {
 
 /** Plan de evaluación implícito en el sílabo (norma del RRA, bloques, actividades con peso sugerido). */
 export interface ActividadPlan {
+  /** «M2-S3/practico/practica_experimental»: identifica la actividad al ajustar los pesos (V4-4). */
+  clave?: string;
   sesion: string;
   momento: number;
   columna: 'docente' | 'asincronica' | 'practico' | 'autonomo';
@@ -223,7 +225,14 @@ export interface PlanEvaluacion {
   por_bloque: Record<string, number>;
   por_momento: Record<string, number>;
   alertas: string[];
+  /** Cada alerta con cómo corregirla (V4-3); `alertas` queda por compatibilidad. */
+  avisos?: { texto: string; sugerencia: string | null }[];
   /** §9.4: momentos ("3") cuya política de IA excluye la IA en una evaluación, con el motivo. */
   ia_restringida?: Record<string, string>;
   actividades: ActividadPlan[];
+  /** V4-4: de dónde salen los pesos; `desactualizados` si el docente confirmó otra versión del sílabo. */
+  pesos?: { origen: 'docente' | 'sugeridos'; confirmado_por: string | null; confirmado_en: string | null;
+    desactualizados: boolean };
+  /** Lo que el docente puede repartir: cada calificación de cada bloque, con su % de la norma. */
+  grupos?: { bloque: number; calificacion: string; peso: number; claves: string[] }[];
 }

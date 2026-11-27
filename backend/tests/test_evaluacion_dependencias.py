@@ -97,3 +97,12 @@ def test_el_insumo_de_respaldo_solo_en_tareas_complementarias_con_su_origen(dato
     assert "insumo_respaldo" not in [h["herramienta"] for h in herramientas_de("ensayo", "M2-S1", None, independiente)]
     # Una prueba no es una tarea: no lleva insumo de respaldo aunque su texto continúe algo.
     assert "insumo_respaldo" not in [h["herramienta"] for h in herramientas_de("prueba_sumativa", "M3-S1", None, d)]
+
+
+def test_cada_alerta_de_dependencia_trae_su_sugerencia(datos):
+    s = _con(datos, {"M3-S3/autonomo": "Revisión del prototipo elaborado en el Momento 1 y ajuste de sus vistas.",
+                     "M3-S2/autonomo": "Ajuste final del portafolio según la retroalimentación recibida."})
+    sugerencias: dict[str, str] = {}
+    alertas = alertas_dependencias(s, sugerencias=sugerencias)
+    assert len(alertas) == 2 and set(sugerencias) == set(alertas)
+    assert all("A partir de [producto previo]" in sugerencias[a] for a in alertas)

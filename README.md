@@ -129,7 +129,7 @@ Exige `SGA_PROVEEDOR=real`, que depende de TI (B-SGA1): [docs/sga/para-TI.md](do
 ### Pruebas
 
 ```bash
-# Backend (base: 1 544 pasan, 21 omitidas, 4 deseleccionadas)
+# Backend (base: 1 568 pasan, 21 omitidas, 4 deseleccionadas)
 cd backend && ../.venv/Scripts/python.exe -m pytest -m "not servidor and not modelo" -q
 # Modelo de ciencia de datos (entorno con PyTorch)
 cd backend && HF_HUB_OFFLINE=1 ../.venv-ciencia/Scripts/python.exe -m pytest -m modelo -q tests/test_razonador.py tests/test_cd_*.py

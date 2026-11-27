@@ -167,7 +167,7 @@ def test_plan_de_evaluacion_por_api(entorno, conn):
     r = d.get(f"/asignaturas/{aid}/plan-evaluacion")
     assert r.status_code == 200
     plan = r.json()
-    assert plan["rol"] == "dueno" and set(plan) >= {"norma", "bloques", "actividades", "alertas", "por_momento", "ia_restringida",
+    assert plan["rol"] == "dueno" and set(plan) >= {"norma", "bloques", "actividades", "alertas", "avisos", "por_momento", "ia_restringida",
                                                     "clasificacion_ia"}
     fila = plan["actividades"][0]
     assert set(fila) >= {"sesion", "columna", "texto", "tipo", "evaluable", "calificacion", "peso_final", "herramientas"}
@@ -184,3 +184,59 @@ def test_plan_de_evaluacion_por_api(entorno, conn):
         d.get(f"/asignaturas/{aid}/plan-evaluacion")
         assert conn.execute("select count(*) n from trabajo where tipo='clasificacion'").fetchone()["n"] == 1
     assert cliente("intruso@uti.edu.ec").get(f"/asignaturas/{aid}/plan-evaluacion").status_code == 403
+
+
+# --- V4-4: el docente confirma o ajusta los pesos ------------------------------------------------
+
+from tests.test_generacion_api import HEADERS  # noqa: E402
+
+def _sin_ia_pendiente(conn, d, aid):
+    """La clasificación con IA queda lista (sin cambios) para poder confirmar los pesos."""
+    d.get(f"/asignaturas/{aid}/plan-evaluacion")
+    conn.execute("update clasificacion_silabo set estado='lista', tipos='{}'::jsonb where asignatura_id=%s", (aid,))
+    return d.get(f"/asignaturas/{aid}/plan-evaluacion").json()
+
+
+def _ajuste(plan, calificacion, primero):
+    """Pesos actuales con la calificación repartida dando `primero` a su primera actividad."""
+    pesos = {a["clave"]: a["peso_bloque"] for a in plan["actividades"] if a["evaluable"] and a["calificacion"]}
+    g = next(g for g in plan["grupos"] if g["calificacion"] == calificacion)
+    pesos[g["claves"][0]], pesos[g["claves"][1]] = primero, round(g["peso"] - primero, 2)
+    return pesos, g["claves"][0]
+
+
+def test_el_docente_ajusta_dentro_de_la_calificacion_y_puede_restaurar(entorno, conn):
+    _, cliente, d, aid, _ = entorno
+    plan = _sin_ia_pendiente(conn, d, aid)
+    assert plan["pesos"]["origen"] == "sugeridos" and plan["grupos"]
+    pesos, k = _ajuste(plan, "C3_formativa", 7.5)
+    r = d.put(f"/asignaturas/{aid}/plan-evaluacion/pesos", json={"pesos": pesos}, headers=HEADERS)
+    assert r.status_code == 200, r.text
+    nuevo = r.json()
+    assert nuevo["pesos"]["origen"] == "docente" and nuevo["pesos"]["confirmado_por"] == "dueno@uti.edu.ec"
+    assert next(a for a in nuevo["actividades"] if a["clave"] == k)["peso_bloque"] == 7.5
+    assert nuevo["por_bloque"] == plan["por_bloque"]  # Cada calificación conserva su % de la norma.
+    # Un reparto que cambia el total de la calificación se rechaza con el motivo.
+    malo, _ = _ajuste(plan, "C3_formativa", 9.0)
+    malo[k] = 9.5
+    r = d.put(f"/asignaturas/{aid}/plan-evaluacion/pesos", json={"pesos": malo}, headers=HEADERS)
+    assert r.status_code == 422 and "la norma pide" in r.text
+    # El lector no confirma; el dueño vuelve a los sugeridos.
+    from tests.acceso import dar_acceso
+    dar_acceso(conn, aid, "lector@uti.edu.ec", "lector")
+    assert cliente("lector@uti.edu.ec").put(f"/asignaturas/{aid}/plan-evaluacion/pesos",
+                                            json={"pesos": pesos}, headers=HEADERS).status_code == 403
+    r = d.delete(f"/asignaturas/{aid}/plan-evaluacion/pesos", headers=HEADERS)
+    assert r.status_code == 200 and r.json()["pesos"]["origen"] == "sugeridos"
+
+
+def test_si_cambia_el_silabo_los_pesos_vuelven_a_sugeridos_y_se_avisa(entorno, conn, datos):
+    from app.silabo.modelo import SilaboUTI
+    app, _, d, aid, _ = entorno
+    plan = _sin_ia_pendiente(conn, d, aid)
+    pesos, _ = _ajuste(plan, "C3_formativa", 7.5)
+    assert d.put(f"/asignaturas/{aid}/plan-evaluacion/pesos", json={"pesos": pesos}, headers=HEADERS).status_code == 200
+    datos["momentos"][0]["evidencia"] += " Versión revisada."
+    app.state.asignaturas.guardar("dueno@uti.edu.ec", SilaboUTI.model_validate(datos))
+    plan = d.get(f"/asignaturas/{aid}/plan-evaluacion").json()
+    assert plan["pesos"]["origen"] == "sugeridos" and plan["pesos"]["desactualizados"] is True

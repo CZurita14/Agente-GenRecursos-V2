@@ -1,6 +1,8 @@
 """Pesos sugeridos y auditoría del plan de evaluación implícito en el sílabo (V3-4)."""
 from datetime import date
 
+import pytest
+
 from app.evaluacion.clasificador import Actividad, actividad_de
 from app.evaluacion.norma import Bloque, norma_de
 from app.evaluacion.pesos import calcular
@@ -89,3 +91,78 @@ def test_sin_diagnostica_se_avisa():
     actividades = [a for a in _completo_en_linea() if a.tipo != "diagnostica"]
     plan = calcular(actividades, EN_LINEA, [_bloque(1, "Bloque único", sorted({a.sesion for a in actividades}))])
     assert "No hay evaluación diagnóstica al inicio del proyecto formativo." in plan.alertas
+
+
+# --- Sugerencias de corrección (V4-3) ---------------------------------------------------------
+
+def test_la_calificacion_que_falta_sugiere_donde_y_con_que_rotulo():
+    actividades = [a for a in _completo_en_linea() if a.tipo != "entrega_avance"]
+    sesiones = sorted({a.sesion for a in actividades}) + ["M3-S4"]
+    textos = {f"{s}/docente": "x" for s in sesiones} | {"M3-S4/autonomo": "Lectura del capítulo 4.",
+                                                       "M2-S3/autonomo": "Portafolio."}
+    plan = calcular(actividades, EN_LINEA, [_bloque(1, "Bloque único", sesiones)], textos)
+    sugerencia = plan.sugerencias["Bloque único: falta una actividad de «Proyecto integrador» (20 %)."]
+    # La sesión del bloque con columna autónoma y menos evaluaciones (M3-S4 no tiene ninguna).
+    assert sugerencia.startswith("Agrega en Momento 3, sesión 4 (trabajo autónomo)")
+    assert "«Entrega de la versión [n] del [producto del momento]" in sugerencia
+
+
+def test_la_prueba_del_parcial_se_sugiere_al_cierre_del_bloque():
+    actividades = [_a("M1-S1", "diagnostica", PRESENCIAL), _a("M1-S2", "foro", PRESENCIAL)]
+    textos = {"M1-S1/docente": "x", "M1-S2/docente": "x", "M2-S5/docente": "x"}
+    plan = calcular(actividades, PRESENCIAL, [_bloque(1, "Parcial 1", ["M1-S1", "M1-S2", "M2-S5"])], textos)
+    sugerencia = plan.sugerencias["Parcial 1: falta una actividad de «Evaluación de resultados de aprendizaje (sumativa)» (20 %)."]
+    assert "Momento 2, sesión 5 (con el docente)" in sugerencia and "Prueba acumulativa del primer parcial" in sugerencia
+
+
+def test_las_alertas_de_forma_sugieren_numeracion_y_sesiones_vecinas():
+    actividades = [_a("M1-S1", "diagnostica"),
+                   _a("M2-S1", "practica_experimental", columna="practico", texto="Práctica de aprendizaje experimental 1: a"),
+                   _a("M2-S2", "practica_experimental", columna="practico", texto="Práctica de aprendizaje experimental: b"),
+                   _a("M2-S2", "estudio_caso"), _a("M2-S2", "prueba_sumativa"), _a("M2-S2", "proyecto_final", columna="autonomo")]
+    textos = {"M2-S1/practico": "Práctica de aprendizaje experimental 1: a", "M2-S2/practico":
+              "Práctica de aprendizaje experimental: b", "M2-S3/docente": "x"}
+    plan = calcular(actividades, EN_LINEA, [_bloque(1, "Bloque único", ["M1-S1", "M2-S1", "M2-S2", "M2-S3"])], textos)
+    assert "Momento 2, sesión 2 → «Práctica de aprendizaje experimental 2" in plan.sugerencias[
+        "Prácticas experimentales sin numerar: M2-S2."]
+    assert "a Momento 2, sesión 1 o Momento 2, sesión 3" in plan.sugerencias[
+        "M2-S2 concentra 4 evaluaciones en una sola sesión."]
+    assert "Momento 1, sesión 1" in calcular([a for a in actividades if a.tipo != "diagnostica"], EN_LINEA, [
+        _bloque(1, "Bloque único", ["M2-S1", "M2-S2"])], textos).sugerencias[
+        "No hay evaluación diagnóstica al inicio del proyecto formativo."]
+
+
+# --- Ajuste del docente dentro de cada calificación (V4-4) --------------------------------------
+
+def test_el_docente_reparte_dentro_de_cada_calificacion():
+    from app.evaluacion.pesos import clave, grupos, validar_ajustes
+    actividades = _completo_en_linea()
+    bloques = [_bloque(1, "Bloque único", sorted({a.sesion for a in actividades}))]
+    sugerido = calcular(actividades, EN_LINEA, bloques)
+    ajustes = {clave(p.actividad): p.peso_bloque for p in sugerido.actividades if p.actividad.calificacion}
+    practicas = next(g for g in grupos(actividades, EN_LINEA, bloques) if g["calificacion"] == "C2_practicas")
+    a, b = practicas["claves"]
+    ajustes[a], ajustes[b] = 15.0, 5.0  # 20 % de prácticas en línea, repartido 15 / 5.
+    assert validar_ajustes(actividades, EN_LINEA, bloques, ajustes) == []
+    plan = calcular(actividades, EN_LINEA, bloques, ajustes=ajustes)
+    assert {clave(p.actividad): p.peso_bloque for p in plan.actividades}[a] == 15.0
+    assert plan.por_bloque == {1: 100.0}
+
+
+@pytest.mark.parametrize("cambio,error", [
+    (lambda aj, a, b: aj.update({a: 11.0}), "«Actividades prácticas» suma 21 % y la norma pide 20 %"),
+    (lambda aj, a, b: aj.pop(a), "Faltan los pesos de"),
+    (lambda aj, a, b: aj.update({"M9-S9/docente/foro": 1.0}), "no están en el plan"),
+    (lambda aj, a, b: aj.update({a: -1.0, b: 21.0}), "entre 0 y 100"),
+])
+def test_un_reparto_que_rompe_la_norma_se_rechaza(cambio, error):
+    from app.evaluacion.pesos import clave, grupos, validar_ajustes
+    actividades = _completo_en_linea()
+    bloques = [_bloque(1, "Bloque único", sorted({a.sesion for a in actividades}))]
+    ajustes = {clave(p.actividad): p.peso_bloque for p in calcular(actividades, EN_LINEA, bloques).actividades
+               if p.actividad.calificacion}
+    a, b = next(g for g in grupos(actividades, EN_LINEA, bloques) if g["calificacion"] == "C2_practicas")["claves"]
+    cambio(ajustes, a, b)
+    assert any(error in e for e in validar_ajustes(actividades, EN_LINEA, bloques, ajustes))
+    assert validar_ajustes(actividades, HIBRIDA, [], {}) == [
+        "La norma de esta modalidad no está definida: no hay pesos que ajustar."]

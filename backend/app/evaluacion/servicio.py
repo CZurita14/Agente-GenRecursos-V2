@@ -98,3 +98,25 @@ def procesar_clasificacion(conn, trabajo, cliente, worker_id: str, lease_s: int)
         conn.execute("update clasificacion_silabo set estado='lista', tipos=%s, actualizado=now() "
                      "where asignatura_id=%s and huella=%s", (Jsonb(tipos), trabajo.asignatura_id, h))
         terminar(conn, trabajo.id, "listo", **cerco)
+
+
+# --- Pesos confirmados por el docente (V4-4) ----------------------------------------------------
+
+def pesos_confirmados(conn, asignatura_id, h: str) -> tuple[dict | None, bool]:
+    """(fila de esta versión del sílabo o None, hay pesos confirmados de otra versión)."""
+    fila = conn.execute("select pesos, confirmado_por, confirmado_en from pesos_docente "
+                        "where asignatura_id=%s and huella=%s", (asignatura_id, h)).fetchone()
+    otra = conn.execute("select 1 from pesos_docente where asignatura_id=%s and huella<>%s limit 1",
+                        (asignatura_id, h)).fetchone()
+    return fila, fila is None and otra is not None
+
+
+def guardar_pesos(conn, asignatura_id, h: str, pesos: dict[str, float], correo: str) -> None:
+    conn.execute("insert into pesos_docente (asignatura_id, huella, pesos, confirmado_por) values (%s,%s,%s,%s) "
+                 "on conflict (asignatura_id, huella) do update set pesos=excluded.pesos, "
+                 "confirmado_por=excluded.confirmado_por, confirmado_en=now()",
+                 (asignatura_id, h, Jsonb(pesos), correo))
+
+
+def borrar_pesos(conn, asignatura_id, h: str) -> None:
+    conn.execute("delete from pesos_docente where asignatura_id=%s and huella=%s", (asignatura_id, h))

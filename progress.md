@@ -28,11 +28,30 @@ Estados: `⬜ pendiente` · `🔄 en curso` · `🔁 devuelta (ronda n)` · `✅
 |---|---|---|
 | V4-1 | Revisión visual del plan en la app (botones nuevos, simulacro acumulativo en su pestaña) | ✅ hecha |
 | V4-2 | Dependencias entre sesiones (§6): tareas complementarias, insumo previo, eslabones rotos; insumo de respaldo solo donde hay dependencia | ✅ hecha |
-| V4-3 | Alertas con sugerencia de corrección (qué agregar y dónde) | 🔄 en curso |
-| V4-4 | El docente confirma o ajusta los pesos (suma 100 por bloque, guardado por versión del sílabo) | ⬜ pendiente |
-| V4-5 | Validación completa, documentación y push a la rama | ⬜ pendiente |
+| V4-3 | Alertas con sugerencia de corrección (qué agregar y dónde) | ✅ hecha |
+| V4-4 | El docente confirma o ajusta los pesos dentro de cada calificación (decisión del usuario: cada calificación conserva su % de la norma), guardado por versión del sílabo | ✅ hecha |
+| V4-5 | Validación completa, documentación y push a la rama | ✅ hecha |
 
 ### Bitácora V4
+
+- **2026-11-27 · V4-5 (cierre):** suite estándar del backend (1 568 pasan), frontend (37 unitarias, 42 de navegador, tipos y build), `docs/plan-evaluacion.md` §7 y push a `V3-SilabosPesos` (PR #4 en borrador, sin fusionar). Cuenta de prueba `prueba.v4` borrada. La base local `genrecursos-db` se había detenido al reiniciarse Docker; se volvió a arrancar.
+- **2026-11-27 · V4-4 (pesos del docente):** decisión del usuario: el docente reparte el peso solo dentro de cada calificación, y cada una conserva su % de la norma.
+  - **Backend:**
+    - migración `021_pesos_docente.sql` (una fila por huella del sílabo);
+    - `pesos.calcular(..., ajustes)`, `grupos` y `validar_ajustes`;
+    - `PUT` y `DELETE /plan-evaluacion/pesos`;
+    - el plan devuelve `pesos` (origen, quién y cuándo confirmó, `desactualizados` si se confirmó otra versión del sílabo), `grupos` y la `clave` de cada actividad.
+  - **Pantalla:** «Confirmar o ajustar pesos», con la suma de cada calificación frente a su %; el botón se activa solo si todo cuadra; «Volver a los sugeridos».
+  - **Verificado en la app con PPC:** C3 del Parcial 1 repartida en 12 / 8 → 6 % y 4 % de la nota; restaurar vuelve a 10 / 10.
+
+- **2026-11-27 · V4-3 (alertas con sugerencia):** `Plan.alertar(texto, sugerencia)` en `pesos.py`. El plan devuelve `avisos` ([{texto, sugerencia}]) y conserva `alertas`. Sugerencias:
+  - **Calificación que falta en un bloque:** propone la sesión del bloque con menos evaluaciones que tiene la columna adecuada (la prueba sumativa, al cierre del bloque), con un rótulo del prompt institucional que el docente completa.
+  - **Diagnóstica:** en M1-S1.
+  - **Prácticas sin numerar:** la numeración correlativa en todo el periodo.
+  - **Sesión sobrecargada:** sesiones vecinas con menos evaluaciones.
+  - **Dependencias:** cómo nombrar el insumo (§6.3) y medir solo el avance nuevo (§6.4).
+
+  Nunca copian texto del sílabo; lo que el docente completa va entre corchetes. Verificado en la app con PPC.
 
 - **2026-11-26 · V4-2 (dependencias, §6):** `app/evaluacion/dependencias.py`, con reglas deterministas y sin IA.
   - **Clasificación:** cada tarea (columna práctico-experimental o autónoma) es independiente o complementaria. Marcadores: versión corregida o final, iteración, ajuste, aplicación de mejoras, incorporación, fase de desarrollo o entrega, «continúa con», «a partir del prototipo…». Las lecturas previas, los prerrequisitos, los ajustes razonables (DUA), «incorpora retroalimentación» y «continua» como adjetivo cuentan como independientes.
