@@ -48,7 +48,7 @@ const MOMENTOS = { rol: 'dueno', momentos: [MOMENTO(2, 'Planeación', 'M2-S1', '
   MOMENTO(3, 'Resolución', 'M3-S1', '2026-10-21', 'ESTIMACIÓN')] };
 const PLAN = { rol: 'dueno', modalidad: 'EN LINEA', norma: null, bloques: [], clasificacion_ia: 'no_necesaria',
   por_bloque: {}, por_momento: {}, alertas: [], actividades: [] };
-const RESUMEN = { carpeta: 'docente_analisis', validados: 0, asignatura: 0, momentos: [] };
+const RESUMEN = { carpeta: 'docente_analisis_de_datos_con_un_nombre_de_carpeta_largo', validados: 0, asignatura: 0, momentos: [] };
 const RECURSO = validado => ({ id: 'r1', trabajo_id: 't1', ambito_id: 'M2-S1', herramienta: 'cuestionario', version_silabo: '1.0',
   estado: 'requiere_revision', revision: 0, creado: '2026-10-28T10:00:00Z', silabo_actualizado: false, evidencia_vigente: true,
   validado: !!validado, validado_por: validado ? USUARIO.correo : null, validado_en: validado ? '2026-10-28T11:00:00Z' : null,
@@ -250,8 +250,11 @@ test('móvil: sin desbordamiento, menú colapsado y tarjetas apiladas', async ()
 
 // --- P6b: Mis recursos ----------------------------------------------------------------
 
-async function abrirAsignatura(page) {
-  await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('button', { name: 'Proyecto Formativo', exact: true }).click();
+async function abrirAsignatura(page, { movil = false } = {}) {
+  if (movil) {
+    await page.getByRole('button', { name: 'Abrir navegación' }).click();
+    await page.getByRole('navigation', { name: 'Navegación móvil' }).getByRole('button', { name: 'Proyecto Formativo', exact: true }).click();
+  } else await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('button', { name: 'Proyecto Formativo', exact: true }).click();
   await page.getByRole('button', { name: 'Abrir ANALISIS DE DATOS' }).click();
   await page.getByRole('heading', { name: 'ANALISIS DE DATOS' }).waitFor();
 }
@@ -304,6 +307,37 @@ test('el Proyecto Formativo abre en sus momentos, con las clases del momento y s
   await page.getByRole('button', { name: /mié 21\/10 · Clase 2/ }).waitFor();
   assert.equal(await page.getByText(/Paso 1 · Elige la clase/).count(), 0);
   await context.close();
+});
+
+test('pantalla ancha: momentos, momento abierto y norma en tres columnas', async () => {
+  const { context, page } = await abrir({ viewport: { width: 1600, height: 900 } });
+  await abrirAsignatura(page);
+  const norma = page.getByRole('complementary', { name: 'Evaluación del Proyecto Formativo' });
+  await norma.getByRole('heading', { name: 'Norma de evaluación de la modalidad' }).waitFor();
+  assert.equal(await page.getByRole('button', { name: 'Ver detalle y pesos' }).count(), 0);
+  const lado = await page.getByRole('complementary', { name: 'Momentos del Proyecto Formativo' }).boundingBox();
+  const centro = await page.getByRole('heading', { name: 'Clases del momento' }).boundingBox();
+  const derecha = await norma.boundingBox();
+  assert.ok(lado.x + lado.width <= centro.x && centro.x + centro.width <= derecha.x);
+  await page.getByText('Preparar de una vez').waitFor();
+  await context.close();
+});
+
+test('laptop mediana pliega la norma y el teléfono deja todo en una columna', async () => {
+  for (const viewport of [{ width: 1100, height: 800 }, { width: 375, height: 812 }]) {
+    const { context, page } = await abrir({ viewport });
+    await abrirAsignatura(page, { movil: viewport.width < 768 });
+    const ver = page.getByRole('button', { name: 'Ver detalle y pesos' });
+    await ver.waitFor();
+    assert.equal(await ver.getAttribute('aria-expanded'), 'false');
+    assert.equal(await page.getByRole('complementary', { name: 'Evaluación del Proyecto Formativo' }).count(), 0);
+    await ver.click();
+    await page.getByRole('button', { name: 'Ocultar detalle' }).waitFor();
+    // Nada se sale de la pantalla a lo ancho.
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
+    await page.getByRole('button', { name: 'Herramientas del Proyecto Formativo' }).waitFor();
+    await context.close();
+  }
 });
 
 test('al volver de una clase se abre el mismo momento', async () => {

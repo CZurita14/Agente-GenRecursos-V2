@@ -6,7 +6,7 @@ import {
   urlDescarga,
 } from '../api/cliente';
 import type { Ambito, MomentoDetalle, PlanEvaluacion, ResumenDescarga, SemanaMenu, TrabajoCreado } from '../api/tipos';
-import { NormaModalidad, PlanMomento, porcentajeMomento } from './PlanEvaluacion';
+import { NormaModalidad, PlanMomento, PrepararParcial, porcentajeMomento } from './PlanEvaluacion';
 import { dia, fechaCorta, nombreAmbito } from '../api/herramientas';
 
 interface MomentosProps {
@@ -26,6 +26,26 @@ interface MomentosProps {
 
 const mensaje = (e: unknown) => e instanceof ErrorApi ? e.message : 'No hay conexión con el servidor.';
 
+/** Cortes de Tailwind: xl (1280 px) = tres columnas; lg (1024 px) = dos; menos = una sola columna. */
+const ANCHO_XL = '(min-width: 1280px)';
+const ANCHO_LG = '(min-width: 1024px)';
+type Ancho = 'xl' | 'lg' | 'base';
+const leerAncho = (): Ancho => {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return 'xl';
+  return window.matchMedia(ANCHO_XL).matches ? 'xl' : window.matchMedia(ANCHO_LG).matches ? 'lg' : 'base';
+};
+function useAncho(): Ancho {
+  const [ancho, setAncho] = useState<Ancho>(leerAncho);
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return;
+    const consultas = [ANCHO_XL, ANCHO_LG].map(q => window.matchMedia(q));
+    const cambiar = () => setAncho(leerAncho());
+    consultas.forEach(c => c.addEventListener('change', cambiar));
+    return () => consultas.forEach(c => c.removeEventListener('change', cambiar));
+  }, []);
+  return ancho;
+}
+
 /** Pantalla principal del Proyecto Formativo: norma y plan de evaluación, y cada momento con su contexto, su guía,
  * sus evaluaciones, sus herramientas y sus clases (todo en una pantalla, sin ir y volver). */
 export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado, onVerRecursos, onSesionVencida,
@@ -39,6 +59,8 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
   const [error, setError] = useState('');
   const [abierto, setAbierto] = useState<number | null>(null);
   const [plan, setPlan] = useState<PlanEvaluacion | null>(null);
+  const ancho = useAncho();
+  const lateral = ancho !== 'base';
 
   const fallo = useCallback((e: unknown) => {
     if (e instanceof ErrorApi && e.estado === 401) return onSesionVencida();
@@ -91,32 +113,49 @@ export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado,
       </div>
       <div className="flex flex-wrap gap-2">
         <Button variant="secondary" onClick={onVerRecursos}>Ver recursos</Button>
-        {!lector && lista && <Button variant="secondary"
+        {!lector && lista && <Button variant="secondary" aria-label="Herramientas del Proyecto Formativo"
           onClick={() => onElegir({ tipo: 'asignatura', id: 'asignatura' }, 'Todo el Proyecto Formativo')}>
-          Herramientas del Proyecto Formativo</Button>}
+          <span className="sm:hidden">Herramientas del PF</span>
+          <span className="hidden sm:inline">Herramientas del Proyecto Formativo</span></Button>}
       </div>
     </div>
     {lector && <Alert tone="info">Tienes acceso de lectura: puedes ver los recursos, pero no generarlos.</Alert>}
     {error && <Alert tone="danger" role="alert">{error}</Alert>}
     {!lista && !error && <p className="text-muted" role="status">Cargando los momentos…</p>}
-    {plan && <NormaModalidad plan={plan} aid={aid} lector={lector} onPlan={setPlan} onError={fallo}
-      onGenerado={onGenerado} />}
-    {lista && <ol aria-label="Trazabilidad de momentos" className="flex flex-wrap items-center gap-2">
-      {lista.map((m, i) => <li key={m.numero} className="flex items-center gap-2">
-        <button type="button" onClick={() => abrir(m.numero)} aria-current={abierto === m.numero}
-          className={`rounded-lg border px-3 py-2 text-left text-sm ${abierto === m.numero ? 'border-highlight bg-highlight-soft' : 'border-line bg-surface'}`}>
-          <span className="block font-bold">Momento {m.numero}</span>
-          <span className="block text-xs text-muted">{m.fase.nombre}</span>
-          {plan?.norma?.estado === 'definida' && <span className="block text-xs font-bold text-action-ink">
-            {porcentajeMomento(plan.por_momento[m.numero] ?? 0)} de la nota</span>}
-        </button>
-        {i < lista.length - 1 && <ChevronRight aria-hidden="true" className="w-4 h-4 text-muted" />}
-      </li>)}
-    </ol>}
-    {lista?.filter(m => m.numero === abierto).map(m => <TarjetaMomento key={m.numero} aid={aid} momento={m}
-      lector={lector} plan={plan} onCambio={reemplazar} onError={fallo} onElegir={onElegir} onAbrir={onAbrir}
-      onGenerado={onGenerado} semanas={semanas} />)}
-    {resumen && <Descarga aid={aid} resumen={resumen} />}
+    {/* Pantalla ancha: momentos | momento abierto | norma. Laptop: momentos | norma plegada + momento.
+        Tableta y teléfono: una columna, con los momentos en fila y la norma plegada. */}
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_360px]">
+      <aside aria-label="Momentos del Proyecto Formativo"
+        className="min-w-0 space-y-3 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+        {lista && <ol aria-label="Trazabilidad de momentos"
+          className="flex items-stretch gap-2 overflow-x-auto pb-1 md:grid md:grid-flow-col md:auto-cols-fr md:overflow-visible md:pb-0 lg:flex lg:flex-col">
+          {lista.map((m, i) => <li key={m.numero} className="flex shrink-0 items-center gap-2">
+            <button type="button" onClick={() => abrir(m.numero)} aria-current={abierto === m.numero}
+              className={`w-full rounded-lg border px-3 py-2 text-left text-sm ${abierto === m.numero ? 'border-highlight bg-highlight-soft' : 'border-line bg-surface'}`}>
+              <span className="block font-bold">Momento {m.numero}</span>
+              <span className="block text-xs text-muted">{m.fase.nombre}</span>
+              {plan?.norma?.estado === 'definida' && <span className="block text-xs font-bold text-action-ink">
+                {porcentajeMomento(plan.por_momento[m.numero] ?? 0)} de la nota</span>}
+            </button>
+            {i < lista.length - 1 && <ChevronRight aria-hidden="true" className="w-4 h-4 shrink-0 text-muted md:hidden" />}
+          </li>)}
+        </ol>}
+        {lateral && plan && !lector && <PrepararParcial plan={plan} aid={aid} onGenerado={onGenerado} onError={fallo}
+          lateral />}
+      </aside>
+      <div className="min-w-0 space-y-6">
+        {plan && ancho !== 'xl' && <NormaModalidad plan={plan} aid={aid} lector={lector} onPlan={setPlan} onError={fallo}
+          onGenerado={onGenerado} plegable conPreparar={!lateral} />}
+        {lista?.filter(m => m.numero === abierto).map(m => <TarjetaMomento key={m.numero} aid={aid} momento={m}
+          lector={lector} plan={plan} onCambio={reemplazar} onError={fallo} onElegir={onElegir} onAbrir={onAbrir}
+          onGenerado={onGenerado} semanas={semanas} />)}
+        {resumen && <Descarga aid={aid} resumen={resumen} />}
+      </div>
+      {plan && ancho === 'xl' && <aside aria-label="Evaluación del Proyecto Formativo" className="min-w-0">
+        <NormaModalidad plan={plan} aid={aid} lector={lector} onPlan={setPlan} onError={fallo} onGenerado={onGenerado}
+          conPreparar={false} />
+      </aside>}
+    </div>
   </>;
 }
 
@@ -238,8 +277,8 @@ function TarjetaMomento({ aid, momento: m, lector, plan, onCambio, onError, onEl
           Más herramientas</Button>}
       </div>
       {m.recursos.length === 0 ? <p className="text-sm text-muted">Todavía no hay herramientas generadas en este momento.</p>
-        : <ul className="divide-y divide-line">{m.recursos.map(r => <li key={r.id}
-          className="flex flex-wrap items-center justify-between gap-2 py-2">
+        : <ul className="grid gap-2 sm:grid-cols-2 2xl:grid-cols-3">{m.recursos.map(r => <li key={r.id}
+          className="flex flex-col justify-between gap-2 rounded-lg border border-line p-3">
           <button type="button" className="text-left text-sm hover:underline" onClick={() => onAbrir(r.id)}>
             {r.nombre} <span className="text-muted">· {r.ambito_id === m.id ? 'momento' : nombreAmbito(r.ambito_id)}</span>
           </button>
@@ -274,7 +313,7 @@ function ClasesMomento({ momento: m, semanas, lector, onElegir }: { momento: Mom
         <CalendarDays aria-hidden="true" className="w-4 h-4" />
         Semana {semana.numero} · {fechaCorta(semana.inicio)} – {fechaCorta(semana.fin)}
       </h4>
-      <div className="grid gap-2 md:grid-cols-2">
+      <div className="grid gap-2 sm:grid-cols-2 2xl:grid-cols-3">
         {semana.clases.map(clase => {
           const n = cuenta(clase.clase_id);
           return <button key={clase.clase_id} type="button" disabled={lector}
@@ -301,7 +340,7 @@ function Descarga({ aid, resumen }: { aid: string; resumen: ResumenDescarga }) {
   const regenerar = resumen.momentos.reduce((n, m) => n + m.por_regenerar, 0);
   return <section aria-labelledby="descarga" className="bg-surface rounded-xl border border-line p-5 space-y-3">
     <h2 id="descarga" className="text-lg font-bold">Descargar el perfil docente</h2>
-    <p className="text-sm text-muted">Se descarga una carpeta <b>{resumen.carpeta}</b> con lo validado, ordenado por momento.</p>
+    <p className="text-sm text-muted">Se descarga una carpeta <b className="break-all">{resumen.carpeta}</b> con lo validado, ordenado por momento.</p>
     <table className="w-full text-sm">
       <thead><tr className="text-left text-muted"><th className="py-1">Momento</th><th>Guía</th><th>Validadas</th><th>Por regenerar</th></tr></thead>
       <tbody>{resumen.momentos.map(m => <tr key={m.numero} className="border-t border-line">

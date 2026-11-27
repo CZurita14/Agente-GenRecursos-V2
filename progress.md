@@ -36,8 +36,16 @@ TLS estricto queda para el final, cuando el usuario haga las pruebas finales (de
 | V5-3 | Revisión de seguridad de la rama (sin TLS): permisos, texto del sílabo en los prompts, escape en las exportaciones, abuso y costo del encolado masivo, secretos | ✅ hecha |
 | V5-4 | Validación completa, documentación y push | ✅ hecha |
 | V5-5 | Una sola pantalla por Proyecto Formativo: los momentos son la pantalla principal y las clases van dentro de cada momento | ✅ hecha |
+| V5-6 | La pantalla del Proyecto Formativo usa todo el ancho y se adapta a laptop, tableta y teléfono | ✅ hecha |
 
 ### Bitácora V5
+
+- **2026-11-27 · V5-6 (todo el ancho):** pedido del usuario para aprovechar los costados vacíos; mockup aprobado antes de cambiar.
+  - **Pantalla ancha (≥1280 px):** tres columnas. Momentos y «Preparar de una vez» a la izquierda, fijos al bajar; el momento abierto al centro; la norma completa a la derecha. El contenido llega a 1920 px solo en esta pantalla (`AppLayout amplio`, con la barra superior alineada).
+  - **Laptop mediana (1024–1279 px):** dos columnas; la norma queda plegada sobre el momento, con la barra de pesos, «N alertas» y «Ver detalle y pesos».
+  - **Tableta y teléfono:** una columna. Los momentos van en fila: con desplazamiento lateral en el teléfono y en cuadrícula en la tableta. La norma va plegada y trae dentro «Preparar de una vez».
+  - Herramientas generadas y clases en tarjetas de 2 o 3 columnas. Se corrigieron dos desbordes del teléfono: la columna sin límite de ancho y el nombre largo de la carpeta de descarga.
+  - Pruebas de navegador: 45 (dos nuevas, con tres anchos). Verificado en la app a 1700, 1150, 768 y 375 px.
 
 - **2026-11-27 · V5-5 (pantalla única):** pedido del usuario para reducir clics.
   - **Al entrar a un Proyecto Formativo** se abren sus momentos (`Momentos.tsx`). Ya no existe la pantalla «Paso 1 · Elige la clase» (`Asignatura.tsx` se eliminó).

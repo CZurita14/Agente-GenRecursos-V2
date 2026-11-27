@@ -80,7 +80,8 @@ export default function App() {
   // El panel de consumo muestra el proyecto formativo abierto; fuera de uno, todos los de la cuenta.
   const aidAbierto = 'curso' in ruta ? ruta.curso.aid : ruta.vista === 'recursos' ? ruta.aid : undefined;
 
-  return <AppLayout items={menu} activeId={pestana(ruta)} onChange={id => setRuta({ vista: id } as Ruta)} actions={acciones}>
+  return <AppLayout items={menu} activeId={pestana(ruta)} onChange={id => setRuta({ vista: id } as Ruta)} actions={acciones}
+    amplio={ruta.vista === 'momentos'}>
     {ruta.vista === 'inicio' && <Inicio onGenerar={() => setRuta({ vista: 'generar' })} />}
     {ruta.vista === 'cuentas' && adminCuentas && <Cuentas onSesionVencida={expirar} />}
     {ruta.vista === 'clave' && <CambiarClave onListo={() => setRuta({ vista: 'inicio' })}

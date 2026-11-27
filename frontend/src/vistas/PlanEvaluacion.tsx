@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertTriangle, CheckCircle2, Lightbulb, Link2, Sparkles } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ChevronDown, Lightbulb, Link2, Sparkles } from 'lucide-react';
 import { Alert, Badge } from '../components';
 import { ErrorApi, generar, guardarPesos, loteParcial, prepararParcial, restaurarPesos } from '../api/cliente';
 import type { ActividadPlan, LoteParcial, PlanEvaluacion as Plan, TrabajoCreado } from '../api/tipos';
@@ -40,26 +40,41 @@ export const porcentajeMomento = (n: number) => `${n.toLocaleString('es-EC', { m
 interface NormaProps {
   plan: Plan; aid?: string; lector?: boolean; onPlan?: (p: Plan) => void; onError?: (e: unknown) => void;
   onGenerado?: (creados: TrabajoCreado[]) => void;
+  /** Laptop mediana, tableta y teléfono: solo la barra de pesos y las alertas; el detalle se abre con un botón. */
+  plegable?: boolean;
+  /** Con columna lateral, «Preparar de una vez» va junto a los momentos y no dentro de la norma. */
+  conPreparar?: boolean;
 }
 
 /** Norma del RRA de la modalidad, bloques de calificación y alertas del plan implícito en el sílabo. */
-export function NormaModalidad({ plan, aid, lector = true, onPlan, onError, onGenerado }: NormaProps) {
+export function NormaModalidad({ plan, aid, lector = true, onPlan, onError, onGenerado, plegable = false,
+  conPreparar = true }: NormaProps) {
   const { norma } = plan;
   const cumple = !!norma && norma.estado === 'definida' && plan.alertas.length === 0;
+  const [abierta, setAbierta] = useState(false);
+  const detalle = !plegable || abierta;
+  const alertas = plan.alertas.length;
   return <section aria-labelledby="norma" className="bg-surface rounded-xl border border-line p-5 space-y-3">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h2 id="norma" className="font-bold">Norma de evaluación de la modalidad</h2>
-      <span className="flex flex-wrap gap-1">
+      <span className="flex flex-wrap items-center gap-1">
+        {plegable && alertas > 0 && <Badge tone="warning">{alertas} {alertas === 1 ? 'alerta' : 'alertas'}</Badge>}
         <Badge tone="info">{norma ? MODALIDAD[norma.modalidad] ?? norma.modalidad : plan.modalidad || 'Sin modalidad'} · RRA</Badge>
         {plan.bloques.length > 0 && <Badge tone="neutral">{plan.bloques.length === 1 ? 'Un bloque'
           : `${plan.bloques.length} parciales`}</Badge>}
+        {plegable && <button type="button" aria-expanded={abierta} aria-controls="norma-detalle"
+          onClick={() => setAbierta(a => !a)}
+          className="inline-flex items-center gap-1 rounded-lg border border-line px-2.5 py-1 text-sm hover:bg-app-soft">
+          {abierta ? 'Ocultar detalle' : 'Ver detalle y pesos'}
+          <ChevronDown aria-hidden="true" className={`w-4 h-4 transition-transform ${abierta ? 'rotate-180' : ''}`} />
+        </button>}
       </span>
     </div>
     {norma && norma.estado === 'definida' && <>
       <div className="flex h-2.5 overflow-hidden rounded-full" aria-hidden="true">
         {CALIFICACIONES.map(c => <div key={c.codigo} className={c.color} style={{ width: `${norma.pesos[c.codigo] ?? 0}%` }} />)}
       </div>
-      <p className="text-sm text-muted">
+      {detalle && <div id="norma-detalle" className="space-y-3"><p className="text-sm text-muted">
         {CALIFICACIONES.map(c => `${c.corto} ${norma.pesos[c.codigo]}`).join(' · ')}
         {norma.c5 === 'prueba_y_proyecto_final' && ' · C5 = prueba + proyecto final'}
       </p>
@@ -67,11 +82,13 @@ export function NormaModalidad({ plan, aid, lector = true, onPlan, onError, onGe
         <li key={b.numero} className="rounded-lg border border-line px-3 py-1.5">
           <b>{b.nombre}</b> · {fechaCorta(b.inicio)} – {fechaCorta(b.fin)} · {porcentaje(plan.por_bloque[b.numero] ?? 0)} de 100
         </li>)}</ul>}
+      </div>}
     </>}
     {plan.clasificacion_ia === 'en_curso' && <p className="text-sm text-info flex items-center gap-1.5" role="status">
       <Sparkles aria-hidden="true" className="w-4 h-4" />Clasificando con IA las actividades que no traen rótulo…</p>}
     {plan.clasificacion_ia === 'error' && <p className="text-sm text-danger">No se pudieron clasificar algunas actividades;
       se muestran como actividades de avance.</p>}
+    {detalle && <>
     {cumple && <p className="text-sm text-success flex items-center gap-1.5">
       <CheckCircle2 aria-hidden="true" className="w-4 h-4" />El plan implícito en el sílabo cumple la norma.</p>}
     {plan.alertas.length > 0 && <ul className="space-y-2">{(plan.avisos ?? plan.alertas.map(texto => ({ texto, sugerencia: null })))
@@ -91,7 +108,9 @@ export function NormaModalidad({ plan, aid, lector = true, onPlan, onError, onGe
       revisa y confirma de nuevo los pesos.</p>}
     {!lector && aid && onPlan && (plan.grupos?.length ?? 0) > 0 &&
       <AjustePesos plan={plan} aid={aid} onPlan={onPlan} onError={onError} />}
-    {!lector && aid && onGenerado && <PrepararParcial plan={plan} aid={aid} onGenerado={onGenerado} onError={onError} />}
+    {conPreparar && !lector && aid && onGenerado && <PrepararParcial plan={plan} aid={aid} onGenerado={onGenerado}
+      onError={onError} />}
+    </>}
   </section>;
 }
 
@@ -99,8 +118,8 @@ const redondear = (n: number) => Math.round(n * 100) / 100;
 const dolares = (n: number) => `US$ ${n.toLocaleString('es-EC', { minimumFractionDigits: 2, maximumFractionDigits: 3 })}`;
 
 /** V5-1: encola de una vez las herramientas de las evaluaciones de un bloque, mostrando antes cuánto cuesta. */
-function PrepararParcial({ plan, aid, onGenerado, onError }: { plan: Plan; aid: string;
-  onGenerado: (creados: TrabajoCreado[]) => void; onError?: (e: unknown) => void }) {
+export function PrepararParcial({ plan, aid, onGenerado, onError, lateral = false }: { plan: Plan; aid: string;
+  onGenerado: (creados: TrabajoCreado[]) => void; onError?: (e: unknown) => void; lateral?: boolean }) {
   const [lote, setLote] = useState<LoteParcial | null>(null);
   const [ocupado, setOcupado] = useState(false);
   const [aviso, setAviso] = useState('');
@@ -121,9 +140,9 @@ function PrepararParcial({ plan, aid, onGenerado, onError }: { plan: Plan; aid: 
     catch (e) { atender(e); } finally { setOcupado(false); }
   };
 
-  return <div className="space-y-2 border-t border-line pt-3">
+  return <div className={lateral ? 'space-y-2 rounded-xl border border-line bg-surface p-3' : 'space-y-2 border-t border-line pt-3'}>
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm font-bold">Preparar de una vez:</span>
+      <span className={`text-sm font-bold ${lateral ? 'w-full' : ''}`}>Preparar de una vez{lateral ? '' : ':'}</span>
       {bloques.map(b => <button key={b.numero} type="button" disabled={ocupado} onClick={() => ver(b.numero)}
         className="inline-flex items-center gap-1 rounded-lg border border-line px-3 py-1.5 text-sm hover:bg-app-soft disabled:opacity-60">
         <Sparkles aria-hidden="true" className="w-3.5 h-3.5 text-action-ink" />{b.nombre}</button>)}
