@@ -69,12 +69,34 @@ def crear_trabajos(conn, solicitud: SolicitudGeneracion) -> list[UUID]:
                           silabo=asignatura["silabo"], version_silabo=asignatura["version_silabo"])
         if solicitud.perfil_dificultad is not None:
             parametros["perfil_dificultad"] = solicitud.perfil_dificultad
+        from app.momentos.contexto import material_momento
+
+        def con_material(h: str) -> dict:
+            # Instantánea del contexto del docente y de la guía validada del momento.
+            material = material_momento(conn, solicitud.asignatura_id, solicitud.ambito.tipo, solicitud.ambito.id, h)
+            return {**parametros, "material_momento": material} if material else parametros
         return [encolar(conn, asignatura_id=solicitud.asignatura_id, agente=asignatura["agente"],
-                        ambito=solicitud.ambito, herramienta=h, parametros=parametros)
+                        ambito=solicitud.ambito, herramienta=h, parametros=con_material(h))
                 for h in solicitud.herramientas]
 
 
-def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonador=None) -> bool:
+def _fuentes_guia(conn, trabajo, silabo, ctx, config, perfil=None) -> dict:
+    """Bibliografía del sílabo y fuentes web (SearchAPI) del momento: solo para la guía de estudio."""
+    from app.agentes.mensajes import leer
+    from app.fuentes.searchapi import bibliografia_silabo, fuentes_momento
+    from app.momentos.trazabilidad import numero_momento
+    previos = leer(conn, trabajo.id, Encargo)
+    if previos:
+        return previos[0].fuentes  # Al reanudar, las mismas fuentes con las que empezó.
+    web = []
+    if config is not None and (n := numero_momento(ctx.clase_id)) is not None:
+        fb = perfil.fuentes_bibliograficas if perfil is not None else None
+        web = fuentes_momento(conn, config, trabajo.asignatura_id, n, list(ctx.contenidos), ctx.carrera,
+                              bases=tuple(fb.bases) if fb else ("google_scholar",), desde=fb.desde if fb else None)
+    return {"silabo": bibliografia_silabo(silabo), "web": web}
+
+
+def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonador=None, config=None) -> bool:
     trabajo = tomar_siguiente(conn, worker_id, lease_s)
     if trabajo is None:
         return False
@@ -87,6 +109,10 @@ def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonado
             from app.chat.ejecutor import procesar_chat
             procesar_chat(conn, trabajo, cliente, perfiles, worker_id, lease_s)  # El chat no consulta el razonador.
             return True
+        if trabajo.tipo == 'clasificacion':
+            from app.evaluacion.servicio import procesar_clasificacion
+            procesar_clasificacion(conn, trabajo, cliente, worker_id, lease_s)  # Plan implícito en el sílabo.
+            return True
         silabo = SilaboUTI.model_validate(trabajo.parametros["silabo"])
         ctx = contexto_ambito(silabo, trabajo.ambito)
         encargo = Encargo(
@@ -95,6 +121,8 @@ def procesar_uno(conn, cliente, perfiles, worker_id: str, lease_s: int, razonado
             carrera=ctx.carrera, nivel=ctx.nivel, ambito=trabajo.ambito,
             herramienta=trabajo.herramienta, perfil_dificultad=trabajo.parametros.get("perfil_dificultad", perfil_por_nivel(ctx.nivel)),
             instrucciones=trabajo.parametros.get("instrucciones", ""),
+            material_momento=trabajo.parametros.get("material_momento", ""),
+            fuentes=_fuentes_guia(conn, trabajo, silabo, ctx, config, perfiles.get(trabajo.agente)) if trabajo.herramienta == "guia_estudio" else {},
         )
         Coordinador(perfiles[trabajo.agente], WORKERS, cliente, razonador=razonador).ejecutar(
             conn, trabajo, encargo, ctx,

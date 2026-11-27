@@ -1,0 +1,247 @@
+{
+  "contrato": "silabo-api/0.1.0",
+  "documento": {
+    "id": "SIL-B26-ENFE-000123",
+    "version": "1.0",
+    "estado": "aprobado",
+    "generado": "2026-11-16T10:30:00-05:00"
+  },
+  "portada": {
+    "facultad": "FACULTAD DE CIENCIAS DE LA SALUD Y BIENESTAR HUMANO",
+    "carrera": "ENFERMERIA",
+    "periodo_codigo": "B26",
+    "periodo_inicio": "2026-10-05",
+    "periodo_fin": "2027-03-01",
+    "pf_nombre": "FARMACOLOGIA II",
+    "pf_codigo": "B26-ENFE-4-00000-0000",
+    "version": "1.0",
+    "fecha_aprobacion": "2026-11-03"
+  },
+  "presentacion": {
+    "nombre": "FARMACOLOGIA II",
+    "uoc": "PROFESIONAL",
+    "creditos": 3,
+    "horas_total": 144,
+    "periodo": "B26",
+    "nivel": 4,
+    "modalidad": "PRESENCIAL",
+    "nivel_formacion": "Pregrado",
+    "horas_contacto": 72,
+    "horas_practico": 48,
+    "horas_autonomo": 24,
+    "horario_contacto": [
+      "Lunes 08:00 a 08:59",
+      "Lunes 09:00 a 09:59"
+    ],
+    "horario_practico": [],
+    "prerrequisitos": [
+      "FARMACOLOGIA I"
+    ],
+    "correquisitos": []
+  },
+  "mapa": {
+    "competencia_perfil": "Texto de la competencia específica del perfil de egreso.",
+    "competencia_pf": "Texto de la competencia específica del proyecto formativo.",
+    "metacompetencias": [
+      {
+        "texto": "Gobernanza ética de tecnologías digitales e IA",
+        "marcada": false
+      },
+      {
+        "texto": "Innovación y emprendimiento sostenible con impacto territorial",
+        "marcada": false
+      },
+      {
+        "texto": "Liderazgo colaborativo e intercultural para la transformación territorial",
+        "marcada": false
+      },
+      {
+        "texto": "Metacognición estratégica y proyecto ético de vida",
+        "marcada": false
+      },
+      {
+        "texto": "Pensamiento sociocrítico y sistémico para la toma de decisiones estratégicas",
+        "marcada": true
+      }
+    ],
+    "habilidades_blandas": [
+      "Pensamiento crítico",
+      "Trabajo en equipo"
+    ],
+    "ejes_transversales": [
+      {
+        "eje": "Interculturalidad",
+        "como_se_evidencia": "Cómo se evidencia el eje en este proyecto formativo."
+      }
+    ],
+    "inclusion": "Medidas de inclusión y atención a la diversidad.",
+    "resultados_aprendizaje": [
+      {
+        "id": "RA1",
+        "texto": "Analiza la farmacocinética de los grupos terapéuticos para la administración segura de medicamentos.",
+        "evidencia": "Informe de caso clínico (Momento 1)"
+      },
+      {
+        "id": "RA2",
+        "texto": "Aplica protocolos de administración de medicamentos en situaciones simuladas.",
+        "evidencia": "Lista de cotejo de práctica simulada (Momento 2)"
+      }
+    ],
+    "contribucion_perfil": "Contribución del proyecto formativo al perfil de egreso.",
+    "problema": "Problema, necesidad u oportunidad del territorio.",
+    "pregunta_reto": "¿Pregunta o reto que guía el proyecto formativo?",
+    "evidencia_central": "Evidencia de desempeño central del proyecto formativo.",
+    "pis_nombre": "Nombre del Proyecto Interdisciplinario Socioformativo",
+    "pis_aporte": "Aporte del proyecto formativo al PIS.",
+    "metodologias": [
+      "Aprendizaje Basado en Problemas (ABP)",
+      "Clase Invertida"
+    ]
+  },
+  "momentos": [
+    {
+      "numero": 1,
+      "titulo": "1. SENSIBILIZACIÓN, CONTEXTUALIZACIÓN Y CONCEPTUALIZACIÓN",
+      "fecha_inicio": "2026-10-05",
+      "fecha_fin": "2026-11-27",
+      "ra_referidos": [
+        "RA1"
+      ],
+      "evidencia": "Informe de caso clínico",
+      "sesiones": [
+        {
+          "numero": 1,
+          "fecha_inicio": "2026-10-05",
+          "fecha_fin": "2026-10-05",
+          "docente": {
+            "actividad": "Clase dialogada sobre farmacocinética.",
+            "horas": 36
+          },
+          "docente_asincronica": null,
+          "practico": {
+            "actividad": "Taller de cálculo de dosis.",
+            "horas": 24
+          },
+          "autonomo": {
+            "actividad": "Lectura guiada y cuestionario.",
+            "horas": 12
+          },
+          "contenidos": [
+            "Absorción y distribución",
+            "Metabolismo y excreción"
+          ]
+        }
+      ],
+      "totales": {
+        "docente": 36,
+        "practico": 24,
+        "autonomo": 12
+      },
+      "recursos": "Aula virtual, laboratorio de simulación.",
+      "politica_ia": "Uso permitido para explorar conceptos; toda referencia propuesta por IA se verifica.",
+      "rubrica": {
+        "evidencia": "Informe de caso clínico",
+        "ra_citados": [
+          {
+            "id": "RA1",
+            "texto": "Analiza la farmacocinética de los grupos terapéuticos para la administración segura de medicamentos."
+          }
+        ],
+        "filas": [
+          {
+            "indicador": "Interpretación de la farmacocinética en el caso",
+            "niveles": {
+              "receptivo": "Descriptor receptivo.",
+              "resolutivo": "Descriptor resolutivo.",
+              "reflexivo": "Descriptor reflexivo.",
+              "critico": "Descriptor crítico.",
+              "cocreativo": "Descriptor cocreativo."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "numero": 2,
+      "titulo": "2. APLICACIÓN Y TRANSFERENCIA",
+      "fecha_inicio": "2026-11-30",
+      "fecha_fin": "2027-02-26",
+      "ra_referidos": [
+        "RA2"
+      ],
+      "evidencia": "Lista de cotejo de práctica simulada",
+      "sesiones": [
+        {
+          "numero": 1,
+          "fecha_inicio": "2026-11-30",
+          "fecha_fin": "2026-11-30",
+          "docente": {
+            "actividad": "Demostración de técnicas de administración.",
+            "horas": 36
+          },
+          "docente_asincronica": null,
+          "practico": {
+            "actividad": "Práctica simulada por estaciones.",
+            "horas": 24
+          },
+          "autonomo": {
+            "actividad": "Elaboración de protocolo.",
+            "horas": 12
+          },
+          "contenidos": [
+            "Vías de administración"
+          ]
+        }
+      ],
+      "totales": {
+        "docente": 36,
+        "practico": 24,
+        "autonomo": 12
+      },
+      "recursos": "Laboratorio de simulación.",
+      "politica_ia": null,
+      "rubrica": {
+        "evidencia": "Lista de cotejo de práctica simulada",
+        "ra_citados": [
+          {
+            "id": "RA2",
+            "texto": "Aplica protocolos de administración de medicamentos en situaciones simuladas."
+          }
+        ],
+        "filas": [
+          {
+            "indicador": "Aplicación del protocolo",
+            "niveles": {
+              "receptivo": "Descriptor receptivo.",
+              "resolutivo": "Descriptor resolutivo.",
+              "reflexivo": "Descriptor reflexivo.",
+              "critico": "Descriptor crítico.",
+              "cocreativo": "Descriptor cocreativo."
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "rubrica_producto_final": {
+    "evidencia": "Evidencia de desempeño central del proyecto formativo.",
+    "filas": [
+      {
+        "indicador": "Integración de los resultados de aprendizaje",
+        "niveles": {
+          "receptivo": "Descriptor receptivo.",
+          "resolutivo": "Descriptor resolutivo.",
+          "reflexivo": "Descriptor reflexivo.",
+          "critico": "Descriptor crítico.",
+          "cocreativo": "Descriptor cocreativo."
+        }
+      }
+    ]
+  },
+  "bibliografia": {
+    "basica": [
+      "Autor, A. (2024). Título del libro. Editorial."
+    ],
+    "complementaria": []
+  }
+}

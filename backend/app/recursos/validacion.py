@@ -108,6 +108,9 @@ def validar_contenido(
                     for s, m in zip(definicion.secciones, definicion.modelos)}
         if herramienta == "estudio_caso" and canonico["caso"]["escenario"] != original["caso"]["escenario"]:
             raise EdicionInvalida  # El escenario lo fija el código (C9).
+        if herramienta == "guia_estudio":
+            # La bibliografía (enlaces reales) la arma el sistema: editar la guía no la cambia.
+            canonico["aplicacion"]["bibliografia"] = (original.get("aplicacion") or {}).get("bibliografia")
         from app.herramientas.imagenes import hashes
         if not hashes(canonico) <= hashes(original):
             raise EdicionInvalida  # Las imágenes las busca el sistema; editar solo puede quitarlas.

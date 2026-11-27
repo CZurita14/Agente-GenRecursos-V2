@@ -13,18 +13,24 @@ import psycopg
 from app.agentes.facultades import cargar_catalogo, cargar_perfiles
 from app.api.asignaturas import router as asignaturas_router
 from app.api.admin import router as admin_router
+from app.api.consumo import router as consumo_router
+from app.api.monitor_uti import router as monitor_router
 from app.api.auth import router as auth_router
+from app.api.cuentas import router as cuentas_router
 from app.api.cuerpo import LimiteJSON
 from app.api.recursos import router as recursos_router
+from app.api.momentos import router as momentos_router
 from app.api.chat import router as chat_router
 from app.api.privacidad import router as privacidad_router
 from app.api.errores import registrar_errores
+from app.auth.cuentas import ServicioCuentas
 from app.auth.servicio import ServicioAuth
 from app.config import RAIZ, Ajustes, ajustes
 from app.db.conexion import conectar
 from app.db.pool import PoolConexiones
 from app.asignaturas.servicio import ServicioAsignaturas
 from app.recursos.servicio import ServicioRecursos
+from app.momentos.servicio import ServicioMomentos
 from app.control.identidad import ProxyInvalido, ip_cliente, operacion_segura
 from app.llm.cliente import contexto_tls
 from app.control.limites import LimiteExcedido
@@ -49,6 +55,7 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         app.state.asignaturas = ServicioAsignaturas(conexion, cargar_catalogo(RAIZ / "kb/catalogo.yaml"),
                                                     app.state.perfiles)
         app.state.recursos = ServicioRecursos(conexion, app.state.perfiles)
+        app.state.momentos = ServicioMomentos(conexion, app.state.recursos)
         if isinstance(app.state.auth, ServicioAuth) and app.state.auth.asignaturas is None:
             app.state.auth.asignaturas = app.state.asignaturas
         verificar = contexto_tls(config.llm_tls_estricto) if transporte is None else True
@@ -73,17 +80,24 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         except SGAError:
             proveedor = None  # Sin SGA configurado el ingreso responde 503; /auth/prueba sigue disponible.
         app.state.auth = ServicioAuth(conexion, config.auth_secreto.get_secret_value(), proveedor,
-                                      sincronizacion_max_s=config.sga_sincronizacion_max_s)
+                                      sincronizacion_max_s=config.sga_sincronizacion_max_s,
+                                      cuentas_locales=config.cuentas_locales)
+    app.state.cuentas = ServicioCuentas(conexion)
     registrar_errores(app)
     app.include_router(auth_router)
     app.include_router(asignaturas_router)
     app.include_router(recursos_router)
+    app.include_router(momentos_router)
     app.include_router(chat_router)
     app.include_router(admin_router)
+    app.include_router(consumo_router)
+    app.include_router(monitor_router)
     app.include_router(privacidad_router)
+    app.include_router(cuentas_router)
     # La incorporación previa al middleware de acceso lo deja por dentro:
     # CORS → sesión/Origin → límite de cuerpo → parser JSON/rutas.
-    app.add_middleware(LimiteJSON, max_bytes=config.api_json_max_bytes, timeout_s=config.api_json_timeout_s)
+    app.add_middleware(LimiteJSON, max_bytes=config.api_json_max_bytes, timeout_s=config.api_json_timeout_s,
+                       por_ruta={"/silabos/pdf": config.silabo_pdf_max_bytes} if config.cuentas_locales else None)
 
     async def proteger(request, siguiente, ip, operacion, proxy_invalido):
         control = app.state.control
@@ -94,7 +108,9 @@ def crear_app(config: Ajustes | None = None, *, transporte=None, auth=None, cone
         if request.method not in {"GET", "HEAD", "OPTIONS"}:
             if request.headers.get("origin") != config.api_origen:
                 return JSONResponse({"detail": "Origen no permitido"}, status_code=403)
-        publica = ((request.method in {"GET", "HEAD"} and request.url.path in {"/salud", "/auth/modo"})
+        # /v1/*: API UTI v1 del Monitor de Agentes; se autentica con su propio token Bearer, no con sesión.
+        publica = ((request.method in {"GET", "HEAD"} and (request.url.path in {"/salud", "/auth/modo"}
+                                                          or request.url.path.startswith("/v1/")))
                    or (request.method == "POST" and request.url.path in {"/auth/ingresar", "/auth/prueba"}))
         if not publica:
             usuario = None

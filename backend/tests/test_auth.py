@@ -322,7 +322,8 @@ def test_http_ingreso_cookie_materias_yo_y_salida(web, auth, caplog):
     cookie = r.headers["set-cookie"].lower()
     assert "sesion=" in cookie and "httponly" in cookie and "secure" in cookie
     assert "samesite=lax" in cookie and "max-age=604800" in cookie and "path=/" in cookie
-    assert web.get("/auth/yo").json() == {"correo": CORREO_SGA, "rol": "docente"}
+    assert web.get("/auth/yo").json() == {"correo": CORREO_SGA, "rol": "docente", "cuenta_local": False,
+                                          "cambiar_clave": False, "cuentas_locales": False}
     token = web.cookies.get("sesion")
     assert web.post("/auth/salir", headers=ORIGEN).status_code == 200
     assert web.get("/auth/yo").status_code == 401
@@ -392,14 +393,14 @@ def test_acceso_prueba_prohibido_en_produccion():
 
 def test_acceso_prueba_apagado_por_defecto(nueva_conexion, auth):
     with _app_prueba(nueva_conexion, auth) as c:
-        assert c.get("/auth/modo").json() == {"acceso_prueba": False}
+        assert c.get("/auth/modo").json()["acceso_prueba"] is False
         r = c.post("/auth/prueba", json={"correo": "docente@uti.edu.ec"}, headers=ORIGEN_PRUEBA)
         assert r.status_code == 404 and "sesion" not in r.cookies
 
 
 def test_acceso_prueba_con_correo_e_invitado(nueva_conexion, auth):
     with _app_prueba(nueva_conexion, auth, acceso_prueba=True) as c:
-        assert c.get("/auth/modo").json() == {"acceso_prueba": True}
+        assert c.get("/auth/modo").json()["acceso_prueba"] is True
         r = c.post("/auth/prueba", json={"correo": "Docente@UTI.edu.ec"}, headers=ORIGEN_PRUEBA)
         assert r.status_code == 200 and "HttpOnly" in r.headers["set-cookie"]
         assert c.get("/auth/yo").json()["correo"] == "docente@uti.edu.ec"

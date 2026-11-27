@@ -20,7 +20,7 @@ PIE = "Recurso generado con asistencia de IA y revisado por el docente"
 
 NOMBRES = {
     "cuestionario": "Cuestionario", "simulacro": "Simulacro", "ficha_clase": "Ficha de clase",
-    "repaso_momento": "Repaso integrador", "guia_evidencia": "Guía de la evidencia",
+    "guia_estudio": "Guía de estudio", "repaso_momento": "Repaso integrador", "guia_evidencia": "Guía de la evidencia",
     "estudio_caso": "Estudio de caso", "guia_producto_final": "Guía del producto final",
     "hoja_ruta": "Hoja de ruta del Proyecto Formativo", "autoevaluacion_rubrica": "Autoevaluación con la rúbrica",
     "autoevaluacion_final": "Autoevaluación final", "lista_evidencia": "Lista de verificación de la evidencia",
@@ -28,10 +28,13 @@ NOMBRES = {
     "practica_guiada": "Práctica guiada", "tarjetas": "Tarjetas de estudio",
     "guia_autonoma": "Guía de trabajo autónomo", "guion_clase": "Guion de clase (docente)",
     "presentacion": "Presentación (PowerPoint)",
+    "guia_practica": "Guía de la práctica y guía de observación", "ficha_foro": "Ficha del foro",
+    "guia_tarea": "Guía de la tarea autónoma", "prueba_diagnostica": "Prueba diagnóstica",
+    "guia_entrega": "Guía de la entrega y lista de cotejo", "insumo_respaldo": "Insumo de respaldo",
 }
 # Listas de la presentación que el estudiante va marcando, y textos que descubre cuando quiere.
 # Las que tienen una versión con respuestas, solo para el docente.
-CON_RESPUESTAS = {"cuestionario", "simulacro", "estudio_caso"}
+CON_RESPUESTAS = {"cuestionario", "simulacro", "estudio_caso", "prueba_diagnostica"}
 LISTAS_MARCABLES = {"Autocomprobación", "Autochequeo", "Preguntas de repaso", "Recomendaciones"}
 TEXTOS_OCULTABLES = {"Resultado": "Ver el resultado"}
 ESTILO = """
@@ -183,8 +186,22 @@ def _estudio_caso(c: dict) -> str:
     return "".join(partes)
 
 
+def _diagnostica(c: dict) -> str:
+    """El estudiante marca sus respuestas; la clave y lo que debe repasar van solo en la versión del docente."""
+    d = c["diagnostica"]
+    partes = ["<p>Esta prueba no se califica: sirve para saber qué conocimientos previos debes reforzar.</p>",
+              "<h2>Conocimientos previos</h2><ul>"
+              + "".join(f"<li>{escape(p['nombre'])}</li>" for p in d["prerrequisitos"]) + "</ul>"]
+    for n, p in enumerate(d["preguntas"], 1):
+        opciones = "".join(f'<label><input type="radio" name="d{n}"> {escape(str(o))}</label>' for o in p["opciones"])
+        partes.append(f"<fieldset><legend>Pregunta {n}</legend><p><strong>{escape(p['pregunta'])}</strong></p>"
+                      f"{opciones}</fieldset>")
+    return "".join(partes)
+
+
 INTERACTIVAS = {"autoevaluacion_rubrica": _autoevaluacion, "autoevaluacion_final": _autoevaluacion,
-                "lista_evidencia": _lista_evidencia, "estudio_caso": _estudio_caso}
+                "lista_evidencia": _lista_evidencia, "estudio_caso": _estudio_caso,
+                "prueba_diagnostica": _diagnostica}
 
 
 def _cuerpo(herramienta: str, contenido) -> str:
@@ -221,10 +238,16 @@ PROPOSITO = {
     "guia_autonoma": "Organizar tu trabajo autónomo de la sesión y llegar preparado a la siguiente clase.",
     "guion_clase": "Guiar al docente en la conducción de la sesión.",
     "presentacion": "Acompañar la exposición de la clase con diapositivas.",
+    "guia_estudio": "Estudiar a fondo la teoría del momento antes de trabajar sus herramientas.",
     "repaso_momento": "Integrar lo trabajado en las sesiones del momento con su resultado de aprendizaje.",
     "guia_evidencia": "Entender qué se pide en la evidencia del momento y cómo se valora.",
     "estudio_caso": "Practicar el análisis de un caso con preguntas de menor a mayor complejidad.",
     "guia_producto_final": "Prepararte para el producto final del proyecto formativo.",
+    "ficha_foro": "Participar en el foro con un aporte fundamentado y réplicas que aporten.",
+    "guia_tarea": "Saber qué entregar en la tarea autónoma, para qué y cómo se califica.",
+    "prueba_diagnostica": "Saber qué conocimientos previos dominas y cuáles debes reforzar antes de empezar.",
+    "guia_entrega": "Preparar la entrega de avance y verificarla antes de subirla.",
+    "insumo_respaldo": "Continuar la tarea aunque no hayas completado la actividad previa.",
 }
 INSTRUCCIONES = {
     "cuestionario": ["Lee cada pregunta con atención.", "Elige la opción que consideres correcta.",
@@ -240,6 +263,22 @@ INSTRUCCIONES = {
     "estudio_caso": ["Lee el caso completo.", "Responde las preguntas en orden; cada una exige más análisis.",
                      "Argumenta tus respuestas con los contenidos del momento."],
 }
+INSTRUCCIONES.update({
+    "guia_practica": ["Lee el objetivo y prepara los materiales.", "Sigue el procedimiento y registra lo indicado.",
+                      "Revisa la guía de observación: así se valora tu desempeño.", "Entrega el producto de la práctica."],
+    "ficha_foro": ["Lee la pregunta detonante.",
+                   "Publica tu aporte inicial dentro del plazo, con al menos una fuente en APA 7.",
+                   "Responde a tus compañeros con argumentos.", "Revisa la rúbrica antes de publicar."],
+    "guia_tarea": ["Lee qué entregas y para qué.", "Sigue los pasos y las condiciones de entrega.",
+                   "Revisa tu trabajo con los criterios de calidad.",
+                   "Declara el uso de IA según la política del momento."],
+    "prueba_diagnostica": ["Responde sin consultar material: no se califica.", "Elige una opción por pregunta.",
+                           "Repasa los conocimientos previos de las preguntas que fallaste."],
+    "guia_entrega": ["Lee qué se entrega y sobre qué se construye.", "Prepara el avance siguiendo los pasos.",
+                     "Marca la lista de cotejo antes de entregar."],
+    "insumo_respaldo": ["Úsalo solo si no completaste la actividad previa.", "Sigue los pasos de uso.",
+                        "Recuerda: se califica el avance nuevo."],
+})
 INSTRUCCIONES_GENERALES = ["Lee el material completo.", "Desarrolla cada sección en el orden en que aparece.",
                            "Revisa tu trabajo con las preguntas o la lista de verificación, si las hay."]
 

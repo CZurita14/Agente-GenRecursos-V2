@@ -11,7 +11,8 @@ from dataclasses import dataclass, field
 from psycopg.types.json import Jsonb
 
 from app.sga.proveedor import SGANoDisponible, SilaboNoDisponible
-from app.sga.traductor import a_contrato
+from app.sga import contrato_validador
+from app.sga.traductor import a_contrato_con_avisos
 from app.silabo.integridad import SilaboInvalido, cargar_silabo
 
 
@@ -48,18 +49,40 @@ def _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir=True) -
         crudo = proveedor.obtener_silabo(permiso, materia)
     except (SGANoDisponible, SilaboNoDisponible):
         return MateriaEstado(**base, estado="no_disponible", asignatura_id=previa_id)
+    # Contrato definitivo: el JSON del Validador de Sílabos (silabo-api/0.1.0), tal cual.
+    if not contrato_validador.es_validador(crudo):
+        return MateriaEstado(**base, estado="invalida", asignatura_id=previa_id,
+                             fallos=[f"contrato: se requiere {contrato_validador.VERSION}"])
+    if fallos_contrato := contrato_validador.reglas(crudo):
+        return MateriaEstado(**base, estado="invalida", fallos=fallos_contrato, asignatura_id=previa_id)
     try:
-        silabo = cargar_silabo(a_contrato(crudo))
+        contrato, avisos = a_contrato_con_avisos(crudo)
+        silabo = cargar_silabo(contrato)
     except SilaboInvalido as e:
         return MateriaEstado(**base, estado="invalida", fallos=list(e.fallos), asignatura_id=previa_id)
     if silabo.proyecto_formativo.codigo != materia.codigo_pf:
         return MateriaEstado(**base, estado="invalida", asignatura_id=previa_id,
                              fallos=["proyecto_formativo.codigo: no coincide con la materia del SGA"])
     if previa and previa["version_silabo"] == silabo.proyecto_formativo.version:
-        return MateriaEstado(**base, estado="sin_cambios", asignatura_id=previa_id)
+        return MateriaEstado(**base, estado="sin_cambios", fallos=avisos, asignatura_id=previa_id)
     guardado = servicio.guardar(correo, silabo)
-    return MateriaEstado(**base, estado="importada", asignatura_id=guardado["id"],
+    # En una materia importada, `fallos` lleva los avisos (p. ej. sesiones sin fecha que no entraron).
+    return MateriaEstado(**base, estado="importada", fallos=avisos, asignatura_id=guardado["id"],
                          clases_cambiadas=guardado["clases_cambiadas"])
+
+
+def registrar_materia(conn, correo, materia, estado: MateriaEstado) -> None:
+    """Deja la materia y el resultado de importar su sílabo en `materia_sga` (lo que lista /materias)."""
+    with conn.transaction():
+        conn.execute(
+            "insert into materia_sga (correo,id_sga,codigo_pf,paralelo,nombre,carrera,estado_sga,"
+            "estado,fallos,asignatura_id,sincronizada) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,now()) "
+            "on conflict (correo,id_sga) do update set codigo_pf=excluded.codigo_pf,"
+            "paralelo=excluded.paralelo,nombre=excluded.nombre,carrera=excluded.carrera,"
+            "estado_sga=excluded.estado_sga,estado=excluded.estado,fallos=excluded.fallos,"
+            "asignatura_id=excluded.asignatura_id,sincronizada=excluded.sincronizada",
+            (correo, materia.id_sga, materia.codigo_pf, materia.paralelo, materia.nombre,
+             materia.carrera, materia.estado, estado.estado, Jsonb(estado.fallos), estado.asignatura_id))
 
 
 def sincronizar(conn, proveedor, identidad, permiso, servicio, *, presupuesto_s: float | None = None,
@@ -79,16 +102,7 @@ def sincronizar(conn, proveedor, identidad, permiso, servicio, *, presupuesto_s:
     for materia in lista:
         pedir = presupuesto_s is None or reloj() - inicio < presupuesto_s
         estado = _procesar(conn, proveedor, permiso, materia, correo, servicio, pedir)
-        with conn.transaction():
-            conn.execute(
-                "insert into materia_sga (correo,id_sga,codigo_pf,paralelo,nombre,carrera,estado_sga,"
-                "estado,fallos,asignatura_id,sincronizada) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,now()) "
-                "on conflict (correo,id_sga) do update set codigo_pf=excluded.codigo_pf,"
-                "paralelo=excluded.paralelo,nombre=excluded.nombre,carrera=excluded.carrera,"
-                "estado_sga=excluded.estado_sga,estado=excluded.estado,fallos=excluded.fallos,"
-                "asignatura_id=excluded.asignatura_id,sincronizada=excluded.sincronizada",
-                (correo, materia.id_sga, materia.codigo_pf, materia.paralelo, materia.nombre,
-                 materia.carrera, materia.estado, estado.estado, Jsonb(estado.fallos), estado.asignatura_id))
+        registrar_materia(conn, correo, materia, estado)
         resultado.append(estado)
     with conn.transaction():
         conn.execute("delete from materia_sga where correo=%s and not (id_sga = any(%s))",

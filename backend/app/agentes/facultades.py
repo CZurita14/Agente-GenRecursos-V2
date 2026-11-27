@@ -7,12 +7,29 @@ las facultades no reconocidas van al agente `general`.
 """
 import unicodedata
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
+
+from pydantic import field_validator
 
 import yaml
 
 from app.agentes.mensajes import EstiloFacultad
 from app.silabo.modelo import BaseInmutable
+
+
+class FuentesBibliograficas(BaseInmutable):
+    """Bases donde la guía de estudio busca fuentes (SearchAPI) y norma de las referencias."""
+    bases: list[str] = ["google_scholar"]   # en orden de prioridad; ver app.fuentes.searchapi.BASES
+    desde: int | None = None                # año mínimo de publicación
+    norma: Literal["IEEE"] = "IEEE"
+
+    @field_validator("bases")
+    @classmethod
+    def _conocidas(cls, v: list[str]) -> list[str]:
+        from app.fuentes.searchapi import BASES
+        if not v or any(b not in BASES for b in v):
+            raise ValueError(f"bases bibliográficas desconocidas; válidas: {sorted(BASES)}")
+        return v
 
 
 class PerfilFacultad(BaseInmutable):
@@ -21,6 +38,7 @@ class PerfilFacultad(BaseInmutable):
     estilo: EstiloFacultad
     carreras: dict[str, EstiloFacultad] = {}
     herramientas_recomendadas: dict[str, list[str]]
+    fuentes_bibliograficas: FuentesBibliograficas = FuentesBibliograficas()
 
 
 def normalizar(texto: str) -> str:
@@ -49,6 +67,7 @@ def _perfil_desde(datos: dict[str, Any]) -> PerfilFacultad:
         estilo=datos["estilo"],
         carreras=carreras,
         herramientas_recomendadas=datos["herramientas_recomendadas"],
+        fuentes_bibliograficas=datos.get("fuentes_bibliograficas") or {},
     )
 
 

@@ -4,8 +4,7 @@
  */
 import type {
   Ambito, AsignaturaResumen, Catalogo, Materia, MenuAsignatura, Recurso, RecursoResumen, Trabajo, TrabajoCreado,
-  TipoAmbito, Usuario,
-} from './tipos';
+  TipoAmbito, Usuario, MomentoDetalle, MomentosRespuesta, ResumenDescarga, CuentaLocal, SilaboImportado, PlanEvaluacion, LoteParcial } from './tipos';
 
 const BASE = '/api';
 
@@ -63,7 +62,7 @@ export const ingresar = (usuario: string, clave: string) =>
 export const materias = () => pedir<Materia[]>('/materias');
 
 /** Si la API ofrece el acceso de prueba sin el SGA (solo en desarrollo). */
-export const modoAcceso = () => pedir<{ acceso_prueba: boolean }>('/auth/modo');
+export const modoAcceso = () => pedir<{ acceso_prueba: boolean; cuentas_locales?: boolean }>('/auth/modo');
 
 /** Sesión sin código; sin correo entra como invitado. */
 export const accesoPrueba = (correo?: string) =>
@@ -82,9 +81,9 @@ export const menu = (aid: string) => pedir<MenuAsignatura>(`/asignaturas/${enc(a
 export const catalogo = (aid: string, tipo: TipoAmbito, id: string) =>
   pedir<Catalogo>(`/asignaturas/${enc(aid)}/herramientas?ambito=${tipo}&id=${enc(id)}`);
 
-export const generar = (aid: string, ambito: Ambito, herramientas: string[]) =>
+export const generar = (aid: string, ambito: Ambito, herramientas: string[], instrucciones?: string) =>
   pedir<{ trabajos: TrabajoCreado[] }>(`/asignaturas/${enc(aid)}/generar`,
-    { method: 'POST', body: json({ ambito, herramientas }) });
+    { method: 'POST', body: json(instrucciones ? { ambito, herramientas, instrucciones } : { ambito, herramientas }) });
 
 export const trabajos = (aid: string, ids?: string[]) => pedir<Trabajo[]>(`/asignaturas/${enc(aid)}/trabajos?limite=200${ids ? ids.map(id => `&ids=${enc(id)}`).join('') : ''}`);
 
@@ -105,3 +104,57 @@ export const urlImagen = (aid: string, rid: string, hash: string) =>
 
 export const urlExportar = (aid: string, rid: string, formato: 'html' | 'pdf' | 'docx' | 'pptx' = 'html', docente = false) =>
   `${BASE}/asignaturas/${enc(aid)}/recursos/${enc(rid)}/exportar?formato=${formato}${docente ? '&version=docente' : ''}`;
+
+/** Momentos del Proyecto Formativo: trazabilidad, contexto del docente y guía de estudio. */
+export const momentos = (aid: string) => pedir<MomentosRespuesta>(`/asignaturas/${enc(aid)}/momentos`);
+
+/** Plan de evaluación implícito en el sílabo; si faltan columnas por clasificar, la API encola la IA. */
+export const planEvaluacion = (aid: string) => pedir<PlanEvaluacion>(`/asignaturas/${enc(aid)}/plan-evaluacion`);
+
+/** V4-4: confirma o ajusta los pesos (422 con el motivo si una calificación no suma su % de la norma). */
+export const guardarPesos = (aid: string, pesos: Record<string, number>) =>
+  pedir<PlanEvaluacion>(`/asignaturas/${enc(aid)}/plan-evaluacion/pesos`, { method: 'PUT', body: json({ pesos }) });
+
+/** V5-1: vista previa del lote de un bloque (no encola nada). */
+export const loteParcial = (aid: string, bloque: number) =>
+  pedir<LoteParcial>(`/asignaturas/${enc(aid)}/plan-evaluacion/lote?bloque=${bloque}`);
+
+/** V5-1: encola el lote del bloque; el servidor lo recalcula, no usa la lista del navegador. */
+export const prepararParcial = (aid: string, bloque: number) =>
+  pedir<{ trabajos: TrabajoCreado[]; costo_usd: number }>(`/asignaturas/${enc(aid)}/plan-evaluacion/lote`,
+    { method: 'POST', body: json({ bloque }) });
+
+/** Vuelve a los pesos sugeridos para la versión actual del sílabo. */
+export const restaurarPesos = (aid: string) =>
+  pedir<PlanEvaluacion>(`/asignaturas/${enc(aid)}/plan-evaluacion/pesos`, { method: 'DELETE' });
+
+/** Guarda el contexto del momento (se valida en la API; 422 con el motivo, 409 si cambió). */
+export const guardarContexto = (aid: string, numero: number, revision: number, texto: string) =>
+  pedir<MomentoDetalle>(`/asignaturas/${enc(aid)}/momentos/${numero}/contexto`,
+    { method: 'PUT', body: json({ revision, texto }) });
+
+export const resumenDescarga = (aid: string) => pedir<ResumenDescarga>(`/asignaturas/${enc(aid)}/descarga/resumen`);
+
+/** ZIP «docente_materia» con lo validado; la cookie viaja sola. */
+export const urlDescarga = (aid: string) => `${BASE}/asignaturas/${enc(aid)}/descarga`;
+
+/* --- Cuentas locales (etapa de pruebas): solo existen con CUENTAS_LOCALES=true en el servidor. --- */
+
+export const cuentasLocales = () => pedir<CuentaLocal[]>('/admin/cuentas');
+
+/** Alta sin verificar el correo; la API acepta solo @indoamerica.edu.ec y @uti.edu.ec (422 con el motivo). */
+export const crearCuenta = (correo: string, nombre: string, clave: string) =>
+  pedir<{ correo: string }>('/admin/cuentas', { method: 'POST', body: json({ correo, nombre, clave }) });
+
+export const restablecerClave = (correo: string, clave: string) =>
+  pedir<void>(`/admin/cuentas/${enc(correo)}/clave`, { method: 'POST', body: json({ clave }) });
+
+export const activarCuenta = (correo: string, activa: boolean) =>
+  pedir<void>(`/admin/cuentas/${enc(correo)}/estado`, { method: 'POST', body: json({ activa }) });
+
+export const cambiarClave = (actual: string, nueva: string) =>
+  pedir<void>('/auth/clave', { method: 'POST', body: json({ actual, nueva }) });
+
+/** El PDF viaja tal cual (application/pdf); la API lo lee y lo importa como una materia del SGA. */
+export const subirSilaboPdf = (archivo: File) =>
+  pedir<SilaboImportado>('/silabos/pdf', { method: 'POST', body: archivo, headers: { 'Content-Type': 'application/pdf' } });

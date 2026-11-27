@@ -21,11 +21,14 @@ export function Ingreso({ onIngresar, onIngresarPrueba }: IngresoProps) {
   const [error, setError] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [modoPrueba, setModoPrueba] = useState(false);
+  const [cuentasLocales, setCuentasLocales] = useState(false);
 
   // Si la consulta falla se muestra el ingreso normal con el SGA.
   useEffect(() => {
     let vigente = true;
-    modoAcceso().then(m => { if (vigente) setModoPrueba(m.acceso_prueba); }).catch(() => {});
+    modoAcceso().then(m => {
+      if (vigente) { setModoPrueba(m.acceso_prueba); setCuentasLocales(!!m.cuentas_locales); }
+    }).catch(() => {});
     return () => { vigente = false; };
   }, []);
 
@@ -72,12 +75,13 @@ export function Ingreso({ onIngresar, onIngresarPrueba }: IngresoProps) {
   </div>;
 
   return <div className="max-w-md mx-auto">
-    <Card title="Ingresa a Recursos de estudio" description="Usa el mismo correo y clave que en el SGA."
-      icon={<KeyRound aria-hidden="true" />}>
+    <Card title="Ingresa a Recursos de estudio" icon={<KeyRound aria-hidden="true" />}
+      description={cuentasLocales ? 'Usa tu correo institucional y la clave del SGA o la que te dio el administrador.'
+        : 'Usa el mismo correo y clave que en el SGA.'}>
       <form onSubmit={entrar} className="space-y-4" noValidate>
-        <Input label="Correo del SGA" name="usuario" type="email" inputMode="email" autoComplete="username" required
+        <Input label={cuentasLocales ? 'Correo institucional' : 'Correo del SGA'} name="usuario" type="email" inputMode="email" autoComplete="username" required
           autoCapitalize="none" spellCheck={false} placeholder="nombre@uti.edu.ec" value={usuario} onChange={e => setUsuario(e.target.value)} />
-        <Input label="Clave del SGA" name="clave" type="password" autoComplete="current-password" required
+        <Input label={cuentasLocales ? 'Clave' : 'Clave del SGA'} name="clave" type="password" autoComplete="current-password" required
           value={clave} onChange={e => setClave(e.target.value)}
           hint="Tu clave solo se usa para entrar; no se guarda." />
         {error && <Alert tone="danger" role="alert">{error}</Alert>}

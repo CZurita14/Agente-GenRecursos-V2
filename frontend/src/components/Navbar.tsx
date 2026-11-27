@@ -11,8 +11,10 @@ export interface NavbarProps extends Omit<HTMLAttributes<HTMLElement>, 'onChange
   activeId?: string;
   onChange?: (id: string) => void;
   actions?: ReactNode;
+  /** Alinea la barra con el contenido amplio de la pantalla. */
+  amplio?: boolean;
 }
-export function Navbar({ isDarkMode, onToggleTheme, brand = BRAND_CONFIG, items = [], activeId, onChange, actions, className = '', ...rest }: NavbarProps) {
+export function Navbar({ isDarkMode, onToggleTheme, brand = BRAND_CONFIG, items = [], activeId, onChange, actions, amplio = false, className = '', ...rest }: NavbarProps) {
   const [expanded, setExpanded] = useState(false);
   const menuId = useId();
   const toggleLabel = isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
@@ -26,7 +28,7 @@ export function Navbar({ isDarkMode, onToggleTheme, brand = BRAND_CONFIG, items 
     return item.href ? <a key={item.id} href={item.href} {...props} /> : <button key={item.id} type="button" {...props} />;
   });
   return <header {...rest} className={`bg-header text-white shadow-md border-b border-header-border ${className}`}>
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6">
+    <div className={`${amplio ? 'max-w-[1920px] lg:px-8' : 'max-w-[1500px]'} mx-auto px-4 sm:px-6`}>
       <div className="flex flex-wrap items-center justify-between gap-3 py-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <img src={brand.logoPath} alt={brand.institution} className="h-10 w-auto max-w-24 object-contain shrink-0" />

@@ -1,0 +1,892 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "silabo-api-0.1.0.derivado",
+  "title": "Sílabo silabo-api/0.1.0 (validador) — DERIVADO del documento «Estructura JSON para Sistemas» del 24/11/2026",
+  "description": "No es el esquema oficial (specs/001-validador-silabo/contracts/ no está en este equipo). Se arma campo por campo de las tablas 2.2: «Sí» = clave obligatoria que admite null, \"\" o []; «Sí, no vacío» = exige valor; «No» = opcional; contrato cerrado.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contrato",
+    "documento",
+    "portada",
+    "presentacion",
+    "mapa",
+    "momentos",
+    "rubrica_producto_final"
+  ],
+  "properties": {
+    "contrato": {
+      "const": "silabo-api/0.1.0"
+    },
+    "documento": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "estado",
+        "generado"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "estado": {
+          "enum": [
+            "borrador",
+            "enviado",
+            "aprobado"
+          ]
+        },
+        "generado": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "portada": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "carrera",
+        "periodo_codigo",
+        "periodo_inicio",
+        "periodo_fin",
+        "pf_nombre",
+        "pf_codigo"
+      ],
+      "properties": {
+        "carrera": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "periodo_codigo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "periodo_inicio": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "periodo_fin": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "pf_nombre": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pf_codigo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "facultad": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fecha_aprobacion": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      }
+    },
+    "presentacion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nombre",
+        "creditos",
+        "horas_total",
+        "horas_contacto",
+        "horas_practico",
+        "horas_autonomo",
+        "periodo",
+        "nivel",
+        "prerrequisitos",
+        "correquisitos"
+      ],
+      "properties": {
+        "nombre": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "creditos": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "horas_total": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "horas_contacto": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "horas_practico": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "horas_autonomo": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "periodo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nivel": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 12
+        },
+        "prerrequisitos": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "correquisitos": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "uoc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "modalidad": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nivel_formacion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "horario_contacto": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "horario_practico": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mapa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "competencia_perfil",
+        "competencia_pf",
+        "contribucion_perfil",
+        "metacompetencias",
+        "habilidades_blandas",
+        "ejes_transversales",
+        "inclusion",
+        "resultados_aprendizaje",
+        "problema",
+        "pregunta_reto",
+        "evidencia_central",
+        "pis_nombre",
+        "pis_aporte",
+        "metodologias"
+      ],
+      "properties": {
+        "competencia_perfil": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "competencia_pf": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contribucion_perfil": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metacompetencias": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "texto",
+              "marcada"
+            ],
+            "properties": {
+              "texto": {
+                "type": "string",
+                "minLength": 1
+              },
+              "marcada": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "habilidades_blandas": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "ejes_transversales": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "eje",
+              "como_se_evidencia"
+            ],
+            "properties": {
+              "eje": {
+                "type": "string",
+                "minLength": 1
+              },
+              "como_se_evidencia": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "inclusion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resultados_aprendizaje": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "texto",
+              "evidencia"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^RA[0-9]+$"
+              },
+              "texto": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "evidencia": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "problema": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pregunta_reto": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidencia_central": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pis_nombre": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pis_aporte": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metodologias": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "momentos": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "numero",
+          "titulo",
+          "fecha_inicio",
+          "fecha_fin",
+          "ra_referidos",
+          "evidencia",
+          "sesiones",
+          "totales",
+          "politica_ia",
+          "rubrica"
+        ],
+        "properties": {
+          "numero": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "titulo": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fecha_inicio": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "fecha_fin": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "ra_referidos": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string",
+              "pattern": "^RA[0-9]+$"
+            }
+          },
+          "evidencia": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sesiones": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "numero",
+                "fecha_inicio",
+                "fecha_fin",
+                "docente",
+                "practico",
+                "autonomo",
+                "contenidos"
+              ],
+              "properties": {
+                "numero": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "fecha_inicio": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date"
+                },
+                "fecha_fin": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date"
+                },
+                "docente": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "actividad",
+                    "horas"
+                  ],
+                  "properties": {
+                    "actividad": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "horas": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    }
+                  }
+                },
+                "practico": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "actividad",
+                    "horas"
+                  ],
+                  "properties": {
+                    "actividad": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "horas": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    }
+                  }
+                },
+                "autonomo": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "actividad",
+                    "horas"
+                  ],
+                  "properties": {
+                    "actividad": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "horas": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    }
+                  }
+                },
+                "contenidos": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "docente_asincronica": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "actividad",
+                        "horas"
+                      ],
+                      "properties": {
+                        "actividad": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "horas": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "totales": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "docente",
+              "practico",
+              "autonomo"
+            ],
+            "properties": {
+              "docente": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "practico": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "autonomo": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              }
+            }
+          },
+          "politica_ia": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rubrica": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "evidencia",
+              "ra_citados",
+              "filas"
+            ],
+            "properties": {
+              "evidencia": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ra_citados": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "texto"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^RA[0-9]+$"
+                    },
+                    "texto": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              },
+              "filas": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "indicador",
+                    "niveles"
+                  ],
+                  "properties": {
+                    "indicador": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "niveles": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "receptivo",
+                        "resolutivo",
+                        "reflexivo",
+                        "critico",
+                        "cocreativo"
+                      ],
+                      "properties": {
+                        "receptivo": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "resolutivo": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "reflexivo": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "critico": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "cocreativo": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "recursos": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "rubrica_producto_final": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidencia",
+        "filas"
+      ],
+      "properties": {
+        "evidencia": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filas": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "indicador",
+              "niveles"
+            ],
+            "properties": {
+              "indicador": {
+                "type": "string",
+                "minLength": 1
+              },
+              "niveles": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "receptivo",
+                  "resolutivo",
+                  "reflexivo",
+                  "critico",
+                  "cocreativo"
+                ],
+                "properties": {
+                  "receptivo": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "resolutivo": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "reflexivo": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "critico": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "cocreativo": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bibliografia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "basica": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "complementaria": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

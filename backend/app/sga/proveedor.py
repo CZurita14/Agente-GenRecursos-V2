@@ -50,7 +50,8 @@ class ProveedorSGA(Protocol):
         ...
 
 
-_CODIGO = re.compile(r"^\[(\d+)\]\s+([A-Z]\d{2}-[A-Z]{4}-\d-\d{5}-\d{4})\s+PARALELO\s+(\d+)$")
+# Sigla de 1 a 6 letras, con un prefijo opcional (posgrado: B26-M-CIBER-...); así son los códigos reales del B26.
+_CODIGO = re.compile(r"^\[(\d+)\]\s+([A-Z]\d{2}(?:-[A-Z]{1,6}){1,2}-\d{1,2}-\d{5}-\d{4})\s+PARALELO\s+(\d+)$")
 
 
 def separar_codigo(texto: str) -> tuple[str, str, str]:

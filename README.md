@@ -57,6 +57,8 @@ El razonador es **opcional y está apagado por omisión** (sin `RAZONADOR_RUTA`,
 | Estudio de caso | Momento |
 | Guía del producto final | Asignatura |
 
+**Plan de evaluación (V3):** el sistema lee el plan de evaluación implícito en el sílabo y le aplica la norma del RRA de la modalidad. Sugiere los pesos por parcial y por momento, avisa lo que falta y ofrece, junto a cada actividad evaluable, las herramientas que la preparan: guía de la práctica con guía de observación, ficha del foro con rúbrica, guía de la tarea autónoma, prueba diagnóstica, guía de la entrega con lista de cotejo, insumo de respaldo y simulacro acumulativo del parcial. Detalle, verificación y costo: [docs/plan-evaluacion.md](docs/plan-evaluacion.md).
+
 **Sin IA:** hoja de ruta, rúbrica del momento, rúbrica final, autoevaluaciones y lista de verificación de la evidencia. Salen directamente del sílabo.
 
 Los recursos se editan, se ajustan con un chat privado y se exportan a HTML, PDF y Word.
@@ -113,6 +115,13 @@ AUTH_SECRETO=<al menos 32 caracteres aleatorios propios>
 
 El SGA simulado lee `usuarios.json`, `materias/<usuario>.json` y `sga_silabos/<codigo_pf>.json` de esa carpeta: dos docentes de prueba (`docente.uno`, `docente.dos`) y tres sílabos simulados `S91-SIMU-…` que traen claves privadas falsas para comprobar que el traductor las descarta. `usuarios.json` guarda solo el hash SHA-256 de cada clave; **las claves de prueba están en las constantes de las pruebas** (`backend/tests/test_auth.py`), no en la documentación. El proveedor simulado no se admite con `ENTORNO=produccion`.
 
+### Panel de consumo de tokens
+
+Un botón fijo abajo a la derecha abre el consumo de la IA **de los proyectos formativos de la cuenta** (el abierto, o todos los de la cuenta): tokens de entrada y salida, llamadas, fallos, tiempo, costo estimado, consumo por herramienta (con el promedio por recurso y la parte del revisor), chat de ajustes y últimos trabajos. Los `ADMINISTRADORES` entran directo; los demás docentes, con la clave del panel, que abre el panel 30 minutos en esa sesión (5 intentos cada 15 minutos).
+
+La clave nunca se guarda en claro: en el `.env` va `CONSUMO_CLAVE_HASH`, generado con `printf '%s
+' '<clave>' | python -m app.operacion hash-clave` desde `backend/`. El costo es el mismo que cobra DeepSeek: cada llamada guarda su modelo, los tokens que DeepSeek tomó de su caché y su costo con la tarifa de su hora (pico o fuera de pico), según la tabla oficial copiada en `backend/app/llm/precios.py` (con su fecha de vigencia; se actualiza ahí cuando DeepSeek cambie precios). Solo los feriados chinos, que no se conocen de antemano, pueden hacer que el costo calculado quede por encima del cobrado. Las llamadas anteriores a este registro se estiman a la tarifa máxima y el panel las cuenta aparte.
+
 ### Producción
 
 Exige `SGA_PROVEEDOR=real`, que depende de TI (B-SGA1): [docs/sga/para-TI.md](docs/sga/para-TI.md). El despliegue institucional (servidor, DNS, TLS, servidor de IA) está en [docs/entrega-ti.md](docs/entrega-ti.md); la operación, el respaldo y la restauración, en [docs/operacion.md](docs/operacion.md); la API, en [docs/desarrollo-api.md](docs/desarrollo-api.md).
@@ -120,7 +129,7 @@ Exige `SGA_PROVEEDOR=real`, que depende de TI (B-SGA1): [docs/sga/para-TI.md](do
 ### Pruebas
 
 ```bash
-# Backend (base: 1202 pasan, 14 deseleccionadas)
+# Backend (base: 1 580 pasan, 21 omitidas, 4 deseleccionadas)
 cd backend && ../.venv/Scripts/python.exe -m pytest -m "not servidor and not modelo" -q
 # Modelo de ciencia de datos (entorno con PyTorch)
 cd backend && HF_HUB_OFFLINE=1 ../.venv-ciencia/Scripts/python.exe -m pytest -m modelo -q tests/test_razonador.py tests/test_cd_*.py
@@ -146,6 +155,7 @@ Cuando TI entregue acceso al SGA real, `python -m app.sga.comparar <carpeta_sga>
 | [docs/entrega-ti.md](docs/entrega-ti.md) | Ficha de entrega del despliegue a TI |
 | [docs/operacion.md](docs/operacion.md) | Operación, respaldo y restauración |
 | [docs/desarrollo-api.md](docs/desarrollo-api.md) | API local, configuración y pruebas |
+| [docs/plan-evaluacion.md](docs/plan-evaluacion.md) | Plan de evaluación implícito en el sílabo: norma RRA, clasificación, pesos, herramientas, verificación y costo |
 | [docs/superpowers/plans/](docs/superpowers/plans/) | Planes de implementación |
 
 ### Historia de V1

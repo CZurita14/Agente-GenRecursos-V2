@@ -1,0 +1,363 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BookOpenCheck, CalendarDays, ChevronRight, Download, RefreshCw } from 'lucide-react';
+import { Alert, Badge, Button } from '../components';
+import {
+  ErrorApi, generar, guardarContexto, menu as cargarMenu, momentos as cargarMomentos, planEvaluacion, resumenDescarga,
+  urlDescarga,
+} from '../api/cliente';
+import type { Ambito, MomentoDetalle, PlanEvaluacion, ResumenDescarga, SemanaMenu, TrabajoCreado } from '../api/tipos';
+import { NormaModalidad, PlanMomento, PrepararParcial, porcentajeMomento } from './PlanEvaluacion';
+import { dia, fechaCorta, nombreAmbito } from '../api/herramientas';
+
+interface MomentosProps {
+  aid: string;
+  nombre: string;
+  onVolver: () => void;
+  onElegir: (ambito: Ambito, titulo: string) => void;
+  onAbrir: (rid: string) => void;
+  onGenerado: (creados: TrabajoCreado[]) => void;
+  onVerRecursos: () => void;
+  onSesionVencida: () => void;
+  /** Momento abierto al entrar (el último que usó el docente en este Proyecto Formativo). */
+  momentoInicial?: number;
+  /** Avisa qué momento abrió el docente, para volver a él al regresar de una clase o de un recurso. */
+  onMomento?: (numero: number) => void;
+}
+
+const mensaje = (e: unknown) => e instanceof ErrorApi ? e.message : 'No hay conexión con el servidor.';
+
+/** Cortes de Tailwind: xl (1280 px) = tres columnas; lg (1024 px) = dos; menos = una sola columna. */
+const ANCHO_XL = '(min-width: 1280px)';
+const ANCHO_LG = '(min-width: 1024px)';
+type Ancho = 'xl' | 'lg' | 'base';
+const leerAncho = (): Ancho => {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return 'xl';
+  return window.matchMedia(ANCHO_XL).matches ? 'xl' : window.matchMedia(ANCHO_LG).matches ? 'lg' : 'base';
+};
+function useAncho(): Ancho {
+  const [ancho, setAncho] = useState<Ancho>(leerAncho);
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return;
+    const consultas = [ANCHO_XL, ANCHO_LG].map(q => window.matchMedia(q));
+    const cambiar = () => setAncho(leerAncho());
+    consultas.forEach(c => c.addEventListener('change', cambiar));
+    return () => consultas.forEach(c => c.removeEventListener('change', cambiar));
+  }, []);
+  return ancho;
+}
+
+/** Pantalla principal del Proyecto Formativo: norma y plan de evaluación, y cada momento con su contexto, su guía,
+ * sus evaluaciones, sus herramientas y sus clases (todo en una pantalla, sin ir y volver). */
+export function Momentos({ aid, nombre, onVolver, onElegir, onAbrir, onGenerado, onVerRecursos, onSesionVencida,
+  momentoInicial, onMomento }: MomentosProps) {
+  const [lista, setLista] = useState<MomentoDetalle[] | null>(null);
+  const [semanas, setSemanas] = useState<SemanaMenu[]>([]);
+  // Solo al entrar: cambiar de pestaña no debe volver a cargar la pantalla.
+  const inicial = useRef(momentoInicial);
+  const [lector, setLector] = useState(false);
+  const [resumen, setResumen] = useState<ResumenDescarga | null>(null);
+  const [error, setError] = useState('');
+  const [abierto, setAbierto] = useState<number | null>(null);
+  const [plan, setPlan] = useState<PlanEvaluacion | null>(null);
+  const ancho = useAncho();
+  const lateral = ancho !== 'base';
+
+  const fallo = useCallback((e: unknown) => {
+    if (e instanceof ErrorApi && e.estado === 401) return onSesionVencida();
+    setError(mensaje(e));
+  }, [onSesionVencida]);
+
+  useEffect(() => {
+    let vigente = true;
+    Promise.all([cargarMomentos(aid), resumenDescarga(aid)]).then(([m, r]) => {
+      if (!vigente) return;
+      setLista(m.momentos);
+      setLector(m.rol === 'lector');
+      setResumen(r);
+      const elegido = m.momentos.some(x => x.numero === inicial.current) ? inicial.current : m.momentos[0]?.numero;
+      setAbierto(a => a ?? elegido ?? null);
+    }).catch(e => vigente && fallo(e));
+    // Las clases por semana (antes, la pantalla «Elige la clase»); si fallan, el resto de la pantalla sigue.
+    cargarMenu(aid).then(m => vigente && setSemanas(m.menu)).catch(e => {
+      if (vigente && e instanceof ErrorApi && e.estado === 401) onSesionVencida();
+    });
+    return () => { vigente = false; };
+  }, [aid, fallo, onSesionVencida]);
+
+  const abrir = (numero: number) => { setAbierto(numero); onMomento?.(numero); };
+
+  // Plan de evaluación implícito en el sílabo; mientras la IA clasifica, se vuelve a pedir cada 5 s.
+  useEffect(() => {
+    let vigente = true;
+    let espera: ReturnType<typeof setTimeout> | undefined;
+    const cargar = () => planEvaluacion(aid).then(p => {
+      if (!vigente) return;
+      setPlan(p);
+      if (p.clasificacion_ia === 'en_curso') espera = setTimeout(cargar, 5000);
+    }).catch(e => vigente && fallo(e));
+    cargar();
+    return () => { vigente = false; clearTimeout(espera); };
+  }, [aid, fallo]);
+
+  const reemplazar = (m: MomentoDetalle) => {
+    setLista(l => l?.map(x => x.numero === m.numero ? m : x) ?? null);
+    resumenDescarga(aid).then(setResumen).catch(() => undefined);
+  };
+
+  return <>
+    <div className="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <button type="button" onClick={onVolver} className="text-sm text-muted hover:text-fg">← Mis Proyectos Formativos</button>
+        <h1 className="text-2xl font-bold mt-1">{nombre}</h1>
+        <p className="text-muted mt-1">Elige el momento: su plan de evaluación, sus herramientas y sus clases.</p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="secondary" onClick={onVerRecursos}>Ver recursos</Button>
+        {!lector && lista && <Button variant="secondary" aria-label="Herramientas del Proyecto Formativo"
+          onClick={() => onElegir({ tipo: 'asignatura', id: 'asignatura' }, 'Todo el Proyecto Formativo')}>
+          <span className="sm:hidden">Herramientas del PF</span>
+          <span className="hidden sm:inline">Herramientas del Proyecto Formativo</span></Button>}
+      </div>
+    </div>
+    {lector && <Alert tone="info">Tienes acceso de lectura: puedes ver los recursos, pero no generarlos.</Alert>}
+    {error && <Alert tone="danger" role="alert">{error}</Alert>}
+    {!lista && !error && <p className="text-muted" role="status">Cargando los momentos…</p>}
+    {/* Pantalla ancha: momentos | momento abierto | norma. Laptop: momentos | norma plegada + momento.
+        Tableta y teléfono: una columna, con los momentos en fila y la norma plegada. */}
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_360px]">
+      <aside aria-label="Momentos del Proyecto Formativo"
+        className="min-w-0 space-y-3 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+        {lista && <ol aria-label="Trazabilidad de momentos"
+          className="flex items-stretch gap-2 overflow-x-auto pb-1 md:grid md:grid-flow-col md:auto-cols-fr md:overflow-visible md:pb-0 lg:flex lg:flex-col">
+          {lista.map((m, i) => <li key={m.numero} className="flex shrink-0 items-center gap-2">
+            <button type="button" onClick={() => abrir(m.numero)} aria-current={abierto === m.numero}
+              className={`w-full rounded-lg border px-3 py-2 text-left text-sm ${abierto === m.numero ? 'border-highlight bg-highlight-soft' : 'border-line bg-surface'}`}>
+              <span className="block font-bold">Momento {m.numero}</span>
+              <span className="block text-xs text-muted">{m.fase.nombre}</span>
+              {plan?.norma?.estado === 'definida' && <span className="block text-xs font-bold text-action-ink">
+                {porcentajeMomento(plan.por_momento[m.numero] ?? 0)} de la nota</span>}
+            </button>
+            {i < lista.length - 1 && <ChevronRight aria-hidden="true" className="w-4 h-4 shrink-0 text-muted md:hidden" />}
+          </li>)}
+        </ol>}
+        {lateral && plan && !lector && <PrepararParcial plan={plan} aid={aid} onGenerado={onGenerado} onError={fallo}
+          lateral />}
+      </aside>
+      <div className="min-w-0 space-y-6">
+        {plan && ancho !== 'xl' && <NormaModalidad plan={plan} aid={aid} lector={lector} onPlan={setPlan} onError={fallo}
+          onGenerado={onGenerado} plegable conPreparar={!lateral} />}
+        {lista?.filter(m => m.numero === abierto).map(m => <TarjetaMomento key={m.numero} aid={aid} momento={m}
+          lector={lector} plan={plan} onCambio={reemplazar} onError={fallo} onElegir={onElegir} onAbrir={onAbrir}
+          onGenerado={onGenerado} semanas={semanas} />)}
+        {resumen && <Descarga aid={aid} resumen={resumen} />}
+      </div>
+      {plan && ancho === 'xl' && <aside aria-label="Evaluación del Proyecto Formativo" className="min-w-0">
+        <NormaModalidad plan={plan} aid={aid} lector={lector} onPlan={setPlan} onError={fallo} onGenerado={onGenerado}
+          conPreparar={false} />
+      </aside>}
+    </div>
+  </>;
+}
+
+interface TarjetaProps {
+  aid: string; momento: MomentoDetalle; lector: boolean; plan: PlanEvaluacion | null;
+  onCambio: (m: MomentoDetalle) => void; onError: (e: unknown) => void;
+  onElegir: (ambito: Ambito, titulo: string) => void; onAbrir: (rid: string) => void;
+  onGenerado: (creados: TrabajoCreado[]) => void; semanas: SemanaMenu[];
+}
+
+function TarjetaMomento({ aid, momento: m, lector, plan, onCambio, onError, onElegir, onAbrir, onGenerado,
+  semanas }: TarjetaProps) {
+  const [texto, setTexto] = useState(m.contexto_docente?.texto ?? '');
+  const [guardando, setGuardando] = useState(false);
+  const [aviso, setAviso] = useState<{ tono: 'success' | 'danger'; texto: string } | null>(null);
+  const [generando, setGenerando] = useState(false);
+  const cambiado = texto.trim() !== (m.contexto_docente?.texto ?? '');
+
+  const guardar = async () => {
+    setGuardando(true); setAviso(null);
+    try {
+      const nuevo = await guardarContexto(aid, m.numero, m.contexto_docente?.revision ?? 0, texto);
+      setTexto(nuevo.contexto_docente?.texto ?? texto);
+      onCambio(nuevo);
+      setAviso({ tono: 'success', texto: 'Contexto validado y guardado. La guía y las herramientas generadas antes quedan por regenerar.' });
+    } catch (e) {
+      if (e instanceof ErrorApi && e.estado === 401) return onError(e);
+      setAviso({ tono: 'danger', texto: mensaje(e) });
+    } finally { setGuardando(false); }
+  };
+
+  const generarGuia = async () => {
+    setGenerando(true);
+    try {
+      const r = await generar(aid, { tipo: 'momento', id: m.id }, ['guia_estudio']);
+      onGenerado(r.trabajos);
+    } catch (e) { onError(e); } finally { setGenerando(false); }
+  };
+
+  const guia = m.guia;
+  const estadoGuia = !guia ? <Badge tone="neutral">sin generar</Badge>
+    : guia.por_regenerar ? <Badge tone="warning">por regenerar</Badge>
+    : guia.validado ? <Badge tone="success">validada · {guia.paginas} págs.</Badge>
+    : <Badge tone="info">por validar · {guia.paginas} págs.</Badge>;
+
+  return <section aria-labelledby={`momento-${m.numero}`} className="bg-surface rounded-xl border border-line p-5 space-y-5">
+    <header>
+      <p className="text-xs font-bold uppercase tracking-wide text-action-ink">Momento {m.numero} · {m.fase.nombre}</p>
+      <h2 id={`momento-${m.numero}`} className="text-xl font-bold mt-1">{m.titulo}</h2>
+      <p className="text-sm text-muted mt-1">
+        {m.fecha_inicio && m.fecha_fin ? `${fechaCorta(m.fecha_inicio)} – ${fechaCorta(m.fecha_fin)} · ` : ''}
+        En este momento se {m.fase.proposito}.
+      </p>
+    </header>
+
+    <div className="grid gap-4 md:grid-cols-2">
+      <div className="space-y-3">
+        <h3 className="font-bold">Lo que trae el sílabo</h3>
+        <div>
+          <p className="text-sm font-semibold">Resultados de aprendizaje</p>
+          <ul className="text-sm list-disc pl-5">{m.ra.map(r => <li key={r.id}><b>{r.id}</b>: {r.texto}</li>)}</ul>
+        </div>
+        <div>
+          <p className="text-sm font-semibold">Sesiones</p>
+          <ul className="text-sm space-y-1">{m.sesiones.map(s => <li key={s.id}>
+            <b>Sesión {s.numero}</b>{s.fecha ? ` (${fechaCorta(s.fecha)})` : ''}: {s.contenidos.join(' · ')}
+          </li>)}</ul>
+        </div>
+        {m.evidencia && <div><p className="text-sm font-semibold">Evidencia</p><p className="text-sm">{m.evidencia}</p></div>}
+      </div>
+      <div className="space-y-2">
+        <h3 className="font-bold">Contexto del docente</h3>
+        <p className="text-xs text-muted">Complementa el sílabo para generar la guía y las herramientas de este momento.
+          Se valida al guardar: sin datos personales, sin órdenes al sistema y sin pedir que se resuelva la evidencia.</p>
+        <textarea aria-label={`Contexto del momento ${m.numero}`} value={texto} onChange={e => setTexto(e.target.value)}
+          readOnly={lector} maxLength={6000} rows={9}
+          className="w-full rounded-md border border-line bg-surface px-3 py-2 text-sm text-fg" />
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-xs text-muted">{texto.length} / 6000
+            {m.contexto_docente ? ` · revisión ${m.contexto_docente.revision}` : ' · sin contexto propio'}</span>
+          {!lector && <Button size="sm" onClick={guardar} loading={guardando} disabled={!cambiado}>Validar y guardar</Button>}
+        </div>
+        {m.contexto_docente && <div className="flex flex-wrap gap-1">
+          {m.contexto_docente.verificaciones.map(v => <Badge key={v} tone="success">✓ {v}</Badge>)}
+        </div>}
+        {aviso && <Alert tone={aviso.tono} role="status">{aviso.texto}</Alert>}
+      </div>
+    </div>
+
+    <div className="rounded-lg border border-line p-4 space-y-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <BookOpenCheck aria-hidden="true" className="w-5 h-5 text-action-ink" />
+          <h3 className="font-bold">Guía de estudio del momento</h3>
+          {estadoGuia}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {guia && <Button size="sm" variant="secondary" onClick={() => onAbrir(guia.recurso_id)}>Abrir y validar</Button>}
+          {!lector && <Button size="sm" onClick={generarGuia} loading={generando}
+            icon={guia ? <RefreshCw aria-hidden="true" className="w-4 h-4" /> : undefined}>
+            {guia ? 'Regenerar guía' : 'Generar guía'}</Button>}
+        </div>
+      </div>
+      <p className="text-sm text-muted">La parte teórica del momento (de 10 a 15 páginas), apoyada en la bibliografía del
+        sílabo y en fuentes web verificadas con su enlace. Una vez validada, es la base con la que se generan las
+        herramientas del momento y de sus clases.</p>
+      {guia?.fuentes && <p className="text-xs text-muted">Bibliografía: {guia.fuentes.silabo} del sílabo ·
+        {' '}{guia.fuentes.web} fuentes web con enlace</p>}
+    </div>
+
+    {plan && <PlanMomento aid={aid} plan={plan} numero={m.numero} lector={lector} onGenerado={onGenerado}
+      onError={onError} />}
+
+    <div className="space-y-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="font-bold">Herramientas generadas</h3>
+        {!lector && <Button size="sm" variant="secondary"
+          onClick={() => onElegir({ tipo: 'momento', id: m.id }, `Momento ${m.numero} · ${m.titulo}`)}>
+          Más herramientas</Button>}
+      </div>
+      {m.recursos.length === 0 ? <p className="text-sm text-muted">Todavía no hay herramientas generadas en este momento.</p>
+        : <ul className="grid gap-2 sm:grid-cols-2 2xl:grid-cols-3">{m.recursos.map(r => <li key={r.id}
+          className="flex flex-col justify-between gap-2 rounded-lg border border-line p-3">
+          <button type="button" className="text-left text-sm hover:underline" onClick={() => onAbrir(r.id)}>
+            {r.nombre} <span className="text-muted">· {r.ambito_id === m.id ? 'momento' : nombreAmbito(r.ambito_id)}</span>
+          </button>
+          <span className="flex gap-1">
+            {r.por_regenerar && <Badge tone="warning">por regenerar</Badge>}
+            {r.validado ? <Badge tone="success">validada</Badge> : <Badge tone="neutral">por validar</Badge>}
+          </span>
+        </li>)}</ul>}
+    </div>
+
+    <ClasesMomento momento={m} semanas={semanas} lector={lector} onElegir={onElegir} />
+  </section>;
+}
+
+/** Las clases del momento por semana; cada una abre sus herramientas (antes, una pantalla aparte). */
+function ClasesMomento({ momento: m, semanas, lector, onElegir }: { momento: MomentoDetalle; semanas: SemanaMenu[];
+  lector: boolean; onElegir: (ambito: Ambito, titulo: string) => void }) {
+  const propias = semanas.map(s => ({ ...s, clases: s.clases.filter(c => c.momento === m.numero) }))
+    .filter(s => s.clases.length > 0);
+  if (propias.length === 0) return null;
+  const cuenta = (claseId: string) => m.recursos.filter(r => r.ambito_id === claseId).length;
+  return <div className="space-y-3 border-t border-line pt-4">
+    <div>
+      <h3 className="font-bold">Clases del momento</h3>
+      <p className="text-sm text-muted">{lector ? 'Las clases del momento y sus herramientas generadas.'
+        : 'Elige una clase para preparar sus herramientas.'}</p>
+    </div>
+    {propias.map(semana => <section key={semana.numero} aria-labelledby={`semana-${m.numero}-${semana.numero}`}
+      className="space-y-2">
+      <h4 id={`semana-${m.numero}-${semana.numero}`}
+        className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-action-ink">
+        <CalendarDays aria-hidden="true" className="w-4 h-4" />
+        Semana {semana.numero} · {fechaCorta(semana.inicio)} – {fechaCorta(semana.fin)}
+      </h4>
+      <div className="grid gap-2 sm:grid-cols-2 2xl:grid-cols-3">
+        {semana.clases.map(clase => {
+          const n = cuenta(clase.clase_id);
+          return <button key={clase.clase_id} type="button" disabled={lector}
+            onClick={() => onElegir({ tipo: 'clase', id: clase.clase_id },
+              `Clase ${clase.numero_clase} · ${nombreAmbito(clase.clase_id)}`)}
+            className="text-left rounded-lg border border-line p-3 hover:border-highlight focus-visible:border-highlight disabled:cursor-default">
+            <span className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-bold text-sm">{dia(clase.dia)} {fechaCorta(clase.fecha)} · Clase {clase.numero_clase}</span>
+              {n ? <Badge tone="success">{n} {n === 1 ? 'recurso' : 'recursos'}</Badge>
+                : <Badge tone="neutral">sin generar</Badge>}
+            </span>
+            <span className="block text-sm mt-1">{clase.contenidos.join(' · ')}</span>
+            {clase.entregables.length > 0 && <span className="block text-xs text-muted mt-1">
+              Entregables: {clase.entregables.join(', ')}</span>}
+          </button>;
+        })}
+      </div>
+    </section>)}
+  </div>;
+}
+
+function Descarga({ aid, resumen }: { aid: string; resumen: ResumenDescarga }) {
+  const pendientes = resumen.momentos.reduce((n, m) => n + (m.total - m.validados), 0);
+  const regenerar = resumen.momentos.reduce((n, m) => n + m.por_regenerar, 0);
+  return <section aria-labelledby="descarga" className="bg-surface rounded-xl border border-line p-5 space-y-3">
+    <h2 id="descarga" className="text-lg font-bold">Descargar el perfil docente</h2>
+    <p className="text-sm text-muted">Se descarga una carpeta <b className="break-all">{resumen.carpeta}</b> con lo validado, ordenado por momento.</p>
+    <table className="w-full text-sm">
+      <thead><tr className="text-left text-muted"><th className="py-1">Momento</th><th>Guía</th><th>Validadas</th><th>Por regenerar</th></tr></thead>
+      <tbody>{resumen.momentos.map(m => <tr key={m.numero} className="border-t border-line">
+        <td className="py-1">M{m.numero} · {m.fase}</td>
+        <td>{m.guia_validada ? '✓' : '—'}</td>
+        <td>{m.validados} de {m.total}</td>
+        <td>{m.por_regenerar || '—'}</td>
+      </tr>)}</tbody>
+    </table>
+    {(pendientes > 0 || regenerar > 0) && <Alert tone="warning">
+      {pendientes > 0 && `${pendientes} herramienta(s) sin validar no se incluirán. `}
+      {regenerar > 0 && `${regenerar} quedaron por regenerar tras cambiar el contexto o la guía.`}
+    </Alert>}
+    {resumen.validados > 0
+      ? <a href={urlDescarga(aid)} download
+        className="inline-flex items-center gap-1.5 rounded-lg bg-action px-4 py-2 text-sm font-semibold text-white hover:bg-action-hover">
+        <Download aria-hidden="true" className="w-4 h-4" />Descargar {resumen.validados} validadas (ZIP)</a>
+      : <p className="text-sm text-muted">Valida al menos una herramienta para poder descargar.</p>}
+  </section>;
+}

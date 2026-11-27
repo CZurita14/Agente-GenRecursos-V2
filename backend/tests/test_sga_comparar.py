@@ -18,7 +18,7 @@ def _dirs(tmp_path):
 
 
 def _codigo(p: Path) -> str:
-    return json.loads(p.read_text(encoding="utf-8"))["proyecto_formativo"]["codigo"]
+    return json.loads(p.read_text(encoding="utf-8"))["portada"]["pf_codigo"]
 
 
 def test_identicos(tmp_path):

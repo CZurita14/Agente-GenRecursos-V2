@@ -128,7 +128,7 @@ def test_silabo_invalido(conn, servicio, base):
     def rompe(materia, crudo):
         if materia.codigo_pf == PF_B:
             crudo = json.loads(json.dumps(crudo))
-            crudo["proyecto_formativo"]["creditos"] = "VALOR-SECRETO-QUE-NO-DEBE-SALIR"
+            crudo["momentos"][0]["sesiones"][0]["fecha_inicio"] = "VALOR-SECRETO-QUE-NO-DEBE-SALIR"
         return crudo
 
     r = sync(conn, servicio, Envoltorio(base, cambia=rompe))
@@ -139,6 +139,41 @@ def test_silabo_invalido(conn, servicio, base):
     assert "VALOR-SECRETO" not in json.dumps(f["fallos"], default=str)
     # Las demás materias no se afectan.
     assert {x.estado for x in r.materias if x.codigo_pf == PF_A} <= {"importada", "sin_cambios"}
+
+
+@pytest.mark.parametrize("contrato", [None, "1.0", "2.0", "silabo-api/0.2.0"])
+def test_solo_entra_el_contrato_del_validador(conn, servicio, base, contrato):
+    """Un sílabo sin `"contrato": "silabo-api/0.1.0"` se rechaza y no reemplaza la versión guardada."""
+    sync(conn, servicio, base)
+    antes = conn.execute("select id,version_silabo from asignatura where codigo_pf=%s", (PF_B,)).fetchone()
+
+    def cambia(materia, crudo):
+        if materia.codigo_pf == PF_B:
+            crudo = json.loads(json.dumps(crudo))
+            if contrato is None:
+                del crudo["contrato"]
+            else:
+                crudo["contrato"] = contrato
+            crudo["documento"]["version"] = "9.9"
+        return crudo
+
+    r = sync(conn, servicio, Envoltorio(base, cambia=cambia))
+    m = next(m for m in r.materias if m.codigo_pf == PF_B)
+    assert m.estado == "invalida" and m.fallos == ["contrato: se requiere silabo-api/0.1.0"]
+    assert m.asignatura_id == str(antes["id"])
+    assert conn.execute("select id,version_silabo from asignatura where codigo_pf=%s", (PF_B,)).fetchone() == antes
+
+
+def test_contrato_del_validador_sin_requisitos_para_generar_no_entra(conn, servicio, base):
+    def cambia(materia, crudo):
+        if materia.codigo_pf == PF_B:
+            crudo = json.loads(json.dumps(crudo))
+            crudo["momentos"] = []
+        return crudo
+
+    r = sync(conn, servicio, Envoltorio(base, cambia=cambia))
+    m = next(m for m in r.materias if m.codigo_pf == PF_B)
+    assert m.estado == "invalida" and m.fallos == ["momentos: el Generador necesita al menos un momento"]
 
 
 def _id_sesion(fila):
@@ -152,7 +187,7 @@ def test_version_cambia(conn, servicio, base):
     def nueva(materia, crudo):
         if materia.codigo_pf == PF_A:
             crudo = json.loads(json.dumps(crudo))
-            crudo["proyecto_formativo"]["version"] = "2.0"
+            crudo["documento"]["version"] = "2.0"
             ses = crudo["momentos"][0]["sesiones"][0]
             ses["contenidos"] = [*ses["contenidos"], "Contenido adicional"]
         return crudo
@@ -192,7 +227,7 @@ def test_lista_vacia_quita_todo_y_sga_caido_no_toca_nada(conn, servicio, base):
 def test_codigo_distinto_al_de_la_materia_es_invalido(conn, servicio, base):
     def otro(materia, crudo):
         crudo = json.loads(json.dumps(crudo))
-        crudo["proyecto_formativo"]["codigo"] = "S91-SIMU-3-99999-9999"
+        crudo["portada"]["pf_codigo"] = "S91-SIMU-3-99999-9999"
         return crudo
 
     r = sync(conn, servicio, Envoltorio(base, cambia=otro))

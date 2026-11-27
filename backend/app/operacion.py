@@ -5,6 +5,7 @@ Salida JSON mínima y código 0/1. No consulta IA. El contenedor usa
 WORKER_GRACIA_S limita el cierre a 570 s por defecto, siempre menos de 600 s.
 """
 import argparse
+import sys
 import json
 import math
 import os
@@ -168,8 +169,35 @@ def salud_worker(config, *, ruta=None, reloj=time.monotonic, identidad=identidad
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('comando', choices=['migrar', 'preparado', 'salud-worker', 'health-worker'])
-    comando = parser.parse_args(argv).comando
+    parser.add_argument('comando', choices=['migrar', 'preparado', 'salud-worker', 'health-worker', 'hash-clave',
+                                            'token-monitor'])
+    parser.add_argument('destino', nargs='?', help='token-monitor: archivo donde se escribe el token nuevo')
+    argumentos = parser.parse_args(argv)
+    comando = argumentos.comando
+    if comando == 'token-monitor':
+        # Token Bearer del Monitor de Agentes: se escribe solo en el archivo indicado (para entregarlo por un
+        # canal seguro) y por pantalla sale únicamente su SHA-256, que va en MONITOR_TOKEN_HASH.
+        import hashlib
+        import secrets
+        if not argumentos.destino:
+            return 1
+        token = secrets.token_urlsafe(32)
+        try:  # Nunca sobrescribe un token anterior: se crea un archivo nuevo.
+            archivo = open(argumentos.destino, 'x', encoding='utf-8')
+        except OSError:
+            return 1
+        with archivo:
+            archivo.write(token + chr(10))
+        print(hashlib.sha256(token.encode()).hexdigest())
+        return 0
+    if comando == 'hash-clave':
+        # Clave del panel de consumo por la entrada estándar (no queda en el historial de la consola).
+        from app.control.clave import hashear
+        clave = sys.stdin.readline().rstrip(chr(13) + chr(10))
+        if not clave:
+            return 1
+        print(hashear(clave))
+        return 0
     ok = False
     try:
         config = ajustes()

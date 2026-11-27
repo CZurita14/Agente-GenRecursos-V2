@@ -1,0 +1,1036 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uti.edu.ec/generador-recursos/silabo-api.v2.schema.json",
+  "title": "Sílabo UTI para el Generador de Recursos · contrato v2.0",
+  "description": "Sílabo con los apartados que valora la Escala general de evaluación de sílabos (UTI, 23/10/2026). Regla general: toda clave listada en required debe venir; un texto o una lista vacíos significan 'no documentado' (ND) para la escala. No incluye la sección I (perfil y contacto del docente) ni la VII (firmas): la API no debe enviarlas y esos dos puntos los valora el evaluador fuera del sistema. El SGA envía lo que guarda; el sistema deriva el id de sesión, la semana del periodo y los entregables cuando no vienen.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contrato",
+    "facultad",
+    "carrera",
+    "periodo",
+    "proyecto_formativo",
+    "competencia_perfil",
+    "competencia_pf",
+    "metacompetencia",
+    "habilidades_blandas",
+    "ejes_transversales",
+    "inclusion",
+    "contribucion_perfil",
+    "resultados_aprendizaje",
+    "problema",
+    "pis",
+    "metodologias",
+    "momentos",
+    "rubrica_producto_final",
+    "evaluacion",
+    "bibliografia"
+  ],
+  "properties": {
+    "contrato": {
+      "const": "2.0",
+      "description": "Versión del contrato. Distingue este formato del v1.0."
+    },
+    "facultad": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Nombre oficial de la facultad. Elige el agente y el estilo de la facultad."
+    },
+    "carrera": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Nombre oficial de la carrera o del programa de posgrado."
+    },
+    "periodo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codigo",
+        "inicio",
+        "fin"
+      ],
+      "properties": {
+        "codigo": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Código del periodo académico, p. ej. B26."
+        },
+        "inicio": {
+          "type": "string",
+          "format": "date"
+        },
+        "fin": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "proyecto_formativo": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Apartado II de la escala (II.1).",
+      "required": [
+        "codigo",
+        "nombre",
+        "version",
+        "aprobado",
+        "nivel",
+        "uoc",
+        "modalidad",
+        "formacion",
+        "creditos",
+        "horas",
+        "horario",
+        "prerrequisitos",
+        "correquisitos"
+      ],
+      "properties": {
+        "codigo": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Código del proyecto formativo, p. ej. B26-SOFT-3-56157-1727. Identifica el sílabo y debe ser igual al codigo_pf de la materia."
+        },
+        "nombre": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Versión del sílabo. Debe cambiar cada vez que cambia el sílabo."
+        },
+        "aprobado": {
+          "type": "string",
+          "format": "date",
+          "description": "Fecha de aprobación; elige la versión vigente."
+        },
+        "nivel": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nivel o semestre de la malla."
+        },
+        "uoc": {
+          "type": "string",
+          "description": "Unidad de organización curricular. Vacío = ND."
+        },
+        "modalidad": {
+          "type": "string",
+          "description": "PRESENCIAL, EN LINEA, HIBRIDA u otra vigente. Vacío = ND."
+        },
+        "formacion": {
+          "type": "string",
+          "description": "Tipo de formación que declara el sílabo (p. ej. grado, posgrado, tecnológica). Vacío = ND."
+        },
+        "creditos": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "null = ND."
+        },
+        "horas": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Horas del PF por componente. null = ND.",
+          "additionalProperties": false,
+          "required": [
+            "total",
+            "contacto",
+            "autonomo",
+            "practico"
+          ],
+          "properties": {
+            "total": {
+              "type": "number",
+              "minimum": 0
+            },
+            "contacto": {
+              "type": "number",
+              "minimum": 0
+            },
+            "autonomo": {
+              "type": "number",
+              "minimum": 0
+            },
+            "practico": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "horario": {
+          "type": "array",
+          "description": "Franjas de clase. Lista vacía = ND.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dia",
+              "inicio",
+              "fin"
+            ],
+            "properties": {
+              "dia": {
+                "type": "string",
+                "minLength": 1
+              },
+              "inicio": {
+                "$ref": "#/$defs/hora"
+              },
+              "fin": {
+                "$ref": "#/$defs/hora"
+              }
+            }
+          }
+        },
+        "prerrequisitos": {
+          "$ref": "#/$defs/requisitos"
+        },
+        "correquisitos": {
+          "$ref": "#/$defs/requisitos"
+        }
+      }
+    },
+    "competencia_perfil": {
+      "type": "string",
+      "description": "III.1 Competencia del perfil de egreso, con el enunciado aprobado. Vacío = ND."
+    },
+    "competencia_pf": {
+      "type": "string",
+      "description": "III.2 Competencia del proyecto formativo. Vacío = ND."
+    },
+    "metacompetencia": {
+      "type": "string",
+      "description": "III.3 Metacompetencia transversal: una de las 5 del catálogo institucional (la que marca el docente en la plantilla). Se compara sin mayúsculas ni tildes (regla 4 del contrato). Vacío = ND.",
+      "examples": [
+        "Innovación y emprendimiento sostenible con impacto territorial",
+        "Gobernanza ética de tecnologías digitales e IA",
+        "Liderazgo colaborativo e intercultural para la transformación territorial",
+        "Metacognición estratégica y proyecto ético de vida",
+        "Pensamiento sociocrítico y sistémico para la toma de decisiones estratégicas"
+      ]
+    },
+    "habilidades_blandas": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "III.4 Habilidades asociadas a la metacompetencia, una por elemento. Lista vacía = ND."
+    },
+    "ejes_transversales": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "III.5 a III.10. Los seis ejes vienen siempre; un eje no pertinente al PF va con aplica=false y su justificación (NA).",
+      "required": [
+        "sostenibilidad_ods",
+        "interculturalidad",
+        "internacionalizacion",
+        "interdisciplinariedad",
+        "emprendimiento",
+        "educacion_financiera"
+      ],
+      "properties": {
+        "sostenibilidad_ods": {
+          "description": "III.5 Sostenibilidad y ODS.",
+          "allOf": [
+            {
+              "$ref": "#/$defs/eje"
+            }
+          ],
+          "required": [
+            "ods"
+          ],
+          "properties": {
+            "ods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 17
+              },
+              "description": "Números de los ODS pertinentes (1 a 17)."
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "interculturalidad": {
+          "description": "III.6 Interculturalidad.",
+          "allOf": [
+            {
+              "$ref": "#/$defs/eje"
+            }
+          ],
+          "unevaluatedProperties": false
+        },
+        "internacionalizacion": {
+          "description": "III.7 Internacionalización.",
+          "allOf": [
+            {
+              "$ref": "#/$defs/eje"
+            }
+          ],
+          "required": [
+            "tipo",
+            "actores",
+            "actividad",
+            "producto"
+          ],
+          "properties": {
+            "tipo": {
+              "enum": [
+                "clase_espejo",
+                "coil",
+                "movilidad",
+                "colaboracion",
+                "contraste_casos_fuentes",
+                "otra",
+                null
+              ],
+              "description": "Tipo de experiencia internacional; null si no se planifica."
+            },
+            "actores": {
+              "type": "string"
+            },
+            "actividad": {
+              "type": "string"
+            },
+            "producto": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "interdisciplinariedad": {
+          "description": "III.8 Interdisciplinariedad.",
+          "allOf": [
+            {
+              "$ref": "#/$defs/eje"
+            }
+          ],
+          "required": [
+            "disciplinas"
+          ],
+          "properties": {
+            "disciplinas": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "Disciplinas o saberes que aportan."
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "emprendimiento": {
+          "description": "III.9 Emprendimiento.",
+          "allOf": [
+            {
+              "$ref": "#/$defs/eje"
+            }
+          ],
+          "unevaluatedProperties": false
+        },
+        "educacion_financiera": {
+          "description": "III.10 Educación financiera.",
+          "allOf": [
+            {
+              "$ref": "#/$defs/eje"
+            }
+          ],
+          "unevaluatedProperties": false
+        }
+      }
+    },
+    "inclusion": {
+      "type": "string",
+      "description": "III.11 Inclusión y atención a las barreras para el aprendizaje y la participación: barreras identificadas y apoyos planificados, en un solo texto como en la plantilla. No admite NA. Vacío = ND."
+    },
+    "contribucion_perfil": {
+      "type": "string",
+      "description": "III.15 Cómo la competencia, la metacompetencia, los RA y el producto aportan al perfil de egreso. Vacío = ND."
+    },
+    "resultados_aprendizaje": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "description": "III.12 a III.14. De uno a cuatro RA (M3), con ids RA1 a RA4 sin repetir.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "texto",
+          "evidencia"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^RA[1-4]$",
+            "description": "RA1 a RA4; se referencia desde momentos[].ra."
+          },
+          "texto": {
+            "type": "string",
+            "minLength": 1,
+            "description": "III.12 Enunciado del RA."
+          },
+          "evidencia": {
+            "type": "string",
+            "description": "III.13 Evidencia del RA. Vacío = ND."
+          }
+        }
+      }
+    },
+    "problema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "descripcion",
+        "reto",
+        "producto_final"
+      ],
+      "properties": {
+        "descripcion": {
+          "type": "string",
+          "description": "III.16 Problema, necesidad u oportunidad del territorio. Vacío = ND."
+        },
+        "reto": {
+          "type": "string",
+          "description": "III.17 Pregunta o reto. Vacío = ND."
+        },
+        "producto_final": {
+          "type": "string",
+          "description": "III.18 Producto central del PF. Vacío = ND."
+        }
+      }
+    },
+    "pis": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "III.19 y III.20. Proyecto interdisciplinario socioformativo (PIS) al que aporta el PF. Si no forma parte de uno: aplica=false y justificación (NA).",
+      "required": [
+        "aplica",
+        "nombre",
+        "descripcion",
+        "aporte",
+        "justificacion_na"
+      ],
+      "properties": {
+        "aplica": {
+          "type": "boolean"
+        },
+        "nombre": {
+          "type": "string"
+        },
+        "descripcion": {
+          "type": "string",
+          "description": "III.19 Problema común del territorio y articulación de PF, disciplinas y actores."
+        },
+        "aporte": {
+          "type": "string",
+          "description": "III.20 Producto, proceso o desempeño que aporta el PF al PIS, con responsabilidades, coordinación y fechas."
+        },
+        "justificacion_na": {
+          "type": "string"
+        }
+      },
+      "if": {
+        "properties": {
+          "aplica": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "justificacion_na": {
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "metodologias": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "III.21 a III.29.",
+      "required": [
+        "clase_invertida",
+        "complementarias"
+      ],
+      "properties": {
+        "clase_invertida": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "III.21 Clase invertida. Se valora siempre; no admite NA.",
+          "required": [
+            "antes",
+            "durante",
+            "despues"
+          ],
+          "properties": {
+            "antes": {
+              "type": "string",
+              "description": "Preparación autónoma previa y accesible."
+            },
+            "durante": {
+              "type": "string",
+              "description": "Comprobación de comprensión, aplicación y diálogo con el docente."
+            },
+            "despues": {
+              "type": "string",
+              "description": "Reflexión o transferencia posterior."
+            }
+          }
+        },
+        "complementarias": {
+          "type": "array",
+          "description": "III.22 a III.29. Solo las que elige el docente; las no elegidas son NA. Cada tipo aparece una vez, salvo 'otra'.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "tipo",
+              "nombre",
+              "justificacion",
+              "aplicada_en"
+            ],
+            "properties": {
+              "tipo": {
+                "enum": [
+                  "aprendizaje_basado_problemas",
+                  "aprendizaje_basado_retos",
+                  "aprendizaje_servicio",
+                  "aprendizaje_cooperativo",
+                  "estudio_caso",
+                  "cocreacion_dialogo_saberes",
+                  "rutinas_destrezas_pensamiento",
+                  "otra"
+                ]
+              },
+              "nombre": {
+                "type": "string",
+                "description": "Nombre como figura en el sílabo; obligatorio no vacío cuando tipo es 'otra'."
+              },
+              "justificacion": {
+                "type": "string",
+                "description": "Decisión pedagógica: por qué se elige y qué aporta."
+              },
+              "aplicada_en": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^M[0-9]+-S[0-9]+$"
+                },
+                "description": "Ids de las sesiones donde se aplica (M<momento>-S<sesión>). Lista vacía = pendiente: la escala exige al menos una actividad."
+              }
+            },
+            "if": {
+              "properties": {
+                "tipo": {
+                  "const": "otra"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "nombre": {
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "momentos": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Apartado IV: cada momento se valora con IV.1 a IV.15.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "numero",
+          "titulo",
+          "fecha_inicio",
+          "fecha_fin",
+          "ra",
+          "evidencia",
+          "politica_ia",
+          "recursos",
+          "rubrica",
+          "sesiones"
+        ],
+        "properties": {
+          "numero": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "titulo": {
+            "type": "string",
+            "minLength": 1,
+            "description": "IV.1 Nombre y función del momento."
+          },
+          "fecha_inicio": {
+            "type": "string",
+            "format": "date",
+            "description": "IV.2"
+          },
+          "fecha_fin": {
+            "type": "string",
+            "format": "date",
+            "description": "IV.2"
+          },
+          "ra": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^RA[1-4]$"
+            },
+            "description": "IV.3 Ids de resultados_aprendizaje. Lista vacía = ND."
+          },
+          "evidencia": {
+            "type": "string",
+            "description": "IV.4 Evidencia o producto del momento. Es un entregable: el sistema no la resuelve. Vacío = ND."
+          },
+          "politica_ia": {
+            "type": "string",
+            "description": "IV.12 Gobernanza sociocrítica y ética de IA. Vacío = ND (nunca NA)."
+          },
+          "recursos": {
+            "type": "string",
+            "description": "IV.11 Recursos y escenarios. Vacío = ND."
+          },
+          "rubrica": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/fila_rubrica"
+            },
+            "description": "IV.13 a IV.15. Lista vacía = ND."
+          },
+          "sesiones": {
+            "type": "array",
+            "minItems": 1,
+            "description": "IV.5 a IV.10.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "numero",
+                "fecha",
+                "contenidos",
+                "docente",
+                "practico",
+                "autonomo"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^M[0-9]+-S[0-9]+$",
+                  "description": "Opcional. Si no viene, el sistema lo arma como M<momento>-S<numero>."
+                },
+                "numero": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Número de la sesión en el sílabo; no se repite dentro del sílabo."
+                },
+                "fecha": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date",
+                  "description": "Dentro del periodo. null si no tiene fecha: la sesión no se importa y el docente recibe un aviso."
+                },
+                "semana_periodo": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Opcional. Si no viene, la calcula el sistema."
+                },
+                "contenidos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "IV.10 Un elemento por contenido."
+                },
+                "docente": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "IV.6 Actividades con el docente.",
+                  "required": [
+                    "texto",
+                    "horas"
+                  ],
+                  "properties": {
+                    "texto": {
+                      "type": "string"
+                    },
+                    "horas": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "IV.7"
+                    },
+                    "asincronica": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "additionalProperties": false,
+                      "required": [
+                        "texto"
+                      ],
+                      "properties": {
+                        "texto": {
+                          "type": "string"
+                        },
+                        "horas": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "description": "Otras actividades con el docente (asincrónicas), o null."
+                    }
+                  }
+                },
+                "practico": {
+                  "$ref": "#/$defs/actividad",
+                  "description": "IV.8 Actividades práctico-experimentales."
+                },
+                "autonomo": {
+                  "$ref": "#/$defs/actividad",
+                  "description": "IV.9 Actividades autónomas."
+                },
+                "entregables": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Opcional. Si no viene, el sistema los detecta en las actividades."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rubrica_producto_final": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fila_rubrica"
+      },
+      "description": "V.1 a V.4 Rúbrica del producto final. Lista vacía = ND."
+    },
+    "evaluacion": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "V.5 a V.12 Sistema de evaluación del PF.",
+      "required": [
+        "proceso",
+        "agentes",
+        "retroalimentacion",
+        "metacompetencia",
+        "gobernanza_ia",
+        "calificacion",
+        "mejora",
+        "credencial"
+      ],
+      "properties": {
+        "proceso": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "V.5 Evaluación inicial, seguimiento y final.",
+          "required": [
+            "inicial",
+            "seguimiento",
+            "final"
+          ],
+          "properties": {
+            "inicial": {
+              "type": "string"
+            },
+            "seguimiento": {
+              "type": "string"
+            },
+            "final": {
+              "type": "string"
+            }
+          }
+        },
+        "agentes": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "V.6 Quién evalúa, cuándo y con qué criterios.",
+          "required": [
+            "autoevaluacion",
+            "coevaluacion",
+            "heteroevaluacion"
+          ],
+          "properties": {
+            "autoevaluacion": {
+              "type": "string"
+            },
+            "coevaluacion": {
+              "type": "string"
+            },
+            "heteroevaluacion": {
+              "type": "string"
+            }
+          }
+        },
+        "retroalimentacion": {
+          "type": "string",
+          "description": "V.7 Retroalimentación socioformativa."
+        },
+        "metacompetencia": {
+          "type": "string",
+          "description": "V.8 Valoración de la metacompetencia y el proyecto ético de vida."
+        },
+        "gobernanza_ia": {
+          "type": "string",
+          "description": "V.9 Autoría y gobernanza de IA en la evaluación."
+        },
+        "calificacion": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "V.10 Reglas de calificación. Si se usan porcentajes, deben sumar 100.",
+          "required": [
+            "componentes",
+            "reglas"
+          ],
+          "properties": {
+            "componentes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "nombre",
+                  "porcentaje",
+                  "momento"
+                ],
+                "properties": {
+                  "nombre": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "porcentaje": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "momento": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "description": "Número del momento al que pertenece, o null si es del PF completo."
+                  }
+                }
+              }
+            },
+            "reglas": {
+              "type": "string",
+              "description": "Cálculo, criterios y equivalencias institucionales."
+            }
+          }
+        },
+        "mejora": {
+          "type": "string",
+          "description": "V.11 Uso de resultados para la mejora."
+        },
+        "credencial": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "V.12 Microcredencial o credencial. Si el PF no otorga credencial: aplica=false y justificación (NA).",
+          "required": [
+            "aplica",
+            "nombre",
+            "desempeno",
+            "evidencias",
+            "criterios",
+            "justificacion_na"
+          ],
+          "properties": {
+            "aplica": {
+              "type": "boolean"
+            },
+            "nombre": {
+              "type": "string"
+            },
+            "desempeno": {
+              "type": "string"
+            },
+            "evidencias": {
+              "type": "string"
+            },
+            "criterios": {
+              "type": "string",
+              "description": "Criterios de otorgamiento; la acreditación exige al menos el nivel crítico."
+            },
+            "justificacion_na": {
+              "type": "string"
+            }
+          },
+          "if": {
+            "properties": {
+              "aplica": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "justificacion_na": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "bibliografia": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "VI.1 Bibliografía. Ambas listas vacías = ND.",
+      "required": [
+        "basica",
+        "complementaria"
+      ],
+      "properties": {
+        "basica": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "complementaria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hora": {
+      "type": "string",
+      "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+    },
+    "requisitos": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Nombres o códigos de las asignaturas. Lista vacía = 'no requiere según la malla aprobada' (válido)."
+    },
+    "eje": {
+      "type": "object",
+      "required": [
+        "aplica",
+        "descripcion",
+        "justificacion_na"
+      ],
+      "properties": {
+        "aplica": {
+          "type": "boolean",
+          "description": "false = no pertinente al PF (NA)."
+        },
+        "descripcion": {
+          "type": "string",
+          "description": "Cómo se integra el eje en el PF. Vacío con aplica=true = ND."
+        },
+        "justificacion_na": {
+          "type": "string",
+          "description": "Obligatoria no vacía cuando aplica=false."
+        }
+      },
+      "if": {
+        "properties": {
+          "aplica": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "justificacion_na": {
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "actividad": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "texto",
+        "horas"
+      ],
+      "properties": {
+        "texto": {
+          "type": "string"
+        },
+        "horas": {
+          "type": "number",
+          "minimum": 0,
+          "description": "IV.7"
+        }
+      }
+    },
+    "fila_rubrica": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "indicador",
+        "niveles"
+      ],
+      "properties": {
+        "indicador": {
+          "type": "string",
+          "minLength": 1
+        },
+        "niveles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "receptivo",
+            "resolutivo",
+            "reflexivo",
+            "critico",
+            "cocreativo"
+          ],
+          "properties": {
+            "receptivo": {
+              "type": "string"
+            },
+            "resolutivo": {
+              "type": "string"
+            },
+            "reflexivo": {
+              "type": "string"
+            },
+            "critico": {
+              "type": "string"
+            },
+            "cocreativo": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

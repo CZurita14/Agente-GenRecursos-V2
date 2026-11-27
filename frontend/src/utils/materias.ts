@@ -38,3 +38,16 @@ export function mensajeIngreso(estado: number | undefined, reintentar?: number):
   if (estado === 503) return 'El SGA no está disponible por el momento. Inténtalo en unos minutos.';
   return 'No se pudo ingresar. Inténtalo de nuevo.';
 }
+
+const COLUMNAS: Record<string, string> = {
+  docente: 'actividad con el docente', 'docente.asincronica': 'otras actividades con el docente',
+  practico: 'actividad práctico-experimental', autonomo: 'trabajo autónomo', fecha: 'fecha',
+};
+
+/** «momentos[0].sesiones[2].autonomo: …» → «Momento 1, sesión 3 · trabajo autónomo: …» (el aviso nunca trae texto del sílabo). */
+export function avisoLegible(aviso: string): string {
+  const m = /^momentos\[(\d+)\]\.sesiones\[(\d+)\]\.([\w.]+): (.*)$/.exec(aviso);
+  if (!m) return aviso;
+  const [, i, j, campo, detalle] = m;
+  return `Momento ${Number(i) + 1}, sesión ${Number(j) + 1} · ${COLUMNAS[campo] ?? campo}: ${detalle}`;
+}

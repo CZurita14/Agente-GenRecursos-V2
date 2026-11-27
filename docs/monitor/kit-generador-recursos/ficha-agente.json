@@ -1,0 +1,85 @@
+{
+  "name": "Generador de recursos de estudio UTI",
+  "agentId": "generador-recursos-uti",
+  "mode": "API real",
+  "environment": "development",
+  "description": "Genera con IA herramientas de estudio a partir del sílabo de cada proyecto formativo (JSON del sílabo silabo-api/0.1.0).",
+  "baseUrl": "http://172.18.3.25:8766",
+  "integration": "uti-v1",
+  "authentication": {
+    "type": "bearer",
+    "credentialDelivery": "Archivo de texto entregado en mano o por un mensaje cifrado acordado; nunca por correo abierto ni dentro de esta ficha.",
+    "permissions": "Solo lectura de GET /v1/capabilities, /v1/health y /v1/events. El token no abre ninguna otra ruta del Generador.",
+    "expirationAndRenewal": "No caduca. Se rota generando uno nuevo (python -m app.operacion token-monitor <archivo>), cambiando MONITOR_TOKEN_HASH en el .env del Generador, reiniciando su API y guardando el token nuevo en el monitor."
+  },
+  "capabilities": {
+    "configuration": false,
+    "training": false
+  },
+  "weightRules": {},
+  "currentConfiguration": null,
+  "jointWeightConstraints": [],
+  "metrics": {
+    "scope": "Proceso de la API del Generador (servidor FastAPI).",
+    "measurementWindow": "cpuPercent: desde la consulta anterior. memoryMb: memoria residente en el instante. errorRate: llamadas a la IA fallidas de los últimos 15 minutos (se omite si no hubo llamadas).",
+    "availableFields": [
+      "cpuPercent",
+      "memoryMb",
+      "errorRate"
+    ]
+  },
+  "training": {
+    "supported": false,
+    "acceptedDatasetRefs": [],
+    "parametersAndLimits": "No aplica",
+    "infrastructure": "No aplica",
+    "evaluationAndArtifacts": "No aplica",
+    "deploymentAndRollback": "No aplica"
+  },
+  "network": {
+    "requirements": "Adaptador en la PC del Generador, IP institucional 172.18.3.25, puerto TCP 8766 (solo /v1; el resto de la API sigue en 127.0.0.1). Regla de firewall de entrada limitada al origen 172.18.3.16 (PC del monitor). Iniciar con: powershell -File infra/iniciar-monitor.ps1"
+  },
+  "operations": {
+    "idempotencyRetention": "No aplica: el agente no expone operaciones (configuration=false y training=false).",
+    "lookupByIdempotencyKey": false,
+    "survivesRestart": false,
+    "failureMessage": false
+  },
+  "events": {
+    "supported": true,
+    "eventTypes": [
+      "servicio.iniciado",
+      "recurso.solicitado",
+      "recurso.generado",
+      "recurso.revision_requerida",
+      "recurso.fallido",
+      "chat.atendido",
+      "chat.fallido",
+      "silabo.importado",
+      "silabo.invalido",
+      "silabo.no_disponible"
+    ],
+    "retention": "Los eventos se arman a partir de los trabajos y las sincronizaciones guardados en la base del Generador, que no se borran automáticamente.",
+    "cursorValidity": "Indefinida: cursor opaco por fecha e identificador; no caduca ni se invalida al reiniciar.",
+    "personalDataExclusion": "Los mensajes se arman con campos fijos: herramienta, ámbito (momento y sesión), estado, duración, tokens y rutas de campos que fallan. Nunca incluyen correos, nombres, texto del sílabo, contenido de recursos, conversaciones ni razonamiento del modelo. Las materias se identifican solo por su código de proyecto formativo."
+  },
+  "documentation": {
+    "openapiFile": "monitor-api-v1.json (se implementan GET /v1/capabilities, /v1/health y /v1/events)",
+    "examplesDirectory": "ejemplos-respuestas.json",
+    "utiV1Differences": [
+      "No implementa /v1/config, /v1/config/apply, /v1/training-jobs ni /v1/operations, porque declara configuration=false y training=false."
+    ],
+    "rateLimits": "600 solicitudes por minuto por IP (LIMITE_IP_MINUTO). El monitor consulta cada 10 segundos."
+  },
+  "technicalContact": {
+    "name": "REEMPLAZAR",
+    "email": "REEMPLAZAR"
+  },
+  "knownLimitations": [
+    "Sin pesos ni entrenamiento controlables desde el monitor.",
+    "cpuPercent y memoryMb requieren el paquete psutil en el servidor; sin él se omiten.",
+    "servicio.iniciado se emite una vez por arranque de la API.",
+    "GET /v1/usage (contrato 1.2.0) aún no está implementado; se hará con provider \"deepseek\".",
+    "ResourceEntry no aplica: el Generador usa la API de DeepSeek, no un servidor Qwen propio, así que no hay CPU, GPU, VRAM ni colas del servidor de inferencia que medir."
+  ]
+}

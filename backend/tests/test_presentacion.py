@@ -14,6 +14,13 @@ FICHA = {"conceptual": {"ideas_clave": ["Idea A", "Idea B", "Idea C"], "relacion
                         "autocomprobacion": ["Q1", "Q2", "Q3"]}}
 _LARGO = "Texto de prueba con la longitud suficiente para la herramienta."
 CON_IA = {
+    "guia_estudio": {
+        "introduccion": {"presentacion": _LARGO, "objetivos": ["Uno", "Dos", "Tres"], "ruta_del_momento": ["a", "b"],
+                         "glosario": [{"termino": "Término", "definicion": "Definición de prueba del término."}]},
+        "desarrollo_1": {"apartados": [{"titulo": "Tema A", "desarrollo": _LARGO, "puntos_clave": ["x", "y"]}]},
+        "desarrollo_2": {"apartados": [{"titulo": "Tema B", "desarrollo": _LARGO, "puntos_clave": ["x", "y"]}]},
+        "aplicacion": {"vinculacion_practica": _LARGO, "sintesis": _LARGO, "autoevaluacion": ["p1", "p2"],
+                       "ejemplos": [{"titulo": "Ej", "situacion": "Situación ficticia.", "desarrollo": _LARGO}]}},
     "presentacion": {"presentacion": {"titulo": "Título de prueba", "diapositivas": [
         {"titulo": "Uno", "puntos": ["a", "b"], "notas": "Notas de prueba para el docente."}]}},
     "practica_guiada": {"practica": {"objetivo": _LARGO, "ejercicios": [
@@ -36,6 +43,20 @@ CON_IA = {
                                            "criterios": [{"indicador": "Ind", "como_prepararse": "Prepara"}],
                                            "recomendaciones": ["r1"]}},
 }
+def _muestras_v3_6():
+    """Herramientas del plan de evaluación (V3-6), con las mismas muestras que sus pruebas."""
+    from types import SimpleNamespace
+    from tests.test_herramientas_evaluacion import NUEVAS, _salida
+    from app.agentes.workers.definiciones import DEFINICIONES
+    ctx = SimpleNamespace(ra=[SimpleNamespace(id="RA2")], rubrica=[SimpleNamespace(indicador="Indicador 1")],
+                          contenidos=["Contenido 1"])
+    return {h: {DEFINICIONES[h].secciones[0]: {**_salida(h, ctx), **(
+        {"plazos": ["Aporte inicial: hasta el 10/10/2026"], "evaluacion": "Formativa"} if h == "ficha_foro" else {})}}
+        for h in NUEVAS}
+
+
+CON_IA.update(_muestras_v3_6())
+
 SIN_IA = [("hoja_ruta", "asignatura"), ("autoevaluacion_rubrica", "M2"), ("autoevaluacion_final", "asignatura"),
           ("lista_evidencia", "M3"),
           ("rubrica_momento", "M2"), ("rubrica_final", "asignatura")]

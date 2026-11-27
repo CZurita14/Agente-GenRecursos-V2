@@ -324,3 +324,88 @@ def esquema_presentacion() -> dict:
                             "imagen_busqueda": {"type": "string"}})
     return _cerrado({"titulo": {"type": "string"},
                      "diapositivas": {"type": "array", "items": diapositiva, "minItems": 6, "maxItems": 12}})
+
+
+# --- Guía de estudio del momento (parte teórica, de 10 a 15 páginas en 4 secciones) ---
+
+class TerminoGlosario(_Cerrado):
+    termino: str = Field(min_length=2, max_length=80)
+    definicion: str = Field(min_length=20)
+
+
+class GuiaIntroduccion(_Cerrado):
+    presentacion: str = Field(min_length=300)
+    objetivos: list[str] = Field(min_length=3, max_length=6)
+    ruta_del_momento: list[str] = Field(min_length=2, max_length=8)
+    glosario: list[TerminoGlosario] = Field(min_length=6, max_length=15)
+
+
+class ApartadoGuia(_Cerrado):
+    titulo: str = Field(min_length=3, max_length=160)
+    desarrollo: str = Field(min_length=900)
+    puntos_clave: list[str] = Field(min_length=2, max_length=6)
+
+
+class GuiaDesarrollo(_Cerrado):
+    apartados: list[ApartadoGuia] = Field(min_length=2, max_length=5)
+
+
+class EjemploGuia(_Cerrado):
+    titulo: str = Field(min_length=3, max_length=160)
+    situacion: str = Field(min_length=120)
+    desarrollo: str = Field(min_length=300)
+
+
+class EntradaSilabo(_Cerrado):
+    id: str = Field(pattern=r"^B\d+$")
+    tipo: Literal["basica", "complementaria"]
+    texto: str
+
+
+class FuenteWeb(_Cerrado):
+    id: str = Field(pattern=r"^F\d+$")
+    titulo: str
+    autores: str = ""
+    anio: str | None = None
+    sitio: str = ""
+    tipo: str = ""
+    enlace: str = Field(pattern=r"^https://")
+    fragmento: str = ""
+    motor: str = ""
+    base: str = ""      # google_scholar, scopus, scielo o repositorios
+    revista: str = ""   # para la referencia IEEE
+
+
+class BibliografiaGuia(_Cerrado):
+    """La arma el código con la bibliografía del sílabo y las fuentes de SearchAPI; el modelo no la llena."""
+    silabo: list[EntradaSilabo] = []
+    web: list[FuenteWeb] = []
+
+
+class GuiaAplicacion(_Cerrado):
+    vinculacion_practica: str = Field(min_length=400)
+    ejemplos: list[EjemploGuia] = Field(min_length=2, max_length=3)
+    sintesis: str = Field(min_length=300)
+    autoevaluacion: list[str] = Field(min_length=5, max_length=8)
+    bibliografia: BibliografiaGuia | None = None  # Fuera del esquema que recibe el modelo.
+
+
+def esquema_guia_introduccion() -> dict:
+    termino = _cerrado({"termino": {"type": "string"}, "definicion": {"type": "string"}})
+    return _cerrado({"presentacion": {"type": "string"}, "objetivos": _textos(3, 6),
+                     "ruta_del_momento": _textos(2, 8),
+                     "glosario": {"type": "array", "items": termino, "minItems": 6, "maxItems": 15}})
+
+
+def esquema_guia_desarrollo() -> dict:
+    apartado = _cerrado({"titulo": {"type": "string"}, "desarrollo": {"type": "string"},
+                         "puntos_clave": _textos(2, 6)})
+    return _cerrado({"apartados": {"type": "array", "items": apartado, "minItems": 2, "maxItems": 5}})
+
+
+def esquema_guia_aplicacion() -> dict:
+    ejemplo = _cerrado({"titulo": {"type": "string"}, "situacion": {"type": "string"},
+                        "desarrollo": {"type": "string"}})
+    return _cerrado({"vinculacion_practica": {"type": "string"},
+                     "ejemplos": {"type": "array", "items": ejemplo, "minItems": 2, "maxItems": 3},
+                     "sintesis": {"type": "string"}, "autoevaluacion": _textos(5, 8)})

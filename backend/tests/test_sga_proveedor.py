@@ -77,12 +77,13 @@ def test_traductor_descarta_privados():
     crudo = _json(SGA / "sga_silabos" / "S91-SIMU-3-90001-9001.json")
     assert {"docente", "correo", "firmas", "cedula"} <= crudo.keys()
     # También dentro de objetos anidados y de elementos de listas.
-    crudo["proyecto_formativo"]["cedula"] = "0000000000"
+    crudo["portada"]["cedula"] = "0000000000"
+    crudo["presentacion"]["cedula"] = "0000000000"
     crudo["momentos"][0]["docente"] = "MARCA-PRIVADA"
     crudo["momentos"][0]["sesiones"][0]["correo"] = "MARCA-PRIVADA"
     limpio = a_contrato(crudo)
     assert not {"docente", "correo", "firmas", "cedula"} & limpio.keys()
-    assert "cedula" not in limpio["proyecto_formativo"]
+    assert "cedula" not in limpio["proyecto_formativo"] and "cedula" not in json.dumps(limpio)
     assert "docente" not in limpio["momentos"][0]
     assert "correo" not in limpio["momentos"][0]["sesiones"][0]
     salida = json.dumps(limpio)
@@ -106,6 +107,8 @@ def test_arbol_esquema_es_el_del_archivo():
     ("[12345] A99-AAAA-9-99999-9999 PARALELO 1".replace("A99-AAAA-9-99999-9999", "B26-SOFT-3-56146-1727"),
      ("12345", "B26-SOFT-3-56146-1727", "1")),
     ("[7] S91-SIMU-3-90001-9001 PARALELO 12", ("7", "S91-SIMU-3-90001-9001", "12")),
+    ("[8] B26-ENF-1-50001-0001 PARALELO 2", ("8", "B26-ENF-1-50001-0001", "2")),            # sigla de 3 letras
+    ("[9] B26-M-CIBER-1-50002-0002 PARALELO 1", ("9", "B26-M-CIBER-1-50002-0002", "1")),    # posgrado, con prefijo
 ])
 def test_separar_codigo(texto, esperado):
     assert separar_codigo(texto) == esperado
@@ -202,18 +205,18 @@ def test_usuarios_guardan_hash_no_clave():
 
 
 def test_traductor_filtra_claves_extra_en_nodos_antes_libres():
-    """pis, bibliografia, horas y horario[] traen una clave privada: se descarta y el sílabo carga."""
+    """Mapa, bibliografía, presentación, horario, rúbrica y actividades traen una clave privada: se descarta y el sílabo carga."""
     crudo = _json(SGA / "sga_silabos" / "S91-SIMU-3-90001-9001.json")
-    pf = crudo["proyecto_formativo"]
-    crudo["pis"] = {"nombre": "PIS simulado", "aporte": "aporte simulado", "contacto": "MARCA-PRIVADA"}
+    crudo["mapa"].update(pis_nombre="PIS simulado", pis_aporte="aporte simulado", contacto="MARCA-PRIVADA")
     crudo["bibliografia"] = {"basica": ["libro"], "complementaria": [], "cedula": "MARCA-PRIVADA"}
-    pf["horas"]["docente"] = "MARCA-PRIVADA"
-    pf["horario"] = [{"dia": "lunes", "inicio": "08:00", "fin": "09:00", "correo": "MARCA-PRIVADA"}]
+    crudo["presentacion"]["docente"] = "MARCA-PRIVADA"
+    crudo["presentacion"]["horario_contacto"] = ["Lunes 08:00 a 09:00"]
+    crudo["momentos"][0]["rubrica"]["firmante"] = "MARCA-PRIVADA"
+    crudo["momentos"][0]["sesiones"][0]["docente"]["correo"] = "MARCA-PRIVADA"
     limpio = a_contrato(crudo)
     assert "MARCA-PRIVADA" not in json.dumps(limpio)
     assert limpio["pis"] == {"nombre": "PIS simulado", "aporte": "aporte simulado"}
     assert limpio["bibliografia"] == {"basica": ["libro"], "complementaria": []}
-    assert "docente" not in limpio["proyecto_formativo"]["horas"]
     assert limpio["proyecto_formativo"]["horario"] == [{"dia": "lunes", "inicio": "08:00", "fin": "09:00"}]
     cargar_silabo(limpio)
 

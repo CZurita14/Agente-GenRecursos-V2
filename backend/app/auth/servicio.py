@@ -8,8 +8,9 @@ from contextlib import closing
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 
+from app.control.clave import verificar
 from app.control.limites import seudonimo
-from app.sga import CredencialesInvalidas, SGAError
+from app.sga import CredencialesInvalidas, IdentidadSGA, SGAError
 from app.sga.sincronizar import sincronizar
 
 log = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ def _hash_token(token: str) -> str:
 
 class ServicioAuth:
     def __init__(self, conexion, secreto: str, proveedor=None, asignaturas=None, *, ahora=None,
-                 sincronizacion_max_s: float = 45):
+                 sincronizacion_max_s: float = 45, cuentas_locales: bool = False):
         if len(secreto) < 32:
             raise ValueError("El secreto de autenticación necesita al menos 32 caracteres")
         self.conexion, self.secreto = conexion, secreto.encode()
@@ -52,6 +53,8 @@ class ServicioAuth:
         self.ahora = ahora or (lambda: datetime.now(timezone.utc))
         # Presupuesto de la sincronización dentro del ingreso (menor que los 65 s del proxy).
         self.sincronizacion_max_s = sincronizacion_max_s
+        # Etapa de pruebas: una cuenta local (app/auth/cuentas.py) se valida aquí y no consulta al SGA.
+        self.cuentas_locales = cuentas_locales
 
     def _clave_bloqueo(self, usuario: str) -> str:
         """Seudónimo del usuario sin distinguir mayúsculas: quien teclea su clave en el campo de
@@ -141,8 +144,35 @@ class ServicioAuth:
                      "ultimo_ingreso=excluded.ultimo_ingreso, ingresos=docente.ingresos+1",
                      (identidad.correo, (identidad.nombre or "").strip()[:200], ahora, ahora))
 
+    def _cuenta_local(self, usuario: str):
+        if not self.cuentas_locales:
+            return None
+        try:
+            correo = normalizar_correo(usuario)
+        except AuthError:
+            return None
+        with closing(self.conexion()) as conn:
+            conn.autocommit = True
+            return conn.execute("select correo,nombre,clave_hash,activa from cuenta_local where correo=%s",
+                                (correo,)).fetchone()
+
+    def _autenticar_local(self, cuenta, clave: str, clave_u: str) -> str:
+        """Mismo conteo de intentos y bloqueo que con el SGA; una cuenta desactivada responde como clave errada.
+        No sincroniza: las materias de una cuenta local vienen del PDF que sube el docente."""
+        intentos, propio, hasta = self._reservar(clave_u)
+        if not cuenta["activa"] or not verificar(clave, cuenta["clave_hash"]):
+            raise (AuthError(429, "Demasiados intentos", 900) if propio
+                   else AuthError(401, "Usuario o clave incorrectos"))
+        self._cerrar_con_exito(clave_u, propio)
+        with closing(self.conexion()) as conn:
+            conn.autocommit = True
+            self._crear_o_actualizar_docente(conn, IdentidadSGA(cuenta["correo"], cuenta["correo"], cuenta["nombre"]))
+        return cuenta["correo"]
+
     def _autenticar_y_sincronizar(self, usuario: str, clave: str, clave_u: str) -> str:
         """Reserva intento -> SGA -> sincronización. La clave solo vive como parámetro local."""
+        if (cuenta := self._cuenta_local(usuario)) is not None:
+            return self._autenticar_local(cuenta, clave, clave_u)
         if self.proveedor is None:
             raise AuthError(503, "El SGA no está configurado")
         intentos, propio, hasta = self._reservar(clave_u)

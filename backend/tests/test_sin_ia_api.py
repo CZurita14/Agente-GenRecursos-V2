@@ -29,8 +29,8 @@ def test_genera_hoja_ruta_al_instante(entorno):
 def test_catalogo_por_ambito(entorno):
     _, _, d, aid, _ = entorno
     momento = [h["id"] for h in d.get(f"/asignaturas/{aid}/herramientas?ambito=momento").json()["herramientas"]]
-    # Orden del perfil FING (simulacro, …, autoevaluacion_rubrica, …) y luego las no recomendadas.
-    assert momento == ["simulacro", "estudio_caso", "autoevaluacion_rubrica", "repaso_momento",
+    # Orden del perfil FING (guía de estudio, simulacro, …) y luego las no recomendadas.
+    assert momento == ["guia_estudio", "simulacro", "estudio_caso", "autoevaluacion_rubrica", "repaso_momento",
                        "guia_evidencia", "lista_evidencia", "rubrica_momento"]
     asignatura = [h["id"] for h in d.get(f"/asignaturas/{aid}/herramientas?ambito=asignatura").json()["herramientas"]]
     assert sorted(asignatura) == ["autoevaluacion_final", "guia_producto_final", "hoja_ruta", "rubrica_final"]

@@ -1,6 +1,6 @@
 """Compara los sílabos del SGA con sus JSON de referencia (exportados de V1 una sola vez).
 
-Empareja por `proyecto_formativo.codigo`. Ambos lados pasan por `a_contrato`, así que solo
+Empareja por el código del proyecto formativo (`portada.pf_codigo` en el JSON del validador). Ambos lados pasan por `a_contrato`, así que solo
 cuentan los campos del contrato. El informe da rutas de campos, nunca valores. Varios
 archivos con el mismo código (paralelos) se aceptan si su contrato es idéntico; si difieren,
 el error nombra el código.
@@ -32,11 +32,11 @@ def _cargar(carpeta: Path) -> dict[str, dict]:
     por_codigo: dict[str, dict] = {}
     for f in sorted(Path(carpeta).glob("*.json")):
         crudo = json.loads(f.read_text(encoding="utf-8"))
-        try:
-            codigo = crudo["proyecto_formativo"]["codigo"]
-        except (KeyError, TypeError):
-            raise ValueError(f"{f.name}: proyecto_formativo.codigo: falta") from None
+        # El código sale del contrato ya traducido: sirve para el JSON del validador y para el 2.0.
         contrato = a_contrato(crudo)
+        codigo = (contrato.get("proyecto_formativo") or {}).get("codigo") if isinstance(contrato, dict) else None
+        if not codigo:
+            raise ValueError(f"{f.name}: código del proyecto formativo: falta")
         # Varios paralelos comparten código: si su contrato es idéntico cuenta una vez.
         if codigo in por_codigo and por_codigo[codigo] != contrato:
             raise ValueError(f"{codigo}: varios archivos con este código y contenido distinto")

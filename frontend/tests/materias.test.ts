@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { etiquetaMateria, estadoMateria, mensajeIngreso } from '../src/utils/materias.ts';
+import { avisoLegible, etiquetaMateria, estadoMateria, mensajeIngreso } from '../src/utils/materias.ts';
 import type { Materia } from '../src/api/tipos.ts';
 
 const base: Materia = { id_sga: 'm1', codigo_pf: 'B26-SOFT-3', paralelo: '1', nombre: 'ANALISIS DE DATOS',
@@ -58,4 +58,12 @@ test('mensajes de ingreso por estado', () => {
   assert.match(mensajeIngreso(503), /SGA no está disponible/);
   assert.match(mensajeIngreso(500), /No se pudo ingresar/);
   assert.match(mensajeIngreso(undefined), /No hay conexión/);
+});
+
+test('los avisos del sílabo se leen por momento, sesión y columna', () => {
+  assert.equal(avisoLegible('momentos[0].sesiones[3].autonomo: el texto parece incompleto; revísalo en el sílabo'),
+    'Momento 1, sesión 4 · trabajo autónomo: el texto parece incompleto; revísalo en el sílabo');
+  assert.equal(avisoLegible('momentos[1].sesiones[0].docente.asincronica: x'),
+    'Momento 2, sesión 1 · otras actividades con el docente: x');
+  assert.equal(avisoLegible('otro aviso'), 'otro aviso');
 });

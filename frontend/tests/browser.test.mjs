@@ -37,6 +37,18 @@ const MENU_ASIG = [{ numero: 2, inicio: '2026-10-12', fin: '2026-10-18', cierra_
 { numero: 3, inicio: '2026-10-19', fin: '2026-10-25', cierra_momentos: [3], clases: [
   { clase_id: 'M3-S1', numero_clase: 2, dia: 'mie', fecha: '2026-10-21', momento: 3, momento_titulo: 'Resolución',
     contenidos: ['ESTIMACIÓN'], ra: ['RA3'], entregables: [] }] }];
+/** Pantalla principal del Proyecto Formativo: los momentos 2 y 3 del menú, con su plan y su descarga. */
+const MOMENTO = (numero, titulo, sesion, fecha, contenido) => ({
+  numero, id: `M${numero}`, titulo, fase: { nombre: titulo, proposito: 'trabaja el proyecto' },
+  fecha_inicio: fecha, fecha_fin: fecha, ra: [{ id: `RA${numero}`, texto: 'Resultado del momento.' }],
+  evidencia: 'Informe del momento.', politica_ia: 'Se permite IA como asistente.',
+  sesiones: [{ id: sesion, numero: 1, fecha, contenidos: [contenido] }], contexto_docente: null, guia: null,
+  recursos: [], resumen: { total: 0, validados: 0, por_regenerar: 0 } });
+const MOMENTOS = { rol: 'dueno', momentos: [MOMENTO(2, 'Planeación', 'M2-S1', '2026-10-14', 'DISTRIBUCIONES'),
+  MOMENTO(3, 'Resolución', 'M3-S1', '2026-10-21', 'ESTIMACIÓN')] };
+const PLAN = { rol: 'dueno', modalidad: 'EN LINEA', norma: null, bloques: [], clasificacion_ia: 'no_necesaria',
+  por_bloque: {}, por_momento: {}, alertas: [], actividades: [] };
+const RESUMEN = { carpeta: 'docente_analisis_de_datos_con_un_nombre_de_carpeta_largo', validados: 0, asignatura: 0, momentos: [] };
 const RECURSO = validado => ({ id: 'r1', trabajo_id: 't1', ambito_id: 'M2-S1', herramienta: 'cuestionario', version_silabo: '1.0',
   estado: 'requiere_revision', revision: 0, creado: '2026-10-28T10:00:00Z', silabo_actualizado: false, evidencia_vigente: true,
   validado: !!validado, validado_por: validado ? USUARIO.correo : null, validado_en: validado ? '2026-10-28T11:00:00Z' : null,
@@ -79,6 +91,9 @@ async function abrir({ sesion = true, viewport, rutas = {} } = {}) {
     if (ruta === '/asignaturas') return json(200, [{ id: 'a1', nombre: 'ANALISIS DE DATOS', codigo_pf: 'B26-SOFT-3', version_silabo: '1.0', agente: 'ingenierias', rol: 'dueno', dueno: USUARIO.correo }]);
     // --- P6b: menú, catálogo, generación, avance, recurso, validación ---
     if (ruta === '/asignaturas/a1/menu') return json(200, { id: 'a1', rol: 'dueno', version_silabo: '1.0', menu: MENU_ASIG });
+    if (ruta === '/asignaturas/a1/momentos') return json(200, MOMENTOS);
+    if (ruta === '/asignaturas/a1/plan-evaluacion') return json(200, PLAN);
+    if (ruta === '/asignaturas/a1/descarga/resumen') return json(200, RESUMEN);
     if (ruta === '/asignaturas/a1/herramientas') {
       const restringido = url.searchParams.get('id')?.startsWith('M3');
       return json(200, { ambito: url.searchParams.get('ambito'), restringido, perfil_sugerido: 'fundamentacion',
@@ -235,10 +250,18 @@ test('móvil: sin desbordamiento, menú colapsado y tarjetas apiladas', async ()
 
 // --- P6b: Mis recursos ----------------------------------------------------------------
 
-async function abrirAsignatura(page) {
-  await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('button', { name: 'Proyecto Formativo', exact: true }).click();
+async function abrirAsignatura(page, { movil = false } = {}) {
+  if (movil) {
+    await page.getByRole('button', { name: 'Abrir navegación' }).click();
+    await page.getByRole('navigation', { name: 'Navegación móvil' }).getByRole('button', { name: 'Proyecto Formativo', exact: true }).click();
+  } else await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('button', { name: 'Proyecto Formativo', exact: true }).click();
   await page.getByRole('button', { name: 'Abrir ANALISIS DE DATOS' }).click();
   await page.getByRole('heading', { name: 'ANALISIS DE DATOS' }).waitFor();
+}
+
+/** Abre la pestaña de un momento en la pantalla principal del Proyecto Formativo. */
+async function abrirMomento(page, numero) {
+  await page.getByRole('list', { name: 'Trazabilidad de momentos' }).getByRole('button', { name: new RegExp(`Momento ${numero}`) }).click();
 }
 
 test('recorrido: clase → actividad → generar → avance → recurso', async () => {
@@ -263,6 +286,7 @@ test('recorrido: clase → actividad → generar → avance → recurso', async 
 test('clase de un momento restringido muestra el aviso y no ofrece IA', async () => {
   const { context, page } = await abrir();
   await abrirAsignatura(page);
+  await abrirMomento(page, 3);
   await page.getByRole('button', { name: /Clase 2/ }).click();
   await page.getByRole('alert').getByText('excluye la IA').waitFor();
   assert.equal(await page.getByRole('checkbox').count(), 0);
@@ -270,12 +294,61 @@ test('clase de un momento restringido muestra el aviso y no ofrece IA', async ()
   await context.close();
 });
 
-test('el menú ofrece clases y el Proyecto Formativo, no momentos', async () => {
+test('el Proyecto Formativo abre en sus momentos, con las clases del momento y sus botones', async () => {
   const { context, page } = await abrir();
   await abrirAsignatura(page);
   await page.getByRole('button', { name: 'Herramientas del Proyecto Formativo' }).waitFor();
-  assert.equal(await page.getByRole('button', { name: 'Herramientas del momento' }).count(), 0);
-  assert.equal(await page.getByText(/Cierra el Momento/).count(), 0);
+  await page.getByRole('button', { name: 'Ver recursos' }).waitFor();
+  // Solo las clases del momento abierto: la del Momento 3 aparece al abrir su pestaña.
+  await page.getByRole('heading', { name: 'Clases del momento' }).waitFor();
+  await page.getByRole('button', { name: /mié 14\/10 · Clase 1/ }).waitFor();
+  assert.equal(await page.getByRole('button', { name: /Clase 2/ }).count(), 0);
+  await abrirMomento(page, 3);
+  await page.getByRole('button', { name: /mié 21\/10 · Clase 2/ }).waitFor();
+  assert.equal(await page.getByText(/Paso 1 · Elige la clase/).count(), 0);
+  await context.close();
+});
+
+test('pantalla ancha: momentos, momento abierto y norma en tres columnas', async () => {
+  const { context, page } = await abrir({ viewport: { width: 1600, height: 900 } });
+  await abrirAsignatura(page);
+  const norma = page.getByRole('complementary', { name: 'Evaluación del Proyecto Formativo' });
+  await norma.getByRole('heading', { name: 'Norma de evaluación de la modalidad' }).waitFor();
+  assert.equal(await page.getByRole('button', { name: 'Ver detalle y pesos' }).count(), 0);
+  const lado = await page.getByRole('complementary', { name: 'Momentos del Proyecto Formativo' }).boundingBox();
+  const centro = await page.getByRole('heading', { name: 'Clases del momento' }).boundingBox();
+  const derecha = await norma.boundingBox();
+  assert.ok(lado.x + lado.width <= centro.x && centro.x + centro.width <= derecha.x);
+  await page.getByText('Preparar de una vez').waitFor();
+  await context.close();
+});
+
+test('laptop mediana pliega la norma y el teléfono deja todo en una columna', async () => {
+  for (const viewport of [{ width: 1100, height: 800 }, { width: 375, height: 812 }]) {
+    const { context, page } = await abrir({ viewport });
+    await abrirAsignatura(page, { movil: viewport.width < 768 });
+    const ver = page.getByRole('button', { name: 'Ver detalle y pesos' });
+    await ver.waitFor();
+    assert.equal(await ver.getAttribute('aria-expanded'), 'false');
+    assert.equal(await page.getByRole('complementary', { name: 'Evaluación del Proyecto Formativo' }).count(), 0);
+    await ver.click();
+    await page.getByRole('button', { name: 'Ocultar detalle' }).waitFor();
+    // Nada se sale de la pantalla a lo ancho.
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
+    await page.getByRole('button', { name: 'Herramientas del Proyecto Formativo' }).waitFor();
+    await context.close();
+  }
+});
+
+test('al volver de una clase se abre el mismo momento', async () => {
+  const { context, page } = await abrir();
+  await abrirAsignatura(page);
+  await abrirMomento(page, 3);
+  await page.getByRole('button', { name: /Clase 2/ }).click();
+  await page.getByRole('button', { name: '← Volver al Proyecto Formativo' }).click();
+  await page.getByRole('heading', { name: 'Clases del momento' }).waitFor();
+  const activo = page.getByRole('list', { name: 'Trazabilidad de momentos' }).locator('button[aria-current="true"]');
+  assert.match(await activo.innerText(), /Momento 3/);
   await context.close();
 });
 

@@ -52,7 +52,7 @@ export function Actividad({ aid, ambito, titulo, onGenerado, onVolver, onSesionV
 
   return <>
     <div>
-      <Button variant="ghost" size="sm" onClick={onVolver}>← Volver al menú</Button>
+      <Button variant="ghost" size="sm" onClick={onVolver}>← Volver al Proyecto Formativo</Button>
       <h1 className="text-2xl font-bold mt-2">{titulo}</h1>
       <p className="text-muted mt-1">Paso 2 · Elige la actividad que quieres preparar.</p>
     </div>

@@ -47,7 +47,8 @@ def ingresar(datos: Ingreso, request: Request, response: Response):
 @router.get("/modo")
 def modo(request: Request):
     """Público: la pantalla de ingreso decide si ofrece entrar sin código."""
-    return {"acceso_prueba": request.app.state.config.acceso_prueba}
+    config = request.app.state.config
+    return {"acceso_prueba": config.acceso_prueba, "cuentas_locales": config.cuentas_locales}
 
 
 @router.post("/prueba")
@@ -66,8 +67,12 @@ def prueba(datos: AccesoPrueba, request: Request, response: Response):
 
 @router.get("/yo")
 def yo(request: Request):
-    rol = "administrador" if request.state.usuario in request.app.state.config.administradores else "docente"
-    return {"correo": request.state.usuario, "rol": rol}
+    config = request.app.state.config
+    rol = "administrador" if request.state.usuario in config.administradores else "docente"
+    # Cuenta local (etapa de pruebas): el frontend pide cambiar la clave inicial y ofrece subir el PDF del sílabo.
+    local = request.app.state.cuentas.estado(request.state.usuario) if config.cuentas_locales else None
+    return {"correo": request.state.usuario, "rol": rol, "cuenta_local": local is not None,
+            "cambiar_clave": bool(local and local["cambiar_clave"]), "cuentas_locales": config.cuentas_locales}
 
 
 @router.post("/salir")

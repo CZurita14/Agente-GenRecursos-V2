@@ -744,6 +744,15 @@ def test_evaluar_rechaza_un_modelo_preliminar_sin_tomar_candado(tmp_path):
     assert not (modelo / "evaluacion.candado").exists()
 
 
+def test_evaluar_rechaza_un_modelo_exploratorio_sin_tomar_candado(tmp_path):
+    modelo = _modelo_falso(tmp_path, preliminar=False, humo=False)
+    p = modelo / "metadatos.json"
+    p.write_text(json.dumps({**json.loads(p.read_text()), "exploratorio": True}))
+    with pytest.raises(ev.EntradaInvalida, match="exploratorio"):
+        ev.ejecutar(modelo, tmp_path / "silabos", datos=tmp_path, salida=tmp_path / "s")
+    assert not (modelo / "evaluacion.candado").exists()
+
+
 def test_evaluar_con_humo_sigue_con_un_modelo_preliminar(tmp_path):
     modelo = _modelo_falso(tmp_path, preliminar=True, humo=True)
     r = ev.ejecutar(modelo, tmp_path / "silabos", datos=tmp_path, salida=tmp_path / "s", humo=True)

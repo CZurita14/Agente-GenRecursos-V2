@@ -339,3 +339,26 @@ def test_la_consola_cp1252_no_rompe_la_cli(modulo_cli, parche):
                        cwd=Path(__file__).resolve().parents[1])
     assert r.returncode == 0, r.stderr.decode("utf-8", "replace")[-300:]
     assert "✅ listo" in r.stdout.decode("utf-8")
+
+
+# --- modo exploratorio: solo reales, sin el mínimo, nunca aprobable -----------------------
+
+
+def test_exploratorio_entrena_sin_el_minimo_y_queda_marcado(tmp_path, monkeypatch, dos_silabos):
+    textos, meta = _entrenar_cli(tmp_path, monkeypatch, dos_silabos, "--exploratorio")
+    _, prueba = _grupos(dos_silabos)
+    assert meta["exploratorio"] is True and "preliminar" not in meta
+    assert meta["por_facultad"] == {"FING": 2}
+    assert meta["n_entrenamiento"] == 1 and meta["n_prueba"] == 1
+    assert textos and not {t.strip().casefold() for t in textos} & {t.strip().casefold() for t in prueba}
+
+
+def test_exploratorio_rechaza_simulados(tmp_path, monkeypatch, corpus_mixto):
+    monkeypatch.setattr(modulo, "entrenar", lambda *a, **k: pytest.fail("no debió entrenar"))
+    with pytest.raises(SystemExit, match="solo acepta sílabos reales"):
+        main(["--silabos", str(corpus_mixto), "--salida", str(tmp_path / "v"), "--exploratorio"])
+
+
+def test_sin_exploratorio_sigue_exigiendo_el_minimo(tmp_path, dos_silabos):
+    with pytest.raises(SystemExit, match="mínimo"):
+        main(["--silabos", str(dos_silabos), "--salida", str(tmp_path / "v")])

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://uti.edu.ec/generador-recursos/silabo-api.schema.json",
-  "title": "Sílabo UTI para el Generador de Recursos",
-  "description": "Solo los apartados académicos que consume el sistema. No incluye la sección I (perfil y contacto del docente) ni la VII (firmas): la API no debe enviarlos. Las claves marcadas como opcionales no se usan hoy y pueden omitirse.",
+  "$id": "https://uti.edu.ec/generador-recursos/silabo-api.v1.schema.json",
+  "title": "Sílabo UTI para el Generador de Recursos · contrato v1.0",
+  "description": "Apartados académicos del sílabo que consume el sistema. No incluye la sección I (perfil y contacto del docente) ni la VII (firmas): la API no debe enviarlas. El SGA envía lo que guarda; el sistema deriva el id de sesión, la semana del periodo y los entregables cuando no vienen. Validado con 51 sílabos reales del periodo B26.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -19,12 +19,12 @@
     "facultad": {
       "type": "string",
       "minLength": 1,
-      "description": "Nombre oficial de la facultad, como en el catálogo."
+      "description": "Nombre oficial de la facultad. Elige el agente y el estilo de la facultad."
     },
     "carrera": {
       "type": "string",
       "minLength": 1,
-      "description": "Nombre oficial de la carrera."
+      "description": "Nombre oficial de la carrera o del programa de posgrado."
     },
     "periodo": {
       "type": "object",
@@ -36,7 +36,8 @@
       ],
       "properties": {
         "codigo": {
-          "type": "string"
+          "type": "string",
+          "description": "Código del periodo académico, p. ej. B26."
         },
         "inicio": {
           "type": "string",
@@ -62,7 +63,7 @@
         "codigo": {
           "type": "string",
           "minLength": 1,
-          "description": "Identificador estable del proyecto formativo; separa entrenamiento y prueba."
+          "description": "Código del proyecto formativo, p. ej. B26-SOFT-3-56157-1727. Identifica el sílabo y debe ser igual al codigo_pf de la materia. La sigla de la carrera tiene de 1 a 5 letras y puede llevar un prefijo."
         },
         "nombre": {
           "type": "string",
@@ -70,7 +71,8 @@
         },
         "version": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "Versión del sílabo, p. ej. 1.0. Debe cambiar cada vez que cambia el sílabo."
         },
         "aprobado": {
           "type": "string",
@@ -79,23 +81,24 @@
         },
         "nivel": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 1,
+          "description": "Nivel o semestre de la malla (1 a 10)."
         },
         "uoc": {
           "type": "string",
-          "description": "Opcional: no se usa hoy."
+          "description": "Opcional. Unidad de organización curricular."
         },
         "modalidad": {
           "type": "string",
-          "description": "Opcional: no se usa hoy."
+          "description": "Opcional. PRESENCIAL, EN LINEA o HIBRIDA."
         },
         "creditos": {
           "type": "number",
-          "description": "Opcional: no se usa hoy."
+          "description": "Opcional. Créditos de la asignatura."
         },
         "horas": {
           "type": "object",
-          "description": "Opcional: no se usa hoy. Si viene, trae las cuatro horas.",
+          "description": "Opcional. Si viene, trae las cuatro horas.",
           "additionalProperties": false,
           "properties": {
             "total": {
@@ -120,7 +123,7 @@
         },
         "horario": {
           "type": "array",
-          "description": "Opcional: no se usa hoy.",
+          "description": "Opcional. Franjas de clase; las horas en formato HH:MM.",
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -146,15 +149,16 @@
     },
     "competencia_perfil": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "description": "Competencia del perfil de egreso a la que aporta la asignatura."
     },
     "competencia_pf": {
       "type": "string",
-      "description": "Opcional: no se usa hoy; candidato a entrar al contexto."
+      "description": "Opcional. Competencia del proyecto formativo."
     },
     "metacompetencia": {
       "type": "string",
-      "description": "Opcional: no se usa hoy."
+      "description": "Opcional."
     },
     "resultados_aprendizaje": {
       "type": "array",
@@ -170,14 +174,15 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Referenciado desde momentos[].ra."
+            "description": "RA1, RA2, ...; se referencia desde momentos[].ra."
           },
           "texto": {
             "type": "string",
             "minLength": 1
           },
           "evidencia": {
-            "type": "string"
+            "type": "string",
+            "description": "Evidencia del resultado; puede ir vacía."
           }
         }
       }
@@ -200,7 +205,8 @@
         "producto_final": {
           "type": "string"
         }
-      }
+      },
+      "description": "Problema del contexto. Las tres claves son obligatorias; el texto puede ir vacío si el sílabo no lo tiene."
     },
     "momentos": {
       "type": "array",
@@ -241,23 +247,26 @@
             "items": {
               "type": "string"
             },
-            "description": "Ids de resultados_aprendizaje."
+            "description": "Ids de resultados_aprendizaje que trabaja el momento."
           },
           "evidencia": {
-            "type": "string"
+            "type": "string",
+            "description": "Evidencia de desempeño del momento. Es un entregable: el sistema no la resuelve."
           },
           "politica_ia": {
-            "type": "string"
+            "type": "string",
+            "description": "Política de gobernanza de IA del momento."
           },
           "recursos": {
             "type": "string",
-            "description": "Opcional: no se usa hoy."
+            "description": "Opcional. Recursos para el aprendizaje."
           },
           "rubrica": {
             "type": "array",
             "items": {
               "$ref": "#/$defs/fila_rubrica"
-            }
+            },
+            "description": "Rúbrica del momento; puede ir vacía."
           },
           "sesiones": {
             "type": "array",
@@ -266,10 +275,8 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
-                "id",
                 "numero",
                 "fecha",
-                "semana_periodo",
                 "contenidos",
                 "docente",
                 "practico",
@@ -278,27 +285,33 @@
               "properties": {
                 "id": {
                   "type": "string",
-                  "description": "Forma M<momento>-S<n>, p. ej. M2-S1."
+                  "description": "Opcional. Si no viene, el sistema lo arma como M<momento>-S<numero>, p. ej. M2-S1."
                 },
                 "numero": {
                   "type": "integer",
-                  "minimum": 1
+                  "minimum": 1,
+                  "description": "Número de la sesión como aparece en el sílabo; no se repite dentro del sílabo."
                 },
                 "fecha": {
-                  "type": "string",
-                  "format": "date"
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date",
+                  "description": "Fecha de la sesión (AAAA-MM-DD), dentro del periodo. null si el SGA no tiene fecha programada: esa sesión no se importa y el docente recibe un aviso."
                 },
                 "semana_periodo": {
                   "type": "integer",
-                  "minimum": 1
+                  "minimum": 1,
+                  "description": "Opcional. Si no viene, el sistema la calcula: semana 1 es la del lunes de periodo.inicio."
                 },
                 "contenidos": {
                   "type": "array",
-                  "minItems": 1,
                   "items": {
                     "type": "string",
                     "minLength": 1
-                  }
+                  },
+                  "description": "Un elemento por contenido de la sesión. Puede ir vacío si la sesión no tiene contenidos."
                 },
                 "docente": {
                   "type": "object",
@@ -318,6 +331,10 @@
                         "object",
                         "null"
                       ],
+                      "additionalProperties": false,
+                      "required": [
+                        "texto"
+                      ],
                       "properties": {
                         "texto": {
                           "type": "string"
@@ -325,9 +342,11 @@
                         "horas": {
                           "type": "number"
                         }
-                      }
+                      },
+                      "description": "Otras actividades con el docente (asincrónicas), o null."
                     }
-                  }
+                  },
+                  "description": "Actividad con el docente. asincronica: otras actividades con el docente, o null."
                 },
                 "practico": {
                   "$ref": "#/$defs/actividad"
@@ -339,7 +358,8 @@
                   "type": "array",
                   "items": {
                     "type": "string"
-                  }
+                  },
+                  "description": "Opcional. Si no viene, el sistema los detecta en las actividades (Tarea n, PAE n, Evaluación cognitiva n). El sistema nunca resuelve un entregable."
                 }
               }
             }
@@ -351,11 +371,12 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/fila_rubrica"
-      }
+      },
+      "description": "Opcional. Rúbrica del producto final."
     },
     "pis": {
       "type": "object",
-      "description": "Opcional: fuera del contexto hasta tener sílabos reales.",
+      "description": "Opcional. Proyecto integrador de saberes; entra al contexto de generación. Los textos pueden ir vacíos.",
       "additionalProperties": false,
       "required": [
         "nombre",
@@ -375,11 +396,11 @@
       "items": {
         "type": "string"
       },
-      "description": "Opcional: fuera del contexto hasta tener sílabos reales."
+      "description": "Opcional. Hoy no entra al contexto."
     },
     "bibliografia": {
       "type": "object",
-      "description": "Opcional: fuera del contexto hasta tener sílabos reales.",
+      "description": "Opcional. Hoy no entra al contexto.",
       "additionalProperties": false,
       "properties": {
         "basica": {
@@ -411,7 +432,8 @@
         "horas": {
           "type": "number"
         }
-      }
+      },
+      "description": "texto es obligatorio y puede ir vacío; horas es opcional."
     },
     "fila_rubrica": {
       "type": "object",
@@ -429,7 +451,7 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "Clave del nivel (receptivo, resolutivo, reflexivo, critico, cocreativo) y su descriptor."
+          "description": "Descriptor por nivel. Claves esperadas: receptivo, resolutivo, reflexivo, critico, cocreativo."
         }
       }
     }

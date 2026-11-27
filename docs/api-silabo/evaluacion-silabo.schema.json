@@ -1,0 +1,532 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uti.edu.ec/generador-recursos/evaluacion-silabo.schema.json",
+  "title": "Resultado de la Escala general de evaluación de sílabos · formato 1.0",
+  "description": "Valoración de un sílabo con la escala (catálogo en escala-silabo.json). Un punto por pregunta; III.12 y III.13 una vez por RA declarado (o NA para RA2 a RA4 no declarados); IV.1 a IV.15 una vez por momento. No guarda nombres de personas.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "formato",
+    "instrumento",
+    "silabo",
+    "revision",
+    "puntos",
+    "apartados",
+    "total",
+    "completa"
+  ],
+  "properties": {
+    "formato": {
+      "const": "1.0"
+    },
+    "instrumento": {
+      "const": "UTI 23/10/2026"
+    },
+    "silabo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codigo",
+        "version"
+      ],
+      "properties": {
+        "codigo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "etapa",
+        "fecha"
+      ],
+      "properties": {
+        "etapa": {
+          "enum": [
+            "inicio",
+            "seguimiento",
+            "final"
+          ]
+        },
+        "fecha": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "puntos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/punto"
+      }
+    },
+    "apartados": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII"
+      ],
+      "properties": {
+        "I": {
+          "$ref": "#/$defs/apartado"
+        },
+        "II": {
+          "$ref": "#/$defs/apartado"
+        },
+        "III": {
+          "$ref": "#/$defs/apartado"
+        },
+        "IV": {
+          "$ref": "#/$defs/apartado"
+        },
+        "V": {
+          "$ref": "#/$defs/apartado"
+        },
+        "VI": {
+          "$ref": "#/$defs/apartado"
+        },
+        "VII": {
+          "$ref": "#/$defs/apartado"
+        }
+      }
+    },
+    "total": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Suma de los resultados de I a VII. null mientras la evaluación no esté completa."
+    },
+    "completa": {
+      "type": "boolean",
+      "description": "true cuando ningún punto queda por valorar (valor null)."
+    },
+    "sugerencias_generales": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "apartado": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "peso",
+        "puntos",
+        "maximo",
+        "aplicables",
+        "na",
+        "nd",
+        "por_valorar",
+        "pendientes",
+        "resultado"
+      ],
+      "properties": {
+        "peso": {
+          "type": "number"
+        },
+        "puntos": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maximo": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "aplicables × 5"
+        },
+        "aplicables": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "na": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nd": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "por_valorar": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pendientes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resultado": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "puntos ÷ maximo × peso, redondeado a 2 decimales. null mientras haya puntos por valorar."
+        }
+      }
+    },
+    "punto": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codigo",
+        "valor",
+        "fuente",
+        "justificacion",
+        "sugerencia",
+        "pendiente"
+      ],
+      "properties": {
+        "codigo": {
+          "enum": [
+            "I.1",
+            "II.1",
+            "III.1",
+            "III.2",
+            "III.3",
+            "III.4",
+            "III.5",
+            "III.6",
+            "III.7",
+            "III.8",
+            "III.9",
+            "III.10",
+            "III.11",
+            "III.12",
+            "III.13",
+            "III.14",
+            "III.15",
+            "III.16",
+            "III.17",
+            "III.18",
+            "III.19",
+            "III.20",
+            "III.21",
+            "III.22",
+            "III.23",
+            "III.24",
+            "III.25",
+            "III.26",
+            "III.27",
+            "III.28",
+            "III.29",
+            "IV.1",
+            "IV.2",
+            "IV.3",
+            "IV.4",
+            "IV.5",
+            "IV.6",
+            "IV.7",
+            "IV.8",
+            "IV.9",
+            "IV.10",
+            "IV.11",
+            "IV.12",
+            "IV.13",
+            "IV.14",
+            "IV.15",
+            "V.1",
+            "V.2",
+            "V.3",
+            "V.4",
+            "V.5",
+            "V.6",
+            "V.7",
+            "V.8",
+            "V.9",
+            "V.10",
+            "V.11",
+            "V.12",
+            "VI.1",
+            "VII.1"
+          ]
+        },
+        "ra": {
+          "type": "string",
+          "pattern": "^RA[1-4]$"
+        },
+        "momento": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "valor": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            {
+              "enum": [
+                "ND",
+                "NA"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Nivel 1 a 5, ND (vale 0), NA (fuera del máximo) o null (por valorar)."
+        },
+        "fuente": {
+          "enum": [
+            "automatica",
+            "ia",
+            "evaluador"
+          ],
+          "description": "automatica: ND o NA que se deducen del JSON; ia: nivel propuesto por el modelo; evaluador: confirmado por una persona."
+        },
+        "justificacion": {
+          "type": "string",
+          "description": "Obligatoria no vacía cuando valor es NA."
+        },
+        "sugerencia": {
+          "type": "string",
+          "description": "Sugerencia para mejorar (columna de la escala)."
+        },
+        "pendiente": {
+          "type": "boolean",
+          "description": "Queda pendiente de aclarar (p. ej. metodología elegida sin actividad)."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "valor": {
+                "const": "NA"
+              }
+            },
+            "required": [
+              "valor"
+            ]
+          },
+          "then": {
+            "properties": {
+              "codigo": {
+                "enum": [
+                  "III.5",
+                  "III.6",
+                  "III.7",
+                  "III.8",
+                  "III.9",
+                  "III.10",
+                  "III.12",
+                  "III.13",
+                  "III.19",
+                  "III.20",
+                  "III.22",
+                  "III.23",
+                  "III.24",
+                  "III.25",
+                  "III.26",
+                  "III.27",
+                  "III.28",
+                  "III.29",
+                  "V.12"
+                ]
+              },
+              "justificacion": {
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "codigo": {
+                "enum": [
+                  "III.12",
+                  "III.13"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "ra"
+            ],
+            "not": {
+              "required": [
+                "momento"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "codigo": {
+                "enum": [
+                  "IV.1",
+                  "IV.2",
+                  "IV.3",
+                  "IV.4",
+                  "IV.5",
+                  "IV.6",
+                  "IV.7",
+                  "IV.8",
+                  "IV.9",
+                  "IV.10",
+                  "IV.11",
+                  "IV.12",
+                  "IV.13",
+                  "IV.14",
+                  "IV.15"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "momento"
+            ],
+            "not": {
+              "required": [
+                "ra"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "codigo": {
+                "enum": [
+                  "I.1",
+                  "II.1",
+                  "III.1",
+                  "III.2",
+                  "III.3",
+                  "III.4",
+                  "III.5",
+                  "III.6",
+                  "III.7",
+                  "III.8",
+                  "III.9",
+                  "III.10",
+                  "III.11",
+                  "III.14",
+                  "III.15",
+                  "III.16",
+                  "III.17",
+                  "III.18",
+                  "III.19",
+                  "III.20",
+                  "III.21",
+                  "III.22",
+                  "III.23",
+                  "III.24",
+                  "III.25",
+                  "III.26",
+                  "III.27",
+                  "III.28",
+                  "III.29",
+                  "V.1",
+                  "V.2",
+                  "V.3",
+                  "V.4",
+                  "V.5",
+                  "V.6",
+                  "V.7",
+                  "V.8",
+                  "V.9",
+                  "V.10",
+                  "V.11",
+                  "V.12",
+                  "VI.1",
+                  "VII.1"
+                ]
+              }
+            }
+          },
+          "then": {
+            "allOf": [
+              {
+                "not": {
+                  "required": [
+                    "ra"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "required": [
+                    "momento"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "codigo": {
+                "enum": [
+                  "III.12",
+                  "III.13"
+                ]
+              },
+              "valor": {
+                "const": "NA"
+              }
+            },
+            "required": [
+              "valor"
+            ]
+          },
+          "then": {
+            "properties": {
+              "ra": {
+                "not": {
+                  "const": "RA1"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "codigo": {
+                "enum": [
+                  "I.1",
+                  "VII.1"
+                ]
+              },
+              "valor": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "valor"
+            ]
+          },
+          "then": {
+            "properties": {
+              "fuente": {
+                "const": "evaluador"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

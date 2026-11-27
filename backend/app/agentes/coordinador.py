@@ -164,7 +164,8 @@ class Coordinador:
             tarea = TareaLote(**ids, lote=lote, ronda=ronda, contexto=contexto, estilo=estilo,
                               plan=plan, ya_generado=[i["pregunta"] for k, i in contenido.items()
                                                      if k not in {p.item_id for p in plan}],
-                              devoluciones=devoluciones, instrucciones=encargo.instrucciones)
+                              devoluciones=devoluciones, instrucciones=encargo.instrucciones,
+                              material_momento=encargo.material_momento, fuentes=encargo.fuentes)
             persistir([tarea], estado="generando")
             comprobar()
             entrega = worker.generar(tarea, cliente)

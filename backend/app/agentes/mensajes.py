@@ -42,6 +42,8 @@ class Encargo(Mensaje):
     herramienta: str
     perfil_dificultad: str
     instrucciones: str = ""
+    material_momento: str = ""  # Contexto del docente y guía validada del momento (instantánea).
+    fuentes: dict[str, Any] = {}  # Guía de estudio: bibliografía del sílabo (B…) y fuentes web (F…).
 
 
 class PlanRazonado(Mensaje):
@@ -67,6 +69,8 @@ class TareaLote(Mensaje):
     resultados_calculados: list[str] = []
     devoluciones: list[Devolucion] = []
     instrucciones: str = ""
+    material_momento: str = ""
+    fuentes: dict[str, Any] = {}
 
 
 class EntregaLote(Mensaje):

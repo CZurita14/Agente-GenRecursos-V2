@@ -26,6 +26,11 @@ class Ajustes(BaseSettings):
     imagenes_activas: bool = True
     unsplash_access_key: SecretStr | None = None
     pexels_api_key: SecretStr | None = None
+    # Fuentes web de la guía de estudio (solo la guía): SearchAPI con Google Scholar y Google.
+    # Sin clave, la guía usa solo la bibliografía del sílabo. Cada consulta gasta un crédito.
+    searchapi_key: SecretStr | None = None
+    searchapi_url: str = "https://www.searchapi.io/api/v1/search"
+    searchapi_consultas_por_momento: int = Field(default=4, ge=0, le=6)  # una por base del perfil
     llm_max_concurrencia: int = 4
     llm_timeout_s: float = 120
     llm_timeout_revisor_s: float = 240
@@ -38,6 +43,10 @@ class Ajustes(BaseSettings):
     entorno: Literal["desarrollo", "produccion"] = "produccion"
     # Entrar sin autenticar contra el SGA (solo desarrollo); el ingreso normal usa el SGA.
     acceso_prueba: bool = False
+    # Etapa de pruebas: cuentas con correo institucional que crea un administrador, sin verificar el
+    # correo y sin el SGA; el docente sube el PDF de su sílabo. Prohibido en producción.
+    cuentas_locales: bool = False
+    silabo_pdf_max_bytes: int = Field(default=15 * 1024 * 1024, ge=1024, le=50 * 1024 * 1024)
     api_json_max_bytes: int = Field(default=1024 * 1024, ge=1, le=4 * 1024 * 1024)
     api_json_timeout_s: float = Field(default=30, gt=0, le=120)
     # Proveedor del SGA: "real" espera el adaptador de TI; "simulado" (solo desarrollo) lee los fixtures
@@ -48,6 +57,13 @@ class Ajustes(BaseSettings):
     # Presupuesto de la sincronización dentro del ingreso: el proxy corta la petición a los 65 s.
     sga_sincronizacion_max_s: float = Field(default=45, gt=0, lt=65)
     administradores: list[str] = Field(default_factory=list)
+    # Panel de consumo: hash PBKDF2 de la clave (python -m app.operacion hash-clave). Sin hash, solo los
+    # administradores ven el panel. El costo sale de app/llm/precios.py (tarifas oficiales de DeepSeek).
+    consumo_clave_hash: SecretStr | None = None
+    # Monitor de Agentes de la UTI (API UTI v1 en /v1): SHA-256 del token Bearer del monitor
+    # (python -m app.operacion token-monitor <archivo>) y el ID estable con que se registra el agente.
+    monitor_token_hash: SecretStr | None = None
+    monitor_agent_id: str = "generador-recursos-uti"
     proxies_confiables: list[str] = Field(default_factory=list)
     limite_ip_minuto: int = Field(default=600, ge=1, le=100000)
     limite_usuario_minuto: int = Field(default=120, ge=1, le=100000)
@@ -100,6 +116,8 @@ class Ajustes(BaseSettings):
             raise ValueError("LLM_TLS_ESTRICTO=false solo se permite en desarrollo")
         if self.entorno == "produccion" and self.acceso_prueba:
             raise ValueError("ACCESO_PRUEBA no se permite en producción")
+        if self.entorno == "produccion" and self.cuentas_locales:
+            raise ValueError("CUENTAS_LOCALES no se permite en producción")
         if self.entorno == "produccion" and self.sga_proveedor == "simulado":
             raise ValueError("SGA_PROVEEDOR=simulado no se permite en producción")
         if self.sga_proveedor == "simulado" and (

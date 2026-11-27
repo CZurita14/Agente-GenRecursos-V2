@@ -10,12 +10,12 @@ interface RecursosProps {
   aidInicial?: string;
   onAbrir: (aid: string, rid: string, rol: AsignaturaResumen['rol']) => void;
   onSesionVencida: () => void;
-  onTrabajos?: (aid: string, ids: string[], rol: AsignaturaResumen['rol']) => void;
+  onTrabajos?: (aid: string, ids: string[], rol: AsignaturaResumen['rol'], nombre: string) => void;
 }
 
 const FORMATOS = [['html', 'HTML'], ['pdf', 'PDF'], ['docx', 'Word']] as const;
 // Solo resultados finales: lo de un momento (simulacro, rúbrica del momento…) no se lista. Los datos se conservan.
-const esFinal = (r: RecursoResumen) => !/^M\d+$/.test(r.ambito_id);
+const esFinal = (r: RecursoResumen) => !/^M\d+(-M\d+)?$/.test(r.ambito_id);
 
 /** «Mis recursos»: lo generado en un Proyecto Formativo, para validarlo y descargarlo. */
 export function Recursos({ aidInicial, onAbrir, onSesionVencida, onTrabajos }: RecursosProps) {
@@ -125,6 +125,6 @@ export function Recursos({ aidInicial, onAbrir, onSesionVencida, onTrabajos }: R
     {aid && <DataTable caption="Recursos del Proyecto Formativo" columns={columnas} rows={(filas ?? []).filter(esFinal)} rowKey={r => r.id}
       loading={filas === null} emptyMessage="Aún no hay recursos. Elige una clase en «Proyecto Formativo» para generarlos." />}
     {aid && rol !== 'lector' && <ChatAjustes aid={aid} onSesionVencida={onSesionVencida}
-      onActualizado={() => { void refrescar(aid); }} onTrabajos={ids => onTrabajos?.(aid, ids, rol)} />}
+      onActualizado={() => { void refrescar(aid); }} onTrabajos={ids => onTrabajos?.(aid, ids, rol, lista?.find(a => a.id === aid)?.nombre ?? 'Proyecto Formativo')} />}
   </>;
 }

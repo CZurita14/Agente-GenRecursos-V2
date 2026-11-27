@@ -1,0 +1,614 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Contrato de agentes para Monitor UTI",
+    "version": "1.1.0",
+    "description": "Propuesta para solicitar a los desarrolladores de agentes. El monitor incluye un adaptador para este contrato. configuration/training=false deshabilitan los controles correspondientes. No implica que exista una API externa desplegada. v1.1 añade /v1/events (registro de actividad) y message en operaciones; ambos son opcionales y compatibles con v1.0 (protocolVersion sigue siendo \"1\")."
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/v1/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "summary": "Identidad, operaciones soportadas y esquema de pesos",
+        "responses": {
+          "200": {
+            "description": "Respuesta del agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Capabilities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "Salud funcional y recursos reportados",
+        "responses": {
+          "200": {
+            "description": "Respuesta del agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/config": {
+      "get": {
+        "operationId": "getConfiguration",
+        "summary": "Configuración realmente aplicada",
+        "responses": {
+          "200": {
+            "description": "Respuesta del agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Configuration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/config/apply": {
+      "post": {
+        "operationId": "applyConfiguration",
+        "summary": "Validar y aplicar pesos de forma atómica",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Deduplicar durablemente. Una clave repetida devuelve la misma operación sin repetir efectos. Debe permitir consulta en /v1/operations/{id}."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "expectedVersion",
+                  "weights",
+                  "reason"
+                ],
+                "properties": {
+                  "expectedVersion": {
+                    "type": "string"
+                  },
+                  "weights": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "number"
+                    },
+                    "description": "Coeficientes de decisión. El agente valida restricciones conjuntas y campos permitidos."
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Respuesta del agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "La versión efectiva cambió; no se aplicó el cambio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Pesos inválidos; no se aplicó el cambio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/training-jobs": {
+      "post": {
+        "operationId": "createTraining",
+        "summary": "Solicitar entrenamiento asíncrono sin activar automáticamente el modelo",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Deduplicar durablemente. Una clave repetida devuelve la misma operación sin repetir efectos. Debe permitir consulta en /v1/operations/{id}."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "datasetRef",
+                  "epochs",
+                  "reason"
+                ],
+                "properties": {
+                  "datasetRef": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "epochs": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Respuesta del agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Dataset o parámetros no admitidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/operations/{id}": {
+      "get": {
+        "operationId": "getOperation",
+        "summary": "Consultar una operación por ID remoto O por Idempotency-Key",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta del agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Operación no conocida. Si el monitor nunca recibió operationId, la marca como no recibida y no aplicada; por eso la consulta por Idempotency-Key debe ser durable. El monitor no reenvía efectos automáticamente."
+          }
+        }
+      }
+    },
+    "/v1/events": {
+      "get": {
+        "operationId": "listEvents",
+        "summary": "Registro de actividad del agente (extensión opcional v1.1)",
+        "description": "El monitor consulta cada ~10 s y avanza con nextCursor. Sin cursor, devolver desde el evento más antiguo retenido. Si no se implementa, responder 404: el agente sigue conectado y su actividad aparece como no disponible.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            },
+            "description": "Valor nextCursor de la página anterior."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta del agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventPage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Extensión no implementada."
+          },
+          "409": {
+            "description": "Cursor inválido. El monitor detiene la captura sin reiniciar el historial.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Cursor expirado por retención. El monitor detiene la captura sin reiniciar el historial.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Capabilities": {
+        "type": "object",
+        "required": [
+          "protocolVersion",
+          "agentId",
+          "configuration",
+          "training",
+          "weightRules"
+        ],
+        "properties": {
+          "protocolVersion": {
+            "type": "string",
+            "const": "1"
+          },
+          "agentId": {
+            "type": "string",
+            "description": "Debe coincidir con el ID estable registrado en el monitor."
+          },
+          "configuration": {
+            "type": "boolean"
+          },
+          "training": {
+            "type": "boolean"
+          },
+          "weightRules": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "label",
+                "min",
+                "max"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "min": {
+                  "type": "number"
+                },
+                "max": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "degraded",
+              "not_ready"
+            ]
+          },
+          "metrics": {
+            "type": "object",
+            "description": "Métricas del agente o su proceso. Omitir valores desconocidos; no inventar ceros.",
+            "properties": {
+              "cpuPercent": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 100
+              },
+              "memoryMb": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "errorRate": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Fracción de solicitudes fallidas sobre el período de medición documentado por el agente."
+              }
+            }
+          }
+        }
+      },
+      "Configuration": {
+        "type": "object",
+        "required": [
+          "version",
+          "weights"
+        ],
+        "properties": {
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Versión efectiva que cambia al aplicar una configuración diferente."
+          },
+          "weights": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Coeficientes de decisión. El agente valida restricciones conjuntas y campos permitidos."
+          }
+        }
+      },
+      "Accepted": {
+        "type": "object",
+        "required": [
+          "operationId"
+        ],
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        }
+      },
+      "Operation": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "running",
+              "succeeded",
+              "failed"
+            ]
+          },
+          "progress": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Opcional (v1.1). Detalle legible del estado o la causa de un fallo. Sin datos personales ni secretos."
+          }
+        }
+      },
+      "Event": {
+        "type": "object",
+        "required": [
+          "id",
+          "agentId",
+          "timestamp",
+          "severity",
+          "type",
+          "status",
+          "message"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Estable y único por agente: el monitor deduplica por este valor."
+          },
+          "agentId": {
+            "type": "string",
+            "description": "Igual al agentId de /v1/capabilities."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "maxLength": 80,
+            "description": "ISO 8601 con zona horaria (Z o ±hh:mm)."
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "info",
+              "warning",
+              "error"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Tipo de actividad, por ejemplo prediction.completed, training.failed o service.started."
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Resultado de la actividad, por ejemplo ok, failed o retrying."
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "description": "Mensaje técnico sin datos personales de estudiantes, conversaciones, secretos ni razonamiento interno."
+          },
+          "executionId": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Opcional. Correlaciona eventos de una misma ejecución."
+          },
+          "operationId": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Opcional. operationId de /v1/config/apply o /v1/training-jobs relacionado."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Opcional. El monitor solo conserva estos campos numéricos/booleanos; cualquier otro se descarta.",
+            "properties": {
+              "durationMs": {
+                "type": "number"
+              },
+              "count": {
+                "type": "number"
+              },
+              "retryCount": {
+                "type": "number"
+              },
+              "httpStatus": {
+                "type": "number"
+              },
+              "success": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "EventPage": {
+        "type": "object",
+        "required": [
+          "agentId",
+          "events",
+          "nextCursor",
+          "hasMore"
+        ],
+        "properties": {
+          "agentId": {
+            "type": "string",
+            "description": "Igual al agentId de /v1/capabilities."
+          },
+          "events": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            },
+            "description": "En orden cronológico ascendente desde el cursor recibido."
+          },
+          "nextCursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "Cursor opaco para continuar. Siempre presente, también si events está vacío; debe avanzar cuando hasMore=true."
+          },
+          "hasMore": {
+            "type": "boolean",
+            "description": "true si hay más eventos disponibles inmediatamente."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

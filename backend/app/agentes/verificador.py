@@ -260,3 +260,141 @@ def verificar_herramienta_clase(nombre: str):
                 fallos.append("tarjeta con un contenido ajeno a la sesión")
         return fallos
     return verificar
+
+
+# --- Guía de estudio del momento --------------------------------------------------
+# Unas 480 palabras por página en el Word exportado: 10 a 15 páginas ≈ 4 800 a 7 200 palabras.
+PALABRAS_POR_PAGINA = 480
+MIN_PALABRAS_GUIA = {"introduccion": 600, "desarrollo_1": 1600, "desarrollo_2": 1600, "aplicacion": 1000}
+MIN_PALABRAS_GUIA_TOTAL = 10 * PALABRAS_POR_PAGINA
+
+
+def palabras_guia(datos) -> int:
+    return sum(len(t.split()) for t in _textos(datos))
+
+
+_CITA = re.compile(r"\[([BF]\d+)\]")
+_ENLACE = re.compile(r"https?://|www\.", re.I)
+
+
+def _sin_bibliografia(datos: dict) -> dict:
+    if "bibliografia" in datos:
+        return {k: v for k, v in datos.items() if k != "bibliografia"}
+    return {k: _sin_bibliografia(v) if isinstance(v, dict) else v for k, v in datos.items()}
+
+
+def verificar_guia_estudio(datos: dict, contexto: ContextoClase) -> list[str]:
+    """Una sección suelta (cada lote) o la guía completa (al cerrar): extensión, frases, integridad y citas."""
+    completa = bool(datos) and set(datos) <= set(MIN_PALABRAS_GUIA)
+    bibliografia = ((datos.get("aplicacion") or {}) if completa else datos).get("bibliografia") or {}
+    datos = _sin_bibliografia(datos)
+    fallos = verificar_ficha(datos, contexto)
+    textos = _textos(datos)
+    if any(_ENLACE.search(t) for t in textos):
+        fallos.append("escribe enlaces: los enlaces solo van en la bibliografía que arma el sistema")
+    if completa:
+        validas = {e["id"] for e in bibliografia.get("silabo", [])} | {f["id"] for f in bibliografia.get("web", [])}
+        citas = {c for t in textos for c in _CITA.findall(t)}
+        if citas - validas:
+            fallos.append(f"cita fuentes inexistentes: {', '.join(sorted(citas - validas))}")
+        if validas and not citas & validas:
+            fallos.append("la guía no cita la bibliografía ni las fuentes verificadas")
+    # La introducción presenta el momento y puede citar su evidencia; el resto no la reproduce.
+    sin_intro = {k: v for k, v in datos.items() if k != "introduccion"} if completa else (
+        {} if "glosario" in datos else datos)
+    if _copia(contexto.entregables_momento, _textos(sin_intro)):
+        fallos.append("copia el texto de la evidencia del momento")
+    if completa:
+        total = palabras_guia(datos)
+        if total < MIN_PALABRAS_GUIA_TOTAL:
+            fallos.append(f"la guía tiene unas {total // PALABRAS_POR_PAGINA} páginas; se piden al menos 10")
+    else:
+        minimo = (MIN_PALABRAS_GUIA["introduccion"] if "glosario" in datos else
+                  MIN_PALABRAS_GUIA["aplicacion"] if "ejemplos" in datos else MIN_PALABRAS_GUIA["desarrollo_1"])
+        if (n := palabras_guia(datos)) < minimo:
+            fallos.append(f"la sección tiene {n} palabras; amplía el desarrollo hasta al menos {minimo}")
+    return fallos
+
+
+# --- Herramientas del plan de evaluación (V3-6) -------------------------------------
+
+def _indicadores_ajenos(filas: list[dict], contexto: ContextoClase) -> bool:
+    from app.herramientas.esquemas_evaluacion import SIN_INDICADOR
+    validos = {f.indicador for f in contexto.rubrica} | {SIN_INDICADOR}
+    return any(f.get("indicador_momento") not in validos for f in filas)
+
+
+# Campo que dice qué se entrega: puede citar la entrega del sílabo, como «qué se pide» en la guía de la evidencia.
+CITA_ENTREGA = {"tarea": "producto", "entrega": "que_se_entrega", "insumo": "tarea"}
+
+
+def _base_evaluacion(nombre: str, d: dict, contexto: ContextoClase) -> list[str]:
+    """Campos vacíos, frases prohibidas, RA del momento y que no copie un entregable fuera del campo que lo cita."""
+    cita = CITA_ENTREGA.get(nombre)
+    fallos = verificar_herramienta_clase(nombre)({nombre: {k: v for k, v in d.items() if k != cita}}, contexto)
+    if cita is not None and not str(d.get(cita, "")).strip():
+        fallos.append("hay campos vacíos")
+    if "ra" in d and d.get("ra") not in {r.id for r in contexto.ra}:
+        fallos.append("RA ajeno al momento")
+    return fallos
+
+
+def verificar_guia_practica(datos: dict, contexto: ContextoClase) -> list[str]:
+    d = _seccion(datos, "guia_practica")
+    fallos = _base_evaluacion("guia_practica", d, contexto)
+    criterios = [normalizar(c.get("criterio", "")) for c in d.get("observacion", [])]
+    if len(criterios) != len(set(criterios)):
+        fallos.append("la guía de observación repite criterios")
+    return fallos
+
+
+def verificar_ficha_foro(datos: dict, contexto: ContextoClase) -> list[str]:
+    """§5.4: la pregunta usa un contenido del momento y no se responde copiando una definición."""
+    d = _seccion(datos, "foro")
+    fallos = _base_evaluacion("foro", d, contexto)
+    if contexto.contenidos and normalizar(d.get("contenido", "")) not in {normalizar(c) for c in contexto.contenidos}:
+        fallos.append("el foro usa un contenido ajeno a la sesión")
+    pregunta = d.get("pregunta_detonante", "")
+    if "?" not in pregunta:
+        fallos.append("la pregunta detonante no es una pregunta")
+    elif re.match(r"\s*¿?\s*(QUE ES|QUE SON|DEFIN[AE])\b", normalizar(pregunta)):  # normalizar: mayúsculas
+        fallos.append("la pregunta detonante se responde con una definición")
+    if _indicadores_ajenos(d.get("rubrica", []), contexto):
+        fallos.append("criterio alineado a un indicador ajeno a la rúbrica del momento")
+    return fallos
+
+
+def verificar_guia_tarea(datos: dict, contexto: ContextoClase) -> list[str]:
+    d = _seccion(datos, "tarea")
+    fallos = _base_evaluacion("tarea", d, contexto)
+    if _indicadores_ajenos(d.get("criterios", []), contexto):
+        fallos.append("criterio alineado a un indicador ajeno a la rúbrica del momento")
+    return fallos
+
+
+def verificar_prueba_diagnostica(datos: dict, contexto: ContextoClase) -> list[str]:
+    d = _seccion(datos, "diagnostica")
+    fallos = _base_evaluacion("diagnostica", d, contexto)
+    n = len(d.get("prerrequisitos", []))
+    usados = {p.get("prerrequisito") for p in d.get("preguntas", [])}
+    if any(not isinstance(u, int) or not 1 <= u <= n for u in usados):
+        fallos.append("pregunta de un prerrequisito que no está en la lista")
+    elif len(usados) < n:
+        fallos.append("hay prerrequisitos sin pregunta")
+    for k, p in enumerate(d.get("preguntas", []), 1):
+        opciones = [normalizar(o) for o in p.get("opciones", [])]
+        if len(set(opciones)) != len(opciones):
+            fallos.append(f"la pregunta {k} repite opciones")
+    return fallos
+
+
+def verificar_guia_entrega(datos: dict, contexto: ContextoClase) -> list[str]:
+    d = _seccion(datos, "entrega")
+    fallos = _base_evaluacion("entrega", d, contexto)
+    if _indicadores_ajenos(d.get("lista_cotejo", []), contexto):
+        fallos.append("ítem alineado a un indicador ajeno a la rúbrica del momento")
+    return fallos
+
+
+def verificar_insumo_respaldo(datos: dict, contexto: ContextoClase) -> list[str]:
+    return _base_evaluacion("insumo", _seccion(datos, "insumo"), contexto)

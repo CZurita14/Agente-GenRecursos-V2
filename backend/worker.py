@@ -28,8 +28,10 @@ def registrar_llamada(conn, datos):
     """Registra metadatos de uso; nunca persiste prompts ni razonamiento."""
     with conn.transaction():
         conn.execute(
-            "insert into llamada_llm (trabajo_id,asignatura_id,rol,tokens_entrada,tokens_salida,segundos,ok) "
-            "values (%(trabajo_id)s,%(asignatura_id)s,%(rol)s,%(tokens_entrada)s,%(tokens_salida)s,%(segundos)s,%(ok)s)", datos,
+            "insert into llamada_llm (trabajo_id,asignatura_id,rol,tokens_entrada,tokens_salida,segundos,ok,"
+            "modelo,tokens_cache,costo_usd) values (%(trabajo_id)s,%(asignatura_id)s,%(rol)s,%(tokens_entrada)s,"
+            "%(tokens_salida)s,%(segundos)s,%(ok)s,%(modelo)s,%(tokens_cache)s,%(costo_usd)s)",
+            {"modelo": None, "tokens_cache": 0, "costo_usd": None, **datos},
         )
 
 
@@ -129,7 +131,7 @@ def main():
                     while not detener.is_set():
                         latido.pulsar(numero)
                         trabajo = procesar_uno(conn, cliente, perfiles, worker_id, config.lease_s,
-                                               razonador=razonador)
+                                               razonador=razonador, config=config)
                         latido.pulsar(numero)
                         if not trabajo:
                             detener.wait(2)

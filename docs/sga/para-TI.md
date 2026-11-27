@@ -49,7 +49,7 @@ Una consulta que devuelva las materias del docente autenticado según [materias-
 | Campo | Qué es |
 |---|---|
 | `id_sga` | Identificador de la materia-paralelo en el SGA (único por docente) |
-| `codigo_pf` | Código del proyecto formativo, `A99-AAAA-9-99999-9999` |
+| `codigo_pf` | Código del proyecto formativo, p. ej. `B26-SOFT-3-56157-1727` |
 | `paralelo` | Número o nombre del paralelo |
 | `nombre` | Nombre de la materia |
 | `carrera` | Carrera |
@@ -61,13 +61,30 @@ Una consulta que devuelva las materias del docente autenticado según [materias-
 
 ## 4. Sílabo en JSON
 
-Una consulta que devuelva el sílabo de una materia según [silabo-api.schema.json](../api-silabo/silabo-api.schema.json) ([ejemplo mínimo](../api-silabo/ejemplo-minimo.json); qué apartado se usa para qué, en el [README de contratos](../api-silabo/README.md)).
+Una consulta que devuelva el sílabo de una materia según [silabo-api.schema.json](../api-silabo/silabo-api.schema.json) (contrato **v1.0**; [ejemplo mínimo](../api-silabo/ejemplo-minimo.json) y [ejemplo completo](../api-silabo/ejemplo-completo.json); qué apartado se usa para qué, en el [README de contratos](../api-silabo/README.md)).
 
 - **Sin la sección I** (perfil, correo, teléfono, ORCID del docente) **ni la VII** (firmas), y sin ningún dato personal. Si llegan, se descartan en cuanto entran (lista blanca) y no se guardan; aun así, preferimos que no se envíen.
 - **Claves extra:** cualquier clave que el esquema no declara se descarta sin mirarla. No hace falta limpiarlas del lado del SGA, pero tampoco se aprovechan.
-- **Completitud:** los apartados obligatorios deben venir. El sistema valida el esquema y 7 reglas de integridad (números de momento sin repetir, resultados de aprendizaje existentes, sesiones por momento, id de sesión `M<momento>-S<n>` sin repetir, fecha dentro del periodo, contenidos sin vacíos). Un sílabo que no cumple no se importa y el docente ve la ruta del campo que falla, nunca su valor.
-- **Calidad de los datos:** en los dos sílabos reales analizados (PDF), la actividad práctica de un 23 % de las sesiones, la autónoma de un 12 % y los entregables de un 65 % venían vacíos. Si el SGA los tiene completos, deben llegar completos.
+- **El SGA envía lo que guarda:** no hace falta calcular nada. El id de cada sesión, su semana del periodo y sus entregables los completa el sistema.
+- **Completitud:** las claves obligatorias deben venir, aunque su texto esté vacío. El sistema valida el esquema y 7 reglas de integridad (números de momento sin repetir, resultados de aprendizaje existentes, sesiones por momento, id de sesión sin repetir, fecha dentro del periodo, contenidos sin vacíos). Un sílabo que no cumple no se importa y el docente ve la ruta del campo que falla, nunca su valor.
+- **Sesiones sin fecha:** si una sesión no tiene fecha programada, debe llegar con `fecha: null`. Esa sesión no se importa y el docente recibe un aviso; el resto del sílabo entra normal.
+- **Calidad de los datos:** en 51 sílabos reales del periodo B26, la actividad práctica venía vacía en el 31 % de las sesiones, la autónoma en el 26 % y los contenidos en el 6 %. Si el SGA los tiene, deben llegar.
 - **Versión:** `proyecto_formativo.version` debe cambiar cuando cambia el sílabo. Es lo que usamos para saber si hay que volver a importarlo.
+
+### 4.1 Todos los sílabos de un periodo (consulta masiva)
+
+Además de la consulta por materia, pedimos una consulta que entregue **todos los sílabos aprobados de un periodo**, de todas las carreras. Sirve para entrenar y validar el modelo con todas las facultades; no la usan los docentes.
+
+| Tema | Propuesta |
+|---|---|
+| Petición | Por periodo (p. ej. `B26`), con paginación: `pagina` y `tamano` (50 por página como máximo) |
+| Respuesta | `{"periodo": "B26", "pagina": 1, "paginas": 12, "total": 580, "silabos": [ ... ]}`; cada elemento de `silabos` cumple el mismo `silabo-api.schema.json` |
+| Filtros opcionales | `facultad`, `carrera`, y `desde` (fecha) para traer solo los aprobados o cambiados después |
+| Un sílabo por código | Uno por `proyecto_formativo.codigo`, en su versión vigente, no uno por paralelo |
+| Privacidad | Sin secciones I ni VII, igual que la consulta por materia |
+| Acceso | Una credencial de servicio propia del Generador, distinta de la de los docentes y solo de lectura |
+
+Si TI prefiere otra forma (un archivo exportado por periodo, por ejemplo), también sirve mientras cada sílabo cumpla el esquema.
 
 ## 5. Tiempos, límites y errores
 
@@ -85,7 +102,7 @@ Necesitamos saber:
 ## 6. Cómo se identifica una materia y un sílabo
 
 - **Materia:** `id_sga` (único por docente) más `codigo_pf` y `paralelo`.
-- **Sílabo:** por el código del proyecto formativo, `A99-AAAA-9-99999-9999` (una letra, dos dígitos, guion, cuatro letras, guion, un dígito, guion, cinco dígitos, guion, cuatro dígitos). Es el mismo `codigo_pf` de la materia y `proyecto_formativo.codigo` del sílabo; si no coinciden, el sílabo se rechaza.
+- **Sílabo:** por el código del proyecto formativo, p. ej. `B26-SOFT-3-56157-1727`: periodo, sigla de la carrera (de 2 a 4 letras; en posgrado puede llevar un prefijo), nivel, cinco dígitos y cuatro dígitos. Es el mismo `codigo_pf` de la materia y `proyecto_formativo.codigo` del sílabo; si no coinciden, el sílabo se rechaza. El sistema no exige un patrón fijo.
 - **Paralelos:** hay un sílabo por código PF, compartido entre sus paralelos. Si el SGA entrega sílabos distintos por paralelo, hay que decirlo: hoy no está soportado.
 - **Cómo se pide el sílabo:** necesitamos saber qué dato usa el SGA para pedirlo (¿`id_sga`, `codigo_pf`, ambos?). El adaptador recibe la materia completa, así que cualquiera sirve.
 
